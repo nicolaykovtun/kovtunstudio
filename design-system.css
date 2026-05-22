@@ -1,0 +1,217 @@
+/* =====================================================================
+   Kovtun.studio — Design tokens
+   Brand: persona of a graphic-design / presentation studio (Russian).
+   Logo confirms: navy #002136 + red #EF1C24 on white.
+   User-supplied secondary palette: #E53124 / #444443 / #87888A /
+   #B1B3B4 / #F5F5F5.
+   ===================================================================== */
+
+/* ---------- Fonts ------------------------------------------------------ */
+/* Manrope — primary family across the whole system.
+   Loaded locally from /fonts (user-supplied TTF files).
+   Weight map:  200 ExtraLight · 300 Light · 400 Regular · 500 Medium
+                600 SemiBold · 700 Bold · 800 ExtraBold                    */
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-ExtraLight.ttf") format("truetype");
+  font-weight: 200; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-Light.ttf") format("truetype");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-Medium.ttf") format("truetype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-SemiBold.ttf") format("truetype");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-Bold.ttf") format("truetype");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/Manrope-ExtraBold.ttf") format("truetype");
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+
+:root {
+  /* ---------- Brand core ----------------------------------------------
+     Brand ratio is 50 · 30 · 20 :
+       • 50 %  Red       — dominant. Hero surfaces, CTAs, headline accent.
+       • 30 %  White     — canvas. Default page, breathing room.
+       • 20 %  Charcoal  — deep accent. Headings, dark sections, footer.
+     Navy #002136 is reserved for the logo SVG only — not a UI surface.
+     --------------------------------------------------------------------- */
+  --ks-red:         #EF1C24;   /* PRIMARY brand colour                     */
+  --ks-red-700:     #C5141B;   /* hover / pressed                          */
+  --ks-red-300:     #FF5A60;   /* highlight on dark                        */
+  --ks-red-user:    #E53124;   /* user-supplied red (alt swatch)           */
+  --ks-red-50:      #FEE7E8;   /* tinted surface for callouts              */
+
+  --ks-charcoal:    #444443;   /* SECONDARY brand colour (deep accent)     */
+  --ks-charcoal-700:#2B2B2B;
+  --ks-charcoal-500:#5A5A59;
+
+  --ks-white:       #FFFFFF;   /* CANVAS — default page                    */
+
+  /* ---------- Greyscale (user-supplied) ------------------------------- */
+  --ks-grey:        #87888A;   /* mid neutral / secondary text             */
+  --ks-grey-300:    #B1B3B4;   /* dividers, disabled                       */
+  --ks-paper:       #F5F5F5;   /* alt surface                              */
+  --ks-black:       #000000;
+
+  /* logo-only colour (do not use as a UI background) */
+  --ks-navy-logo:   #002136;
+
+  /* ---------- Semantic — foreground ------------------------------------ */
+  --fg-1:           var(--ks-charcoal);    /* headings / primary text     */
+  --fg-2:           var(--ks-charcoal);    /* body                         */
+  --fg-3:           var(--ks-grey);        /* secondary / captions         */
+  --fg-4:           var(--ks-grey-300);    /* disabled / placeholder       */
+  --fg-on-dark:     var(--ks-white);
+  --fg-on-red:      var(--ks-white);
+  --fg-accent:      var(--ks-red);
+
+  /* ---------- Semantic — background ------------------------------------ */
+  --bg-1:           var(--ks-white);       /* default surface              */
+  --bg-2:           var(--ks-paper);       /* alt section / cards          */
+  --bg-3:           #ECECEC;               /* deeper alt                   */
+  --bg-dark:        var(--ks-charcoal);    /* inverted section             */
+  --bg-brand:       var(--ks-red);         /* hero / feature surface (50%) */
+  --bg-accent:      var(--ks-red);
+
+  /* ---------- Lines & dividers ---------------------------------------- */
+  --line-1:         #E4E4E4;
+  --line-2:         var(--ks-grey-300);
+  --line-strong:    var(--ks-graphite);
+
+  /* ---------- Radius -------------------------------------------------- */
+  --r-0:  0px;
+  --r-1:  2px;
+  --r-2:  4px;
+  --r-3:  8px;
+  --r-4:  14px;
+  --r-pill: 999px;
+
+  /* ---------- Shadow / elevation -------------------------------------- */
+  --shadow-1: 0 1px 2px rgba(68,68,67,.06), 0 1px 1px rgba(68,68,67,.04);
+  --shadow-2: 0 6px 18px rgba(68,68,67,.10), 0 2px 4px rgba(68,68,67,.05);
+  --shadow-3: 0 18px 40px rgba(68,68,67,.14), 0 4px 10px rgba(68,68,67,.06);
+  --shadow-red: 0 10px 28px rgba(239,28,36,.32);
+
+  /* ---------- Spacing scale (4-pt) ------------------------------------ */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 128px;
+
+  /* ---------- Type families ------------------------------------------- */
+  /* Manrope across the board. Weight map:
+     300 Light · 400 Regular · 500 Medium · 600 SemiBold · 700 Bold · 800 ExtraBold */
+  --font-display: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:    "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---------- Type scale --------------------------------------------- */
+  /* Heroic, tight, geometric — matches the logo wordmark cadence.        */
+  --t-display-1: 800 96px/0.98 var(--font-display);   letter-spacing: -0.03em;
+  --t-display-2: 800 72px/1.00 var(--font-display);
+  --t-h1:        700 56px/1.05 var(--font-display);
+  --t-h2:        700 40px/1.10 var(--font-display);
+  --t-h3:        700 28px/1.20 var(--font-display);
+  --t-h4:        700 22px/1.25 var(--font-display);
+  --t-overline:  700 12px/1.20 var(--font-display);
+  --t-body-l:    400 19px/1.55 var(--font-body);
+  --t-body:      400 16px/1.55 var(--font-body);
+  --t-body-s:    400 14px/1.5  var(--font-body);
+  --t-caption:   500 12px/1.4  var(--font-body);
+
+  /* ---------- Motion -------------------------------------------------- */
+  --ease-out:    cubic-bezier(.22,.61,.36,1);
+  --ease-in-out: cubic-bezier(.65,0,.35,1);
+  --dur-fast:   140ms;
+  --dur-base:   220ms;
+  --dur-slow:   420ms;
+}
+
+/* ===========================================================
+   Base — semantic typography mapped to elements
+   =========================================================== */
+html { color: var(--fg-2); background: var(--bg-1); }
+body {
+  font: 400 16px/1.55 var(--font-body);
+  color: var(--fg-2);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, .h1, .display-2 {
+  font: 800 72px/1.00 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg-1);
+  margin: 0;
+}
+.display-1 {
+  font: 800 96px/0.98 var(--font-display);
+  letter-spacing: -0.03em;
+  color: var(--fg-1);
+}
+h2, .h2 {
+  font: 700 40px/1.10 var(--font-display);
+  letter-spacing: -0.015em;
+  color: var(--fg-1);
+  margin: 0;
+}
+h3, .h3 {
+  font: 700 28px/1.20 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--fg-1);
+  margin: 0;
+}
+h4, .h4 {
+  font: 700 22px/1.25 var(--font-display);
+  color: var(--fg-1);
+  margin: 0;
+}
+.overline {
+  font: 700 12px/1.20 var(--font-display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+p, .body { font: 400 16px/1.55 var(--font-body); color: var(--fg-2); margin: 0 0 1em; }
+.body-l   { font: 400 19px/1.55 var(--font-body); }
+.body-s   { font: 400 14px/1.5  var(--font-body); }
+.caption  { font: 500 12px/1.4  var(--font-body); color: var(--fg-3); }
+
+a { color: var(--fg-1); text-decoration: none; border-bottom: 1px solid currentColor; }
+a:hover { color: var(--fg-accent); }
+
+code, pre { font-family: var(--font-mono); font-size: 0.9em; }
+hr { border: 0; height: 1px; background: var(--line-1); margin: var(--s-6) 0; }
+
+/* helpers */
+.bg-paper { background: var(--bg-2); }
+.bg-dark  { background: var(--bg-dark); color: var(--fg-on-dark); }
+.bg-dark h1, .bg-dark h2, .bg-dark h3 { color: var(--fg-on-dark); }
+.accent   { color: var(--fg-accent); }
+.dot { display:inline-block; width:.45em; height:.45em; border-radius:50%; background:var(--ks-red); vertical-align:.08em; }
