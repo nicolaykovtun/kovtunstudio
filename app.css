@@ -891,33 +891,43 @@ body.theme-dark .k-form { background: #1c1c1b; color: #fff; }
   color: var(--fg-1);
   margin: 0;
 }
-.k-form label { display: grid; gap: 8px; }
-.k-form label > .lbl {
-  font: 700 11px/1 var(--font-display);
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--fg-3);
-}
-.k-form input,
-.k-form textarea {
+/* Outlined field with notched (floating) label */
+.k-form .field { position: relative; }
+.k-form .field input,
+.k-form .field textarea {
+  width: 100%;
   font: 400 16px/1.4 var(--font-body);
   color: var(--fg-1);
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--line-2);
-  border-radius: 0;
-  padding: 12px 0;
+  background: var(--ks-white);
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--r-3);
+  padding: 20px 16px 14px;
   outline: none;
   transition: border-color var(--dur-fast);
-  width: 100%;
 }
-.k-form input::placeholder,
-.k-form textarea::placeholder { color: var(--fg-4); }
-.k-form input:focus,
-.k-form textarea:focus { border-color: var(--ks-red); }
-.k-form textarea { resize: vertical; min-height: 72px; font-family: var(--font-body); }
+.k-form .field textarea { resize: vertical; min-height: 84px; }
+.k-form .field input::placeholder,
+.k-form .field textarea::placeholder { color: var(--fg-4); }
+.k-form .field input:focus,
+.k-form .field textarea:focus { border-color: var(--ks-red); }
+.k-form .field > .lbl {
+  position: absolute; top: -7px; left: 12px;
+  background: var(--ks-white);
+  padding: 0 7px;
+  font: 700 10px/1 var(--font-display);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--fg-3);
+  pointer-events: none;
+}
+.k-form .field input:focus ~ .lbl,
+.k-form .field textarea:focus ~ .lbl { color: var(--ks-red); }
+body.theme-dark .k-form .field input,
+body.theme-dark .k-form .field textarea,
+body.theme-dark .k-form .field > .lbl { background: #1c1c1b; }
 .k-form .field-error {
+  display: block;
   font: 500 12px/1.3 var(--font-body); color: var(--ks-red);
-  margin-top: -4px;
+  margin-top: 6px;
 }
 .k-form .submit-row {
   display: flex; align-items: center; gap: 20px;
