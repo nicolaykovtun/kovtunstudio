@@ -74,6 +74,7 @@ body.theme-dark {
   border-radius: var(--r-3);
   display: inline-flex; align-items: center; gap: 10px;
   text-decoration: none;
+  border: none;
   transition: background var(--dur-base) var(--ease-out),
               color var(--dur-base) var(--ease-out),
               border-color var(--dur-base) var(--ease-out),
@@ -84,7 +85,8 @@ body.theme-dark {
 .btn-primary { background: var(--ks-red); color: #fff; box-shadow: var(--shadow-red); }
 .btn-primary:hover { background: var(--ks-red-700); }
 .btn-dark { background: var(--ks-charcoal); color: #fff; }
-.btn-dark:hover { background: var(--ks-charcoal-700); }
+/* keep white text on hover — overrides the global a:hover red for anchor-buttons */
+.btn-dark:hover { background: var(--ks-charcoal-700); color: #fff; }
 .btn-ghost { background: transparent; color: inherit; border: 1px solid currentColor; }
 .btn-ghost:hover { background: rgba(255,255,255,.08); }
 .btn-ghost-dark { background: transparent; color: var(--fg-1); border: 1px solid var(--line-2); }
@@ -136,6 +138,8 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 .k-header nav a:hover { color: var(--ks-red); }
 .k-header .actions { display: flex; align-items: center; gap: 12px; }
 .k-header .menu-btn { display: none; }
+/* header CTA: text turns black on hover (bright red kept for contrast) */
+.k-header .btn-primary:hover { color: #000; background: var(--ks-red); }
 
 @media (max-width: 900px) {
   .k-header nav { display: none; }
@@ -876,6 +880,9 @@ body.lightbox-locked { overflow: hidden; }
   display: grid; gap: 30px;
   border-radius: var(--r-2);
 }
+/* fields live inside #form-fields / #form-success — space them there, not on the outer grid */
+.k-form #form-fields,
+.k-form #form-success { display: grid; gap: 30px; }
 body.theme-dark .k-form { background: #1c1c1b; color: #fff; }
 
 .k-form .form-head {
@@ -970,14 +977,10 @@ body.theme-dark .k-footer { background: #0a0a0a; }
 }
 @media (max-width: 800px) { .k-footer .top { grid-template-columns: 1fr 1fr; gap: 40px; } }
 .k-footer .brand {
-  font: 800 28px/1 var(--font-display);
-  letter-spacing: -0.02em;
-  color: #fff;
-  display: inline-flex; align-items: baseline;
+  display: inline-flex; align-items: center;
 }
-.k-footer .brand .dot {
-  width: 9px; height: 9px; border-radius: 50%; background: var(--ks-red);
-  margin: 0 2px 4px 1px; align-self: flex-end;
+.k-footer .brand img {
+  height: 30px; width: auto; display: block;
 }
 .k-footer .tag {
   font: 400 15px/1.55 var(--font-body);
