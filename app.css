@@ -873,7 +873,7 @@ body.lightbox-locked { overflow: hidden; }
   background: var(--ks-white);
   color: var(--fg-1);
   padding: 48px 44px 44px;
-  display: grid; gap: 18px;
+  display: grid; gap: 30px;
   border-radius: var(--r-2);
 }
 body.theme-dark .k-form { background: #1c1c1b; color: #fff; }
