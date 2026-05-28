@@ -96,7 +96,7 @@
   /* ---------- Lines & dividers ---------------------------------------- */
   --line-1:         #E4E4E4;
   --line-2:         var(--ks-grey-300);
-  --line-strong:    var(--ks-graphite);
+  --line-strong:    var(--ks-charcoal);
 
   /* ---------- Radius -------------------------------------------------- */
   --r-0:  0px;

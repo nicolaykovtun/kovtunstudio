@@ -34,6 +34,11 @@
   <meta name="geo.position" content="43.1155;131.8855">
   <meta name="ICBM" content="43.1155, 131.8855">
 
+  <!-- Preload critical fonts (used in hero + headings) -->
+  <link rel="preload" href="fonts/Manrope-ExtraBold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="fonts/Manrope-Bold.ttf"      as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="fonts/Manrope-Regular.ttf"   as="font" type="font/ttf" crossorigin>
+
   <!-- Styles -->
   <link rel="stylesheet" href="design-system.css">
   <link rel="stylesheet" href="app.css">
@@ -338,7 +343,7 @@
           <!-- Tier 01 -->
           <div class="tier">
             <div class="tier-example">
-              <img src="assets/tier-basic/01.png" alt="Пример базового дизайна оклейки авто" loading="lazy">
+              <img src="assets/tier-basic/01.webp" alt="Пример базового дизайна оклейки авто" loading="lazy">
               <span class="example-tag">Пример работы · базовый</span>
             </div>
             <div class="tier-body">
@@ -371,7 +376,7 @@
           <!-- Tier 02 (highlight) -->
           <div class="tier highlight">
             <div class="tier-example">
-              <img src="assets/tier-extended/01.png" alt="Пример расширенного дизайна оклейки авто с рекламными блоками" loading="lazy">
+              <img src="assets/tier-extended/01.webp" alt="Пример расширенного дизайна оклейки авто с рекламными блоками" loading="lazy">
               <span class="example-tag">Пример работы · расширенный</span>
             </div>
             <div class="tier-body">
@@ -406,7 +411,7 @@
           <!-- Tier 03 -->
           <div class="tier">
             <div class="tier-example">
-              <img src="assets/tier-image/01.png" alt="Пример имиджевой концепции оклейки авто" loading="lazy">
+              <img src="assets/tier-image/01.webp" alt="Пример имиджевой концепции оклейки авто" loading="lazy">
               <span class="example-tag">Пример работы · имиджевый</span>
             </div>
             <div class="tier-body">
@@ -460,43 +465,43 @@
 
         <div class="gallery" id="gallery">
           <button type="button" class="gallery-item" data-index="0" aria-label="Открыть работу: BMW Z4 — рекламная оклейка">
-            <img src="assets/portfolio/01.png" alt="BMW Z4 — рекламная оклейка" loading="eager">
+            <img src="assets/portfolio/thumb/01.webp" alt="BMW Z4 — рекламная оклейка" loading="eager" fetchpriority="high">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="1" aria-label="Открыть работу: Lexus LX570 — имиджевая концепция">
-            <img src="assets/portfolio/02.png" alt="Lexus LX570 — имиджевая концепция" loading="eager">
+            <img src="assets/portfolio/thumb/02.webp" alt="Lexus LX570 — имиджевая концепция" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="2" aria-label="Открыть работу: Toyota Probox — оклейка Japanhouse, общий план">
-            <img src="assets/portfolio/13.png" alt="Toyota Probox — оклейка Japanhouse, общий план" loading="eager">
+            <img src="assets/portfolio/thumb/13.webp" alt="Toyota Probox — оклейка Japanhouse, общий план" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="3" aria-label="Открыть работу: Toyota Hiace — корпоративный фургон">
-            <img src="assets/portfolio/03.png" alt="Toyota Hiace — корпоративный фургон" loading="eager">
+            <img src="assets/portfolio/thumb/03.webp" alt="Toyota Hiace — корпоративный фургон" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="4" aria-label="Открыть работу: Toyota Probox — расширенный дизайн">
-            <img src="assets/portfolio/04.png" alt="Toyota Probox — расширенный дизайн" loading="eager">
+            <img src="assets/portfolio/thumb/04.webp" alt="Toyota Probox — расширенный дизайн" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="5" aria-label="Открыть работу: Lexus LX570 — фасадный план">
-            <img src="assets/portfolio/08.png" alt="Lexus LX570 — фасадный план" loading="eager">
+            <img src="assets/portfolio/thumb/08.webp" alt="Lexus LX570 — фасадный план" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="6" aria-label="Открыть работу: Probox — деталь оклейки Japanhouse">
-            <img src="assets/portfolio/20.png" alt="Probox — деталь оклейки Japanhouse" loading="eager">
+            <img src="assets/portfolio/thumb/20.webp" alt="Probox — деталь оклейки Japanhouse" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="7" aria-label="Открыть работу: Toyota Probox — оклейка Japanhouse">
-            <img src="assets/portfolio/05.png" alt="Toyota Probox — оклейка Japanhouse" loading="eager">
+            <img src="assets/portfolio/thumb/05.webp" alt="Toyota Probox — оклейка Japanhouse" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="8" aria-label="Открыть работу: Probox — рекламная оклейка">
-            <img src="assets/portfolio/06.png" alt="Probox — рекламная оклейка" loading="lazy">
+            <img src="assets/portfolio/thumb/06.webp" alt="Probox — рекламная оклейка" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="9" aria-label="Открыть работу: Probox — общий вид сзади">
-            <img src="assets/portfolio/22.png" alt="Probox — общий вид сзади" loading="lazy">
+            <img src="assets/portfolio/thumb/22.webp" alt="Probox — общий вид сзади" loading="lazy">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
         </div>
@@ -712,16 +717,4 @@
         <div>
           <h4>Прочее</h4>
           <a href="#contact">Оставить заявку</a>
-          <a href="https://t.me/nikolaikovtun" target="_blank" rel="noopener">Написать в Telegram</a>
-        </div>
-      </div>
-      <div class="bottom">
-        <span>© <span id="year"></span> Kovtun.studio. Все права защищены.</span>
-        <span>Дизайн оклейки авто · Владивосток · РФ</span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="app.js"></script>
-</body>
-</html>
+          <a href="https://t.me/nikolaikovtun" target="_blank" rel="noopener">Написать

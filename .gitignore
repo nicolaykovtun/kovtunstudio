@@ -3,3 +3,11 @@
 Thumbs.db
 desktop.ini
 *.tmp
+*.bak
+
+# Editor
+.vscode/
+.idea/
+
+# Local backups of original (pre-optimized) image assets — not for repo
+assets/**/original/

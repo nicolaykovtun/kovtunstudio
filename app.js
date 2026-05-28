@@ -6,34 +6,34 @@
 
   /* ─── Portfolio data — 28 works ─── */
   var GALLERY = [
-    { src: "assets/portfolio/01.png", label: "BMW Z4 — рекламная оклейка" },
-    { src: "assets/portfolio/02.png", label: "Lexus LX570 — имиджевая концепция" },
-    { src: "assets/portfolio/13.png", label: "Toyota Probox — оклейка Japanhouse, общий план" },
-    { src: "assets/portfolio/03.png", label: "Toyota Hiace — корпоративный фургон" },
-    { src: "assets/portfolio/04.png", label: "Toyota Probox — расширенный дизайн" },
-    { src: "assets/portfolio/08.png", label: "Lexus LX570 — фасадный план" },
-    { src: "assets/portfolio/20.png", label: "Probox — деталь оклейки Japanhouse" },
-    { src: "assets/portfolio/05.png", label: "Toyota Probox — оклейка Japanhouse" },
-    { src: "assets/portfolio/06.png", label: "Probox — рекламная оклейка" },
-    { src: "assets/portfolio/22.png", label: "Probox — общий вид сзади" },
-    { src: "assets/portfolio/07.png", label: "Probox — корпоративный транспорт" },
-    { src: "assets/portfolio/09.png", label: "Probox — фрагмент кузова" },
-    { src: "assets/portfolio/10.png", label: "Probox — боковая проекция" },
-    { src: "assets/portfolio/11.png", label: "Probox — деталь оклейки" },
-    { src: "assets/portfolio/12.png", label: "Probox — рекламный фрагмент" },
-    { src: "assets/portfolio/14.png", label: "Probox — крупный план задней стороны" },
-    { src: "assets/portfolio/15.png", label: "Probox — крупный план передней стороны" },
-    { src: "assets/portfolio/16.png", label: "Probox — деталь композиции" },
-    { src: "assets/portfolio/17.png", label: "Probox — фрагмент имиджевого макета" },
-    { src: "assets/portfolio/18.png", label: "Probox — переход графики на двери" },
-    { src: "assets/portfolio/19.png", label: "Probox — боковая часть с типографикой" },
-    { src: "assets/portfolio/21.png", label: "Probox — задние двери" },
-    { src: "assets/portfolio/23.png", label: "Probox — крупный план графики" },
-    { src: "assets/portfolio/24.png", label: "Probox — деталь имиджевого макета" },
-    { src: "assets/portfolio/25.png", label: "Probox — крупный план кузова" },
-    { src: "assets/portfolio/26.png", label: "Probox — переход графики на боку" },
-    { src: "assets/portfolio/27.png", label: "Probox — фрагмент оклейки" },
-    { src: "assets/portfolio/28.png", label: "Probox — крупный план кузова, сторона" }
+    { src: "assets/portfolio/full/01.webp", label: "BMW Z4 — рекламная оклейка" },
+    { src: "assets/portfolio/full/02.webp", label: "Lexus LX570 — имиджевая концепция" },
+    { src: "assets/portfolio/full/13.webp", label: "Toyota Probox — оклейка Japanhouse, общий план" },
+    { src: "assets/portfolio/full/03.webp", label: "Toyota Hiace — корпоративный фургон" },
+    { src: "assets/portfolio/full/04.webp", label: "Toyota Probox — расширенный дизайн" },
+    { src: "assets/portfolio/full/08.webp", label: "Lexus LX570 — фасадный план" },
+    { src: "assets/portfolio/full/20.webp", label: "Probox — деталь оклейки Japanhouse" },
+    { src: "assets/portfolio/full/05.webp", label: "Toyota Probox — оклейка Japanhouse" },
+    { src: "assets/portfolio/full/06.webp", label: "Probox — рекламная оклейка" },
+    { src: "assets/portfolio/full/22.webp", label: "Probox — общий вид сзади" },
+    { src: "assets/portfolio/full/07.webp", label: "Probox — корпоративный транспорт" },
+    { src: "assets/portfolio/full/09.webp", label: "Probox — фрагмент кузова" },
+    { src: "assets/portfolio/full/10.webp", label: "Probox — боковая проекция" },
+    { src: "assets/portfolio/full/11.webp", label: "Probox — деталь оклейки" },
+    { src: "assets/portfolio/full/12.webp", label: "Probox — рекламный фрагмент" },
+    { src: "assets/portfolio/full/14.webp", label: "Probox — крупный план задней стороны" },
+    { src: "assets/portfolio/full/15.webp", label: "Probox — крупный план передней стороны" },
+    { src: "assets/portfolio/full/16.webp", label: "Probox — деталь композиции" },
+    { src: "assets/portfolio/full/17.webp", label: "Probox — фрагмент имиджевого макета" },
+    { src: "assets/portfolio/full/18.webp", label: "Probox — переход графики на двери" },
+    { src: "assets/portfolio/full/19.webp", label: "Probox — боковая часть с типографикой" },
+    { src: "assets/portfolio/full/21.webp", label: "Probox — задние двери" },
+    { src: "assets/portfolio/full/23.webp", label: "Probox — крупный план графики" },
+    { src: "assets/portfolio/full/24.webp", label: "Probox — деталь имиджевого макета" },
+    { src: "assets/portfolio/full/25.webp", label: "Probox — крупный план кузова" },
+    { src: "assets/portfolio/full/26.webp", label: "Probox — переход графики на боку" },
+    { src: "assets/portfolio/full/27.webp", label: "Probox — фрагмент оклейки" },
+    { src: "assets/portfolio/full/28.webp", label: "Probox — крупный план кузова, сторона" }
   ];
 
   /* ─── Lightbox ─── */
@@ -46,6 +46,9 @@
 
   function pad(n) { return String(n).padStart(2, "0"); }
 
+  // Превращает путь "assets/portfolio/full/01.webp" в "assets/portfolio/thumb/01.webp"
+  function toThumb(src) { return src.replace("/full/", "/thumb/"); }
+
   function buildThumbs() {
     var frag = document.createDocumentFragment();
     GALLERY.forEach(function (it, i) {
@@ -53,8 +56,9 @@
       btn.className = "lightbox-thumb";
       btn.setAttribute("aria-label", "Открыть работу " + (i + 1));
       var img = document.createElement("img");
-      img.src = it.src;
+      img.src = toThumb(it.src);
       img.alt = "";
+      img.loading = "lazy";
       btn.appendChild(img);
       btn.addEventListener("click", function (e) { e.stopPropagation(); open(i); });
       frag.appendChild(btn);
