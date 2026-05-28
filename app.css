@@ -1033,3 +1033,28 @@ image-slot {
   width: 14px; height: 14px; flex-shrink: 0;
   stroke: var(--ks-red); fill: none; stroke-width: 2;
 }
+
+/* ─── Mobile (≤768px) ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* шапка не прилипает на мобильных */
+  .k-header { position: static; }
+
+  /* секция формы заявки — компактнее, без декоративной точки */
+  .cta-section { padding: 72px 0; }
+  .cta-section::after { display: none; }
+
+  /* карточка формы — меньше padding на маленьком экране */
+  .k-form { padding: 28px 22px 24px; }
+
+  /* submit-row: privacy текст и кнопка стопкой, кнопка во всю ширину */
+  .k-form .submit-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 0;
+  }
+  .k-form .submit-row .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
