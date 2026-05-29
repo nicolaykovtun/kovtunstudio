@@ -9,41 +9,32 @@
 /* ---------- Fonts ------------------------------------------------------ */
 /* Manrope — primary family across the whole system.
    Loaded locally from /fonts (user-supplied TTF files).
-   Weight map:  200 ExtraLight · 300 Light · 400 Regular · 500 Medium
-                600 SemiBold · 700 Bold · 800 ExtraBold                    */
+   Weight map:  400 Regular · 500 Medium · 600 SemiBold
+                700 Bold · 800 ExtraBold
+   Формат: WOFF2 (~30 KB на вес, -70% к TTF).                              */
 @font-face {
   font-family: "Manrope";
-  src: url("fonts/Manrope-ExtraLight.ttf") format("truetype");
-  font-weight: 200; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "Manrope";
-  src: url("fonts/Manrope-Light.ttf") format("truetype");
-  font-weight: 300; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "Manrope";
-  src: url("fonts/Manrope-Regular.ttf") format("truetype");
+  src: url("fonts/Manrope-Regular.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Manrope";
-  src: url("fonts/Manrope-Medium.ttf") format("truetype");
+  src: url("fonts/Manrope-Medium.woff2") format("woff2");
   font-weight: 500; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Manrope";
-  src: url("fonts/Manrope-SemiBold.ttf") format("truetype");
+  src: url("fonts/Manrope-SemiBold.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Manrope";
-  src: url("fonts/Manrope-Bold.ttf") format("truetype");
+  src: url("fonts/Manrope-Bold.woff2") format("woff2");
   font-weight: 700; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Manrope";
-  src: url("fonts/Manrope-ExtraBold.ttf") format("truetype");
+  src: url("fonts/Manrope-ExtraBold.woff2") format("woff2");
   font-weight: 800; font-style: normal; font-display: swap;
 }
 
