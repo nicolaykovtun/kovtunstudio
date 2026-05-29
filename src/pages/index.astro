@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout>
+  <main style="max-width: 720px; margin: 80px auto; padding: 0 24px;">
+    <h1>День 2 готов</h1>
+    <p>Контент вынесен в YAML, стили подключены, BaseLayout рендерит все мета-теги и JSON-LD из данных. День 3 — компоненты по блокам.</p>
+    <p style="margin-top: 32px; padding: 16px; background: var(--bg-2); border-radius: var(--r-2);">
+      Проверь View Source: должны быть title, мета-теги, OG-блоки, три JSON-LD скрипта (LocalBusiness, Service, FAQPage), preload шрифтов, и отложенная Метрика.
+    </p>
+  </main>
+</BaseLayout>

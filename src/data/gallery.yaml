@@ -1,0 +1,61 @@
+# gallery.yaml — портфолио.
+# Добавить работу: одна строка с номером и подписью. Все.
+# Превью грузится из assets/portfolio/thumb/<id>.webp,
+# полная версия из assets/portfolio/full/<id>.webp.
+
+- id: "01"
+  alt: BMW Z4 — рекламная оклейка
+- id: "02"
+  alt: Lexus LX570 — имиджевая концепция
+- id: "13"
+  alt: Toyota Probox — оклейка Japanhouse, общий план
+- id: "03"
+  alt: Toyota Hiace — корпоративный фургон
+- id: "04"
+  alt: Toyota Probox — расширенный дизайн
+- id: "08"
+  alt: Lexus LX570 — фасадный план
+- id: "20"
+  alt: Probox — деталь оклейки Japanhouse
+- id: "05"
+  alt: Toyota Probox — оклейка Japanhouse
+- id: "06"
+  alt: Probox — рекламная оклейка
+- id: "22"
+  alt: Probox — общий вид сзади
+- id: "07"
+  alt: Probox — корпоративный транспорт
+- id: "09"
+  alt: Probox — фрагмент кузова
+- id: "10"
+  alt: Probox — боковая проекция
+- id: "11"
+  alt: Probox — деталь оклейки
+- id: "12"
+  alt: Probox — рекламный фрагмент
+- id: "14"
+  alt: Probox — крупный план задней стороны
+- id: "15"
+  alt: Probox — крупный план передней стороны
+- id: "16"
+  alt: Probox — деталь композиции
+- id: "17"
+  alt: Probox — фрагмент имиджевого макета
+- id: "18"
+  alt: Probox — переход графики на двери
+- id: "19"
+  alt: Probox — боковая часть с типографикой
+- id: "21"
+  alt: Probox — задние двери
+- id: "23"
+  alt: Probox — крупный план графики
+- id: "24"
+  alt: Probox — деталь имиджевого макета
+- id: "25"
+  alt: Probox — крупный план кузова
+- id: "26"
+  alt: Probox — переход графики на боку
+- id: "27"
+  alt: Probox — фрагмент оклейки
+- id: "28"
+  alt: Probox — крупный план кузова, сторона

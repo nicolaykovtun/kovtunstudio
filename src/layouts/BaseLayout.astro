@@ -1,0 +1,203 @@
+---
+// BaseLayout.astro — общий каркас. Все мета-теги, шрифты, Метрика, JSON-LD.
+// Контент страницы вставляется через <slot />.
+
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+// Грузим данные
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+const tiers = yaml.load(fs.readFileSync(path.join(dataDir, 'tiers.yaml'), 'utf8')) as any[];
+const faq = yaml.load(fs.readFileSync(path.join(dataDir, 'faq.yaml'), 'utf8')) as any[];
+
+// Допускается override title/description на уровне страницы
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = site.title, description = site.description } = Astro.props;
+const ogImageUrl = `${site.url}/${site.og.image}`;
+
+// JSON-LD: LocalBusiness
+const ldBusiness = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${site.url}/#business`,
+  "name": site.business.name,
+  "alternateName": site.business.alternateName,
+  "image": ogImageUrl,
+  "url": `${site.url}/`,
+  "telephone": "",
+  "priceRange": "₽₽",
+  "description": site.business.description,
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": site.location.city,
+    "addressRegion": site.location.regionFull,
+    "addressCountry": site.location.country
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": site.location.lat,
+    "longitude": site.location.lng
+  },
+  "areaServed": { "@type": "Country", "name": "Россия" },
+  "founder": {
+    "@type": "Person",
+    "name": site.author.name,
+    "jobTitle": site.author.jobTitle,
+    "sameAs": [site.contact.telegram]
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "sales",
+    "availableLanguage": ["Russian"],
+    "url": site.contact.telegram
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": site.location.hoursOpen,
+    "closes": site.location.hoursClose
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Пакеты дизайна оклейки авто",
+    "itemListElement": tiers.map(t => ({
+      "@type": "Offer",
+      "name": t.ldName,
+      "description": t.ldDescription,
+      "price": String(t.price),
+      "priceCurrency": "RUB",
+      "itemOffered": {
+        "@type": "Service",
+        "name": t.ldServiceName,
+        "serviceType": "Graphic design — vehicle wrap"
+      }
+    }))
+  }
+};
+
+// JSON-LD: Service
+const ldService = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Дизайн оклейки автомобиля",
+  "provider": { "@id": `${site.url}/#business` },
+  "areaServed": { "@type": "Country", "name": "Россия" },
+  "audience": { "@type": "BusinessAudience", "audienceType": site.business.serviceAudience },
+  "offers": tiers.map(t => ({
+    "@type": "Offer",
+    "name": t.offerShortName,
+    "price": String(t.price),
+    "priceCurrency": "RUB"
+  }))
+};
+
+// JSON-LD: FAQPage из faq.yaml (один источник, не дубль)
+const ldFaq = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faq.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+
+import '../styles/tokens.css';
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang={site.lang}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content={site.themeColor}>
+
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="keywords" content={site.keywords}>
+  <meta name="author" content={`${site.author.name} (${site.author.brand})`}>
+  <link rel="canonical" href={`${site.url}/`}>
+
+  <!-- Search engine verification -->
+  <meta name="yandex-verification" content={site.verification.yandex} />
+  <meta name="google-site-verification" content={site.verification.google} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content={site.og.type}>
+  <meta property="og:locale" content={site.og.locale}>
+  <meta property="og:site_name" content={site.og.siteName}>
+  <meta property="og:title" content={site.og.title}>
+  <meta property="og:description" content={site.og.description}>
+  <meta property="og:url" content={`${site.url}/`}>
+  <meta property="og:image" content={ogImageUrl}>
+  <meta property="og:image:secure_url" content={ogImageUrl}>
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content={String(site.og.imageWidth)}>
+  <meta property="og:image:height" content={String(site.og.imageHeight)}>
+  <meta property="og:image:alt" content={site.og.imageAlt}>
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content={site.twitter.card}>
+  <meta name="twitter:title" content={site.twitter.title}>
+  <meta name="twitter:description" content={site.twitter.description}>
+  <meta name="twitter:image" content={ogImageUrl}>
+  <meta name="twitter:image:alt" content={site.og.imageAlt}>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+  <!-- Geo -->
+  <meta name="geo.region" content={site.location.region}>
+  <meta name="geo.placename" content={site.location.city}>
+  <meta name="geo.position" content={`${site.location.lat};${site.location.lng}`}>
+  <meta name="ICBM" content={`${site.location.lat}, ${site.location.lng}`}>
+
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="/fonts/Manrope-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Manrope-Bold.woff2"      as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Manrope-Regular.woff2"   as="font" type="font/woff2" crossorigin>
+
+  <!-- Structured data (JSON-LD) — генерируется из site.yaml + tiers.yaml + faq.yaml -->
+  <script type="application/ld+json" set:html={JSON.stringify(ldBusiness)} />
+  <script type="application/ld+json" set:html={JSON.stringify(ldService)} />
+  <script type="application/ld+json" set:html={JSON.stringify(ldFaq)} />
+
+  <!-- Yandex.Metrika counter (deferred — грузится после window.load) -->
+  <script is:inline define:vars={{ metrikaId: site.metrika.id, metrikaOpts: site.metrika.options }}>
+    window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
+    window.ym.l = 1 * new Date();
+    ym(metrikaId, 'init', metrikaOpts);
+    function _loadMetrika() {
+      if (window.__ymLoaded) return; window.__ymLoaded = true;
+      var s = document.createElement('script');
+      s.async = 1;
+      s.src = 'https://mc.yandex.ru/metrika/tag.js?id=' + metrikaId;
+      document.head.appendChild(s);
+    }
+    if (document.readyState === 'complete') { setTimeout(_loadMetrika, 0); }
+    else { window.addEventListener('load', function () { setTimeout(_loadMetrika, 1500); }); }
+    ['mousemove', 'touchstart', 'scroll', 'keydown'].forEach(function (ev) {
+      window.addEventListener(ev, function once() {
+        _loadMetrika();
+        ['mousemove', 'touchstart', 'scroll', 'keydown'].forEach(function (e2) {
+          window.removeEventListener(e2, once);
+        });
+      }, { passive: true, once: true });
+    });
+  </script>
+  <noscript><div><img src={`https://mc.yandex.ru/watch/${site.metrika.id}`} style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
+</head>
+<body>
+  <a href="#top" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Перейти к содержанию</a>
+  <slot />
+</body>
+</html>

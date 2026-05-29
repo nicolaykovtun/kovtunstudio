@@ -9,5 +9,17 @@ desktop.ini
 .vscode/
 .idea/
 
+# Astro / Node
+node_modules/
+dist/
+.astro/
+.cache/
+*.log
+.env
+.env.production
+
+# Локальные хелперы (только для машины Николая)
+_*.bat
+
 # Local backups of original (pre-optimized) image assets — not for repo
 assets/**/original/
