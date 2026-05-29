@@ -1058,4 +1058,10 @@ image-slot {
     width: 100%;
     justify-content: center;
   }
+
+  /* заголовки: понижаем clamp-минимумы, чтобы умещалось в 2-3 строки */
+  .hero h1 { font-size: 36px; }
+  .section-head h2 { font-size: 28px; }
+  .faq .left h2 { font-size: 28px; }
+  .cta-wrap .pitch h2 { font-size: 32px; }
 }
