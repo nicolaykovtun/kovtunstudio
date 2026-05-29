@@ -111,7 +111,8 @@ body.theme-dark .k-header {
 }
 .k-header .row {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 0;
+  padding-top: 18px;
+  padding-bottom: 18px;
   gap: 32px;
 }
 .k-header .brand {
