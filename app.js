@@ -162,6 +162,13 @@
     return ok;
   }
 
+  /* ─── Metrika goal helper ─── */
+  function goal(name, params) {
+    if (typeof window.ym === "function") {
+      try { window.ym(109482416, "reachGoal", name, params || {}); } catch (e) {}
+    }
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (!validate()) return;
@@ -170,6 +177,7 @@
     reopen.href = url;
     fields.hidden = true;
     success.hidden = false;
+    goal("lead_submit", { car: fCar.value.trim().slice(0, 40) });
   });
 
   document.getElementById("form-reset").addEventListener("click", function () {
@@ -180,14 +188,37 @@
   });
 
   /* ─── Tier "Выбрать пакет" → prefill task + scroll to form ─── */
+  var TIER_GOAL = {
+    "Базовый дизайн": "tier_basic",
+    "Расширенный дизайн": "tier_extended",
+    "Имиджевая концепция": "tier_image"
+  };
   Array.prototype.forEach.call(document.querySelectorAll(".tier-cta [data-tier]"), function (btn) {
     btn.addEventListener("click", function () {
       if (success.hidden === false) { success.hidden = true; fields.hidden = false; }
       fMessage.value = "Интересует пакет: " + btn.dataset.tier + ".";
       var el = document.getElementById("contact");
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      goal(TIER_GOAL[btn.dataset.tier] || "tier_unknown");
     });
   });
+
+  /* ─── Main CTA "Обсудить проект" (header + hero) ─── */
+  Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
+    link.addEventListener("click", function () { goal("cta_main"); });
+  });
+
+  /* ─── Прямые ссылки на Telegram ─── */
+  Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://t.me/"]'), function (link) {
+    link.addEventListener("click", function () { goal("telegram_direct"); });
+  });
+
+  /* ─── Открытие лайтбокса (просмотр кейсов) ─── */
+  var originalOpen = open;
+  open = function (i) {
+    originalOpen(i);
+    goal("portfolio_open", { index: i + 1 });
+  };
 
   /* ─── Footer year ─── */
   document.getElementById("year").textContent = new Date().getFullYear();
