@@ -213,15 +213,26 @@
   }
   </script>
 
-  <!-- Yandex.Metrika counter -->
+  <!-- Yandex.Metrika counter (deferred — грузится после window.load, чтобы не блокировать LCP) -->
   <script type="text/javascript">
-      (function(m,e,t,r,i,k,a){
-          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-          m[i].l=1*new Date();
-          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109482416', 'ym');
-      ym(109482416, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+      // 1) Создаём очередь — она ловит init и все будущие reachGoal до загрузки тег.js
+      window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
+      window.ym.l = 1 * new Date();
+      // 2) Init кладём в очередь СРАЗУ, чтобы он был первым событием
+      ym(109482416, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", accurateTrackBounce: true, trackLinks: true });
+      // 3) Подтягиваем tag.js после window.load или первого взаимодействия пользователя
+      function _loadMetrika() {
+          if (window.__ymLoaded) return; window.__ymLoaded = true;
+          var s = document.createElement('script');
+          s.async = 1;
+          s.src = 'https://mc.yandex.ru/metrika/tag.js?id=109482416';
+          document.head.appendChild(s);
+      }
+      if (document.readyState === 'complete') { setTimeout(_loadMetrika, 0); }
+      else { window.addEventListener('load', function () { setTimeout(_loadMetrika, 1500); }); }
+      ['mousemove','touchstart','scroll','keydown'].forEach(function (ev) {
+          window.addEventListener(ev, function once() { _loadMetrika(); ['mousemove','touchstart','scroll','keydown'].forEach(function (e2) { window.removeEventListener(e2, once); }); }, { passive: true, once: true });
+      });
   </script>
   <noscript><div><img src="https://mc.yandex.ru/watch/109482416" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
   <!-- /Yandex.Metrika counter -->
@@ -367,7 +378,7 @@
           <!-- Tier 01 -->
           <div class="tier">
             <div class="tier-example">
-              <img src="assets/tier-basic/01.webp" alt="Пример базового дизайна оклейки авто" loading="lazy">
+              <img src="assets/tier-basic/01.webp" alt="Пример базового дизайна оклейки авто" loading="lazy" width="1400" height="1400">
               <span class="example-tag">Пример работы · базовый</span>
             </div>
             <div class="tier-body">
@@ -400,7 +411,7 @@
           <!-- Tier 02 (highlight) -->
           <div class="tier highlight">
             <div class="tier-example">
-              <img src="assets/tier-extended/01.webp" alt="Пример расширенного дизайна оклейки авто с рекламными блоками" loading="lazy">
+              <img src="assets/tier-extended/01.webp" alt="Пример расширенного дизайна оклейки авто с рекламными блоками" loading="lazy" width="1400" height="1400">
               <span class="example-tag">Пример работы · расширенный</span>
             </div>
             <div class="tier-body">
@@ -435,7 +446,7 @@
           <!-- Tier 03 -->
           <div class="tier">
             <div class="tier-example">
-              <img src="assets/tier-image/01.webp" alt="Пример имиджевой концепции оклейки авто" loading="lazy">
+              <img src="assets/tier-image/01.webp" alt="Пример имиджевой концепции оклейки авто" loading="lazy" width="1400" height="1400">
               <span class="example-tag">Пример работы · имиджевый</span>
             </div>
             <div class="tier-body">
@@ -489,43 +500,43 @@
 
         <div class="gallery" id="gallery">
           <button type="button" class="gallery-item" data-index="0" aria-label="Открыть работу: BMW Z4 — рекламная оклейка">
-            <img src="assets/portfolio/thumb/01.webp" alt="BMW Z4 — рекламная оклейка" loading="eager" fetchpriority="high">
+            <img src="assets/portfolio/thumb/01.webp" alt="BMW Z4 — рекламная оклейка" loading="eager" fetchpriority="high" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="1" aria-label="Открыть работу: Lexus LX570 — имиджевая концепция">
-            <img src="assets/portfolio/thumb/02.webp" alt="Lexus LX570 — имиджевая концепция" loading="lazy">
+            <img src="assets/portfolio/thumb/02.webp" alt="Lexus LX570 — имиджевая концепция" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="2" aria-label="Открыть работу: Toyota Probox — оклейка Japanhouse, общий план">
-            <img src="assets/portfolio/thumb/13.webp" alt="Toyota Probox — оклейка Japanhouse, общий план" loading="lazy">
+            <img src="assets/portfolio/thumb/13.webp" alt="Toyota Probox — оклейка Japanhouse, общий план" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="3" aria-label="Открыть работу: Toyota Hiace — корпоративный фургон">
-            <img src="assets/portfolio/thumb/03.webp" alt="Toyota Hiace — корпоративный фургон" loading="lazy">
+            <img src="assets/portfolio/thumb/03.webp" alt="Toyota Hiace — корпоративный фургон" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="4" aria-label="Открыть работу: Toyota Probox — расширенный дизайн">
-            <img src="assets/portfolio/thumb/04.webp" alt="Toyota Probox — расширенный дизайн" loading="lazy">
+            <img src="assets/portfolio/thumb/04.webp" alt="Toyota Probox — расширенный дизайн" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="5" aria-label="Открыть работу: Lexus LX570 — фасадный план">
-            <img src="assets/portfolio/thumb/08.webp" alt="Lexus LX570 — фасадный план" loading="lazy">
+            <img src="assets/portfolio/thumb/08.webp" alt="Lexus LX570 — фасадный план" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="6" aria-label="Открыть работу: Probox — деталь оклейки Japanhouse">
-            <img src="assets/portfolio/thumb/20.webp" alt="Probox — деталь оклейки Japanhouse" loading="lazy">
+            <img src="assets/portfolio/thumb/20.webp" alt="Probox — деталь оклейки Japanhouse" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="7" aria-label="Открыть работу: Toyota Probox — оклейка Japanhouse">
-            <img src="assets/portfolio/thumb/05.webp" alt="Toyota Probox — оклейка Japanhouse" loading="lazy">
+            <img src="assets/portfolio/thumb/05.webp" alt="Toyota Probox — оклейка Japanhouse" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="8" aria-label="Открыть работу: Probox — рекламная оклейка">
-            <img src="assets/portfolio/thumb/06.webp" alt="Probox — рекламная оклейка" loading="lazy">
+            <img src="assets/portfolio/thumb/06.webp" alt="Probox — рекламная оклейка" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
           <button type="button" class="gallery-item" data-index="9" aria-label="Открыть работу: Probox — общий вид сзади">
-            <img src="assets/portfolio/thumb/22.webp" alt="Probox — общий вид сзади" loading="lazy">
+            <img src="assets/portfolio/thumb/22.webp" alt="Probox — общий вид сзади" loading="lazy" width="800" height="447">
             <span class="hover-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg></span>
           </button>
         </div>
