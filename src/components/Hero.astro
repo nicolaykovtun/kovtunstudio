@@ -1,0 +1,42 @@
+---
+interface MetaItem {
+  num: string;
+  numAccent?: string;
+  suffix?: string;
+  label: string;
+}
+interface Props {
+  headline: string;
+  headlineAccent: string;
+  lede: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  meta: MetaItem[];
+}
+const { headline, headlineAccent, lede, ctaPrimary, ctaSecondary, meta } = Astro.props;
+---
+<section class="hero hero-red" id="top">
+  <div class="container-wide inner">
+    <h1>
+      {headline}<br>
+      <em>{headlineAccent}</em>
+    </h1>
+    <p class="lede">{lede}</p>
+    <div class="ctas">
+      <a href="#contact" class="btn btn-primary btn-lg">
+        {ctaPrimary} <span class="arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="#pricing" class="btn btn-ghost btn-lg">{ctaSecondary}</a>
+    </div>
+    <div class="meta-row">
+      {meta.map(item => (
+        <div class="item">
+          <span class="num">
+            {item.num}{item.numAccent && <span class="accent">{item.numAccent}</span>}{item.suffix}
+          </span>
+          <span class="lbl">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

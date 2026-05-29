@@ -1,0 +1,24 @@
+---
+interface Props {
+  nav: { href: string; label: string }[];
+  phone: string;        // отображаемый формат "+7 908 449-72-60"
+  phoneTel: string;     // tel-формат "+79084497260"
+}
+const { nav, phone, phoneTel } = Astro.props;
+---
+<header class="k-header">
+  <div class="container-wide row">
+    <a class="brand" href="#top" aria-label="Kovtun.studio — на главную">
+      <img class="logo-dark"  src="/assets/logo.svg"         alt="Kovtun.studio">
+      <img class="logo-light" src="/assets/logo-on-dark.svg" alt="Kovtun.studio">
+    </a>
+    <nav aria-label="Главная навигация">
+      {nav.map(item => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <div class="actions">
+      <a href={`tel:${phoneTel}`} class="btn btn-primary" aria-label={`Позвонить ${phone}`}>
+        {phone}
+      </a>
+    </div>
+  </div>
+</header>

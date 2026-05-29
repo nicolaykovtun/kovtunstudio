@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+  aside: string;
+  preview: number;       // сколько превью показать на странице
+  ctaAll: string;
+  items: { id: string; alt: string }[];
+}
+const { title, aside, preview, ctaAll, items } = Astro.props;
+const previewItems = items.slice(0, preview);
+---
+<section class="section section-tight" id="cases">
+  <div class="container-wide">
+    <div class="section-head">
+      <div>
+        <h2 set:html={title}></h2>
+      </div>
+      <p class="aside">{aside}</p>
+    </div>
+
+    <div class="gallery" id="gallery">
+      {previewItems.map((it, i) => (
+        <button type="button" class="gallery-item" data-index={i} aria-label={`Открыть работу: ${it.alt}`}>
+          <img
+            src={`/assets/portfolio/thumb/${it.id}.webp`}
+            alt={it.alt}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : undefined}
+            width="800"
+            height="447"
+          />
+          <span class="hover-zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg>
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <div class="gallery-more">
+      <button type="button" class="btn btn-dark btn-lg" id="gallery-all">
+        {ctaAll} <span class="arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Lightbox stage (управляется из app.js) -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр работы">
+    <div class="lightbox-stage">
+      <button class="lightbox-btn close" id="lb-close" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <button class="lightbox-btn prev" id="lb-prev" aria-label="Предыдущая">
+        <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button class="lightbox-btn next" id="lb-next" aria-label="Следующая">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <img class="lightbox-image" id="lb-image" src="" alt="">
+      <div class="lightbox-caption">
+        <span class="counter" id="lb-counter"></span>
+        <span id="lb-label"></span>
+      </div>
+      <div class="lightbox-thumbs" id="lb-thumbs"></div>
+    </div>
+  </div>
+</section>

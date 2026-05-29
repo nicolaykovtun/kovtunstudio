@@ -1,0 +1,49 @@
+---
+interface Props {
+  tier: {
+    num: string;
+    title: string;
+    priceFormatted: string;
+    priceNote: string;
+    image: string;
+    imageAlt: string;
+    exampleTag: string;
+    summary: string;
+    features: string[];
+    ctaStyle: 'dark' | 'white';
+    highlight: boolean;
+    badge?: string;
+  };
+}
+const { tier } = Astro.props;
+const btnClass = tier.ctaStyle === 'white' ? 'btn-white' : 'btn-dark';
+---
+<div class:list={["tier", tier.highlight && "highlight"]}>
+  <div class="tier-example">
+    <img src={`/${tier.image}`} alt={tier.imageAlt} loading="lazy" width="1400" height="1400">
+    <span class="example-tag">{tier.exampleTag}</span>
+  </div>
+  <div class="tier-body">
+    <div class="tier-head">
+      <span class="tier-num">{tier.num}</span>
+      {tier.badge && <span class="tier-badge">{tier.badge}</span>}
+    </div>
+    <h3>{tier.title}</h3>
+    <div class="price">
+      <span class="from">от</span>
+      {tier.priceFormatted}
+      <span class="ruble">₽</span>
+    </div>
+    <div class="price-note">{tier.priceNote}</div>
+    <p class="summary">{tier.summary}</p>
+    <div class="feat-label">Что входит</div>
+    <ul>
+      {tier.features.map(f => <li>{f}</li>)}
+    </ul>
+    <div class="tier-cta">
+      <button type="button" class={`btn ${btnClass}`} data-tier={tier.title}>
+        Выбрать пакет <span class="arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</div>

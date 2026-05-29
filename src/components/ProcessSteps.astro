@@ -1,0 +1,32 @@
+---
+interface Step {
+  num: string;
+  title: string;
+  text: string;
+}
+interface Props {
+  title: string;
+  aside: string;
+  steps: Step[];
+}
+const { title, aside, steps } = Astro.props;
+---
+<section class="section process" id="process">
+  <div class="container-wide">
+    <div class="section-head">
+      <div>
+        <h2 set:html={title}></h2>
+      </div>
+      <p class="aside">{aside}</p>
+    </div>
+    <div class="steps">
+      {steps.map(step => (
+        <div class="step">
+          <div class="step-num">{step.num}</div>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

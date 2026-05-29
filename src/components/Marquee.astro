@@ -1,0 +1,23 @@
+---
+interface Props {
+  ariaLabel: string;
+  items: string[];
+}
+const { ariaLabel, items } = Astro.props;
+---
+<div class="marquee" aria-label={ariaLabel}>
+  <div class="track">
+    <!-- Двойная копия для бесшовной анимации -->
+    {[1, 2].map(() => (
+      <span>
+        {items.map((item, i) => (
+          <>
+            <span>{item}</span>
+            {i < items.length - 1 && <span class="dot-sep" aria-hidden="true"></span>}
+          </>
+        ))}
+        <span class="dot-sep" aria-hidden="true"></span>
+      </span>
+    ))}
+  </div>
+</div>

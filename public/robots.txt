@@ -17,5 +17,5 @@ Disallow: /assets/tier-extended/original/
 Disallow: /assets/tier-image/original/
 Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content
 
-Sitemap: https://design.kovtun.studio/sitemap.xml
+Sitemap: https://design.kovtun.studio/sitemap-index.xml
 Host: design.kovtun.studio

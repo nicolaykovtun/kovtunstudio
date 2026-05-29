@@ -1,0 +1,31 @@
+---
+interface Props {
+  title: string;
+  intro: string;
+  ctaAsk: string;
+  telegramUrl: string;
+  items: { q: string; a: string }[];
+}
+const { title, intro, ctaAsk, telegramUrl, items } = Astro.props;
+---
+<section class="section" id="faq">
+  <div class="container-wide">
+    <div class="faq">
+      <div class="left">
+        <h2 set:html={title}></h2>
+        <p>{intro}</p>
+        <a href={telegramUrl} target="_blank" rel="noopener" class="btn btn-dark">
+          {ctaAsk} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="right">
+        {items.map(item => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <div class="answer"><p set:html={item.a}></p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+---
+interface Card {
+  num: string;
+  title: string;
+  text: string;
+  featured?: boolean;
+}
+interface Props {
+  title: string;
+  aside: string;
+  cards: Card[];
+}
+const { title, aside, cards } = Astro.props;
+---
+<section class="section" id="what">
+  <div class="container-wide">
+    <div class="section-head">
+      <div>
+        <h2 set:html={title}></h2>
+      </div>
+      <p class="aside">{aside}</p>
+    </div>
+    <div class="what-grid">
+      {cards.map(card => (
+        <div class:list={["what-card", card.featured && "is-featured"]}>
+          <span class="big-num" aria-hidden="true">{card.num}</span>
+          <h3>{card.title}</h3>
+          <p>{card.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

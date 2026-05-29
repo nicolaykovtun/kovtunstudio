@@ -1,12 +1,247 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import WhatGrid from '../components/WhatGrid.astro';
+import Pricing from '../components/Pricing.astro';
+import Gallery from '../components/Gallery.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+const tiers = yaml.load(fs.readFileSync(path.join(dataDir, 'tiers.yaml'), 'utf8')) as any[];
+const faq = yaml.load(fs.readFileSync(path.join(dataDir, 'faq.yaml'), 'utf8')) as any[];
+const gallery = yaml.load(fs.readFileSync(path.join(dataDir, 'gallery.yaml'), 'utf8')) as any[];
+
+// Данные для JS-скрипта: только что нужно для лайтбокса
+const galleryForJs = gallery.map(g => ({
+  src: `/assets/portfolio/full/${g.id}.webp`,
+  label: g.alt,
+}));
 ---
 <BaseLayout>
-  <main style="max-width: 720px; margin: 80px auto; padding: 0 24px;">
-    <h1>День 2 готов</h1>
-    <p>Контент вынесен в YAML, стили подключены, BaseLayout рендерит все мета-теги и JSON-LD из данных. День 3 — компоненты по блокам.</p>
-    <p style="margin-top: 32px; padding: 16px; background: var(--bg-2); border-radius: var(--r-2);">
-      Проверь View Source: должны быть title, мета-теги, OG-блоки, три JSON-LD скрипта (LocalBusiness, Service, FAQPage), preload шрифтов, и отложенная Метрика.
-    </p>
+  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} />
+  <main>
+    <Hero {...site.hero} />
+    <Marquee {...site.marquee} />
+    <WhatGrid {...site.whatDo} />
+    <Pricing {...site.pricing} tiers={tiers} />
+    <Gallery {...site.cases} items={gallery} />
+    <ProcessSteps {...site.process} />
+    <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={faq} />
+    <ContactForm data={site.cta} telegramUrl={site.contact.telegram} telegramHandle={site.contact.telegramHandle} />
   </main>
+  <Footer {...site.footer} />
+
+  <script
+    is:inline
+    define:vars={{
+      GALLERY: galleryForJs,
+      METRIKA_ID: site.metrika.id,
+      TELEGRAM_URL: site.contact.telegram,
+    }}
+  >
+    (function () {
+      "use strict";
+
+      /* ─── Цели Метрики ─── */
+      function goal(name, params) {
+        if (typeof window.ym === "function") {
+          try { window.ym(METRIKA_ID, "reachGoal", name, params || {}); } catch (e) {}
+        }
+      }
+
+      /* ─── Lightbox ─── */
+      var lb = document.getElementById("lightbox");
+      var lbImage = document.getElementById("lb-image");
+      var lbLabel = document.getElementById("lb-label");
+      var lbCounter = document.getElementById("lb-counter");
+      var lbThumbs = document.getElementById("lb-thumbs");
+      var current = null;
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function toThumb(src) { return src.replace("/full/", "/thumb/"); }
+
+      function buildThumbs() {
+        var frag = document.createDocumentFragment();
+        GALLERY.forEach(function (it, i) {
+          var btn = document.createElement("button");
+          btn.className = "lightbox-thumb";
+          btn.setAttribute("aria-label", "Открыть работу " + (i + 1));
+          var img = document.createElement("img");
+          img.src = toThumb(it.src);
+          img.alt = "";
+          img.loading = "lazy";
+          btn.appendChild(img);
+          btn.addEventListener("click", function (e) { e.stopPropagation(); openLb(i); });
+          frag.appendChild(btn);
+        });
+        lbThumbs.appendChild(frag);
+      }
+
+      function preloadNeighbors(i) {
+        var n = GALLERY.length;
+        [(i + 1) % n, (i - 1 + n) % n].forEach(function (j) {
+          var im = new Image();
+          im.src = GALLERY[j].src;
+        });
+      }
+
+      function render() {
+        var it = GALLERY[current];
+        lbImage.src = it.src;
+        lbImage.alt = it.label;
+        lbLabel.textContent = it.label;
+        lbCounter.textContent = pad(current + 1) + " / " + pad(GALLERY.length);
+        var thumbs = lbThumbs.children;
+        for (var i = 0; i < thumbs.length; i++) {
+          thumbs[i].classList.toggle("is-active", i === current);
+        }
+        var active = thumbs[current];
+        if (active && active.scrollIntoView) {
+          active.scrollIntoView({ block: "nearest", inline: "center" });
+        }
+        preloadNeighbors(current);
+      }
+
+      function openLb(i) {
+        current = i;
+        lb.classList.add("is-open");
+        document.body.classList.add("lightbox-locked");
+        render();
+        goal("portfolio_open", { index: i + 1 });
+      }
+
+      function closeLb() {
+        current = null;
+        lb.classList.remove("is-open");
+        document.body.classList.remove("lightbox-locked");
+      }
+
+      function nav(delta) {
+        if (current === null) return;
+        var n = GALLERY.length;
+        current = (current + delta + n) % n;
+        render();
+      }
+
+      buildThumbs();
+
+      Array.prototype.forEach.call(document.querySelectorAll(".gallery-item"), function (el) {
+        el.addEventListener("click", function () { openLb(parseInt(el.dataset.index, 10)); });
+      });
+      var allBtn = document.getElementById("gallery-all");
+      if (allBtn) allBtn.addEventListener("click", function () { openLb(0); });
+      document.getElementById("lb-close").addEventListener("click", closeLb);
+      document.getElementById("lb-prev").addEventListener("click", function () { nav(-1); });
+      document.getElementById("lb-next").addEventListener("click", function () { nav(1); });
+      lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+      document.addEventListener("keydown", function (e) {
+        if (current === null) return;
+        if (e.key === "Escape") closeLb();
+        else if (e.key === "ArrowLeft") nav(-1);
+        else if (e.key === "ArrowRight") nav(1);
+      });
+
+      /* ─── Telegram deep link ─── */
+      function buildTelegramURL(d) {
+        var lines = ["Здравствуйте! Хочу обсудить дизайн оклейки авто.", ""];
+        if (d.name) lines.push("Имя: " + d.name);
+        if (d.car) lines.push("Авто: " + d.car);
+        if (d.message) lines.push("\nЗадача:\n" + d.message);
+        return TELEGRAM_URL + "?text=" + encodeURIComponent(lines.join("\n"));
+      }
+
+      /* ─── Lead form ─── */
+      var form = document.getElementById("lead-form");
+      var fName = document.getElementById("f-name");
+      var fCar = document.getElementById("f-car");
+      var fMessage = document.getElementById("f-message");
+      var errName = document.getElementById("err-name");
+      var errCar = document.getElementById("err-car");
+      var fields = document.getElementById("form-fields");
+      var success = document.getElementById("form-success");
+      var reopen = document.getElementById("reopen-telegram");
+
+      function setError(node, msg) {
+        if (msg) { node.textContent = msg; node.hidden = false; }
+        else { node.textContent = ""; node.hidden = true; }
+      }
+
+      function validate() {
+        var ok = true;
+        if (!fName.value.trim()) { setError(errName, "Как к вам обращаться?"); ok = false; }
+        else setError(errName, "");
+        if (!fCar.value.trim()) { setError(errCar, "Марка и модель — чтобы прикинуть объём"); ok = false; }
+        else setError(errCar, "");
+        return ok;
+      }
+
+      if (form) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!validate()) return;
+          var url = buildTelegramURL({
+            name: fName.value.trim(),
+            car: fCar.value.trim(),
+            message: fMessage.value.trim()
+          });
+          window.open(url, "_blank", "noopener,noreferrer");
+          reopen.href = url;
+          fields.hidden = true;
+          success.hidden = false;
+          goal("lead_submit", { car: fCar.value.trim().slice(0, 40) });
+        });
+      }
+
+      var resetBtn = document.getElementById("form-reset");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+          fName.value = ""; fCar.value = ""; fMessage.value = "";
+          setError(errName, ""); setError(errCar, "");
+          success.hidden = true;
+          fields.hidden = false;
+        });
+      }
+
+      /* ─── Tier "Выбрать пакет" → префилл формы + скролл + цель ─── */
+      var TIER_GOAL = {
+        "Базовый дизайн": "tier_basic",
+        "Расширенный дизайн": "tier_extended",
+        "Имиджевая концепция": "tier_image"
+      };
+      Array.prototype.forEach.call(document.querySelectorAll(".tier-cta [data-tier]"), function (btn) {
+        btn.addEventListener("click", function () {
+          if (success && success.hidden === false) { success.hidden = true; fields.hidden = false; }
+          if (fMessage) fMessage.value = "Интересует пакет: " + btn.dataset.tier + ".";
+          var el = document.getElementById("contact");
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          goal(TIER_GOAL[btn.dataset.tier] || "tier_unknown");
+        });
+      });
+
+      /* ─── Цель: телефонный CTA в шапке ─── */
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (link) {
+        link.addEventListener("click", function () { goal("cta_phone"); });
+      });
+
+      /* ─── Цель: прямые ссылки на Telegram ─── */
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://t.me/"]'), function (link) {
+        link.addEventListener("click", function () { goal("telegram_direct"); });
+      });
+
+      /* ─── Цель: клик по hero CTA "Обсудить проект" ─── */
+      Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
+        link.addEventListener("click", function () { goal("cta_main"); });
+      });
+    })();
+  </script>
 </BaseLayout>

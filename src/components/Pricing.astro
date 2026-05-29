@@ -1,0 +1,24 @@
+---
+import PricingTier from './PricingTier.astro';
+interface Props {
+  title: string;
+  aside: string;
+  note: string;
+  tiers: any[];
+}
+const { title, aside, note, tiers } = Astro.props;
+---
+<section class="section" id="pricing">
+  <div class="container-wide">
+    <div class="section-head">
+      <div>
+        <h2 set:html={title}></h2>
+      </div>
+      <p class="aside">{aside}</p>
+    </div>
+    <div class="pricing">
+      {tiers.map(tier => <PricingTier tier={tier} />)}
+    </div>
+    <p class="pricing-note">{note}</p>
+  </div>
+</section>
