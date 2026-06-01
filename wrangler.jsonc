@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kovtunstudio",
+  "compatibility_date": "2026-05-29",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Деплоим статический Astro-сайт (папка dist/ после npm run build)
+  "assets": {
+    "directory": "./dist",
+    // Поведение на отсутствующий путь: показать 404-страницу
+    "not_found_handling": "404-page"
+  }
+}
