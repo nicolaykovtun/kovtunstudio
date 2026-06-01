@@ -1,0 +1,47 @@
+name: Deploy Astro site to GitHub Pages
+
+# Триггеры:
+# 1. Push в main — деплой production-версии
+# 2. Ручной запуск
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Права для деплоя на Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Только один деплой за раз
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Astro site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install, build, package
+        uses: withastro/action@v3
+        with:
+          node-version: 22
+          # withastro/action сам сделает npm install + npm run build
+          # и загрузит dist/ как Pages-артефакт
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
