@@ -180,6 +180,10 @@ const galleryForJs = gallery.map(g => ({
       var success = document.getElementById("form-success");
       var successText = document.getElementById("success-text");
       var reopen = document.getElementById("reopen-messenger");
+      var copyBlock = document.getElementById("copy-text-block");
+      var copyArea = document.getElementById("copy-text-area");
+      var copyBtn = document.getElementById("copy-text-btn");
+      var copyBtnLabel = document.getElementById("copy-text-btn-label");
 
       function setError(node, msg) {
         if (msg) { node.textContent = msg; node.hidden = false; }
@@ -213,25 +217,50 @@ const galleryForJs = gallery.map(g => ({
             url = buildMaxURL(text);
             label = "MAX";
             goalName = "lead_submit_max";
-            // У MAX нет text-параметра — кладём текст в буфер обмена,
-            // пользователь вставит руками. Best-effort.
+            // MAX не поддерживает pre-filled text в URL — показываем
+            // текст явно с кнопкой "Скопировать" + пробуем сразу положить в буфер.
+            copyArea.value = text;
+            copyBlock.hidden = false;
             if (navigator.clipboard && navigator.clipboard.writeText) {
               navigator.clipboard.writeText(text).catch(function () {});
             }
-            successText.textContent = "Открылся MAX. Текст заявки скопирован в буфер обмена — вставь в чат и отправь.";
+            successText.textContent = "MAX откроется в новой вкладке. Скопируй текст заявки кнопкой ниже и вставь в чат.";
           } else {
             url = buildTelegramURL(text);
             label = "Telegram";
             goalName = "lead_submit";
+            copyBlock.hidden = true;
             successText.textContent = "Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.";
           }
 
           window.open(url, "_blank", "noopener,noreferrer");
           reopen.href = url;
-          reopen.textContent = "Открыть " + label + " ещё раз";
+          // Меняем текст у reopen — оставляем span со стрелкой
+          reopen.innerHTML = "Открыть " + label + " ещё раз <span class=\"arrow\" aria-hidden=\"true\">→</span>";
           fields.hidden = true;
           success.hidden = false;
           goal(goalName, { car: fCar.value.trim().slice(0, 40) });
+        });
+      }
+
+      /* ─── Копирование текста заявки кнопкой ─── */
+      if (copyBtn) {
+        copyBtn.addEventListener("click", function () {
+          var text = copyArea.value;
+          var done = function () {
+            copyBtnLabel.textContent = "Скопировано ✓";
+            setTimeout(function () { copyBtnLabel.textContent = "Скопировать текст"; }, 2000);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done).catch(function () {
+              // Fallback: выделить и execCommand
+              copyArea.select();
+              try { document.execCommand("copy"); done(); } catch (e) {}
+            });
+          } else {
+            copyArea.select();
+            try { document.execCommand("copy"); done(); } catch (e) {}
+          }
         });
       }
 

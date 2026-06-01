@@ -208,7 +208,8 @@ cta:
   intro: >-
     Заполните три поля. Кнопка «Отправить» откроет Telegram с уже
     готовым сообщением. Останется только нажать «отправить» в чате.
-  telegramTitle: "Или напишите сразу"
+  telegramTitle: "Написать в Telegram"
+  maxTitle: "Написать в MAX"
   formTitle: "Расскажите о машине"
   fields:
     name: { label: Имя, placeholder: "Как к вам обращаться" }
