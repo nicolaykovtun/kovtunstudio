@@ -11,6 +11,7 @@ import WhatGrid from '../components/WhatGrid.astro';
 import Pricing from '../components/Pricing.astro';
 import Gallery from '../components/Gallery.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
+import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
@@ -36,6 +37,7 @@ const galleryForJs = gallery.map(g => ({
     <Pricing {...site.pricing} tiers={tiers} />
     <Gallery {...site.cases} items={gallery} />
     <ProcessSteps {...site.process} />
+    <FounderSection data={site.founderSection} />
     <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={faq} />
     <ContactForm data={site.cta} telegramUrl={site.contact.telegram} telegramHandle={site.contact.telegramHandle} maxUrl={site.contact.max} maxHandle={site.contact.maxHandle} />
   </main>

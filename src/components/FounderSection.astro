@@ -1,0 +1,46 @@
+---
+interface Point {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  data: {
+    title: string;
+    aside: string;
+    name: string;
+    role: string;
+    text: string;
+    points: Point[];
+  };
+}
+
+const { data } = Astro.props;
+---
+<section class="section founder-section" id="founder">
+  <div class="container-wide">
+    <div class="section-head">
+      <div>
+        <h2 set:html={data.title}></h2>
+      </div>
+      <p class="aside">{data.aside}</p>
+    </div>
+
+    <div class="founder-grid">
+      <div class="founder-lead">
+        <p class="overline">{data.role}</p>
+        <h3>{data.name}</h3>
+        <p>{data.text}</p>
+      </div>
+
+      <div class="founder-points" aria-label="Как устроена работа">
+        {data.points.map(point => (
+          <div class="founder-point">
+            <h4>{point.title}</h4>
+            <p>{point.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

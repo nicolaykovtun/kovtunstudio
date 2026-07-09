@@ -11,6 +11,7 @@ const dataDir = path.resolve('./src/data');
 const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
 const tiers = yaml.load(fs.readFileSync(path.join(dataDir, 'tiers.yaml'), 'utf8')) as any[];
 const faq = yaml.load(fs.readFileSync(path.join(dataDir, 'faq.yaml'), 'utf8')) as any[];
+const gallery = yaml.load(fs.readFileSync(path.join(dataDir, 'gallery.yaml'), 'utf8')) as any[];
 
 // Допускается override title/description на уровне страницы
 interface Props {
@@ -29,9 +30,10 @@ const ldBusiness = {
   "alternateName": site.business.alternateName,
   "image": ogImageUrl,
   "url": `${site.url}/`,
-  "telephone": "",
+  "telephone": site.contact.phoneTel,
   "priceRange": "₽₽",
   "description": site.business.description,
+  "sameAs": [site.contact.telegram, site.contact.max],
   "address": {
     "@type": "PostalAddress",
     "addressLocality": site.location.city,
@@ -48,12 +50,15 @@ const ldBusiness = {
     "@type": "Person",
     "name": site.author.name,
     "jobTitle": site.author.jobTitle,
-    "sameAs": [site.contact.telegram]
+    "description": site.founderSection.personDescription,
+    "knowsAbout": site.founderSection.knowsAbout,
+    "sameAs": [site.contact.telegram, site.contact.max]
   },
   "contactPoint": {
     "@type": "ContactPoint",
     "contactType": "sales",
     "availableLanguage": ["Russian"],
+    "telephone": site.contact.phoneTel,
     "url": site.contact.telegram
   },
   "openingHoursSpecification": {
@@ -107,6 +112,24 @@ const ldFaq = {
       "@type": "Answer",
       "text": item.a
     }
+  }))
+};
+
+// JSON-LD: ключевые изображения портфолио
+const ldPortfolioImages = {
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  "@id": `${site.url}/#portfolio`,
+  "name": "Портфолио дизайна оклейки авто Kovtun.studio",
+  "url": `${site.url}/#cases`,
+  "associatedMedia": gallery.slice(0, site.cases.preview).map((item, index) => ({
+    "@type": "ImageObject",
+    "name": item.alt,
+    "description": item.alt,
+    "contentUrl": `${site.url}/assets/portfolio/full/${item.id}.webp`,
+    "thumbnailUrl": `${site.url}/assets/portfolio/thumb/${item.id}.webp`,
+    "representativeOfPage": index === 0,
+    "creator": { "@id": `${site.url}/#business` }
   }))
 };
 
@@ -167,6 +190,7 @@ import '../styles/global.css';
   <script type="application/ld+json" set:html={JSON.stringify(ldBusiness)} />
   <script type="application/ld+json" set:html={JSON.stringify(ldService)} />
   <script type="application/ld+json" set:html={JSON.stringify(ldFaq)} />
+  <script type="application/ld+json" set:html={JSON.stringify(ldPortfolioImages)} />
 
   <!-- Yandex.Metrika counter (deferred — грузится после window.load) -->
   <script is:inline define:vars={{ metrikaId: site.metrika.id, metrikaOpts: site.metrika.options }}>
