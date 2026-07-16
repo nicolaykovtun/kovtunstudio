@@ -1,4 +1,8 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+
 interface Point {
   title: string;
   text: string;
@@ -25,6 +29,12 @@ interface Props {
 }
 
 const { data } = Astro.props;
+
+// Хэш файла в query-строке — чтобы при замене фото под тем же именем
+// браузеры и CDN не отдавали закэшированную старую версию.
+const imageVersion = data.image
+  ? crypto.createHash('md5').update(fs.readFileSync(path.resolve('./public', data.image))).digest('hex').slice(0, 8)
+  : null;
 ---
 <section class="section founder-section" id="founder">
   <div class="container-wide">
@@ -38,7 +48,7 @@ const { data } = Astro.props;
     <div class="founder-grid">
       <div class="founder-intro">
         {data.image && (
-          <img src={`/${data.image}`} alt={data.imageAlt || data.name} class="founder-photo" width="120" height="120" loading="lazy" />
+          <img src={`/${data.image}?v=${imageVersion}`} alt={data.imageAlt || data.name} class="founder-photo" width="120" height="120" loading="lazy" />
         )}
         <div class="founder-lead">
           <p class="overline">{data.role}</p>

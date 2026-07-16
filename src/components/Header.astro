@@ -7,7 +7,6 @@ interface Props {
   maxUrl: string;
 }
 const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
-const pathname = Astro.url.pathname;
 ---
 <header class="k-header">
   <div class="container-wide row">
@@ -17,10 +16,7 @@ const pathname = Astro.url.pathname;
     </a>
     <nav aria-label="Главная навигация">
       {nav.map(item => (
-        <a
-          href={item.href}
-          aria-current={item.href === '/portfolio/' && pathname.startsWith('/portfolio') ? 'page' : undefined}
-        >{item.label}</a>
+        <a href={item.href}>{item.label}</a>
       ))}
     </nav>
     <div class="actions">
