@@ -1,0 +1,389 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { cases, type CaseStudy } from '../../data/cases';
+
+export function getStaticPaths() {
+  return cases.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props { project: CaseStudy }
+const { project } = Astro.props;
+const site = yaml.load(fs.readFileSync(path.resolve('./src/data/site.yaml'), 'utf8')) as any;
+const projectIndex = cases.findIndex((item) => item.slug === project.slug);
+const nextProject = cases[(projectIndex + 1) % cases.length];
+const canonicalPath = `/cases/${project.slug}/`;
+const pageUrl = `${site.url}${canonicalPath}`;
+const pageTitle = `${project.title} — кейс | Kovtun.studio`;
+const detailImages = project.gallery?.length
+  ? project.gallery
+  : project.cover
+    ? [{ ...project.cover, caption: 'Ключевой визуал проекта' }]
+    : [];
+const detailPlaceholders = detailImages.length === 0 ? [1, 2, 3] : [];
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${pageUrl}#case-study`,
+    mainEntityOfPage: pageUrl,
+    headline: project.title,
+    description: project.seoDescription,
+    image: project.cover ? `${site.url}${project.cover.src}` : `${site.url}/${site.og.image}`,
+    inLanguage: 'ru-RU',
+    articleSection: project.categoryLabel,
+    keywords: project.services.join(', '),
+    author: {
+      '@type': 'Person',
+      name: site.author.name,
+      url: `${site.url}/#founder`,
+      sameAs: [site.contact.telegram],
+    },
+    publisher: { '@id': `${site.url}/#business` },
+    about: {
+      '@type': 'CreativeWork',
+      name: project.title,
+      description: project.summary,
+      creator: { '@type': 'Person', name: site.author.name },
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Портфолио', item: `${site.url}/portfolio/` },
+      { '@type': 'ListItem', position: 3, name: project.shortTitle, item: pageUrl },
+    ],
+  },
+];
+---
+<BaseLayout
+  title={pageTitle}
+  description={project.seoDescription}
+  keywords={[project.client, project.categoryLabel, ...project.services, 'Kovtun.studio', 'Владивосток'].join(', ')}
+  canonicalPath={canonicalPath}
+  ogTitle={project.title}
+  ogDescription={project.summary}
+  ogImage={project.cover?.src || null}
+  ogImageAlt={project.cover?.alt || project.title}
+  ogType="article"
+  structuredData={structuredData}
+  bodyClass="page-shell"
+>
+  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+  <main id="main-content" style={`--case-accent:${project.accent}`}>
+    <div class="container-wide breadcrumbs" aria-label="Хлебные крошки">
+      <ol>
+        <li><a href="/">Главная</a></li>
+        <li><a href="/portfolio/">Портфолио</a></li>
+        <li aria-current="page">{project.shortTitle}</li>
+      </ol>
+    </div>
+
+    <header class="case-hero">
+      <div class="container-wide">
+        <p class="page-kicker">{project.categoryLabel} · {project.segmentLabel} · {project.year}</p>
+        <div class="case-hero__top">
+          <h1>{project.title}</h1>
+          <p class="case-hero__summary">{project.summary}</p>
+        </div>
+        <div class="case-facts" aria-label="Ключевые факты проекта">
+          {project.facts.map((fact) => (
+            <div class="case-fact">
+              <strong>{fact.value}</strong>
+              <span>{fact.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <figure class="case-cover">
+      {project.cover ? (
+        <img src={project.cover.src} alt={project.cover.alt} decoding="async" fetchpriority="high" />
+      ) : (
+        <div class="case-cover__placeholder" aria-hidden="true"><strong>{project.shortTitle}</strong></div>
+      )}
+    </figure>
+
+    <section class="case-section" aria-labelledby="challenge-title">
+      <div class="container-wide case-section__head">
+        <span class="case-section__num">01 / Задача</span>
+        <div class="case-prose">
+          <h2 id="challenge-title">Что нужно было изменить</h2>
+          <ul>
+            {project.challenge.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-section--paper" aria-labelledby="approach-title">
+      <div class="container-wide">
+        <div class="case-section__head">
+          <span class="case-section__num">02 / Решение</span>
+          <div class="case-prose">
+            <h2 id="approach-title">Логика, а не декоративный приём</h2>
+            <p>Решение строится вокруг поведения человека и условий, в которых он увидит дизайн: на полке, на экране, в переговорной или в дорожном потоке.</p>
+          </div>
+        </div>
+        <div class="case-approach">
+          {project.approach.map((item, index) => (
+            <article>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="case-media-section" aria-labelledby="media-title">
+      <div class="container-wide">
+        <div class="case-section__head">
+          <span class="case-section__num">03 / Изображения</span>
+          <div class="case-prose">
+            <h2 id="media-title">Проект в деталях</h2>
+            <p>Ключевые носители, фрагменты системы и то, как решение работает в реальном масштабе.</p>
+          </div>
+        </div>
+        <div class="case-gallery" aria-label="Изображения проекта">
+          {detailImages.map((image, index) => (
+            <figure>
+              <button
+                class="case-gallery-trigger"
+                type="button"
+                data-case-image={index}
+                aria-label={`Открыть изображение: ${image.alt}`}
+              >
+                <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+                <span class="case-gallery-zoom" aria-hidden="true">Увеличить ↗</span>
+              </button>
+              {image.caption && <figcaption>{image.caption}</figcaption>}
+            </figure>
+          ))}
+          {detailPlaceholders.map((index) => (
+            <figure class="case-media-placeholder">
+              <span>{String(index).padStart(2, '0')}</span>
+              <strong>Изображение проекта</strong>
+              <small>Будет добавлено после подготовки материалов</small>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {detailImages.length > 0 && (
+      <div
+        class="lightbox case-lightbox"
+        id="case-lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Просмотр изображений проекта ${project.shortTitle}`}
+        aria-hidden="true"
+      >
+        <div class="lightbox-stage">
+          <button class="lightbox-btn close" id="case-lb-close" type="button" aria-label="Закрыть просмотр">×</button>
+          <button class="lightbox-btn prev" id="case-lb-prev" type="button" aria-label="Предыдущее изображение">←</button>
+          <button class="lightbox-btn next" id="case-lb-next" type="button" aria-label="Следующее изображение">→</button>
+          <img class="lightbox-image" id="case-lb-image" src="" alt="" />
+          <div class="lightbox-caption" aria-live="polite">
+            <span class="counter" id="case-lb-counter"></span>
+            <span id="case-lb-label"></span>
+          </div>
+          <div class="lightbox-thumbs" id="case-lb-thumbs" aria-label="Миниатюры изображений"></div>
+        </div>
+      </div>
+    )}
+
+    <section class="case-section case-section--dark" aria-labelledby="result-title">
+      <div class="container-wide">
+        <div class="case-section__head">
+          <span class="case-section__num">04 / Результат</span>
+          <div>
+            <h2 id="result-title">Что изменилось после проекта</h2>
+          </div>
+        </div>
+        <div class="case-results">
+          {project.result.map((item, index) => (
+            <article class="case-result">
+              <strong>{String(index + 1).padStart(2, '0')}</strong>
+              <p>{item}</p>
+            </article>
+          ))}
+        </div>
+        {project.quote && <blockquote class="case-quote">«{project.quote}»</blockquote>}
+      </div>
+    </section>
+
+    <section class="case-section" aria-labelledby="scope-title">
+      <div class="container-wide case-deliverables">
+        <div>
+          <span class="case-section__num">05 / Состав проекта</span>
+          <h2 id="scope-title">Что было сделано</h2>
+          <p class="body-l">Проект собирается под задачу: от одного ключевого носителя до масштабируемой системы с правилами и адаптациями.</p>
+        </div>
+        <div>
+          <ul>
+            {project.deliverables.map((item) => <li>{item}</li>)}
+          </ul>
+          <div class="case-credits">
+            <dl>
+              {project.credits.map((credit) => (
+                <div>
+                  <dt>{credit.role}</dt>
+                  <dd>{credit.name}</dd>
+                </div>
+              ))}
+              <div>
+                <dt>Клиент</dt>
+                <dd>{project.client}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <a class="case-next" href={`/cases/${nextProject.slug}/`} aria-label={`Следующий кейс: ${nextProject.title}`}>
+      <span class="container-wide case-next__inner">
+        <span>
+          <small>Следующий кейс · {nextProject.categoryLabel}</small>
+          <strong>{nextProject.title}</strong>
+        </span>
+        <span class="case-next__arrow" aria-hidden="true">→</span>
+      </span>
+    </a>
+  </main>
+  <Footer {...site.footer} />
+
+  {detailImages.length > 0 && (
+    <script is:inline define:vars={{ CASE_GALLERY: detailImages }}>
+      (() => {
+        const lightbox = document.getElementById('case-lightbox');
+        const image = document.getElementById('case-lb-image');
+        const label = document.getElementById('case-lb-label');
+        const counter = document.getElementById('case-lb-counter');
+        const thumbs = document.getElementById('case-lb-thumbs');
+        const closeButton = document.getElementById('case-lb-close');
+        const prevButton = document.getElementById('case-lb-prev');
+        const nextButton = document.getElementById('case-lb-next');
+        const triggers = Array.from(document.querySelectorAll('[data-case-image]'));
+        let current = -1;
+        let returnFocus = null;
+
+        const pad = (value) => String(value).padStart(2, '0');
+
+        function preloadNeighbors(index) {
+          if (CASE_GALLERY.length < 2) return;
+          [
+            (index + 1) % CASE_GALLERY.length,
+            (index - 1 + CASE_GALLERY.length) % CASE_GALLERY.length,
+          ].forEach((neighbor) => {
+            const preload = new Image();
+            preload.src = CASE_GALLERY[neighbor].src;
+          });
+        }
+
+        function render() {
+          const item = CASE_GALLERY[current];
+          image.src = item.src;
+          image.alt = item.alt;
+          label.textContent = item.caption || item.alt;
+          counter.textContent = `${pad(current + 1)} / ${pad(CASE_GALLERY.length)}`;
+          Array.from(thumbs.children).forEach((thumb, index) => {
+            thumb.classList.toggle('is-active', index === current);
+            thumb.setAttribute('aria-current', index === current ? 'true' : 'false');
+          });
+          const activeThumb = thumbs.children[current];
+          if (activeThumb?.scrollIntoView) activeThumb.scrollIntoView({ block: 'nearest', inline: 'center' });
+          preloadNeighbors(current);
+        }
+
+        function openLightbox(index, trigger) {
+          current = index;
+          returnFocus = trigger;
+          lightbox.classList.add('is-open');
+          lightbox.setAttribute('aria-hidden', 'false');
+          document.body.classList.add('lightbox-locked');
+          render();
+          closeButton.focus();
+        }
+
+        function closeLightbox() {
+          lightbox.classList.remove('is-open');
+          lightbox.setAttribute('aria-hidden', 'true');
+          document.body.classList.remove('lightbox-locked');
+          image.src = '';
+          current = -1;
+          returnFocus?.focus();
+        }
+
+        function navigate(delta) {
+          current = (current + delta + CASE_GALLERY.length) % CASE_GALLERY.length;
+          render();
+        }
+
+        CASE_GALLERY.forEach((item, index) => {
+          const button = document.createElement('button');
+          button.className = 'lightbox-thumb';
+          button.type = 'button';
+          button.setAttribute('aria-label', `Открыть изображение ${index + 1}: ${item.alt}`);
+          const thumbImage = document.createElement('img');
+          thumbImage.src = item.src;
+          thumbImage.alt = '';
+          thumbImage.loading = 'lazy';
+          button.appendChild(thumbImage);
+          button.addEventListener('click', () => {
+            current = index;
+            render();
+          });
+          thumbs.appendChild(button);
+        });
+
+        if (CASE_GALLERY.length === 1) {
+          prevButton.hidden = true;
+          nextButton.hidden = true;
+          thumbs.hidden = true;
+        }
+
+        triggers.forEach((trigger) => {
+          trigger.addEventListener('click', () => openLightbox(Number(trigger.dataset.caseImage), trigger));
+        });
+        closeButton.addEventListener('click', closeLightbox);
+        prevButton.addEventListener('click', () => navigate(-1));
+        nextButton.addEventListener('click', () => navigate(1));
+        lightbox.addEventListener('click', (event) => {
+          if (event.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (event) => {
+          if (current < 0) return;
+          if (event.key === 'Escape') closeLightbox();
+          if (event.key === 'ArrowLeft') navigate(-1);
+          if (event.key === 'ArrowRight') navigate(1);
+          if (event.key === 'Tab') {
+            const controls = Array.from(lightbox.querySelectorAll('button:not([hidden])'));
+            if (!controls.length) return;
+            const first = controls[0];
+            const last = controls[controls.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }
+        });
+      })();
+    </script>
+  )}
+</BaseLayout>

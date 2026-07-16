@@ -11,7 +11,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // На сайте одна страница, но плагин корректно делает entry для нее
+      // Все статические страницы и кейсы попадают в sitemap автоматически.
       changefreq: 'monthly',
       priority: 1.0,
       lastmod: new Date(),

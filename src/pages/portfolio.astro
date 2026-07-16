@@ -1,0 +1,238 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { cases, caseCategories, businessSegments } from '../data/cases';
+
+const site = yaml.load(fs.readFileSync(path.resolve('./src/data/site.yaml'), 'utf8')) as any;
+const pageTitle = 'Портфолио дизайнера — упаковка, брендинг, сайты и презентации | Kovtun.studio';
+const pageDescription = 'Портфолио Николая Ковтуна: дизайн упаковки, логотипы и фирменный стиль, сайты, презентации и оклейка автомобилей. Кейсы с задачей, решением и результатом.';
+const pageUrl = `${site.url}/portfolio/`;
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${pageUrl}#collection`,
+    url: pageUrl,
+    name: 'Портфолио Kovtun.studio',
+    description: pageDescription,
+    inLanguage: 'ru-RU',
+    about: ['Дизайн упаковки', 'Фирменный стиль', 'Веб-дизайн', 'Дизайн презентаций', 'Дизайн оклейки автомобиля'],
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: cases.length,
+      itemListElement: cases.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${site.url}/cases/${item.slug}/`,
+        name: item.title,
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Портфолио', item: pageUrl },
+    ],
+  },
+];
+---
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  keywords="портфолио дизайнера, дизайн упаковки, фирменный стиль, веб-дизайн, дизайн презентаций, оклейка авто, Владивосток"
+  canonicalPath="/portfolio/"
+  ogTitle="Портфолио Kovtun.studio"
+  ogDescription={pageDescription}
+  ogImage={null}
+  structuredData={structuredData}
+  bodyClass="page-shell"
+>
+  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+  <main id="main-content">
+    <div class="container-wide breadcrumbs" aria-label="Хлебные крошки">
+      <ol>
+        <li><a href="/">Главная</a></li>
+        <li aria-current="page">Портфолио</li>
+      </ol>
+    </div>
+
+    <header class="portfolio-hero">
+      <div class="container-wide">
+        <p class="page-kicker">Работы Николая Ковтуна · с 2010 года</p>
+        <h1>Дизайн, который помогает <em>выбирать</em></h1>
+        <div class="portfolio-hero__footer">
+          <p>Упаковка, брендинг, сайты, презентации и оклейка авто. В каждом кейсе — не только финальная картинка, но задача, логика решения и результат для бизнеса.</p>
+          <p class="portfolio-hero__count"><strong>{String(cases.length).padStart(2, '0')}</strong> опубликованных кейсов</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="portfolio-index" aria-labelledby="portfolio-title">
+      <h2 id="portfolio-title" class="visually-hidden">Проекты по направлениям</h2>
+      <div class="portfolio-filters-wrap">
+        <div class="container-wide">
+          <div class="portfolio-filter-row">
+            <div class="portfolio-category-controls">
+              <div class="portfolio-filters" role="group" aria-label="Фильтр портфолио по виду проекта">
+                {caseCategories.map((category, index) => (
+                  <button
+                    class="portfolio-filter"
+                    type="button"
+                    data-filter={category.id}
+                    aria-pressed={index === 0 ? 'true' : 'false'}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+              <div class="portfolio-category-compact" role="group" aria-label="Фильтр портфолио по виду проекта">
+                <button
+                  class="portfolio-filter portfolio-filter--all"
+                  type="button"
+                  data-filter="all"
+                  aria-pressed="true"
+                >
+                  Все проекты
+                </button>
+                <label class="portfolio-direction">
+                  <span class="visually-hidden">Направление проекта</span>
+                  <span class="portfolio-select-shell">
+                    <select id="portfolio-category" aria-label="Выбрать направление проекта">
+                      <option value="">Направление проекта</option>
+                      {caseCategories.filter((category) => category.id !== 'all').map((category) => (
+                        <option value={category.id}>{category.label}</option>
+                      ))}
+                    </select>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <label class="portfolio-segment">
+              <span>Сегмент бизнеса</span>
+              <span class="portfolio-select-shell">
+                <select id="portfolio-segment" aria-label="Выбрать сегмент бизнеса">
+                  {businessSegments.map((segment) => (
+                    <option value={segment.id}>{segment.label}</option>
+                  ))}
+                </select>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-wide">
+        <div class="portfolio-status" aria-live="polite">
+          <span id="portfolio-label">Все направления</span>
+          <span id="portfolio-count">Показано: {cases.length}</span>
+        </div>
+
+        <div class="portfolio-grid">
+          {cases.map((item) => (
+            <article class="portfolio-card" data-category={item.category} data-segment={item.segment}>
+              <a class="portfolio-card__link" href={`/cases/${item.slug}/`} aria-label={`Открыть кейс: ${item.title}`}>
+                <div class="portfolio-card__media" style={`--card-accent:${item.accent}`}>
+                  {item.cover ? (
+                    <img src={item.cover.src} alt={item.cover.alt} loading="lazy" decoding="async" />
+                  ) : (
+                    <div class="portfolio-card__placeholder" aria-hidden="true">
+                      <small>Kovtun.studio · {item.categoryLabel}</small>
+                      <strong>{item.shortTitle}</strong>
+                    </div>
+                  )}
+                </div>
+                <div class="portfolio-card__body">
+                  <div>
+                    <p class="portfolio-card__meta">{item.categoryLabel} · {item.segmentLabel} · {item.client}</p>
+                    <h2>{item.title}</h2>
+                  </div>
+                  <span class="portfolio-card__year">{item.year}</span>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <aside class="portfolio-cta" aria-labelledby="portfolio-cta-title">
+          <h2 id="portfolio-cta-title">Есть задача, но нет готового технического задания?</h2>
+          <p>Достаточно описать продукт, аудиторию и что сейчас не работает. Я помогу собрать задачу и предложу формат проекта.</p>
+          <a class="btn btn-primary btn-lg" href={`${site.contact.telegram}?text=${encodeURIComponent('Здравствуйте! Хочу обсудить дизайн-проект.')}`} target="_blank" rel="noopener">
+            Обсудить проект <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <Footer {...site.footer} />
+
+  <script is:inline>
+    (() => {
+      const buttons = Array.from(document.querySelectorAll('[data-filter]'));
+      const cards = Array.from(document.querySelectorAll('.portfolio-card'));
+      const count = document.getElementById('portfolio-count');
+      const label = document.getElementById('portfolio-label');
+      const segmentSelect = document.getElementById('portfolio-segment');
+      const categorySelect = document.getElementById('portfolio-category');
+      let activeCategory = 'all';
+      let activeSegment = 'all';
+
+      function applyFilters(updateUrl) {
+        let visible = 0;
+        cards.forEach((card) => {
+          const matchesCategory = activeCategory === 'all' || card.dataset.category === activeCategory;
+          const matchesSegment = activeSegment === 'all' || card.dataset.segment === activeSegment;
+          const show = matchesCategory && matchesSegment;
+          card.hidden = !show;
+          if (show) visible += 1;
+        });
+        buttons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.filter === activeCategory)));
+        categorySelect.value = activeCategory === 'all' ? '' : activeCategory;
+        categorySelect.classList.toggle('is-active', activeCategory !== 'all');
+        const activeButton = buttons.find((button) => button.dataset.filter === activeCategory);
+        const segmentLabel = segmentSelect.options[segmentSelect.selectedIndex].text;
+        if (count) count.textContent = `Показано: ${visible}`;
+        if (label) {
+          const categoryLabel = activeCategory === 'all' ? 'Все направления' : activeButton.textContent.trim();
+          label.textContent = activeSegment === 'all' ? categoryLabel : `${categoryLabel} · ${segmentLabel}`;
+        }
+        if (updateUrl) {
+          const url = new URL(window.location.href);
+          activeCategory === 'all' ? url.searchParams.delete('category') : url.searchParams.set('category', activeCategory);
+          activeSegment === 'all' ? url.searchParams.delete('segment') : url.searchParams.set('segment', activeSegment);
+          history.replaceState({}, '', url);
+        }
+      }
+
+      buttons.forEach((button) => button.addEventListener('click', () => {
+        activeCategory = button.dataset.filter;
+        applyFilters(true);
+      }));
+      segmentSelect.addEventListener('change', () => {
+        activeSegment = segmentSelect.value;
+        applyFilters(true);
+      });
+      categorySelect.addEventListener('change', () => {
+        activeCategory = categorySelect.value || 'all';
+        applyFilters(true);
+      });
+
+      const url = new URL(window.location.href);
+      const requestedCategory = url.searchParams.get('category');
+      const requestedSegment = url.searchParams.get('segment');
+      if (requestedCategory && buttons.some((button) => button.dataset.filter === requestedCategory)) activeCategory = requestedCategory;
+      if (requestedSegment && Array.from(segmentSelect.options).some((option) => option.value === requestedSegment)) {
+        activeSegment = requestedSegment;
+        segmentSelect.value = requestedSegment;
+      }
+      applyFilters(false);
+    })();
+  </script>
+</BaseLayout>

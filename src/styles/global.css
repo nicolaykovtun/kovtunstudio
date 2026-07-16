@@ -138,13 +138,83 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 }
 .k-header nav a:hover { color: var(--ks-red); }
 .k-header .actions { display: flex; align-items: center; gap: 12px; }
-.k-header .menu-btn { display: none; }
 /* header CTA: text turns black on hover (bright red kept for contrast) */
 .k-header .btn-primary:hover { color: #000; background: var(--ks-red); }
 
 @media (max-width: 900px) {
   .k-header nav { display: none; }
   .k-header .actions .btn-secondary-text { display: none; }
+}
+
+/* ─── Мобильное меню (card-nav) ──────────────────────────────────────
+   Кнопка-гамбургер видна только ≤900px; клик разворачивает панель
+   с цветными карточками-разделами прямо под шапкой. */
+.card-nav-toggle {
+  display: none;
+  width: 44px; height: 44px;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+  background: none; border: 0; cursor: pointer;
+  color: var(--fg-1);
+}
+.card-nav-toggle__line {
+  width: 22px; height: 2px;
+  background: currentColor;
+  transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-fast);
+}
+.card-nav-toggle.is-open .card-nav-toggle__line:first-child { transform: translateY(4px) rotate(45deg); }
+.card-nav-toggle.is-open .card-nav-toggle__line:last-child { transform: translateY(-4px) rotate(-45deg); }
+.card-nav-toggle:focus-visible { outline: 2px solid var(--ks-red); outline-offset: 2px; }
+
+.card-nav-panel {
+  height: 0;
+  overflow: hidden;
+  background: var(--bg-1);
+  border-top: 0 solid var(--line-1);
+  transition: height var(--dur-slow) var(--ease-out);
+}
+.card-nav-panel.is-open { border-top-width: 1px; }
+.card-nav-panel__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 48px 24px;
+}
+@media (max-width: 768px) { .card-nav-panel__inner { padding: 16px 20px 20px; } }
+
+.nav-card {
+  padding: 20px 22px;
+  border-radius: var(--r-2);
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.card-nav-panel.is-open .nav-card { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.card-nav-panel.is-open .nav-card:nth-child(1) { transition-delay: .05s; }
+.card-nav-panel.is-open .nav-card:nth-child(2) { transition-delay: .12s; }
+.nav-card--dark { background: var(--ks-charcoal); color: #fff; }
+.nav-card--red { background: var(--ks-red); color: #fff; }
+.nav-card__label {
+  font: 700 11px/1 var(--font-display);
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 6px;
+}
+.nav-card__links { display: flex; flex-direction: column; }
+.nav-card__link {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,.14);
+  font: 600 17px/1.2 var(--font-display);
+  color: #fff;
+}
+.nav-card__link:last-child { border-bottom: 0; }
+.nav-card__arrow { font-size: 16px; transition: transform var(--dur-fast) var(--ease-out); }
+.nav-card__link:hover .nav-card__arrow { transform: translate(2px, -2px); }
+
+@media (max-width: 900px) {
+  .card-nav-toggle { display: flex; }
 }
 
 /* ─── Hero base ─────────────────────────────────────────────────────── */
@@ -203,6 +273,34 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 }
 @media (max-width: 700px) {
   .hero .meta-row { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+}
+
+/* ─── Hero: вход на первом экране (stagger reveal) ─────────────────────
+   Заголовок, подзаголовок, кнопки и цифры проявляются по очереди
+   с подъёмом снизу — как на motion.dev/examples/react-hero-stagger. */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero .inner > h1,
+.hero .inner > .lede,
+.hero .ctas > .btn,
+.hero .meta-row .item {
+  animation: hero-rise .7s var(--ease-out) both;
+}
+.hero .inner > h1        { animation-delay: .05s; }
+.hero .inner > .lede      { animation-delay: .2s; }
+.hero .ctas > .btn:nth-child(1) { animation-delay: .34s; }
+.hero .ctas > .btn:nth-child(2) { animation-delay: .42s; }
+.hero .meta-row .item:nth-child(1) { animation-delay: .56s; }
+.hero .meta-row .item:nth-child(2) { animation-delay: .62s; }
+.hero .meta-row .item:nth-child(3) { animation-delay: .68s; }
+.hero .meta-row .item:nth-child(4) { animation-delay: .74s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero .inner > h1,
+  .hero .inner > .lede,
+  .hero .ctas > .btn,
+  .hero .meta-row .item { animation: none; }
 }
 
 /* ─── Hero variant A: Red Wall ─────────────────────────────────────── */
@@ -783,8 +881,26 @@ body.lightbox-locked { overflow: hidden; }
   gap: 64px;
   align-items: start;
 }
+.founder-intro {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+.founder-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--r-2);
+  flex-shrink: 0;
+}
 .founder-lead {
   padding-top: 8px;
+  min-width: 0;
+}
+/* .overline глобально скрыт (display:none) — здесь это единственное место,
+   где роль/должность должна быть видна на странице. */
+.founder-lead .overline {
+  display: block;
 }
 .founder-lead h3 {
   margin: 0 0 22px;
@@ -797,6 +913,26 @@ body.lightbox-locked { overflow: hidden; }
   max-width: 44ch;
   color: var(--fg-3);
   font: 400 18px/1.65 var(--font-body);
+}
+.founder-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-1);
+}
+.founder-stats .item .num {
+  display: block;
+  margin-bottom: 6px;
+  font: 800 32px/1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg-1);
+}
+.founder-stats .item .lbl {
+  font: 500 12px/1.4 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
 }
 .founder-points {
   display: grid;
@@ -822,6 +958,11 @@ body.lightbox-locked { overflow: hidden; }
   .founder-grid { grid-template-columns: 1fr; gap: 40px; }
   .founder-points { grid-template-columns: 1fr; gap: 0; }
   .founder-lead h3 { font-size: 36px; }
+}
+@media (max-width: 480px) {
+  .founder-intro { flex-direction: column; }
+  .founder-photo { width: 88px; height: 88px; }
+  .founder-stats { gap: 24px; }
 }
 
 /* ─── FAQ ──────────────────────────────────────────────────────────── */
@@ -883,7 +1024,7 @@ body.lightbox-locked { overflow: hidden; }
   background: var(--ks-red);
   color: #fff;
   padding: 120px 0;
-  position: relative; overflow: hidden;
+  position: relative; clip-path: inset(0);
 }
 .cta-section::after {
   content: "."; position: absolute;
@@ -896,10 +1037,15 @@ body.lightbox-locked { overflow: hidden; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
-  align-items: center;
+  align-items: start;
   position: relative; z-index: 2;
 }
 @media (max-width: 900px) { .cta-wrap { grid-template-columns: 1fr; gap: 48px; } }
+.cta-wrap .pitch {
+  position: sticky;
+  top: 115px;
+}
+@media (max-width: 900px) { .cta-wrap .pitch { position: static; } }
 .cta-wrap .pitch h2 {
   font: 800 clamp(40px, 5.5vw, 80px)/1.0 var(--font-display);
   letter-spacing: -0.03em;
@@ -932,15 +1078,17 @@ body.lightbox-locked { overflow: hidden; }
   display: grid; gap: 30px;
   border-radius: var(--r-2);
 }
-/* fields live inside #form-fields / #form-success — space them there, not on the outer grid */
-.k-form #form-fields,
-.k-form #form-success { display: grid; gap: 30px; }
+/* fields live inside #form-fields / #form-success — space them there, not on the outer grid.
+   :not([hidden]) keeps the hidden attribute able to actually hide the panel. */
+.k-form #form-fields:not([hidden]),
+.k-form #form-success:not([hidden]) { display: grid; gap: 30px; }
 body.theme-dark .k-form { background: #1c1c1b; color: #fff; }
 
 .k-form .form-head {
   margin-bottom: 8px;
 }
 .k-form .form-head .overline {
+  display: block;
   color: var(--ks-red);
   margin-bottom: 8px;
 }
@@ -983,37 +1131,58 @@ body.theme-dark .k-form { background: #1c1c1b; color: #fff; }
 body.theme-dark .k-form .field input,
 body.theme-dark .k-form .field textarea,
 body.theme-dark .k-form .field > .lbl { background: #1c1c1b; }
-.k-form .field-error {
+.k-form .field-error:not([hidden]) {
   display: block;
   font: 500 12px/1.3 var(--font-body); color: var(--ks-red);
   margin-top: 6px;
 }
-.k-form .submit-row {
-  display: flex; align-items: center; gap: 20px;
-  margin-top: 8px;
-}
-.k-form .submit-row .privacy {
-  font: 400 12px/1.4 var(--font-body);
-  color: var(--fg-3);
-  flex: 1;
-}
-.k-form .submit-row .privacy a { color: inherit; border-bottom: 1px solid var(--line-2); }
-.k-form .submit-row .submit-btn {
-  background: var(--ks-charcoal);
-  color: #fff;
-  flex-shrink: 0;
-}
-.k-form .submit-row .submit-btn:hover { background: var(--ks-charcoal-700); }
 
-.k-form .success {
+/* Имя + марка авто в одну строку — форма короче, порядок заполнения нагляднее */
+.k-form .field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 480px) { .k-form .field-row { grid-template-columns: 1fr; } }
+
+/* Единственная главная кнопка отправки (Telegram) */
+.k-form .btn-send { width: 100%; justify-content: center; }
+
+/* MAX — тихая текстовая ссылка под главной кнопкой, а не вторая равная кнопка */
+.k-form .max-quiet-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  justify-self: end;
+  background: none; border: 0; padding: 4px 0; cursor: pointer;
+  font: 600 13px/1 var(--font-body);
+  color: var(--fg-3);
+}
+.k-form .max-quiet-link svg { width: 14px; height: 14px; }
+.k-form .max-quiet-link:hover { color: var(--fg-1); }
+
+/* Экран после отправки — вся карточка становится одной красной панелью */
+.k-form.is-success,
+body.theme-dark .k-form.is-success {
   background: var(--ks-red);
   color: #fff;
-  padding: 20px 24px;
-  margin: 0;
-  font: 500 15px/1.4 var(--font-body);
-  display: flex; align-items: center; gap: 12px;
-  border-radius: var(--r-2);
 }
+.k-form .success-head { display: flex; align-items: center; gap: 12px; }
+.k-form .success-head svg { width: 22px; height: 22px; flex-shrink: 0; }
+.k-form .success-head h3 { margin: 0; color: #fff; }
+.k-form #success-text {
+  margin: 0;
+  font: 400 15px/1.5 var(--font-body);
+  color: rgba(255,255,255,.9);
+}
+.k-form #form-success .btn-white { color: var(--ks-red-700); justify-content: center; }
+.k-form #form-reset {
+  justify-self: start;
+  background: none; border: 0; cursor: pointer;
+  font: 600 12px/1 var(--font-body);
+  color: rgba(255,255,255,.75);
+  text-decoration: underline; text-underline-offset: 3px;
+  padding: 2px 0;
+}
+.k-form #form-reset:hover { color: #fff; }
 
 /* ─── Footer ───────────────────────────────────────────────────────── */
 .k-footer {
@@ -1097,18 +1266,6 @@ image-slot {
 
   /* карточка формы — меньше padding на маленьком экране */
   .k-form { padding: 28px 22px 24px; }
-
-  /* submit-row: privacy текст и кнопка стопкой, кнопка во всю ширину */
-  .k-form .submit-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-    margin-top: 0;
-  }
-  .k-form .submit-row .submit-btn {
-    width: 100%;
-    justify-content: center;
-  }
 
   /* заголовки: понижаем clamp-минимумы, чтобы умещалось в 2-3 строки */
   .hero h1 { font-size: 36px; }

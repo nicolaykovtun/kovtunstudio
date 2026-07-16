@@ -3,22 +3,140 @@ interface Props {
   nav: { href: string; label: string }[];
   phone: string;        // отображаемый формат "+7 908 449-72-60"
   phoneTel: string;     // tel-формат "+79084497260"
+  telegramUrl: string;
+  maxUrl: string;
 }
-const { nav, phone, phoneTel } = Astro.props;
+const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
+const pathname = Astro.url.pathname;
 ---
 <header class="k-header">
   <div class="container-wide row">
-    <a class="brand" href="#top" aria-label="Kovtun.studio — на главную">
+    <a class="brand" href="/" aria-label="Kovtun.studio — на главную">
       <img class="logo-dark"  src="/assets/logo.svg"         alt="Kovtun.studio">
       <img class="logo-light" src="/assets/logo-on-dark.svg" alt="Kovtun.studio">
     </a>
     <nav aria-label="Главная навигация">
-      {nav.map(item => <a href={item.href}>{item.label}</a>)}
+      {nav.map(item => (
+        <a
+          href={item.href}
+          aria-current={item.href === '/portfolio/' && pathname.startsWith('/portfolio') ? 'page' : undefined}
+        >{item.label}</a>
+      ))}
     </nav>
     <div class="actions">
       <a href={`tel:${phoneTel}`} class="btn btn-primary" aria-label={`Позвонить ${phone}`}>
         {phone}
       </a>
+      <button
+        type="button"
+        class="card-nav-toggle"
+        id="card-nav-toggle"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+        aria-controls="card-nav-panel"
+      >
+        <span class="card-nav-toggle__line"></span>
+        <span class="card-nav-toggle__line"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="card-nav-panel" id="card-nav-panel" aria-hidden="true">
+    <div class="card-nav-panel__inner container-wide">
+      <div class="nav-card nav-card--dark">
+        <div class="nav-card__label">Навигация</div>
+        <div class="nav-card__links">
+          {nav.map(item => (
+            <a href={item.href} class="nav-card__link">
+              {item.label}
+              <span class="nav-card__arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="nav-card nav-card--red">
+        <div class="nav-card__label">Связь</div>
+        <div class="nav-card__links">
+          <a href={`tel:${phoneTel}`} class="nav-card__link">
+            {phone}
+            <span class="nav-card__arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href={telegramUrl} target="_blank" rel="noopener" class="nav-card__link">
+            Telegram
+            <span class="nav-card__arrow" aria-hidden="true">↗</span>
+          </a>
+          <a href={maxUrl} target="_blank" rel="noopener" class="nav-card__link">
+            MAX
+            <span class="nav-card__arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </header>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('card-nav-toggle');
+    var panel = document.getElementById('card-nav-panel');
+    if (!toggle || !panel) return;
+
+    var isOpen = false;
+
+    function openPanel() {
+      var target = panel.scrollHeight;
+      panel.style.height = target + 'px';
+    }
+
+    function closePanel() {
+      // зафиксировать текущую высоту, затем в следующем кадре анимировать в 0
+      panel.style.height = panel.scrollHeight + 'px';
+      requestAnimationFrame(function () {
+        panel.style.height = '0px';
+      });
+    }
+
+    panel.addEventListener('transitionend', function (e) {
+      if (e.propertyName !== 'height') return;
+      if (isOpen) panel.style.height = 'auto';
+    });
+
+    toggle.addEventListener('click', function () {
+      isOpen = !isOpen;
+      toggle.classList.toggle('is-open', isOpen);
+      toggle.setAttribute('aria-expanded', String(isOpen));
+      panel.setAttribute('aria-hidden', String(!isOpen));
+      panel.classList.toggle('is-open', isOpen);
+      if (isOpen) {
+        openPanel();
+      } else {
+        closePanel();
+      }
+    });
+
+    // Закрыть при клике по ссылке в панели (например, якорь на текущей странице)
+    panel.querySelectorAll('.nav-card__link').forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (!isOpen) return;
+        isOpen = false;
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
+        panel.classList.remove('is-open');
+        closePanel();
+      });
+    });
+
+    // При ресайзе на десктоп — сбросить инлайн-высоту, чтобы не мешала
+    window.addEventListener('resize', function () {
+      if (window.matchMedia('(min-width: 901px)').matches) {
+        panel.style.height = '';
+        panel.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
+        isOpen = false;
+      }
+    });
+  })();
+</script>

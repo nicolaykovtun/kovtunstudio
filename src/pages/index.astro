@@ -29,8 +29,8 @@ const galleryForJs = gallery.map(g => ({
 }));
 ---
 <BaseLayout>
-  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} />
-  <main>
+  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+  <main id="main-content">
     <Hero {...site.hero} />
     <Marquee {...site.marquee} />
     <WhatGrid {...site.whatDo} />
@@ -241,6 +241,7 @@ const galleryForJs = gallery.map(g => ({
           reopen.innerHTML = "Открыть " + label + " ещё раз <span class=\"arrow\" aria-hidden=\"true\">→</span>";
           fields.hidden = true;
           success.hidden = false;
+          form.classList.add("is-success");
           goal(goalName, { car: fCar.value.trim().slice(0, 40) });
         });
       }
@@ -273,6 +274,7 @@ const galleryForJs = gallery.map(g => ({
           setError(errName, ""); setError(errCar, "");
           success.hidden = true;
           fields.hidden = false;
+          form.classList.remove("is-success");
         });
       }
 
