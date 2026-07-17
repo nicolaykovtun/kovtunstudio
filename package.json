@@ -7,11 +7,16 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
   },
   "devDependencies": {
-    "astro": "^5.1.0",
     "@astrojs/sitemap": "^3.2.1",
-    "js-yaml": "^4.1.0"
+    "astro": "^5.1.0",
+    "js-yaml": "^4.1.0",
+    "wrangler": "^4.111.0"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "12"
   }
 }
