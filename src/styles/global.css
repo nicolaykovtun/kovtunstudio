@@ -887,9 +887,8 @@ body.lightbox-locked { overflow: hidden; }
   align-items: flex-start;
 }
 .founder-photo {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
+  width: 220px;
+  height: auto;
   border-radius: var(--r-2);
   flex-shrink: 0;
 }
@@ -961,7 +960,7 @@ body.lightbox-locked { overflow: hidden; }
 }
 @media (max-width: 480px) {
   .founder-intro { flex-direction: column; }
-  .founder-photo { width: 88px; height: 88px; }
+  .founder-photo { width: 160px; height: auto; }
   .founder-stats { gap: 24px; }
 }
 
@@ -973,6 +972,11 @@ body.lightbox-locked { overflow: hidden; }
   align-items: start;
 }
 @media (max-width: 900px) { .faq { grid-template-columns: 1fr; gap: 48px; } }
+.faq .left {
+  position: sticky;
+  top: 115px;
+}
+@media (max-width: 900px) { .faq .left { position: static; } }
 .faq .left h2 {
   font: 800 clamp(40px, 5vw, 72px)/1.0 var(--font-display);
   letter-spacing: -0.025em;
