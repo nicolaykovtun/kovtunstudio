@@ -876,14 +876,13 @@ body.lightbox-locked { overflow: hidden; }
   background: var(--bg-1);
 }
 .founder-grid {
-  display: grid;
-  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-  gap: 64px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
 }
 .founder-intro {
   display: flex;
-  gap: 28px;
+  gap: 36px;
   align-items: flex-start;
 }
 .founder-photo {
@@ -954,7 +953,7 @@ body.lightbox-locked { overflow: hidden; }
   font: 400 15px/1.6 var(--font-body);
 }
 @media (max-width: 900px) {
-  .founder-grid { grid-template-columns: 1fr; gap: 40px; }
+  .founder-grid { gap: 40px; }
   .founder-points { grid-template-columns: 1fr; gap: 0; }
   .founder-lead h3 { font-size: 36px; }
 }
