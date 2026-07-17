@@ -303,6 +303,40 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   .hero .meta-row .item { animation: none; }
 }
 
+/* ─── Сквозное появление блоков при прокрутке ─────────────────────────
+   Повторяет ритм первого экрана: элементы поднимаются коротким каскадом.
+   Скрытое состояние включается только после инициализации JS, поэтому
+   весь контент остаётся доступным без JavaScript. */
+html.reveal-motion [data-reveal-item] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity .7s var(--ease-out) var(--reveal-delay, 0ms),
+    transform .7s var(--ease-out) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+html.reveal-motion [data-reveal-group].is-revealed > [data-reveal-item],
+html.reveal-motion [data-reveal-group].is-revealed[data-reveal-item] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+@media (max-width: 768px) {
+  html.reveal-motion [data-reveal-item] {
+    transform: translate3d(0, 18px, 0);
+    transition-duration: .58s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.reveal-motion [data-reveal-item] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ─── Hero variant A: Red Wall ─────────────────────────────────────── */
 .hero-red {
   background: var(--ks-red);
@@ -608,6 +642,25 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   user-select: none;
   background: #111;
 }
+.lightbox-media { display: contents; }
+.lightbox-media--slides {
+  display: block;
+  width: min(1200px, calc(100vw - 180px));
+  max-width: 100%;
+  aspect-ratio: 9 / 5;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
+.lightbox-media--slides .lightbox-image {
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  box-shadow: none;
+  transform: translateY(calc(var(--slide-segment, 0) * -33.333333%));
+}
 .lightbox-caption {
   color: rgba(255,255,255,.85);
   font: 500 13px/1.4 var(--font-display);
@@ -647,6 +700,7 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   .lightbox-btn.close { right: 12px; top: 12px; }
   .lightbox-btn { width: 42px; height: 42px; }
   .lightbox-image { max-height: calc(100vh - 160px); }
+  .lightbox-media--slides { width: calc(100vw - 32px); }
 }
 .lightbox-thumbs {
   display: flex; gap: 8px;
@@ -676,6 +730,21 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   border-color: var(--ks-red);
 }
 .lightbox-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.lightbox-thumb--slide {
+  position: relative;
+  flex-basis: 90px;
+  width: 90px;
+  height: 50px;
+}
+.lightbox-thumb--slide img {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: fill;
+  transform: translateY(calc(var(--slide-segment, 0) * -33.333333%));
+}
 
 body.lightbox-locked { overflow: hidden; }
 
@@ -876,9 +945,10 @@ body.lightbox-locked { overflow: hidden; }
   background: var(--bg-1);
 }
 .founder-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: start;
 }
 .founder-intro {
   display: flex;
@@ -933,13 +1003,19 @@ body.lightbox-locked { overflow: hidden; }
   color: var(--fg-3);
 }
 .founder-points {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 28px;
-  border-top: 1px solid var(--line-1);
 }
 .founder-point {
-  padding-top: 28px;
+  padding-top: 24px;
+  border-top: 2px solid var(--ks-red);
+}
+.founder-point-num {
+  font: 800 16px/1 var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--ks-red);
+  margin-bottom: 16px;
 }
 .founder-point h4 {
   margin: 0 0 12px;
@@ -952,9 +1028,14 @@ body.lightbox-locked { overflow: hidden; }
   color: var(--fg-3);
   font: 400 15px/1.6 var(--font-body);
 }
+/* Интро (фото+текст) нужно ≈780px, чтобы не сжиматься — колонки держим
+   только там, где для этого реально есть место. */
+@media (max-width: 1180px) {
+  .founder-grid { grid-template-columns: 1fr; gap: 56px; }
+  .founder-points { display: grid; grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 900px) {
-  .founder-grid { gap: 40px; }
-  .founder-points { grid-template-columns: 1fr; gap: 0; }
+  .founder-points { grid-template-columns: 1fr; }
   .founder-lead h3 { font-size: 36px; }
 }
 @media (max-width: 480px) {

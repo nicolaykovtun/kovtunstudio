@@ -256,5 +256,83 @@ import '../styles/editorial-pages.css';
 <body class={bodyClass}>
   <a class="skip-link" href="#main-content">Перейти к содержанию</a>
   <slot />
+
+  <!-- Общий stagger reveal для содержательных блоков на всех страницах. -->
+  <script is:inline>
+    (() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+      const groupSelectors = [
+        '.section-head',
+        '.what-grid',
+        '.pricing',
+        '.gallery',
+        '.steps',
+        '.founder-intro',
+        '.founder-points',
+        '.faq .left',
+        '.faq .right',
+        '.cta-wrap',
+        '.scenario-grid',
+        '.package-grid',
+        '.rate-grid',
+        '.calculator-grid',
+        '.k-footer .top',
+        '.k-footer .bottom'
+      ];
+      const singleSelectors = [
+        '.pricing-note',
+        '.rate-note',
+        '.gallery-more'
+      ];
+
+      const groups = [];
+      const prepareGroup = (group, items) => {
+        if (!items.length || group.dataset.revealGroup !== undefined) return;
+
+        group.dataset.revealGroup = '';
+        items.forEach((item, index) => {
+          item.dataset.revealItem = '';
+          item.style.setProperty('--reveal-delay', `${Math.min(index, 5) * 70}ms`);
+        });
+        groups.push(group);
+      };
+
+      try {
+        groupSelectors.forEach((selector) => {
+          document.querySelectorAll(selector).forEach((group) => {
+            prepareGroup(group, Array.from(group.children));
+          });
+        });
+
+        singleSelectors.forEach((selector) => {
+          document.querySelectorAll(selector).forEach((item) => {
+            item.dataset.revealItem = '';
+            item.style.setProperty('--reveal-delay', '0ms');
+            prepareGroup(item, [item]);
+          });
+        });
+
+        if (!groups.length) return;
+        document.documentElement.classList.add('reveal-motion');
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          });
+        }, {
+          threshold: 0.12,
+          rootMargin: '0px 0px -8% 0px'
+        });
+
+        groups.forEach((group) => observer.observe(group));
+      } catch (error) {
+        document.documentElement.classList.remove('reveal-motion');
+      }
+    })();
+  </script>
 </body>
 </html>

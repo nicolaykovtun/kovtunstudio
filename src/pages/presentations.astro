@@ -1,0 +1,737 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Marquee from '../components/Marquee.astro';
+import Gallery from '../components/Gallery.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/presentations.css';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const nav = [
+  { href: '#scenarios', label: 'Сценарии' },
+  { href: '#pricing', label: 'Цены' },
+  { href: '#calculator', label: 'Калькулятор' },
+  { href: '#portfolio', label: 'Работы' },
+  { href: '#faq', label: 'FAQ' },
+];
+
+const marquee = {
+  ariaLabel: 'Для каких задач разрабатываю презентации',
+  items: [
+    'Питч инвестору',
+    'Продажа услуг',
+    'Коммерческое предложение',
+    'Отчёт о работе',
+    'Маркетинг-кит',
+    'Обучающие материалы',
+    'Выступление',
+    'Стратегия',
+    'Презентация компании',
+  ],
+};
+
+const scenarios = [
+  {
+    num: '01',
+    title: 'Текст готов',
+    text: 'Материал уже разбит по слайдам. Проверяю логику, выстраиваю иерархию и собираю дизайн.',
+    price: '+4 000 ₽ к дизайну',
+    value: 'ready',
+  },
+  {
+    num: '02',
+    title: 'Черновик текста',
+    text: 'Есть документ, письмо или бриф. Вычитываю, расставляю приоритеты и раскладываю материал по слайдам.',
+    price: '+10 000 ₽ до 20 слайдов',
+    value: 'raw',
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'Текста нет',
+    text: 'Есть идея, цифры и материалы. Провожу бриф, формулирую сообщения и собираю историю с нуля.',
+    price: '+15 000 ₽ и копирайтинг',
+    value: 'none',
+  },
+];
+
+const packages = [
+  {
+    num: '01',
+    title: 'Текст готов',
+    price: '24 000 ₽',
+    detail: '10 слайдов · дизайн 20 000 ₽ + текст 4 000 ₽',
+    items: ['Проверка логики подачи', 'Уникальный дизайн в стиле бренда', 'Инфографика и диаграммы', 'PDF + PPTX', 'Один раунд правок'],
+    value: 'ready',
+  },
+  {
+    num: '02',
+    title: 'Черновик текста',
+    price: '30 000 ₽',
+    detail: '10 слайдов · дизайн 20 000 ₽ + структура 10 000 ₽',
+    items: ['Вычитка и расстановка приоритетов', 'Структура и раскладка по слайдам', 'Уникальный дизайн', 'Инфографика и диаграммы', 'PDF + PPTX', 'Один раунд правок'],
+    value: 'raw',
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'С нуля',
+    price: '45 000 ₽',
+    detail: '10 слайдов · дизайн 20 000 ₽ + текст и структура 25 000 ₽',
+    items: ['Бриф: цель, аудитория, сообщение', 'Текст и история с нуля', 'Структура по слайдам', 'Уникальный дизайн и инфографика', 'PDF + PPTX', 'Один раунд правок'],
+    value: 'none',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Из чего складывается цена?',
+    a: 'Из двух частей. Дизайн считается по количеству слайдов, работа с текстом — по состоянию материалов: готовый текст по слайдам, черновик без разбивки или только идея.',
+  },
+  {
+    q: 'Что прислать для расчёта?',
+    a: 'Примерное количество слайдов, цель и аудиторию презентации, исходный текст и данные, логотип и фирменный стиль, если они есть. Чем полнее материалы, тем точнее расчёт.',
+  },
+  {
+    q: 'Почему слайды после 30-го стоят дороже?',
+    a: 'В больших презентациях чаще появляются сложные таблицы, диаграммы и структуры данных. Такие слайды требуют больше ручной работы, поэтому ставка с 31-го слайда меняется.',
+  },
+  {
+    q: 'Какие файлы я получу?',
+    a: 'PDF для отправки или печати и редактируемый PPTX. По договорённости презентацию можно собрать в Figma. Все согласованные исходники передаю.',
+  },
+  {
+    q: 'Сколько правок включено?',
+    a: 'Один раунд правок по замечаниям входит в стоимость. Структуру и текст согласовываем до дизайна — это сокращает количество переделок на финальном этапе.',
+  },
+  {
+    q: 'У меня только идея и несколько цифр. Возьмётесь?',
+    a: 'Да. Для этого есть сценарий «Текста нет»: бриф, ключевые сообщения, структура истории и текст с нуля. К сроку добавляются 2–3 рабочих дня на согласование сообщений.',
+  },
+  {
+    q: 'Можно переделать один слайд в готовой презентации?',
+    a: 'Да. Разработка или переделка одного слайда стоит 3 000 ₽, срок — 2 рабочих дня.',
+  },
+  {
+    q: 'Работаете официально?',
+    a: 'Да: ИП, договор и закрывающие документы. Работаю удалённо по всей России, общение — в Telegram, MAX и по почте.',
+  },
+];
+
+const contactData = {
+  title: 'Опишите задачу — отвечу за пару часов',
+  intro: 'Три коротких поля. Кнопка откроет Telegram с готовым сообщением — останется только отправить его в чате.',
+  telegramTitle: 'Написать в Telegram',
+  maxTitle: 'Написать в MAX',
+  formTitle: 'Расскажите о презентации',
+  fields: {
+    name: { label: 'Имя', placeholder: 'Как к вам обращаться' },
+    car: { label: 'Задача и объём', placeholder: 'Например: питч инвестору, около 15 слайдов' },
+    message: { label: 'Что есть по тексту (необязательно)', placeholder: 'Готовый текст, черновик без разбивки или только идея' },
+  },
+  privacy: 'Нажимая «Отправить», вы соглашаетесь, что я обработаю ваши контакты, чтобы ответить.',
+  submit: 'Обсудить презентацию',
+  successTitle: 'Сообщение собрано',
+  successText: 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.',
+  reopen: 'Открыть Telegram ещё раз',
+  resetText: 'Отправить ещё одну заявку',
+};
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Страница',
+      links: [
+        { href: '#scenarios', label: 'Сценарии работы' },
+        { href: '#pricing', label: 'Цены' },
+        { href: '#calculator', label: 'Калькулятор' },
+        { href: '#portfolio', label: 'Примеры слайдов' },
+        { href: '#process', label: 'Процесс' },
+        { href: '#faq', label: 'FAQ' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/', label: 'Главная' },
+        { href: '/#cases', label: 'Общее портфолио' },
+        { href: '#contact', label: 'Оставить заявку' },
+      ],
+    },
+  ],
+};
+
+const process = {
+  title: 'От брифа<br>до готовых файлов',
+  aside: 'Сначала согласуем мысль и структуру, затем переходим к дизайну. Так правки остаются быстрыми и не превращаются в переделку готовых слайдов.',
+  steps: [
+    {
+      num: '01',
+      title: 'Бриф',
+      text: 'Цель, аудитория, ключевое сообщение и состояние материалов. Обычно достаточно 10 минут в Telegram.',
+    },
+    {
+      num: '02',
+      title: 'Структура и текст',
+      text: 'Собираю логику повествования и присылаю документ на согласование до отрисовки слайдов.',
+    },
+    {
+      num: '03',
+      title: 'Дизайн',
+      text: 'Слайды в стиле бренда, инфографика и диаграммы под каждый смысловой блок.',
+    },
+    {
+      num: '04',
+      title: 'Файлы',
+      text: 'PDF и редактируемый PPTX. По договорённости — исходники в Figma. Один раунд правок включён.',
+    },
+  ],
+};
+
+const presentationGalleryItems = [
+  { id: '01', src: '/assets/presentations/sales-structure.webp', segment: 0, width: 900, height: 1500, alt: 'Обложка учебной презентации для отдела продаж' },
+  { id: '02', src: '/assets/presentations/sales-structure.webp', segment: 1, width: 900, height: 1500, alt: 'Логика программы — четыре модуля обучения' },
+  { id: '03', src: '/assets/presentations/sales-structure.webp', segment: 2, width: 900, height: 1500, alt: 'Разделитель модуля о территории продаж' },
+  { id: '04', src: '/assets/presentations/sales-data.webp', segment: 0, width: 900, height: 1500, alt: 'Слайд о трёх сегментах рынка' },
+  { id: '05', src: '/assets/presentations/sales-data.webp', segment: 1, width: 900, height: 1500, alt: 'Маршрут от контакта до клиента' },
+  { id: '06', src: '/assets/presentations/sales-data.webp', segment: 2, width: 900, height: 1500, alt: 'План продаж от года к дню' },
+  { id: '07', src: '/assets/presentations/sales-system.webp', segment: 0, width: 900, height: 1500, alt: 'Рабочая неделя из трёх типов дней' },
+  { id: '08', src: '/assets/presentations/sales-system.webp', segment: 1, width: 900, height: 1500, alt: 'Воронка продаж с реальным вкладом этапов' },
+  { id: '09', src: '/assets/presentations/sales-system.webp', segment: 2, width: 900, height: 1500, alt: 'Четыре модуля как единая система продаж' },
+];
+
+const presentationGalleryForJs = presentationGalleryItems.map((item) => ({
+  src: item.src,
+  label: item.alt,
+  segment: item.segment,
+}));
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${site.url}/presentations/#service`,
+  name: 'Разработка презентаций под ключ',
+  serviceType: 'Дизайн и разработка презентаций',
+  description: 'Структура, текст, дизайн и инфографика для презентаций инвесторам, клиентам и сотрудникам.',
+  provider: { '@id': `${site.url}/#business` },
+  areaServed: { '@type': 'Country', name: 'Россия' },
+  offers: packages.map((item) => ({
+    '@type': 'Offer',
+    name: `${item.title}, 10 слайдов`,
+    price: item.price.replace(/\D/g, ''),
+    priceCurrency: 'RUB',
+  })),
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Разработка презентаций под ключ — структура, текст, дизайн · Kovtun.studio"
+  description="Презентации для инвесторов, продаж и отчётов: структура, текст, дизайн и инфографика. От 14 000 ₽, PDF и PPTX, работа по всей России."
+  keywords="разработка презентаций, дизайн презентации, презентация для инвесторов, питч-дек, презентация под ключ, оформление презентации, Владивосток"
+  canonicalPath="/presentations/"
+  ogImage={null}
+  structuredData={[serviceLd, faqLd]}
+  bodyClass="page-presentations"
+>
+  <Header
+    nav={nav}
+    phone={site.contact.phone}
+    phoneTel={site.contact.phoneTel}
+    telegramUrl={site.contact.telegram}
+    maxUrl={site.contact.max}
+  />
+
+  <main id="main-content">
+    <section class="hero hero-dark presentations-hero" aria-labelledby="presentations-title">
+      <div class="container-wide inner">
+        <div class="presentations-hero__copy">
+          <span class="presentations-eyebrow">Презентации для бизнеса</span>
+          <h1 id="presentations-title">Презентация, которую <em>дочитывают до конца</em></h1>
+          <p class="lede">Структура, текст, дизайн и инфографика — под ключ. Питчи для инвесторов, продающие презентации, отчёты и маркетинг-киты.</p>
+          <div class="ctas">
+            <a class="btn btn-primary btn-lg" href="#contact">Обсудить презентацию <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="presentations-text-link" href="#calculator">Рассчитать стоимость</a>
+          </div>
+        </div>
+
+        <div class="presentations-stage" aria-hidden="true">
+          <div class="stage-slide stage-slide--back">
+            <span>Данные</span>
+            <div class="stage-bars"><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="stage-slide stage-slide--middle">
+            <span>Структура</span>
+            <b>01 / 04</b>
+          </div>
+          <div class="stage-slide stage-slide--front">
+            <small>KOVTUN.STUDIO</small>
+            <strong>Одна мысль<br>на один слайд</strong>
+            <i></i>
+          </div>
+        </div>
+
+        <div class="meta-row presentations-meta">
+          <div class="item"><span class="num">от 14<span class="accent">k</span> ₽</span><span class="lbl">Презентация под ключ</span></div>
+          <div class="item"><span class="num">3—7</span><span class="lbl">Рабочих дней</span></div>
+          <div class="item"><span class="num">PDF <span class="accent">+</span> PPTX</span><span class="lbl">Файлы и исходники</span></div>
+          <div class="item"><span class="num">VVO<span class="accent">.</span></span><span class="lbl">Владивосток · вся Россия</span></div>
+        </div>
+      </div>
+    </section>
+
+    <Marquee {...marquee} />
+
+    <section class="section" id="scenarios">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2>Три сценария —<br>смотря что у вас есть</h2>
+          <p class="aside">Дизайн считается одинаково. Итог меняется только из-за объёма работы с текстом: от лёгкой проверки до полноценной разработки истории.</p>
+        </div>
+        <div class="scenario-grid">
+          {scenarios.map((scenario) => (
+            <article class:list={['scenario-card', { 'is-featured': scenario.featured }]}>
+              <div class="scenario-card__top">
+                <span class="scenario-num">{scenario.num}</span>
+                {scenario.featured && <span class="scenario-badge">Чаще всего</span>}
+              </div>
+              <h3>{scenario.title}</h3>
+              <p>{scenario.text}</p>
+              <strong>{scenario.price}</strong>
+              <a href="#calculator" data-scenario-link={scenario.value}>Посчитать этот вариант <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section presentations-pricing" id="pricing">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2>Цена из двух частей:<br>дизайн + текст</h2>
+          <p class="aside">Ниже — три ориентира для презентации на 10 слайдов. Точный расчёт зависит от объёма и готовности материалов.</p>
+        </div>
+
+        <div class="package-grid">
+          {packages.map((item) => (
+            <article class:list={['package-card', { 'is-featured': item.featured }]}>
+              <div class="package-card__head">
+                <span>{item.num}</span>
+                {item.featured && <b>Чаще всего</b>}
+              </div>
+              <h3>{item.title}</h3>
+              <div class="package-price">{item.price}</div>
+              <p class="package-detail">{item.detail}</p>
+              <ul>
+                {item.items.map((entry) => <li>{entry}</li>)}
+              </ul>
+              <a class:list={['btn', item.featured ? 'btn-primary' : 'btn-dark']} href="#calculator" data-scenario-link={item.value}>
+                Рассчитать <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <div class="rate-grid" aria-label="Ставки за слайд">
+          <div class="rate-card">
+            <div class="rate-card__title"><h3>Дизайн</h3></div>
+            <dl>
+              <div><dt>1–10 слайдов</dt><dd>2 000 ₽ / слайд</dd></div>
+              <div><dt>11–30 слайдов</dt><dd>1 000 ₽ / слайд</dd></div>
+              <div><dt>31 и далее</dt><dd>1 200 ₽ / слайд</dd></div>
+            </dl>
+          </div>
+          <div class="rate-card">
+            <div class="rate-card__title"><h3>Копирайтинг</h3></div>
+            <dl>
+              <div><dt>1–10 слайдов</dt><dd>1 000 ₽ / слайд</dd></div>
+              <div><dt>11–30 слайдов</dt><dd>600 ₽ / слайд</dd></div>
+              <div><dt>31 и далее</dt><dd>800 ₽ / слайд</dd></div>
+            </dl>
+          </div>
+        </div>
+        <p class="rate-note">Ставка считается прогрессивно: первые 10 слайдов по первой цене, следующие 20 — по второй. В больших презентациях чаще появляются сложные таблицы и диаграммы, поэтому ставка с 31-го слайда выше.</p>
+      </div>
+    </section>
+
+    <section class="calculator-section" id="calculator" aria-labelledby="calculator-title">
+      <div class="container-wide calculator-grid">
+        <div class="calculator-controls">
+          <span class="calculator-kicker">Калькулятор</span>
+          <h2 id="calculator-title">Посчитайте свою презентацию</h2>
+          <p>Выберите объём и состояние текста. Цена и срок обновятся сразу.</p>
+
+          <div class="slide-control">
+            <div class="slide-control__head">
+              <label for="slide-count-range">Сколько слайдов</label>
+              <div><input id="slide-count-number" type="number" min="3" max="100" value="15" inputmode="numeric" aria-label="Количество слайдов"><span>шт.</span></div>
+            </div>
+            <input id="slide-count-range" type="range" min="3" max="100" value="15" step="1">
+            <div class="range-scale" aria-hidden="true"><span>3</span><span>50</span><span>100</span></div>
+          </div>
+
+          <fieldset class="scenario-picker">
+            <legend>Что есть по тексту</legend>
+            <label><input type="radio" name="text-state" value="ready"><span><b>Текст готов</b><small>Разбит по слайдам</small></span></label>
+            <label><input type="radio" name="text-state" value="raw" checked><span><b>Черновик текста</b><small>Без разбивки по слайдам</small></span></label>
+            <label><input type="radio" name="text-state" value="none"><span><b>Текста нет</b><small>Есть идея и материалы</small></span></label>
+          </fieldset>
+        </div>
+
+        <aside class="calculator-result" aria-live="polite">
+          <span class="calculator-result__label">Предварительный расчёт</span>
+          <div class="result-lines">
+            <div><span>Дизайн</span><strong id="result-design">25 000 ₽</strong></div>
+            <div><span>Текст и структура</span><strong id="result-text">10 000 ₽</strong></div>
+            <div id="result-copy-row" hidden><span>Копирайтинг</span><strong id="result-copy">0 ₽</strong></div>
+          </div>
+          <div class="result-total"><span>Итого</span><strong id="result-total">35 000 ₽</strong></div>
+          <p class="result-term" id="result-term">Срок — 5 рабочих дней</p>
+          <a class="btn btn-white btn-lg" id="calculator-telegram" href={site.contact.telegram} target="_blank" rel="noopener">Отправить расчёт в Telegram <span class="arrow" aria-hidden="true">→</span></a>
+          <p class="result-caption">Расчёт предварительный. Точную цену назову после просмотра материалов — обычно в течение пары часов.</p>
+          <div class="single-slide">Один слайд в готовую презентацию — <strong>3 000 ₽</strong>, срок 2 дня.</div>
+        </aside>
+      </div>
+    </section>
+
+    <Gallery
+      title="Работы&nbsp;—<br>слайды крупным планом"
+      aside="Кликните на любой слайд — он откроется во весь экран. Девять примеров показывают одну презентацию как систему: от обложки и структуры до данных и итогового вывода."
+      preview={9}
+      ctaAll="Смотреть все 9 слайдов"
+      sectionId="portfolio"
+      variant="slides"
+      items={presentationGalleryItems}
+    />
+
+    <ProcessSteps {...process} />
+
+    <FAQ
+      title="Частые<br>вопросы"
+      intro="Если короткого ответа недостаточно — напишите в Telegram. Посмотрю материалы и отвечу по вашей задаче."
+      ctaAsk="Задать вопрос"
+      telegramUrl={site.contact.telegram}
+      items={faqItems}
+    />
+
+    <ContactForm
+      data={contactData}
+      telegramUrl={site.contact.telegram}
+      telegramHandle={site.contact.telegramHandle}
+      maxUrl={site.contact.max}
+      maxHandle={site.contact.maxHandle}
+    />
+  </main>
+
+  <Footer {...footer} />
+
+  <script is:inline define:vars={{ TELEGRAM_URL: site.contact.telegram, MAX_URL: site.contact.max, METRIKA_ID: site.metrika.id, GALLERY: presentationGalleryForJs }}>
+    (function () {
+      'use strict';
+
+      function goal(name, params) {
+        if (typeof window.ym === 'function') {
+          try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (e) {}
+        }
+      }
+
+      var lb = document.getElementById('lightbox');
+      var lbMedia = document.getElementById('lb-media');
+      var lbImage = document.getElementById('lb-image');
+      var lbLabel = document.getElementById('lb-label');
+      var lbCounter = document.getElementById('lb-counter');
+      var lbThumbs = document.getElementById('lb-thumbs');
+      var currentSlide = null;
+
+      function pad(value) { return String(value).padStart(2, '0'); }
+
+      function buildGalleryThumbs() {
+        if (!lbThumbs) return;
+        var fragment = document.createDocumentFragment();
+        GALLERY.forEach(function (item, index) {
+          var button = document.createElement('button');
+          button.className = 'lightbox-thumb lightbox-thumb--slide';
+          button.style.setProperty('--slide-segment', String(item.segment));
+          button.setAttribute('aria-label', 'Открыть слайд ' + (index + 1));
+          var image = document.createElement('img');
+          image.src = item.src;
+          image.alt = '';
+          image.loading = 'lazy';
+          button.appendChild(image);
+          button.addEventListener('click', function (event) { event.stopPropagation(); openGallery(index); });
+          fragment.appendChild(button);
+        });
+        lbThumbs.appendChild(fragment);
+      }
+
+      function renderGallery() {
+        var item = GALLERY[currentSlide];
+        lbImage.src = item.src;
+        lbImage.alt = item.label;
+        lbLabel.textContent = item.label;
+        lbCounter.textContent = pad(currentSlide + 1) + ' / ' + pad(GALLERY.length);
+        lbMedia.style.setProperty('--slide-segment', String(item.segment));
+        Array.prototype.forEach.call(lbThumbs.children, function (thumb, index) {
+          thumb.classList.toggle('is-active', index === currentSlide);
+        });
+      }
+
+      function openGallery(index) {
+        currentSlide = index;
+        lb.classList.add('is-open');
+        document.body.classList.add('lightbox-locked');
+        renderGallery();
+        goal('presentation_portfolio_open', { index: index + 1 });
+      }
+
+      function closeGallery() {
+        currentSlide = null;
+        lb.classList.remove('is-open');
+        document.body.classList.remove('lightbox-locked');
+      }
+
+      function navigateGallery(delta) {
+        if (currentSlide === null) return;
+        currentSlide = (currentSlide + delta + GALLERY.length) % GALLERY.length;
+        renderGallery();
+      }
+
+      if (lb) {
+        buildGalleryThumbs();
+        Array.prototype.forEach.call(document.querySelectorAll('.gallery-item'), function (item) {
+          item.addEventListener('click', function () { openGallery(Number(item.dataset.index)); });
+        });
+        document.getElementById('gallery-all').addEventListener('click', function () { openGallery(0); });
+        document.getElementById('lb-close').addEventListener('click', closeGallery);
+        document.getElementById('lb-prev').addEventListener('click', function () { navigateGallery(-1); });
+        document.getElementById('lb-next').addEventListener('click', function () { navigateGallery(1); });
+        lb.addEventListener('click', function (event) { if (event.target === lb) closeGallery(); });
+        document.addEventListener('keydown', function (event) {
+          if (currentSlide === null) return;
+          if (event.key === 'Escape') closeGallery();
+          else if (event.key === 'ArrowLeft') navigateGallery(-1);
+          else if (event.key === 'ArrowRight') navigateGallery(1);
+        });
+      }
+
+      function money(value) {
+        return new Intl.NumberFormat('ru-RU').format(value) + ' ₽';
+      }
+
+      function progressive(n, firstRate, secondRate, thirdRate) {
+        return Math.min(n, 10) * firstRate +
+          Math.max(0, Math.min(n, 30) - 10) * secondRate +
+          Math.max(0, n - 30) * thirdRate;
+      }
+
+      function termFor(n) {
+        if (n <= 10) return 3;
+        if (n <= 30) return 5;
+        return 7 + Math.ceil((n - 30) / 15);
+      }
+
+      var range = document.getElementById('slide-count-range');
+      var number = document.getElementById('slide-count-number');
+      var scenarioInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="text-state"]'));
+      var designOut = document.getElementById('result-design');
+      var textOut = document.getElementById('result-text');
+      var copyOut = document.getElementById('result-copy');
+      var copyRow = document.getElementById('result-copy-row');
+      var totalOut = document.getElementById('result-total');
+      var termOut = document.getElementById('result-term');
+      var calcTelegram = document.getElementById('calculator-telegram');
+
+      function currentScenario() {
+        var selected = scenarioInputs.find(function (input) { return input.checked; });
+        return selected ? selected.value : 'raw';
+      }
+
+      function scenarioLabel(value) {
+        if (value === 'ready') return 'текст готов и разбит по слайдам';
+        if (value === 'none') return 'текста нет, есть идея и материалы';
+        return 'есть черновик текста без разбивки по слайдам';
+      }
+
+      function clampCount(value) {
+        return Math.max(3, Math.min(100, Number(value) || 3));
+      }
+
+      function updateCalculator() {
+        var n = clampCount(number.value);
+        var scenario = currentScenario();
+        var design = progressive(n, 2000, 1000, 1200);
+        var text = 0;
+        var copy = 0;
+
+        number.value = String(n);
+        range.value = String(n);
+
+        if (scenario === 'ready') text = 4000;
+        else if (scenario === 'raw') text = 10000 + Math.max(0, n - 20) * 400;
+        else {
+          text = 15000;
+          copy = progressive(n, 1000, 600, 800);
+        }
+
+        var total = design + text + copy;
+        var days = termFor(n);
+        var extra = scenario === 'none' ? ' + 2–3 дня на бриф' : '';
+
+        designOut.textContent = money(design);
+        textOut.textContent = money(text);
+        copyOut.textContent = money(copy);
+        copyRow.hidden = scenario !== 'none';
+        totalOut.textContent = money(total);
+        termOut.textContent = 'Срок — ' + days + ' рабочих ' + (days === 3 ? 'дня' : 'дней') + extra;
+
+        var message = [
+          'Здравствуйте! Хочу обсудить разработку презентации.',
+          '',
+          'Слайдов: ' + n,
+          'Материалы: ' + scenarioLabel(scenario),
+          'Предварительная стоимость: ' + money(total),
+          'Предварительный срок: ' + days + ' рабочих ' + (days === 3 ? 'дня' : 'дней') + extra,
+        ].join('\n');
+        calcTelegram.href = TELEGRAM_URL + '?text=' + encodeURIComponent(message);
+      }
+
+      if (range && number) {
+        range.addEventListener('input', function () { number.value = range.value; updateCalculator(); });
+        number.addEventListener('input', updateCalculator);
+        number.addEventListener('blur', updateCalculator);
+        scenarioInputs.forEach(function (input) { input.addEventListener('change', updateCalculator); });
+        updateCalculator();
+      }
+
+      Array.prototype.forEach.call(document.querySelectorAll('[data-scenario-link]'), function (link) {
+        link.addEventListener('click', function () {
+          var value = link.dataset.scenarioLink;
+          var input = document.querySelector('input[name="text-state"][value="' + value + '"]');
+          if (input) { input.checked = true; updateCalculator(); }
+        });
+      });
+
+      if (calcTelegram) {
+        calcTelegram.addEventListener('click', function () {
+          goal('presentation_calculator_submit', { slides: Number(number.value), scenario: currentScenario() });
+        });
+      }
+
+      function buildMessage(data) {
+        var lines = ['Здравствуйте! Хочу обсудить разработку презентации.', ''];
+        if (data.name) lines.push('Имя: ' + data.name);
+        if (data.task) lines.push('Задача и объём: ' + data.task);
+        if (data.materials) lines.push('\nМатериалы:\n' + data.materials);
+        return lines.join('\n');
+      }
+
+      var form = document.getElementById('lead-form');
+      var fName = document.getElementById('f-name');
+      var fTask = document.getElementById('f-car');
+      var fMessage = document.getElementById('f-message');
+      var errName = document.getElementById('err-name');
+      var errTask = document.getElementById('err-car');
+      var fields = document.getElementById('form-fields');
+      var success = document.getElementById('form-success');
+      var successText = document.getElementById('success-text');
+      var reopen = document.getElementById('reopen-messenger');
+      var copyBlock = document.getElementById('copy-text-block');
+      var copyArea = document.getElementById('copy-text-area');
+      var copyBtn = document.getElementById('copy-text-btn');
+      var copyBtnLabel = document.getElementById('copy-text-btn-label');
+
+      function setError(node, message) {
+        if (!node) return;
+        node.textContent = message || '';
+        node.hidden = !message;
+      }
+
+      function validate() {
+        var ok = true;
+        if (!fName.value.trim()) { setError(errName, 'Как к вам обращаться?'); ok = false; }
+        else setError(errName, '');
+        if (!fTask.value.trim()) { setError(errTask, 'Опишите задачу и примерный объём'); ok = false; }
+        else setError(errTask, '');
+        return ok;
+      }
+
+      if (form) {
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (!validate()) return;
+
+          var target = event.submitter && event.submitter.dataset.target || 'telegram';
+          var text = buildMessage({ name: fName.value.trim(), task: fTask.value.trim(), materials: fMessage.value.trim() });
+          var url = target === 'max' ? MAX_URL : TELEGRAM_URL + '?text=' + encodeURIComponent(text);
+          var label = target === 'max' ? 'MAX' : 'Telegram';
+
+          if (target === 'max') {
+            copyArea.value = text;
+            copyBlock.hidden = false;
+            successText.textContent = 'MAX откроется в новой вкладке. Скопируйте текст заявки кнопкой ниже и вставьте в чат.';
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function () {});
+          } else {
+            copyBlock.hidden = true;
+            successText.textContent = 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.';
+          }
+
+          window.open(url, '_blank', 'noopener,noreferrer');
+          reopen.href = url;
+          reopen.innerHTML = 'Открыть ' + label + ' ещё раз <span class="arrow" aria-hidden="true">→</span>';
+          fields.hidden = true;
+          success.hidden = false;
+          form.classList.add('is-success');
+          goal(target === 'max' ? 'presentation_lead_max' : 'presentation_lead_submit');
+        });
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+          var done = function () {
+            copyBtnLabel.textContent = 'Скопировано ✓';
+            setTimeout(function () { copyBtnLabel.textContent = 'Скопировать текст'; }, 2000);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyArea.value).then(done).catch(function () { copyArea.select(); document.execCommand('copy'); done(); });
+          } else { copyArea.select(); document.execCommand('copy'); done(); }
+        });
+      }
+
+      var resetBtn = document.getElementById('form-reset');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          form.reset();
+          setError(errName, '');
+          setError(errTask, '');
+          success.hidden = true;
+          fields.hidden = false;
+          form.classList.remove('is-success');
+        });
+      }
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
+        link.addEventListener('click', function () { goal('presentation_cta_main'); });
+      });
+    })();
+  </script>
+</BaseLayout>

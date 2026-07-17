@@ -4,6 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 interface Point {
+  num: string;
   title: string;
   text: string;
 }
@@ -68,6 +69,7 @@ const imageVersion = data.image
       <div class="founder-points" aria-label="Как устроена работа">
         {data.points.map(point => (
           <div class="founder-point">
+            <div class="founder-point-num">{point.num}</div>
             <h4>{point.title}</h4>
             <p>{point.text}</p>
           </div>

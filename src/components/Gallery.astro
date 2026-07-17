@@ -4,12 +4,29 @@ interface Props {
   aside: string;
   preview: number;       // сколько превью показать на странице
   ctaAll: string;
-  items: { id: string; alt: string }[];
+  sectionId?: string;
+  variant?: 'default' | 'slides';
+  items: {
+    id: string;
+    alt: string;
+    src?: string;
+    segment?: number;
+    width?: number;
+    height?: number;
+  }[];
 }
-const { title, aside, preview, ctaAll, items } = Astro.props;
+const {
+  title,
+  aside,
+  preview,
+  ctaAll,
+  sectionId = 'cases',
+  variant = 'default',
+  items,
+} = Astro.props;
 const previewItems = items.slice(0, preview);
 ---
-<section class="section section-tight" id="cases">
+<section class="section section-tight" id={sectionId}>
   <div class="container-wide">
     <div class="section-head">
       <div>
@@ -18,16 +35,23 @@ const previewItems = items.slice(0, preview);
       <p class="aside">{aside}</p>
     </div>
 
-    <div class="gallery" id="gallery">
+    <div class:list={['gallery', { 'gallery--slides': variant === 'slides' }]} id="gallery">
       {previewItems.map((it, i) => (
-        <button type="button" class="gallery-item" data-index={i} aria-label={`Открыть работу: ${it.alt}`}>
+        <button
+          type="button"
+          class:list={['gallery-item', { 'gallery-item--slide': variant === 'slides' }]}
+          data-index={i}
+          data-segment={it.segment}
+          style={it.segment !== undefined ? `--slide-segment: ${it.segment}` : undefined}
+          aria-label={`Открыть работу: ${it.alt}`}
+        >
           <img
-            src={`/assets/portfolio/thumb/${it.id}.webp`}
+            src={it.src ?? `/assets/portfolio/thumb/${it.id}.webp`}
             alt={it.alt}
             loading={i === 0 ? 'eager' : 'lazy'}
             fetchpriority={i === 0 ? 'high' : undefined}
-            width="800"
-            height="447"
+            width={it.width ?? 800}
+            height={it.height ?? 447}
           />
           <span class="hover-zoom" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg>
@@ -55,7 +79,9 @@ const previewItems = items.slice(0, preview);
       <button class="lightbox-btn next" id="lb-next" aria-label="Следующая">
         <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
       </button>
-      <img class="lightbox-image" id="lb-image" src="" alt="">
+      <div class:list={['lightbox-media', { 'lightbox-media--slides': variant === 'slides' }]} id="lb-media">
+        <img class="lightbox-image" id="lb-image" src="" alt="">
+      </div>
       <div class="lightbox-caption">
         <span class="counter" id="lb-counter"></span>
         <span id="lb-label"></span>
