@@ -343,7 +343,7 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 
 /* ─── Hero: вход на первом экране (stagger reveal) ─────────────────────
    Заголовок, подзаголовок, кнопки и цифры проявляются по очереди
-   с подъёмом снизу — как на motion.dev/examples/react-hero-stagger. */
+   с подъемом снизу — как на motion.dev/examples/react-hero-stagger. */
 @keyframes hero-rise {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -372,7 +372,7 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 /* ─── Сквозное появление блоков при прокрутке ─────────────────────────
    Повторяет ритм первого экрана: элементы поднимаются коротким каскадом.
    Скрытое состояние включается только после инициализации JS, поэтому
-   весь контент остаётся доступным без JavaScript. */
+   весь контент остается доступным без JavaScript. */
 html.reveal-motion [data-reveal-item] {
   opacity: 0;
   transform: translate3d(0, 24px, 0);
@@ -1441,7 +1441,7 @@ image-slot {
 .lightbox-btn { border-radius: 0; }
 
 /* Плавное появление элементов каталога и старых кейсов.
-   Без JS контент остаётся видимым. */
+   Без JS контент остается видимым. */
 html.js-reveal .reveal {
   opacity: 0;
   transform: translateY(20px);

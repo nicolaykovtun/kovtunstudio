@@ -7,7 +7,7 @@
   offerShortName: Базовый
   price: 10000
   priceFormatted: "10 000"
-  priceNote: Макет под печать включён
+  priceNote: Макет под печать включен
   image: assets/tier-basic/01.webp
   imageAlt: Пример базового дизайна оклейки авто
   exampleTag: "Пример работы · базовый"
@@ -30,7 +30,7 @@
   offerShortName: Расширенный
   price: 15000
   priceFormatted: "15 000"
-  priceNote: Макет под печать включён
+  priceNote: Макет под печать включен
   image: assets/tier-extended/01.webp
   imageAlt: Пример расширенного дизайна оклейки авто с рекламными блоками
   exampleTag: "Пример работы · расширенный"
@@ -54,7 +54,7 @@
   offerShortName: Имиджевый
   price: 25000
   priceFormatted: "25 000"
-  priceNote: Макет под печать включён
+  priceNote: Макет под печать включен
   image: assets/tier-image/01.webp
   imageAlt: Пример имиджевой концепции оклейки авто
   exampleTag: "Пример работы · имиджевый"

@@ -83,7 +83,7 @@ const cases = [
 const caseBySlug = Object.fromEntries(cases.map(c => [c.slug, c]));
 const coverIds = new Set(legacyCases.map(c => c.cover));
 
-// Работы, обогащённые направлением и сферой (через свой кейс)
+// Работы, обогащенные направлением и сферой (через свой кейс)
 const works = gallery.map(g => ({
   ...g,
   direction: caseBySlug[g.project]?.direction,
@@ -95,7 +95,7 @@ const countByProject = Object.fromEntries(
   cases.map(c => [c.slug, gallery.filter(g => g.project === c.slug).length])
 );
 
-// Направления: счётчики кейсов и работ (пустые — «скоро»)
+// Направления: счетчики кейсов и работ (пустые — «скоро»)
 const directions = taxonomy.directions.map((d: any, i: number) => {
   const dirCases = cases.filter(c => c.direction === d.key);
   return {
@@ -379,7 +379,7 @@ const seoDescription =
       });
 
       // Пришли по ссылке с ?direction=/?sphere= (например, со страницы /services/) —
-      // применяем фильтр сразу и подскрёстываем к разделу кейсов.
+      // применяем фильтр сразу и подскрестываем к разделу кейсов.
       if (state.direction !== "all" || state.sphere !== "all") {
         apply();
         var casesSection = document.getElementById("cases");

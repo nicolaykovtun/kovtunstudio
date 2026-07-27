@@ -338,7 +338,7 @@ export const editorialCaseConfigs: Record<string, EditorialCaseConfig> = {
         {
           number: '03',
           title: 'Пчеловодство стало системой фактов',
-          text: 'Сплошной текст разделён на виды мёда, показатели пасеки, карту медосбора и статус предприятия.',
+          text: 'Сплошной текст разделен на виды меда, показатели пасеки, карту медосбора и статус предприятия.',
           media: [
             { src: `${terneyRoot}/brief/terneysky-fermer-client-brief-slide-09.webp`, alt: 'Исходный слайд ТЗ о пчеловодстве', caption: 'ТЗ клиента' },
             { src: `${terneyRoot}/wireframe/terneysky-fermer-presentation-wireframe-slide-10.webp`, alt: 'Вайрфрейм слайда о пчеловодстве', caption: 'Вайрфрейм' },

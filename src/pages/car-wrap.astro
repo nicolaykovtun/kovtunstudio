@@ -110,8 +110,8 @@ const ldPortfolioImages = {
 ---
 <BaseLayout
   title="Дизайн оклейки авто во Владивостоке — макеты для коммерческого транспорта · Kovtun.studio"
-  description="Разрабатываю макеты оклейки для лёгковых, фургонов и коммерческого транспорта. От 10 000 ₽ — простой брендинг до 25 000 ₽ — имиджевой рекламной концепции. Файлы готовы под печать. Заявка в Telegram."
-  keywords="дизайн оклейки авто, макет оклейки, брендинг авто, реклама на автомобиле, оклейка коммерческого транспорта, дизайн под плёнку, Владивосток, Kovtun.studio"
+  description="Разрабатываю макеты оклейки для легковых, фургонов и коммерческого транспорта. От 10 000 ₽ — простой брендинг до 25 000 ₽ — имиджевой рекламной концепции. Файлы готовы под печать. Заявка в Telegram."
+  keywords="дизайн оклейки авто, макет оклейки, брендинг авто, реклама на автомобиле, оклейка коммерческого транспорта, дизайн под пленку, Владивосток, Kovtun.studio"
   canonicalPath="/car-wrap/"
   ogTitle="Дизайн оклейки авто — макеты для коммерческого транспорта"
   ogDescription="Макеты оклейки от 10 000 ₽: брендинг, реклама, имиджевая концепция. Под печать, без сюрпризов в продакшене. Заявка — в Telegram @nikolaikovtun."
@@ -284,7 +284,7 @@ const ldPortfolioImages = {
         var ok = true;
         if (!fName.value.trim()) { setError(errName, "Как к вам обращаться?"); ok = false; }
         else setError(errName, "");
-        if (!fCar.value.trim()) { setError(errCar, "Марка и модель — чтобы прикинуть объём"); ok = false; }
+        if (!fCar.value.trim()) { setError(errCar, "Марка и модель — чтобы прикинуть объем"); ok = false; }
         else setError(errCar, "");
         return ok;
       }
@@ -326,7 +326,7 @@ const ldPortfolioImages = {
           window.open(url, "_blank", "noopener,noreferrer");
           reopen.href = url;
           // Меняем текст у reopen — оставляем span со стрелкой
-          reopen.innerHTML = "Открыть " + label + " ещё раз <span class=\"arrow\" aria-hidden=\"true\">→</span>";
+          reopen.innerHTML = "Открыть " + label + " еще раз <span class=\"arrow\" aria-hidden=\"true\">→</span>";
           fields.hidden = true;
           success.hidden = false;
           form.classList.add("is-success");
