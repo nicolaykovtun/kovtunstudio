@@ -1,0 +1,567 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import RevealScript from '../components/RevealScript.astro';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+const taxonomy = yaml.load(fs.readFileSync(path.join(dataDir, 'taxonomy.yaml'), 'utf8')) as any;
+
+const nav = [
+  { href: '#directions', label: 'Направления' },
+  { href: '#process', label: 'Процесс' },
+  { href: '#proof', label: 'Работы' },
+  { href: '#faq', label: 'FAQ' },
+  { href: '#contact', label: 'Написать' },
+];
+
+// Тексты и переходы по направлениям — ключ соответствует taxonomy.yaml.
+// Направления без опубликованных кейсов (packaging, identity) ведут в
+// портфолио с фильтром: там уже есть честный пустой экран «Скоро».
+const directionContent: Record<string, { text: string; status: string; ctaLabel: string; href: string }> = {
+  packaging: {
+    text: 'Дизайн упаковки для розницы и HoReCa: от концепции до макета под печать.',
+    status: 'Скоро',
+    ctaLabel: 'Смотреть направление',
+    href: '/portfolio/?direction=packaging',
+  },
+  identity: {
+    text: 'Логотип, фирменный стиль и гайдлайн: основа для остальных материалов.',
+    status: 'Скоро',
+    ctaLabel: 'Смотреть направление',
+    href: '/portfolio/?direction=identity',
+  },
+  web: {
+    text: 'Сайты и лендинги для бизнеса: структура, тексты и готовые страницы.',
+    status: '1 кейс в портфолио',
+    ctaLabel: 'Смотреть кейс',
+    href: '/portfolio/?direction=web',
+  },
+  presentations: {
+    text: 'Структура, текст, дизайн и инфографика под ключ: питчи, отчёты, маркетинг-киты.',
+    status: 'Лендинг · калькулятор цены',
+    ctaLabel: 'Смотреть лендинг',
+    href: '/presentations/',
+  },
+  wrap: {
+    text: 'Рекламная, брендовая и имиджевая оклейка коммерческого транспорта: от фургона до спецтехники.',
+    status: 'Лендинг · от 10 000 ₽',
+    ctaLabel: 'Смотреть лендинг',
+    href: '/',
+  },
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const directions = taxonomy.directions.map((d: any, i: number) => ({
+  num: pad(i + 1),
+  key: d.key,
+  label: d.label,
+  ...directionContent[d.key],
+}));
+
+const benefits = [
+  {
+    k: 'С 2010 года',
+    v: 'Начинал с упаковки и фирменного стиля, сейчас применяю тот же подход в оклейке, сайтах и презентациях.',
+  },
+  {
+    k: 'Один контакт',
+    v: 'Бриф, концепцию, правки и подготовку файла под печать или публикацию веду сам.',
+  },
+  {
+    k: 'Разные сферы бизнеса',
+    v: 'Металлургия, агробизнес, логистика, ретейл — разный контекст помогает видеть решения шире.',
+  },
+  {
+    k: 'Официально, без сюрпризов',
+    v: 'ИП, договор, ЭДО и NDA по запросу. Все исходники — ваши.',
+  },
+];
+
+const process = {
+  title: 'Как строится<br>работа',
+  aside: 'Один процесс для любого формата — от упаковки до сайта.',
+  steps: [
+    { num: '01', title: 'Бриф', text: 'Пишете, что нужно и в каком формате: сайт, презентация, упаковка, айдентика или оклейка.' },
+    { num: '02', title: 'Концепция', text: 'Предлагаю вариант и объясняю, почему он решает вашу задачу.' },
+    { num: '03', title: 'Правки', text: 'Дорабатываем вместе, пока результат не устроит обе стороны.' },
+    { num: '04', title: 'Готовый файл', text: 'Отдаю макет в нужном формате: под печать, для сайта или презентации.' },
+  ],
+};
+
+const faqItems = [
+  { q: 'Не знаю, какой формат мне нужен — что делать?', a: 'Опишите задачу в сообщении. Подскажу формат и примерную цену в переписке или на созвоне.' },
+  { q: 'Можно заказать сразу два направления, например логотип и упаковку?', a: 'Да. Такие задачи веду вместе — так проще сохранить единый стиль между материалами.' },
+  { q: 'Сколько это стоит?', a: 'Цена зависит от объёма и сложности задачи, а не от размера компании. У оклейки и презентаций цены и калькулятор есть на их страницах. Упаковку, айдентику и сайты считаю индивидуально после брифа.' },
+  { q: 'Можно заказать только часть работы?', a: 'Да. Для сайта можно отдельно заказать только текст и структуру, без дизайна и вёрстки. Для айдентики — только гайдлайн, если логотип уже есть.' },
+  { q: 'Работаете один или с командой?', a: 'Все пять направлений веду сам: от брифа до готового файла.' },
+  { q: 'Как оформляется работа?', a: 'Официально, как ИП, с договором. ЭДО и NDA — по запросу. Все исходники передаю вам.' },
+  { q: 'Как быстро посчитаете стоимость?', a: 'Смету отправляю в тот же день, как получаю бриф.' },
+];
+
+const contactData = {
+  title: 'Опишите задачу — отвечу за пару часов',
+  intro: 'Три коротких поля. Кнопка откроет Telegram с готовым сообщением — останется только отправить его в чате.',
+  telegramTitle: 'Написать в Telegram',
+  maxTitle: 'Написать в MAX',
+  formTitle: 'Расскажите о задаче',
+  fields: {
+    name: { label: 'Имя', placeholder: 'Как к вам обращаться' },
+    car: { label: 'Направление и задача', placeholder: 'Например: логотип для фермерского хозяйства' },
+    message: { label: 'Детали, если есть (необязательно)', placeholder: 'Бюджет, сроки, что уже готово' },
+  },
+  privacy: 'Нажимая «Отправить», вы соглашаетесь, что я обработаю ваши контакты, чтобы ответить.',
+  submit: 'Обсудить проект',
+  successTitle: 'Сообщение собрано',
+  successText: 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.',
+  reopen: 'Открыть Telegram ещё раз',
+  resetText: 'Отправить ещё одну заявку',
+};
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Страница',
+      links: [
+        { href: '#directions', label: 'Направления' },
+        { href: '#process', label: 'Процесс' },
+        { href: '#proof', label: 'Работы' },
+        { href: '#faq', label: 'FAQ' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/presentations/', label: 'Презентации' },
+        { href: '#contact', label: 'Оставить заявку' },
+      ],
+    },
+  ],
+};
+
+const collectionLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${site.url}/services/#collection`,
+  name: 'Услуги Kovtun.studio',
+  url: `${site.url}/services/`,
+  isPartOf: { '@id': `${site.url}/#business` },
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: directions.map((d: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: d.label,
+      url: new URL(d.href, `${site.url}/`).toString(),
+    })),
+  },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Услуги — упаковка, айдентика, сайты, презентации, оклейка авто · Kovtun.studio"
+  description="Пять направлений дизайна у одного исполнителя: упаковка, логотип и фирменный стиль, сайты, презентации, оклейка коммерческого транспорта. Один контакт от брифа до готового файла."
+  keywords="услуги дизайнера, упаковка, фирменный стиль, дизайн сайта, презентации, оклейка авто, Владивосток, Kovtun.studio"
+  canonicalPath="/services/"
+  ogImage={null}
+  structuredData={[collectionLd, faqLd]}
+  bodyClass="page-services"
+>
+  <Header
+    nav={nav}
+    phone={site.contact.phone}
+    phoneTel={site.contact.phoneTel}
+    telegramUrl={site.contact.telegram}
+    maxUrl={site.contact.max}
+  />
+
+  <main id="main-content">
+    <section class="services-hero">
+      <div class="container-wide">
+        <p class="s-crumb reveal">
+          <a href="/">Главная</a><span aria-hidden="true">/</span><span>Услуги</span>
+        </p>
+        <h1 class="reveal" style="--reveal-delay: 60ms">
+          Один дизайнер.<br>
+          <em class="accent">пять форматов дизайна</em>
+        </h1>
+        <p class="s-lede reveal" style="--reveal-delay: 120ms">
+          Упаковка, логотип и фирменный стиль, сайты, презентации, оклейка коммерческого
+          транспорта. Один контакт от брифа до сдачи макета, без агентства и передачи
+          между менеджерами. Ниже — что входит в каждое направление и примеры готовых работ.
+        </p>
+        <div class="s-ctas reveal" style="--reveal-delay: 180ms">
+          <a class="btn btn-primary btn-lg" href="#directions">
+            Смотреть направления <span class="arrow" aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight services-benefits">
+      <div class="container-wide">
+        <div class="benefits-grid">
+          {benefits.map((b, i) => (
+            <div class="benefit reveal" style={`--reveal-delay: ${i * 60}ms`}>
+              <div class="benefit-k">{b.k}</div>
+              <div class="benefit-v">{b.v}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="services-quote">
+      <div class="container-wide">
+        <blockquote class="reveal">
+          «Хороший редизайн — это не когда «стало красивее». Это когда продуктом
+          стало проще пользоваться и его стало легче выбирать.»
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="section" id="directions">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2>Пять направлений</h2>
+          <p class="aside">Выберите нужное — попадёте на лендинг услуги или в примеры работ.</p>
+        </div>
+        <div class="dir-grid">
+          {directions.map((d: any, i: number) => (
+            <a class="dir-card reveal" href={d.href} style={`--reveal-delay: ${i * 50}ms`} data-direction={d.key}>
+              <span class="dc-num">{d.num}</span>
+              <h3>{d.label}</h3>
+              <p>{d.text}</p>
+              <span class:list={['dc-status', { 'is-soon': d.status === 'Скоро' }]}>{d.status}</span>
+              <span class="dc-cta">{d.ctaLabel} <span class="arrow" aria-hidden="true">→</span></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <ProcessSteps {...process} />
+
+    <section class="section-tight services-proof" id="proof">
+      <div class="container-wide">
+        <div class="proof-row reveal">
+          <div class="proof-copy">
+            <h2>Работы из разных сфер</h2>
+            <p class="proof-names">
+              Среди клиентов: <b>Green Power</b>, <b>«Металл Инвест»</b>,
+              <b>Тернейский фермер</b>, <b>ВМТП</b>, <b>Japan Шина</b>.
+            </p>
+          </div>
+          <a class="btn btn-dark" href="/portfolio/">
+            Смотреть всё портфолио <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <FAQ
+      title="Частые<br>вопросы"
+      intro="Если короткого ответа недостаточно — напишите в Telegram. Посмотрю задачу и отвечу подробно."
+      ctaAsk="Задать вопрос"
+      telegramUrl={site.contact.telegram}
+      items={faqItems}
+    />
+
+    <ContactForm
+      data={contactData}
+      telegramUrl={site.contact.telegram}
+      telegramHandle={site.contact.telegramHandle}
+      maxUrl={site.contact.max}
+      maxHandle={site.contact.maxHandle}
+    />
+  </main>
+
+  <Footer {...footer} />
+  <RevealScript />
+
+  <script is:inline define:vars={{ TELEGRAM_URL: site.contact.telegram, MAX_URL: site.contact.max, METRIKA_ID: site.metrika.id }}>
+    (function () {
+      'use strict';
+
+      function goal(name, params) {
+        if (typeof window.ym === 'function') {
+          try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (e) {}
+        }
+      }
+
+      function buildMessage(data) {
+        var lines = ['Здравствуйте! Хочу обсудить проект дизайна.', ''];
+        if (data.name) lines.push('Имя: ' + data.name);
+        if (data.task) lines.push('Направление и задача: ' + data.task);
+        if (data.materials) lines.push('\nДетали:\n' + data.materials);
+        return lines.join('\n');
+      }
+
+      var form = document.getElementById('lead-form');
+      var fName = document.getElementById('f-name');
+      var fTask = document.getElementById('f-car');
+      var fMessage = document.getElementById('f-message');
+      var errName = document.getElementById('err-name');
+      var errTask = document.getElementById('err-car');
+      var fields = document.getElementById('form-fields');
+      var success = document.getElementById('form-success');
+      var successText = document.getElementById('success-text');
+      var reopen = document.getElementById('reopen-messenger');
+      var copyBlock = document.getElementById('copy-text-block');
+      var copyArea = document.getElementById('copy-text-area');
+      var copyBtn = document.getElementById('copy-text-btn');
+      var copyBtnLabel = document.getElementById('copy-text-btn-label');
+
+      function setError(node, message) {
+        if (!node) return;
+        node.textContent = message || '';
+        node.hidden = !message;
+      }
+
+      function validate() {
+        var ok = true;
+        if (!fName.value.trim()) { setError(errName, 'Как к вам обращаться?'); ok = false; }
+        else setError(errName, '');
+        if (!fTask.value.trim()) { setError(errTask, 'Какое направление и задача?'); ok = false; }
+        else setError(errTask, '');
+        return ok;
+      }
+
+      if (form) {
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (!validate()) return;
+
+          var target = (event.submitter && event.submitter.dataset.target) || 'telegram';
+          var text = buildMessage({ name: fName.value.trim(), task: fTask.value.trim(), materials: fMessage.value.trim() });
+          var url = target === 'max' ? MAX_URL : TELEGRAM_URL + '?text=' + encodeURIComponent(text);
+          var label = target === 'max' ? 'MAX' : 'Telegram';
+
+          if (target === 'max') {
+            copyArea.value = text;
+            copyBlock.hidden = false;
+            successText.textContent = 'MAX откроется в новой вкладке. Скопируйте текст заявки кнопкой ниже и вставьте в чат.';
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function () {});
+          } else {
+            copyBlock.hidden = true;
+            successText.textContent = 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.';
+          }
+
+          window.open(url, '_blank', 'noopener,noreferrer');
+          reopen.href = url;
+          reopen.innerHTML = 'Открыть ' + label + ' ещё раз <span class="arrow" aria-hidden="true">→</span>';
+          fields.hidden = true;
+          success.hidden = false;
+          form.classList.add('is-success');
+          goal(target === 'max' ? 'services_lead_max' : 'services_lead_submit');
+        });
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+          var done = function () {
+            copyBtnLabel.textContent = 'Скопировано ✓';
+            setTimeout(function () { copyBtnLabel.textContent = 'Скопировать текст'; }, 2000);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyArea.value).then(done).catch(function () { copyArea.select(); document.execCommand('copy'); done(); });
+          } else { copyArea.select(); document.execCommand('copy'); done(); }
+        });
+      }
+
+      var resetBtn = document.getElementById('form-reset');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          form.reset();
+          setError(errName, '');
+          setError(errTask, '');
+          success.hidden = true;
+          fields.hidden = false;
+          form.classList.remove('is-success');
+        });
+      }
+
+      Array.prototype.forEach.call(document.querySelectorAll('.dir-card'), function (link) {
+        link.addEventListener('click', function () {
+          goal('services_direction_click', { direction: link.dataset.direction });
+        });
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* ── Hero ───────────────────────────────────────────────────────────── */
+  .services-hero {
+    padding: 96px 0 72px;
+    border-bottom: 1px solid var(--line-1);
+  }
+  .s-crumb {
+    font: 700 12px/1.2 var(--font-display);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    display: flex; align-items: center; gap: 12px;
+    margin: 0 0 40px;
+  }
+  .s-crumb a { color: var(--fg-3); border: 0; transition: color var(--dur-fast); }
+  .s-crumb a:hover { color: var(--ks-red); }
+  .s-crumb span[aria-hidden] { color: var(--line-2); }
+  .s-crumb span:last-child { color: var(--fg-1); }
+
+  .services-hero h1 {
+    font: 800 clamp(40px, 6.4vw, 88px)/1.04 var(--font-display);
+    letter-spacing: -0.03em;
+    color: var(--fg-1);
+    margin: 0 0 28px;
+    max-width: 20ch;
+  }
+  .services-hero h1 em { font-style: normal; }
+  .s-lede {
+    font: 400 clamp(16px, 1.3vw, 19px)/1.55 var(--font-body);
+    color: var(--fg-3);
+    max-width: 62ch;
+    margin: 0 0 40px;
+  }
+  .s-ctas { display: flex; gap: 14px; }
+
+  /* ── Benefits ───────────────────────────────────────────────────────── */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .benefit {
+    background: var(--bg-2);
+    border-radius: var(--r-2);
+    padding: 28px 24px;
+  }
+  .benefit-k {
+    font: 700 16px/1.25 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--fg-1);
+    margin-bottom: 10px;
+  }
+  .benefit-v {
+    font: 400 14.5px/1.5 var(--font-body);
+    color: var(--fg-3);
+  }
+  @media (max-width: 900px) { .benefits-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .benefits-grid { grid-template-columns: 1fr; } }
+
+  /* ── Philosophy quote ───────────────────────────────────────────────── */
+  .services-quote { padding: 64px 0; }
+  .services-quote blockquote {
+    margin: 0;
+    padding-left: 28px;
+    border-left: 3px solid var(--ks-red);
+    font: 700 clamp(20px, 2.6vw, 30px)/1.4 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--fg-1);
+    max-width: 44ch;
+  }
+
+  /* ── Directions grid ────────────────────────────────────────────────── */
+  .dir-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .dir-card {
+    background: var(--bg-2);
+    border-radius: var(--r-2);
+    padding: 32px 28px 28px;
+    display: flex; flex-direction: column;
+    text-decoration: none;
+    border: 0;
+    transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+  }
+  .dir-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+  .dc-num {
+    font: 800 13px/1 var(--font-display);
+    letter-spacing: 0.16em;
+    color: var(--ks-red);
+    margin-bottom: 18px;
+  }
+  .dir-card h3 {
+    font: 700 22px/1.2 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--fg-1);
+    margin: 0 0 12px;
+  }
+  .dir-card p {
+    font: 400 14.5px/1.5 var(--font-body);
+    color: var(--fg-3);
+    margin: 0 0 20px;
+    flex: 1;
+  }
+  .dc-status {
+    align-self: flex-start;
+    font: 700 10px/1 var(--font-display);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--fg-3);
+    border: 1px solid var(--line-2);
+    padding: 7px 10px;
+    margin-bottom: 18px;
+  }
+  .dc-status.is-soon { color: var(--fg-4); }
+  .dc-cta {
+    font: 700 14px/1 var(--font-display);
+    color: var(--fg-1);
+    display: inline-flex; align-items: center; gap: 8px;
+    border-top: 1px solid var(--line-2);
+    padding-top: 18px;
+    transition: color var(--dur-base);
+  }
+  .dir-card:hover .dc-cta { color: var(--ks-red); }
+
+  /* ── Proof strip ────────────────────────────────────────────────────── */
+  .proof-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .proof-row h2 {
+    font: 700 clamp(26px, 3vw, 36px)/1.15 var(--font-display);
+    letter-spacing: -0.015em;
+    color: var(--fg-1);
+    margin: 0 0 10px;
+  }
+  .proof-names {
+    font: 400 15px/1.5 var(--font-body);
+    color: var(--fg-3);
+    margin: 0;
+    max-width: 56ch;
+  }
+  .proof-names b { color: var(--fg-1); font-weight: 700; }
+
+  @media (max-width: 700px) {
+    .services-hero { padding: 64px 0 48px; }
+    .dir-grid { grid-template-columns: 1fr; }
+  }
+</style>

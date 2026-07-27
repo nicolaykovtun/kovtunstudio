@@ -320,7 +320,11 @@ const seoDescription =
     // Применяется одновременно к кейсам (#case-index) и работам (#works-grid).
     (function () {
       "use strict";
-      var state = { direction: "all", sphere: "all" };
+      var params = new URLSearchParams(window.location.search);
+      var state = {
+        direction: params.get("direction") || "all",
+        sphere: params.get("sphere") || "all",
+      };
       var chips = document.querySelectorAll(".filter-panel .chip");
       var rows = document.querySelectorAll("#case-index .case-row");
       var tiles = document.querySelectorAll("#works-grid .work-tile");
@@ -373,6 +377,14 @@ const seoDescription =
           apply();
         });
       });
+
+      // Пришли по ссылке с ?direction=/?sphere= (например, со страницы /services/) —
+      // применяем фильтр сразу и подскрёстываем к разделу кейсов.
+      if (state.direction !== "all" || state.sphere !== "all") {
+        apply();
+        var casesSection = document.getElementById("cases");
+        if (casesSection) casesSection.scrollIntoView({ behavior: "instant", block: "start" });
+      }
     })();
   </script>
 </BaseLayout>

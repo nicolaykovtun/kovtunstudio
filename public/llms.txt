@@ -20,6 +20,7 @@
 ## Ключевые разделы сайта
 
 - Главная: https://design.kovtun.studio/
+- Услуги — каталог всех пяти направлений с переходом на нужный лендинг или в портфолио: https://design.kovtun.studio/services/
 - Портфолио по пяти направлениям: https://design.kovtun.studio/portfolio/
 - Кейс Japan Шина — структура, тексты и дизайн сайта: https://design.kovtun.studio/cases/website-japan-shina/
 - Кейс Edelweiss «Золотой Рог» — брошюра жилого квартала: https://design.kovtun.studio/cases/presentation-edelweiss/

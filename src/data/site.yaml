@@ -89,7 +89,7 @@ themeColor: "#EF1C24"
 nav:
   - href: "/portfolio/"
     label: Портфолио
-  - href: "/#what"
+  - href: "/services/"
     label: Услуги
   - href: "/#pricing"
     label: Цены
