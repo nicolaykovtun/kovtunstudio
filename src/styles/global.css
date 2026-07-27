@@ -137,6 +137,12 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   transition: color var(--dur-fast);
 }
 .k-header nav a:hover { color: var(--ks-red); }
+/* Активный пункт меню — «где я нахожусь» (Nielsen) */
+.k-header nav a[aria-current="page"] {
+  color: var(--ks-red);
+  border-bottom: 2px solid var(--ks-red);
+  padding-bottom: 4px;
+}
 
 /* ─── Пункт меню с выпадающим списком («Услуги») ───────────────────── */
 .k-header nav .nav-item {
@@ -266,6 +272,12 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 }
 .nav-card__sublink:last-child { border-bottom: 0; }
 .nav-card__sublink .nav-card__arrow { font-size: 14px; }
+
+/* Активный пункт в мобильной панели */
+.nav-card__link[aria-current="page"],
+.nav-card__sublink[aria-current="page"] {
+  color: var(--ks-red-300);
+}
 
 @media (max-width: 900px) {
   .card-nav-toggle { display: flex; }

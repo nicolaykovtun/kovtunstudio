@@ -9,6 +9,23 @@ interface Props {
   maxUrl: string;
 }
 const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
+
+// Подсветка активного пункта меню («где я нахожусь») — сравниваем только
+// реальные адреса страниц. Якоря (#faq, #contact) не считаем отдельной
+// страницей и не подсвечиваем: они не отвечают на этот вопрос однозначно.
+const currentPath = Astro.url.pathname;
+const currentSearch = Astro.url.search;
+const normalize = (p: string) => (p.endsWith('/') ? p : `${p}/`);
+const isPageMatch = (href: string) => {
+  if (href.includes('#')) return false;
+  const [hrefPath, hrefQuery] = href.split('?');
+  if (normalize(hrefPath) !== normalize(currentPath)) return false;
+  // Ссылки с query (например /portfolio/?direction=web) должны совпасть
+  // и по нему — иначе все направления подсветятся разом на /portfolio/.
+  return hrefQuery ? `?${hrefQuery}` === currentSearch : true;
+};
+const isItemActive = (item: NavItem) =>
+  isPageMatch(item.href) || (item.children?.some(child => isPageMatch(child.href)) ?? false);
 ---
 <header class="k-header">
   <div class="container-wide row">
@@ -20,15 +37,15 @@ const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
       {nav.map(item => (
         item.children ? (
           <div class="nav-item">
-            <a href={item.href}>{item.label}</a>
+            <a href={item.href} aria-current={isItemActive(item) ? 'page' : undefined}>{item.label}</a>
             <div class="nav-dropdown">
               {item.children.map(child => (
-                <a href={child.href}>{child.label}</a>
+                <a href={child.href} aria-current={isPageMatch(child.href) ? 'page' : undefined}>{child.label}</a>
               ))}
             </div>
           </div>
         ) : (
-          <a href={item.href}>{item.label}</a>
+          <a href={item.href} aria-current={isItemActive(item) ? 'page' : undefined}>{item.label}</a>
         )
       ))}
     </nav>
@@ -57,14 +74,14 @@ const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
         <div class="nav-card__links">
           {nav.map(item => (
             <>
-              <a href={item.href} class="nav-card__link">
+              <a href={item.href} class="nav-card__link" aria-current={isItemActive(item) ? 'page' : undefined}>
                 {item.label}
                 <span class="nav-card__arrow" aria-hidden="true">↗</span>
               </a>
               {item.children && (
                 <div class="nav-card__sublinks">
                   {item.children.map(child => (
-                    <a href={child.href} class="nav-card__sublink">
+                    <a href={child.href} class="nav-card__sublink" aria-current={isPageMatch(child.href) ? 'page' : undefined}>
                       {child.label}
                       <span class="nav-card__arrow" aria-hidden="true">↗</span>
                     </a>
