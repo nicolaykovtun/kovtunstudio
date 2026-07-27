@@ -9,9 +9,6 @@ import yaml from 'js-yaml';
 // Грузим данные
 const dataDir = path.resolve('./src/data');
 const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
-const tiers = yaml.load(fs.readFileSync(path.join(dataDir, 'tiers.yaml'), 'utf8')) as any[];
-const faq = yaml.load(fs.readFileSync(path.join(dataDir, 'faq.yaml'), 'utf8')) as any[];
-const gallery = yaml.load(fs.readFileSync(path.join(dataDir, 'gallery.yaml'), 'utf8')) as any[];
 
 // Допускается override title/description на уровне страницы
 interface Props {
@@ -116,57 +113,10 @@ const ldBusiness = {
   }
 };
 
-// JSON-LD: Service
-const ldService = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "serviceType": "Дизайн оклейки автомобиля",
-  "provider": { "@id": `${site.url}/#business` },
-  "areaServed": { "@type": "Country", "name": "Россия" },
-  "audience": { "@type": "BusinessAudience", "audienceType": site.business.serviceAudience },
-  "offers": tiers.map(t => ({
-    "@type": "Offer",
-    "name": t.offerShortName,
-    "price": String(t.price),
-    "priceCurrency": "RUB"
-  }))
-};
-
-// JSON-LD: FAQPage из faq.yaml (один источник, не дубль)
-const ldFaq = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faq.map(item => ({
-    "@type": "Question",
-    "name": item.q,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": item.a
-    }
-  }))
-};
-
-// JSON-LD: ключевые изображения портфолио
-const ldPortfolioImages = {
-  "@context": "https://schema.org",
-  "@type": "ImageGallery",
-  "@id": `${site.url}/#portfolio`,
-  "name": "Портфолио дизайна оклейки авто Kovtun.studio",
-  "url": `${site.url}/portfolio/`,
-  "associatedMedia": gallery.slice(0, site.cases.preview).map((item, index) => ({
-    "@type": "ImageObject",
-    "name": item.alt,
-    "description": item.alt,
-    "contentUrl": `${site.url}/assets/portfolio/full/${item.id}.webp`,
-    "thumbnailUrl": `${site.url}/assets/portfolio/thumb/${item.id}.webp`,
-    "representativeOfPage": index === 0,
-    "creator": { "@id": `${site.url}/#business` }
-  }))
-};
-
-const pageStructuredData = canonicalPath === '/'
-  ? [ldBusiness, ldService, ldFaq, ldPortfolioImages, ...structuredData]
-  : [ldBusiness, ...structuredData];
+// Остальные сущности (Service/FAQPage/ImageGallery конкретной услуги)
+// строит и передаёт сама страница через проп structuredData — так каждая
+// страница отвечает за свою разметку, а LocalBusiness общий для всех.
+const pageStructuredData = [ldBusiness, ...structuredData];
 
 import '../styles/tokens.css';
 import '../styles/global.css';

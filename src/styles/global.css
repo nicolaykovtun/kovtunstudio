@@ -137,6 +137,44 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   transition: color var(--dur-fast);
 }
 .k-header nav a:hover { color: var(--ks-red); }
+
+/* ─── Пункт меню с выпадающим списком («Услуги») ───────────────────── */
+.k-header nav .nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.k-header nav .nav-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translate(-50%, 6px);
+  min-width: 260px;
+  background: var(--bg-1);
+  border: 1px solid var(--line-1);
+  box-shadow: var(--shadow-3);
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility var(--dur-base);
+  z-index: 50;
+}
+.k-header nav .nav-item:hover .nav-dropdown,
+.k-header nav .nav-item:focus-within .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+.k-header nav .nav-dropdown a {
+  display: block;
+  padding: 12px 14px;
+  font: 500 14px/1.3 var(--font-body);
+  color: var(--fg-1);
+  border: 0;
+  white-space: nowrap;
+}
+.k-header nav .nav-dropdown a:hover { background: var(--bg-2); color: var(--ks-red); }
+
 .k-header .actions { display: flex; align-items: center; gap: 12px; }
 /* header CTA: text turns black on hover (bright red kept for contrast) */
 .k-header .btn-primary:hover { color: #000; background: var(--ks-red); }
@@ -212,6 +250,22 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 .nav-card__link:last-child { border-bottom: 0; }
 .nav-card__arrow { font-size: 16px; transition: transform var(--dur-fast) var(--ease-out); }
 .nav-card__link:hover .nav-card__arrow { transform: translate(2px, -2px); }
+
+/* Подпункты (например, направления услуг) — отступ и меньший размер */
+.nav-card__sublinks {
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+}
+.nav-card__sublink {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(255,255,255,.14);
+  font: 500 14px/1.2 var(--font-display);
+  color: rgba(255,255,255,.85);
+}
+.nav-card__sublink:last-child { border-bottom: 0; }
+.nav-card__sublink .nav-card__arrow { font-size: 14px; }
 
 @media (max-width: 900px) {
   .card-nav-toggle { display: flex; }

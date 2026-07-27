@@ -19,8 +19,8 @@
 
 ## Ключевые разделы сайта
 
-- Главная: https://design.kovtun.studio/
-- Услуги — каталог всех пяти направлений с переходом на нужный лендинг или в портфолио: https://design.kovtun.studio/services/
+- Главная — каталог всех пяти направлений с переходом на нужный лендинг или в портфолио: https://design.kovtun.studio/
+- Дизайн оклейки авто во Владивостоке — макеты для коммерческого транспорта: https://design.kovtun.studio/car-wrap/
 - Портфолио по пяти направлениям: https://design.kovtun.studio/portfolio/
 - Кейс Japan Шина — структура, тексты и дизайн сайта: https://design.kovtun.studio/cases/website-japan-shina/
 - Кейс Edelweiss «Золотой Рог» — брошюра жилого квартала: https://design.kovtun.studio/cases/presentation-edelweiss/
@@ -33,11 +33,11 @@
 - Кейс Japan Line — оклейка автомобиля: https://design.kovtun.studio/cases/japan-line/
 - Кейс Sila Car — рекламная оклейка: https://design.kovtun.studio/cases/sila-car/
 - Разработка презентаций под ключ: https://design.kovtun.studio/presentations/
-- Что делаю: https://design.kovtun.studio/#what
-- Цены: https://design.kovtun.studio/#pricing
+- Что делаю (оклейка авто): https://design.kovtun.studio/car-wrap/#what
+- Цены на оклейку авто: https://design.kovtun.studio/car-wrap/#pricing
 - Все работы крупным планом: https://design.kovtun.studio/portfolio/#works
-- Процесс: https://design.kovtun.studio/#process
-- FAQ: https://design.kovtun.studio/#faq
+- Процесс (общий, все направления): https://design.kovtun.studio/#process
+- FAQ (общий, все направления): https://design.kovtun.studio/#faq
 - Заявка: https://design.kovtun.studio/#contact
 
 ## Подход к работе

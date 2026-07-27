@@ -1,6 +1,8 @@
 ---
+interface NavChild { href: string; label: string }
+interface NavItem { href: string; label: string; children?: NavChild[] }
 interface Props {
-  nav: { href: string; label: string }[];
+  nav: NavItem[];
   phone: string;        // отображаемый формат "+7 908 449-72-60"
   phoneTel: string;     // tel-формат "+79084497260"
   telegramUrl: string;
@@ -16,7 +18,18 @@ const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
     </a>
     <nav aria-label="Главная навигация">
       {nav.map(item => (
-        <a href={item.href}>{item.label}</a>
+        item.children ? (
+          <div class="nav-item">
+            <a href={item.href}>{item.label}</a>
+            <div class="nav-dropdown">
+              {item.children.map(child => (
+                <a href={child.href}>{child.label}</a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <a href={item.href}>{item.label}</a>
+        )
       ))}
     </nav>
     <div class="actions">
@@ -43,10 +56,22 @@ const { nav, phone, phoneTel, telegramUrl, maxUrl } = Astro.props;
         <div class="nav-card__label">Навигация</div>
         <div class="nav-card__links">
           {nav.map(item => (
-            <a href={item.href} class="nav-card__link">
-              {item.label}
-              <span class="nav-card__arrow" aria-hidden="true">↗</span>
-            </a>
+            <>
+              <a href={item.href} class="nav-card__link">
+                {item.label}
+                <span class="nav-card__arrow" aria-hidden="true">↗</span>
+              </a>
+              {item.children && (
+                <div class="nav-card__sublinks">
+                  {item.children.map(child => (
+                    <a href={child.href} class="nav-card__sublink">
+                      {child.label}
+                      <span class="nav-card__arrow" aria-hidden="true">↗</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </>
           ))}
         </div>
       </div>
