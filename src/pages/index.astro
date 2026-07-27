@@ -435,11 +435,20 @@ const faqLd = {
   }
 
   /* ── Directions grid ────────────────────────────────────────────────── */
+  /* 6 колонок вместо auto-fit — при 5 карточках auto-fit то помещал 4 в ряд,
+     то 5, оставляя последний ряд наполовину пустым. Здесь ряд всегда занят
+     целиком: первые три карточки по 2/6 (треть), последние две — по 3/6
+     (половина), поэтому оба ряда всегда идут край в край без зазора. */
   .dir-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(6, 1fr);
     gap: 16px;
   }
+  .dir-card:nth-child(1),
+  .dir-card:nth-child(2),
+  .dir-card:nth-child(3) { grid-column: span 2; }
+  .dir-card:nth-child(4),
+  .dir-card:nth-child(5) { grid-column: span 3; }
   .dir-card {
     background: var(--bg-2);
     border-radius: var(--r-2);
@@ -513,5 +522,10 @@ const faqLd = {
   @media (max-width: 700px) {
     .services-hero { padding: 64px 0 48px; }
     .dir-grid { grid-template-columns: 1fr; }
+    .dir-card:nth-child(1),
+    .dir-card:nth-child(2),
+    .dir-card:nth-child(3),
+    .dir-card:nth-child(4),
+    .dir-card:nth-child(5) { grid-column: auto; }
   }
 </style>
