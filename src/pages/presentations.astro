@@ -8,6 +8,7 @@ import Header from '../components/Header.astro';
 import Marquee from '../components/Marquee.astro';
 import Gallery from '../components/Gallery.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
+import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
@@ -195,6 +196,48 @@ const process = {
       num: '04',
       title: 'Файлы',
       text: 'PDF и редактируемый PPTX. По договорённости — исходники в Figma. Один раунд правок включён.',
+    },
+  ],
+};
+
+const presentationFounder = {
+  title: 'Проект ведёт<br>один дизайнер',
+  aside: 'Без цепочки менеджеров: бриф, структуру, текст, дизайн и правки ведёт один человек, который отвечает за итоговую презентацию.',
+  name: site.founderSection.name,
+  role: site.founderSection.role,
+  image: site.founderSection.image,
+  imageAlt: site.founderSection.imageAlt,
+  text: 'Я собираю презентацию как цельную историю: погружаюсь в задачу, выстраиваю логику, редактирую текст, проектирую слайды и готовлю файлы к передаче. Поэтому смысл не теряется между отдельными исполнителями.',
+  stats: [
+    {
+      num: '2010',
+      label: 'Год начала работы дизайнером',
+    },
+    {
+      num: '4',
+      label: 'Подробных кейса презентаций и брошюр',
+    },
+  ],
+  points: [
+    {
+      num: '01',
+      title: 'Один контакт',
+      text: 'Общаетесь напрямую с дизайнером — без пересказов задачи через аккаунт-менеджера.',
+    },
+    {
+      num: '02',
+      title: 'Один контекст',
+      text: 'Цель, аудитория, текст и визуальная подача остаются связаны на всех этапах.',
+    },
+    {
+      num: '03',
+      title: 'Одна ответственность',
+      text: 'Я отвечаю и за логику презентации, и за качество каждого готового слайда.',
+    },
+    {
+      num: '04',
+      title: 'Файлы на руках',
+      text: 'Передаю PDF и редактируемый PPTX, по договорённости — исходники в Figma.',
     },
   ],
 };
@@ -425,6 +468,8 @@ const faqLd = {
     />
 
     <ProcessSteps {...process} />
+
+    <FounderSection data={presentationFounder} />
 
     <FAQ
       title="Частые<br>вопросы"
