@@ -15,27 +15,16 @@ import {
   type CaseStory,
   type EditorialCaseConfig,
 } from '../../data/case-page-config';
+import { caseOrderIndex } from '../../data/case-catalog';
 
 export async function getStaticPaths() {
-  const editorialOrder = [
-    'website-japan-shina',
-    'presentation-vmtp',
-    'presentation-terney-farmer',
-    'presentation-edelweiss',
-    'brochure-metall-invest',
-  ];
   const legacyCases = yaml.load(
     fs.readFileSync(path.resolve('./src/data/cases.yaml'), 'utf8'),
   ) as any[];
   const entries = await getCollection('cases', ({ data }) => !data.draft);
   const editorialEntries = entries
     .filter((entry) => Boolean(entry.data.gallery) || Boolean(editorialCaseConfigs[entry.id]))
-    .sort((a, b) => {
-      const aIndex = editorialOrder.indexOf(a.id);
-      const bIndex = editorialOrder.indexOf(b.id);
-      return (aIndex < 0 ? Number.MAX_SAFE_INTEGER : aIndex) -
-        (bIndex < 0 ? Number.MAX_SAFE_INTEGER : bIndex);
-    });
+    .sort((a, b) => caseOrderIndex(a.id) - caseOrderIndex(b.id));
 
   const records = [
     ...legacyCases.map((data) => ({
@@ -50,7 +39,7 @@ export async function getStaticPaths() {
       kind: 'editorial',
       data: entry.data,
     })),
-  ];
+  ].sort((a, b) => caseOrderIndex(a.slug) - caseOrderIndex(b.slug));
 
   return records.map((record, index) => ({
     params: { slug: record.slug },
@@ -166,7 +155,7 @@ function legacyPage(raw: any): { content: any; config: EditorialCaseConfig } {
       seoDescription: raw.seoDescription,
       categoryLabel: raw.category,
       client: raw.name,
-      accent: '#EF1C24',
+      accent: raw.accent,
       facts: [
         { value: raw.name, label: 'клиент' },
         { value: directionLabel, label: 'направление' },

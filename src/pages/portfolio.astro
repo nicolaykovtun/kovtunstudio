@@ -6,6 +6,7 @@
 
 import fs from 'node:fs';
 import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
@@ -13,17 +14,74 @@ import Footer from '../components/Footer.astro';
 import Lightbox from '../components/Lightbox.astro';
 import RevealScript from '../components/RevealScript.astro';
 import CtaBand from '../components/CtaBand.astro';
+import { editorialCaseConfigs } from '../data/case-page-config';
+import {
+  caseOrderIndex,
+  directionByCategory,
+  sphereBySegment,
+} from '../data/case-catalog';
 
 // пути относительно корня проекта (CWD при сборке)
 const site = yaml.load(fs.readFileSync('./src/data/site.yaml', 'utf8')) as any;
 const gallery = yaml.load(fs.readFileSync('./src/data/gallery.yaml', 'utf8')) as any[];
-const cases = yaml.load(fs.readFileSync('./src/data/cases.yaml', 'utf8')) as any[];
+const legacyCases = yaml.load(fs.readFileSync('./src/data/cases.yaml', 'utf8')) as any[];
 const taxonomy = yaml.load(fs.readFileSync('./src/data/taxonomy.yaml', 'utf8')) as any;
+const editorialEntries = (await getCollection('cases', ({ data }) => !data.draft))
+  .filter((entry) => Boolean(entry.data.gallery) || Boolean(editorialCaseConfigs[entry.id]));
 
 const pad = (n: number) => String(n).padStart(2, '0');
+const plural = (n: number, one: string, few: string, many: string) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
+
+const editorialCases = editorialEntries.map((entry) => {
+  const c = entry.data;
+  const config = c.gallery
+    ? {
+        cover: {
+          src: `${c.gallery.assetRoot}/${c.gallery.cover.src}`,
+          alt: c.gallery.cover.alt,
+        },
+      }
+    : editorialCaseConfigs[entry.id];
+
+  return {
+    slug: c.slug,
+    name: c.shortTitle || c.client,
+    title: c.title,
+    accent: c.accent,
+    category: c.categoryLabel,
+    direction: directionByCategory[c.category],
+    sphere: c.segmentLabel,
+    sphereKey: sphereBySegment[c.segment] ?? c.segment,
+    details: [c.year, c.location].filter(Boolean).join(' · '),
+    coverSrc: config.cover.src,
+    coverAlt: config.cover.alt,
+    countLabel: c.year,
+  };
+});
+
+const cases = [
+  ...legacyCases.map((c) => {
+    const workCount = gallery.filter(g => g.project === c.slug).length;
+    return {
+      ...c,
+      details: c.vehicles,
+      coverSrc: `/assets/portfolio/thumb/${c.cover}.webp`,
+      coverAlt: c.images.find((image: any) => image.id === c.cover)?.caption ?? c.title,
+      countLabel: `${workCount} ${plural(workCount, 'работа', 'работы', 'работ')}`,
+    };
+  }),
+  ...editorialCases,
+].sort((a, b) => caseOrderIndex(a.slug) - caseOrderIndex(b.slug));
 
 const caseBySlug = Object.fromEntries(cases.map(c => [c.slug, c]));
-const coverIds = new Set(cases.map(c => c.cover));
+const coverIds = new Set(legacyCases.map(c => c.cover));
 
 // Работы, обогащённые направлением и сферой (через свой кейс)
 const works = gallery.map(g => ({
@@ -53,9 +111,10 @@ const activeDirections = directions.filter((d: any) => d.caseCount > 0);
 const spheres = taxonomy.spheres
   .map((s: any) => ({
     ...s,
+    caseCount: cases.filter(c => c.sphereKey === s.key).length,
     workCount: works.filter(w => w.sphereKey === s.key).length,
   }))
-  .filter((s: any) => s.workCount > 0);
+  .filter((s: any) => s.caseCount > 0 || s.workCount > 0);
 
 // Лайтбокс — весь каталог, в порядке gallery.yaml
 const lbItems = gallery.map(g => ({
@@ -65,13 +124,12 @@ const lbItems = gallery.map(g => ({
 
 const seoTitle = `Портфолио — графический дизайн: оклейка авто, айдентика, упаковка · Kovtun.studio`;
 const seoDescription =
-  `Каталог работ студии по направлениям: упаковка, логотип и фирменный стиль, сайты, презентации, ` +
-  `оклейка авто. Сейчас открыт раздел оклейки — ${cases.length} проектов, ${gallery.length} работ, ` +
-  `каждый кейс с задачей, решением и макетами под печать.`;
+  `Портфолио Kovtun.studio: ${cases.length} подробных кейсов по сайтам, презентациям, брошюрам ` +
+  `и оклейке авто. Задачи, решения, макеты и ${gallery.length} работ крупным планом.`;
 ---
 <BaseLayout title={seoTitle} description={seoDescription} canonicalPath="/portfolio/">
   <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
-  <main id="top">
+  <main id="main-content">
 
     <!-- ── Шапка каталога ─────────────────────────────────────────── -->
     <section class="p-hero">
@@ -85,9 +143,9 @@ const seoDescription =
         </h1>
         <p class="p-lede reveal" style="--reveal-delay: 120ms">
           Упаковка, айдентика, сайты, презентации и оклейка транспорта.
-          Каталог пополняется: сейчас открыт раздел оклейки авто —
-          зайдите в кейс, чтобы увидеть проект целиком, или кликните
-          любую работу, она откроется во весь экран.
+          В каталоге уже десять подробных кейсов: от сайта и презентаций
+          до корпоративных брошюр и транспорта. Откройте проект целиком
+          или рассмотрите макеты оклейки во весь экран.
         </p>
         <div class="p-meta reveal" style="--reveal-delay: 180ms">
           <div class="item"><span class="num">{pad(directions.length)}</span><span class="lbl">Направлений работы</span></div>
@@ -104,8 +162,8 @@ const seoDescription =
         <div class="section-head">
           <h2 class="reveal">Направления<br>каталога</h2>
           <p class="aside reveal" style="--reveal-delay: 80ms">
-            Пять дисциплин одной студии. Разделы открываются по мере
-            переноса архива — начали с оклейки.
+            Пять дисциплин одной студии. Уже открыты сайты, презентации
+            и оклейка авто; остальные разделы появятся после переноса архива.
           </p>
         </div>
         <ol class="dir-list">
@@ -114,7 +172,10 @@ const seoDescription =
               <a class="dir-row" href="#cases" data-goto-direction={d.key}>
                 <span class="dr-num" aria-hidden="true">{d.num}</span>
                 <span class="dr-name">{d.label}</span>
-                <span class="dr-count">{d.caseCount} проектов · {d.workCount} работ</span>
+                <span class="dr-count">
+                  {d.caseCount} {plural(d.caseCount, 'кейс', 'кейса', 'кейсов')}
+                  {d.workCount > 0 && ` · ${d.workCount} ${plural(d.workCount, 'работа', 'работы', 'работ')}`}
+                </span>
                 <span class="dr-arrow" aria-hidden="true">↓</span>
               </a>
             </li>
@@ -149,7 +210,7 @@ const seoDescription =
               <button type="button" class="chip is-active" data-dim="direction" data-value="all">Все</button>
               {activeDirections.map((d: any) => (
                 <button type="button" class="chip" data-dim="direction" data-value={d.key}>
-                  {d.label} <span class="chip-n">{d.workCount}</span>
+                  {d.label} <span class="chip-n">{d.caseCount}</span>
                 </button>
               ))}
             </div>
@@ -160,7 +221,7 @@ const seoDescription =
               <button type="button" class="chip is-active" data-dim="sphere" data-value="all">Все</button>
               {spheres.map((s: any) => (
                 <button type="button" class="chip" data-dim="sphere" data-value={s.key}>
-                  {s.label} <span class="chip-n">{s.workCount}</span>
+                  {s.label} <span class="chip-n">{s.caseCount}</span>
                 </button>
               ))}
             </div>
@@ -174,19 +235,19 @@ const seoDescription =
               href={`/cases/${c.slug}/`}
               data-direction={c.direction}
               data-sphere={c.sphereKey}
-              style={`--reveal-delay: ${i * 60}ms`}
+              style={`--reveal-delay: ${i * 60}ms; --case-row-accent: ${c.accent}`}
             >
               <span class="cr-num" aria-hidden="true">{pad(i + 1)}</span>
               <span class="cr-thumb">
-                <img src={`/assets/portfolio/thumb/${c.cover}.webp`} alt="" loading="lazy" width="800" height="447" />
+                <img src={c.coverSrc} alt="" loading={i < 3 ? 'eager' : 'lazy'} width="800" height="447" />
               </span>
               <span class="cr-body">
                 <span class="cr-name">{c.name}</span>
-                <span class="cr-meta">{c.sphere} · {c.vehicles}</span>
+                <span class="cr-meta">{c.sphere} · {c.details}</span>
               </span>
               <span class="cr-tags">
                 <span class="cr-cat">{c.category}</span>
-                <span class="cr-count">{countByProject[c.slug]} работ</span>
+                <span class="cr-count">{c.countLabel}</span>
               </span>
               <span class="cr-arrow" aria-hidden="true">→</span>
             </a>
@@ -512,7 +573,7 @@ const seoDescription =
     padding-left: 4px;
     transition: color var(--dur-base);
   }
-  .case-row:hover .cr-num { color: var(--ks-red); }
+  .case-row:hover .cr-num { color: var(--case-row-accent, var(--ks-red)); }
   .cr-thumb {
     aspect-ratio: 16/9;
     overflow: hidden;
@@ -532,7 +593,7 @@ const seoDescription =
     margin-bottom: 6px;
     transition: color var(--dur-base);
   }
-  .case-row:hover .cr-name { color: var(--ks-red); }
+  .case-row:hover .cr-name { color: var(--case-row-accent, var(--ks-red)); }
   .cr-meta {
     display: block;
     font: 400 14px/1.45 var(--font-body);
@@ -560,7 +621,7 @@ const seoDescription =
     justify-self: end;
     transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
   }
-  .case-row:hover .cr-arrow { transform: translateX(6px); color: var(--ks-red); }
+  .case-row:hover .cr-arrow { transform: translateX(6px); color: var(--case-row-accent, var(--ks-red)); }
 
   @media (max-width: 900px) {
     .case-row { grid-template-columns: 96px 1fr 32px; gap: 18px; padding: 18px 0; }

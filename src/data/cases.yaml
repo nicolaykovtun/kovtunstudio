@@ -5,6 +5,7 @@
 # Поля:
 #   slug        — URL и ключ группировки (совпадает с project в gallery.yaml)
 #   name        — короткое имя проекта (список кейсов, next-case)
+#   accent      — цвет проекта для ключевых цифр и текстовых маркеров кейса
 #   title       — H1 страницы кейса
 #   seoTitle    — <title> страницы
 #   seoDescription — meta description
@@ -23,6 +24,7 @@
 
 - slug: green-power
   name: Green Power
+  accent: "#4C8F16"
   title: "Green Power — один бренд на весь автопарк"
   seoTitle: "Кейс Green Power — единая оклейка автопарка: BMW Z4, Lexus LX570, Toyota Hiace · Kovtun.studio"
   seoDescription: >-
@@ -81,6 +83,7 @@
 
 - slug: japanhouse
   name: Japanhouse
+  accent: "#D9432F"
   title: "Japanhouse — суми-э на сером металлике"
   seoTitle: "Кейс Japanhouse — имиджевая оклейка Toyota Probox для авто с аукционов Японии · Kovtun.studio"
   seoDescription: >-
@@ -129,6 +132,7 @@
 
 - slug: primgril
   name: Примгриль
+  accent: "#C4472F"
   title: "Примгриль — брикеты, которые прорывают борт"
   seoTitle: "Кейс Примгриль — рекламная оклейка Toyota Probox для производителя угольных брикетов · Kovtun.studio"
   seoDescription: >-
@@ -176,6 +180,7 @@
 
 - slug: japan-line
   name: Japan Line
+  accent: "#D52B20"
   title: "Japan Line — типографика во весь борт"
   seoTitle: "Кейс Japan Line — рекламная оклейка Toyota Probox для доставки авто под заказ · Kovtun.studio"
   seoDescription: >-
@@ -223,6 +228,7 @@
 
 - slug: sila-car
   name: Sila Car
+  accent: "#D43B30"
   title: "Sila Car — фирменный спорткар на борту"
   seoTitle: "Кейс Sila Car — рекламная оклейка Toyota Probox для автотехники с аукционов · Kovtun.studio"
   seoDescription: >-
