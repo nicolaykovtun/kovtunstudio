@@ -1,0 +1,133 @@
+---
+// Lightbox.astro — автономный лайтбокс для подстраниц (портфолио, кейсы).
+// Открывается кликом по любому элементу с классом .js-lb и data-lb-index.
+// Использует те же css-классы .lightbox*, что и лайтбокс главной (global.css).
+
+interface Props {
+  items: { src: string; label: string }[];
+  metrikaId: number;
+}
+const { items, metrikaId } = Astro.props;
+---
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр работы">
+  <div class="lightbox-stage">
+    <button class="lightbox-btn close" id="lb-close" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <button class="lightbox-btn prev" id="lb-prev" aria-label="Предыдущая">
+      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button class="lightbox-btn next" id="lb-next" aria-label="Следующая">
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <img class="lightbox-image" id="lb-image" src="" alt="">
+    <div class="lightbox-caption">
+      <span class="counter" id="lb-counter"></span>
+      <span id="lb-label"></span>
+    </div>
+    <div class="lightbox-thumbs" id="lb-thumbs"></div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ LB_ITEMS: items, METRIKA_ID: metrikaId }}>
+  (function () {
+    "use strict";
+
+    function goal(name, params) {
+      if (typeof window.ym === "function") {
+        try { window.ym(METRIKA_ID, "reachGoal", name, params || {}); } catch (e) {}
+      }
+    }
+
+    var lb = document.getElementById("lightbox");
+    var lbImage = document.getElementById("lb-image");
+    var lbLabel = document.getElementById("lb-label");
+    var lbCounter = document.getElementById("lb-counter");
+    var lbThumbs = document.getElementById("lb-thumbs");
+    var current = null;
+
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function toThumb(src) { return src.replace("/full/", "/thumb/"); }
+
+    function buildThumbs() {
+      var frag = document.createDocumentFragment();
+      LB_ITEMS.forEach(function (it, i) {
+        var btn = document.createElement("button");
+        btn.className = "lightbox-thumb";
+        btn.setAttribute("aria-label", "Открыть работу " + (i + 1));
+        var img = document.createElement("img");
+        img.src = toThumb(it.src);
+        img.alt = "";
+        img.loading = "lazy";
+        btn.appendChild(img);
+        btn.addEventListener("click", function (e) { e.stopPropagation(); openLb(i); });
+        frag.appendChild(btn);
+      });
+      lbThumbs.appendChild(frag);
+    }
+
+    function preloadNeighbors(i) {
+      var n = LB_ITEMS.length;
+      [(i + 1) % n, (i - 1 + n) % n].forEach(function (j) {
+        var im = new Image();
+        im.src = LB_ITEMS[j].src;
+      });
+    }
+
+    function render() {
+      var it = LB_ITEMS[current];
+      lbImage.src = it.src;
+      lbImage.alt = it.label;
+      lbLabel.textContent = it.label;
+      lbCounter.textContent = pad(current + 1) + " / " + pad(LB_ITEMS.length);
+      var thumbs = lbThumbs.children;
+      for (var i = 0; i < thumbs.length; i++) {
+        thumbs[i].classList.toggle("is-active", i === current);
+      }
+      var active = thumbs[current];
+      if (active && active.scrollIntoView) {
+        active.scrollIntoView({ block: "nearest", inline: "center" });
+      }
+      preloadNeighbors(current);
+    }
+
+    function openLb(i) {
+      current = i;
+      lb.classList.add("is-open");
+      document.body.classList.add("lightbox-locked");
+      render();
+      goal("portfolio_open", { index: i + 1 });
+    }
+
+    function closeLb() {
+      current = null;
+      lb.classList.remove("is-open");
+      document.body.classList.remove("lightbox-locked");
+    }
+
+    function nav(delta) {
+      if (current === null) return;
+      var n = LB_ITEMS.length;
+      current = (current + delta + n) % n;
+      render();
+    }
+
+    buildThumbs();
+
+    Array.prototype.forEach.call(document.querySelectorAll(".js-lb"), function (el) {
+      el.addEventListener("click", function () {
+        openLb(parseInt(el.dataset.lbIndex, 10));
+      });
+    });
+    document.getElementById("lb-close").addEventListener("click", closeLb);
+    document.getElementById("lb-prev").addEventListener("click", function () { nav(-1); });
+    document.getElementById("lb-next").addEventListener("click", function () { nav(1); });
+    lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+    document.addEventListener("keydown", function (e) {
+      if (current === null) return;
+      if (e.key === "Escape") closeLb();
+      else if (e.key === "ArrowLeft") nav(-1);
+      else if (e.key === "ArrowRight") nav(1);
+    });
+  })();
+</script>

@@ -1,0 +1,524 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const entries = await getCollection(
+  'cases',
+  ({ id, data }) => id === 'website-japan-shina' && !data.draft && Boolean(data.gallery),
+);
+const entry = entries[0];
+if (!entry) {
+  throw new Error('Кейс website-japan-shina не найден');
+}
+const c = entry.data;
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const gallery = c.gallery;
+if (!gallery) {
+  throw new Error(`Кейс ${c.slug}: нет gallery.yaml, страницу собрать нечем`);
+}
+
+// Кейс на шаблоне обязан быть заполнен целиком: пустая секция на живой
+// странице выглядит хуже, чем упавшая сборка.
+const required: Array<[string, unknown[]]> = [
+  ['Короткое название', [c.shortTitle].filter(Boolean)],
+  ['Короткое описание', [c.summary].filter(Boolean)],
+  ['SEO-описание', [c.seoDescription].filter(Boolean)],
+  ['Ключевые факты', c.facts],
+  ['Задача', c.task],
+  ['Решения', c.solutions],
+  ['Результат', c.result],
+  ['Что было сделано', c.deliverables],
+  ['Авторство и участники', c.credits],
+];
+const missing = required.filter(([, value]) => value.length === 0).map(([name]) => name);
+if (missing.length > 0) {
+  throw new Error(`Кейс ${c.slug}: в case.md не заполнено — ${missing.join(', ')}`);
+}
+
+const root = gallery.assetRoot;
+const full = (file: string) => `${root}/full/${file}.webp`;
+const thumb = (file: string) => `${root}/thumb/${file}-thumbnail.webp`;
+
+// Сквозной список для просмотрщика: индексы кнопок в разметке совпадают
+// с порядком в этом массиве.
+const lightboxItems = gallery.groups.flatMap((group) =>
+  group.items.map((item) => ({
+    src: full(item.file),
+    thumb: thumb(item.file),
+    label: item.label,
+  })),
+);
+
+let cursor = 0;
+const groupsWithIndex = gallery.groups.map((group) => ({
+  ...group,
+  items: group.items.map((item) => ({ ...item, index: cursor++ })),
+}));
+
+const casePath = `/cases/${c.slug}/`;
+const pageTitle = c.title;
+const description = c.seoDescription;
+
+const nav = [
+  { href: '/portfolio/', label: 'Портфолио' },
+  { href: '#task', label: 'Задача' },
+  ...(gallery.compare ? [{ href: '#before-after', label: 'До / после' }] : []),
+  { href: `#${groupsWithIndex[0]?.id ?? 'gallery'}`, label: 'Макеты' },
+];
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Кейс',
+      links: [
+        { href: '#task', label: 'Задача и решения' },
+        ...(gallery.compare ? [{ href: '#before-after', label: 'До / после' }] : []),
+        { href: '#result', label: 'Результат' },
+        { href: '#works', label: 'Состав работ' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/presentations/', label: 'Презентации' },
+      ],
+    },
+  ],
+};
+
+const clientLink = c.links.find((link) => /^Сайт клиента$/i.test(link.label));
+const clientUrl = clientLink && /^https?:\/\//.test(clientLink.value) ? clientLink.value : undefined;
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: pageTitle,
+    description,
+    url: `${site.url}${casePath}`,
+    dateCreated: c.year,
+    inLanguage: 'ru-RU',
+    image: [`${site.url}${root}/${gallery.cover.src}`],
+    creator: { '@type': 'Person', name: 'Николай Ковтун', url: site.url },
+    about: {
+      '@type': 'Organization',
+      name: c.client,
+      ...(clientUrl ? { url: clientUrl } : {}),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Портфолио', item: `${site.url}/portfolio/` },
+      { '@type': 'ListItem', position: 3, name: c.shortTitle, item: `${site.url}${casePath}` },
+    ],
+  },
+];
+
+const sectionNumber = (n: number) => String(n).padStart(2, '0');
+let section = 0;
+const taskNum = sectionNumber(++section);
+const compareNum = gallery.compare ? sectionNumber(++section) : null;
+const resultNum = sectionNumber(++section);
+const galleryNums = groupsWithIndex.map(() => sectionNumber(++section));
+const worksNum = sectionNumber(++section);
+---
+
+<BaseLayout
+  title={`${pageTitle} · Kovtun.studio`}
+  description={description}
+  keywords={gallery.keywords ?? `${c.categoryLabel}, ${c.client}, дизайн, Николай Ковтун`}
+  canonicalPath={casePath}
+  ogTitle={pageTitle}
+  ogDescription={description}
+  ogImage={`${root}/${gallery.og ?? gallery.cover.src}`}
+  ogImageAlt={gallery.ogAlt ?? gallery.cover.alt}
+  ogType="article"
+  structuredData={structuredData}
+  bodyClass="case-page"
+>
+  <div class="page-shell" style={`--case-accent: ${c.accent}`}>
+    <Header
+      nav={nav}
+      phone={site.contact.phone}
+      phoneTel={site.contact.phoneTel}
+      telegramUrl={site.contact.telegram}
+      maxUrl={site.contact.max}
+    />
+
+    <main id="main-content">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <div class="container-wide">
+          <ol>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/portfolio/">Портфолио</a></li>
+            <li aria-current="page">{c.shortTitle}</li>
+          </ol>
+        </div>
+      </nav>
+
+      <section class="case-hero">
+        <div class="container-wide">
+          <p class="page-kicker">Кейс · {c.categoryLabel.toLowerCase()}</p>
+          <div class="case-hero__top">
+            <h1>{pageTitle}</h1>
+            <p class="case-hero__summary">{c.summary}</p>
+          </div>
+          <div class="case-facts" aria-label="Ключевые факты проекта">
+            {c.facts.map((fact) => (
+              <div class="case-fact">
+                <strong>{fact.value}</strong>
+                <span>{fact.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <figure class="case-cover">
+        <img
+          src={`${root}/${gallery.cover.src}`}
+          alt={gallery.cover.alt}
+          width="1600"
+          height="900"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <section class="case-section" id="task">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">{taskNum} / ЗАДАЧА</span>
+            <div>
+              <h2>С чем пришел клиент</h2>
+              <div class="case-prose">
+                {c.task.map((item) => <p>{item}</p>)}
+              </div>
+            </div>
+          </div>
+
+          <div class="case-approach">
+            {c.solutions.map((solution, index) => (
+              <article>
+                <span>{sectionNumber(index + 1)}</span>
+                <h3>{solution.title}</h3>
+                <p>{solution.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {gallery.compare && (
+        <section class="case-comparison-section" id="before-after">
+          <div class="container-wide">
+            <div class="case-section__head">
+              <span class="case-section__num">{compareNum} / ДО — ПОСЛЕ</span>
+              <div>
+                <h2>{gallery.compare.title}</h2>
+                {gallery.compare.intro && (
+                  <div class="case-prose"><p>{gallery.compare.intro}</p></div>
+                )}
+              </div>
+            </div>
+
+            <div class="case-comparisons">
+              {gallery.compare.items.map((item) => (
+                <article class="case-comparison">
+                  <header class="case-comparison__head">
+                    <span>{item.number}</span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                    </div>
+                  </header>
+                  <div class="case-comparison-grid">
+                    <figure>
+                      <figcaption>{item.beforeCaption}</figcaption>
+                      <img src={full(item.before)} alt={item.beforeAlt} loading="lazy" />
+                    </figure>
+                    <figure>
+                      <figcaption>{item.afterCaption}</figcaption>
+                      <img src={full(item.after)} alt={item.afterAlt} loading="lazy" />
+                    </figure>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section class="case-section case-section--dark" id="result">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">{resultNum} / РЕЗУЛЬТАТ</span>
+            <div>
+              <h2>{gallery.resultTitle ?? 'Что изменилось'}</h2>
+              {c.publicationNotes && (
+                <div class="case-prose"><p>{c.publicationNotes}</p></div>
+              )}
+            </div>
+          </div>
+
+          <div class="case-results">
+            {c.result.map((item, index) => (
+              <article class="case-result">
+                <strong>{sectionNumber(index + 1)}</strong>
+                <p>{item}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {groupsWithIndex.map((group, groupIndex) => (
+        <section class="case-media-section" id={group.id}>
+          <div class="container-wide">
+            <div class="case-section__head">
+              <span class="case-section__num">{galleryNums[groupIndex]} / МАКЕТЫ</span>
+              <div>
+                <h2>{group.title}</h2>
+                <div class="case-prose">
+                  {group.intro && <p>{group.intro}</p>}
+                  {groupIndex === 0 && (
+                    <p>Нажмите на любой макет, чтобы открыть его во весь экран. В просмотрщике работают стрелки, клавиши ← → и миниатюры.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div class={`case-gallery case-gallery--screens${group.items[0]?.tall ? ' case-gallery--tall' : ''}`}>
+              {group.items.map((item) => (
+                <figure>
+                  <button
+                    type="button"
+                    class="case-gallery-trigger"
+                    data-index={item.index}
+                    aria-label={`Открыть макет: ${item.label}`}
+                  >
+                    <img src={thumb(item.file)} alt={item.label} loading="lazy" />
+                    <span class="case-gallery-zoom" aria-hidden="true">Смотреть крупнее</span>
+                  </button>
+                  <figcaption>{item.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+
+      <div
+        class="lightbox case-lightbox"
+        id="case-lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-hidden="true"
+        aria-label={`Просмотр макетов: ${c.shortTitle}`}
+      >
+        <div class="lightbox-stage">
+          <button class="lightbox-btn close" id="case-lb-close" aria-label="Закрыть просмотр">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+          <button class="lightbox-btn prev" id="case-lb-prev" aria-label="Предыдущий макет">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+          <button class="lightbox-btn next" id="case-lb-next" aria-label="Следующий макет">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+          <div class="lightbox-media lightbox-media--case-screens">
+            <img class="lightbox-image" id="case-lb-image" src="" alt="" />
+          </div>
+          <div class="lightbox-caption">
+            <span class="counter" id="case-lb-counter"></span>
+            <span id="case-lb-label"></span>
+          </div>
+          <div class="lightbox-thumbs" id="case-lb-thumbs"></div>
+        </div>
+      </div>
+
+      <section class="case-section case-section--paper" id="works">
+        <div class="container-wide case-deliverables">
+          <div>
+            <span class="case-section__num">{worksNum} / СОСТАВ РАБОТ</span>
+            <h2>Что было сделано</h2>
+            <div class="case-credits">
+              <dl>
+                <div>
+                  <dt>Клиент</dt>
+                  <dd>{c.client}</dd>
+                </div>
+                {c.location && (
+                  <div>
+                    <dt>Город</dt>
+                    <dd>{c.location}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Год</dt>
+                  <dd>{c.year}</dd>
+                </div>
+                {c.credits.map((credit) => (
+                  <div>
+                    <dt>{credit.role}</dt>
+                    <dd>{credit.name}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+          <ul>
+            {c.deliverables.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" id="contact">
+        <div class="container-wide">
+          <div class="portfolio-cta">
+            <h2>{gallery.ctaTitle ?? 'Нужен такой же проект?'}</h2>
+            <p>{gallery.ctaText ?? 'Расскажите о задаче — отвечу, сколько это займет и как лучше собрать материал.'}</p>
+            <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">
+              {gallery.ctaButton ?? 'Обсудить проект'} <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <a class="case-next" href="/portfolio/">
+        <span class="container-wide case-next__inner">
+          <span>
+            <small>Дальше</small>
+            <strong>Другие работы в портфолио</strong>
+          </span>
+          <span class="case-next__arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </main>
+
+    <Footer {...footer} />
+  </div>
+
+  <script is:inline define:vars={{ GALLERY: lightboxItems, METRIKA_ID: site.metrika.id, CASE_SLUG: c.slug }}>
+    (() => {
+      const lightbox = document.getElementById('case-lightbox');
+      const image = document.getElementById('case-lb-image');
+      const label = document.getElementById('case-lb-label');
+      const counter = document.getElementById('case-lb-counter');
+      const thumbs = document.getElementById('case-lb-thumbs');
+      const closeButton = document.getElementById('case-lb-close');
+      const prevButton = document.getElementById('case-lb-prev');
+      const nextButton = document.getElementById('case-lb-next');
+      const triggers = Array.from(document.querySelectorAll('.case-gallery-trigger'));
+
+      if (!lightbox || !image || !label || !counter || !thumbs || !closeButton || !prevButton || !nextButton) return;
+
+      let current = 0;
+      let opener = null;
+      let touchStartX = 0;
+
+      const pad = (value) => String(value).padStart(2, '0');
+      const goal = (name, params) => {
+        if (typeof window.ym !== 'function') return;
+        try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
+      };
+
+      const updateThumbs = () => {
+        thumbs.querySelectorAll('.lightbox-thumb').forEach((thumb, index) => {
+          thumb.classList.toggle('is-active', index === current);
+          thumb.setAttribute('aria-current', index === current ? 'true' : 'false');
+        });
+        const active = thumbs.children[current];
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      };
+
+      const show = (index) => {
+        current = (index + GALLERY.length) % GALLERY.length;
+        const item = GALLERY[current];
+        image.src = item.src;
+        image.alt = item.label;
+        label.textContent = item.label;
+        counter.textContent = `${pad(current + 1)} / ${pad(GALLERY.length)}`;
+        updateThumbs();
+      };
+
+      GALLERY.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lightbox-thumb lightbox-thumb--case-slide';
+        button.setAttribute('aria-label', `Открыть макет ${index + 1}`);
+        const thumbImage = document.createElement('img');
+        thumbImage.src = item.thumb;
+        thumbImage.alt = '';
+        thumbImage.loading = 'lazy';
+        button.appendChild(thumbImage);
+        button.addEventListener('click', () => show(index));
+        thumbs.appendChild(button);
+      });
+
+      const open = (index, trigger) => {
+        opener = trigger;
+        show(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-locked');
+        closeButton.focus();
+        goal('case_screen_open', { case: CASE_SLUG, index: index + 1 });
+      };
+
+      const close = () => {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-locked');
+        image.src = '';
+        if (opener) opener.focus();
+      };
+
+      triggers.forEach((trigger) => {
+        const index = Number(trigger.dataset.index || 0);
+        trigger.addEventListener('click', () => open(index, trigger));
+      });
+      closeButton.addEventListener('click', close);
+      prevButton.addEventListener('click', () => show(current - 1));
+      nextButton.addEventListener('click', () => show(current + 1));
+      lightbox.addEventListener('click', (event) => { if (event.target === lightbox) close(); });
+      lightbox.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      lightbox.addEventListener('touchend', (event) => {
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) < 50) return;
+        show(current + (delta < 0 ? 1 : -1));
+      }, { passive: true });
+
+      document.addEventListener('keydown', (event) => {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+        if (event.key === 'Tab') {
+          const focusable = [closeButton, prevButton, nextButton, ...thumbs.querySelectorAll('button')];
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+          if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+      });
+    })();
+  </script>
+</BaseLayout>

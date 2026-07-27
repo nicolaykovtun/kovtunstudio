@@ -23,6 +23,8 @@ interface Props {
   ogDescription?: string;
   ogImage?: string | null;
   ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
   ogType?: string;
   structuredData?: Record<string, unknown>[];
   bodyClass?: string;
@@ -36,6 +38,8 @@ const {
   ogDescription = description,
   ogImage: providedOgImage,
   ogImageAlt = site.og.imageAlt,
+  ogImageWidth = site.og.imageWidth,
+  ogImageHeight = site.og.imageHeight,
   ogType = site.og.type,
   structuredData = [],
   bodyClass = '',
@@ -148,7 +152,7 @@ const ldPortfolioImages = {
   "@type": "ImageGallery",
   "@id": `${site.url}/#portfolio`,
   "name": "Портфолио дизайна оклейки авто Kovtun.studio",
-  "url": `${site.url}/#cases`,
+  "url": `${site.url}/portfolio/`,
   "associatedMedia": gallery.slice(0, site.cases.preview).map((item, index) => ({
     "@type": "ImageObject",
     "name": item.alt,
@@ -197,8 +201,8 @@ import '../styles/editorial-pages.css';
       <meta property="og:image" content={ogImageUrl}>
       <meta property="og:image:secure_url" content={ogImageUrl}>
       <meta property="og:image:type" content={ogImageType}>
-      {providedOgImage === undefined && <meta property="og:image:width" content={String(site.og.imageWidth)} />}
-      {providedOgImage === undefined && <meta property="og:image:height" content={String(site.og.imageHeight)} />}
+      <meta property="og:image:width" content={String(ogImageWidth)} />
+      <meta property="og:image:height" content={String(ogImageHeight)} />
       <meta property="og:image:alt" content={ogImageAlt}>
     </>
   )}
@@ -278,6 +282,12 @@ import '../styles/editorial-pages.css';
         '.package-grid',
         '.rate-grid',
         '.calculator-grid',
+        '.case-facts',
+        '.case-approach',
+        '.case-comparison-grid',
+        '.case-results',
+        '.case-gallery',
+        '.case-deliverables',
         '.k-footer .top',
         '.k-footer .bottom'
       ];

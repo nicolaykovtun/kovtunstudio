@@ -1,0 +1,586 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const assetRoot = '/assets/cases/presentation-vmtp';
+const title = 'Презентация для ВМТП, крупнейшего порта Дальнего Востока';
+const description = 'Кейс дизайна презентации для ВМТП, крупнейшего порта Дальнего Востока: 16 слайдов с картами, схемами терминалов, данными и инфографикой.';
+const accent = '#00A3D9';
+
+const nav = [
+  { href: '/portfolio/', label: 'Портфолио' },
+  { href: '/presentations/', label: 'Презентации' },
+  { href: '#before-after', label: 'До / после' },
+  { href: '#gallery', label: 'Все слайды' },
+];
+
+const vmtpSlide = (number: number) => {
+  const paddedNumber = String(number).padStart(2, '0');
+  if (number === 1) {
+    return {
+      src: `${assetRoot}/vmtp-presentation-cover.webp`,
+      thumb: `${assetRoot}/thumb/vmtp-presentation-cover-thumbnail.webp`,
+    };
+  }
+
+  return {
+    src: `${assetRoot}/full/vmtp-presentation-slide-${paddedNumber}.webp`,
+    thumb: `${assetRoot}/thumb/vmtp-presentation-slide-${paddedNumber}-thumbnail.webp`,
+  };
+};
+
+const vmtpBrief = (number: number) => `${assetRoot}/before/vmtp-presentation-brief-slide-${String(number).padStart(2, '0')}.webp`;
+
+const finalSlides = [
+  {
+    ...vmtpSlide(1),
+    label: 'Титульный слайд презентации ВМТП',
+  },
+  {
+    ...vmtpSlide(2),
+    label: 'Геолокация Владивостокского морского торгового порта',
+  },
+  {
+    ...vmtpSlide(3),
+    label: 'Преимущества порта, инфраструктуры, транспорта и сервиса',
+  },
+  {
+    ...vmtpSlide(4),
+    label: 'Структура группы компаний FESCO',
+  },
+  {
+    ...vmtpSlide(5),
+    label: 'ВМТП сегодня — ключевые показатели порта',
+  },
+  {
+    ...vmtpSlide(6),
+    label: 'Схема терминалов ВМТП',
+  },
+  {
+    ...vmtpSlide(7),
+    label: 'Оборудование контейнерного и универсального терминалов',
+  },
+  {
+    ...vmtpSlide(8),
+    label: 'Показатели универсального терминала',
+  },
+  {
+    ...vmtpSlide(9),
+    label: 'Показатели контейнерного терминала',
+  },
+  {
+    ...vmtpSlide(10),
+    label: 'Склад консолидации сборных грузов CFS',
+  },
+  {
+    ...vmtpSlide(11),
+    label: 'Железнодорожная инфраструктура ВМТП',
+  },
+  {
+    ...vmtpSlide(12),
+    label: 'Карта маршрутных контейнерных поездов',
+  },
+  {
+    ...vmtpSlide(13),
+    label: 'Структура и динамика общего грузооборота',
+  },
+  {
+    ...vmtpSlide(14),
+    label: 'Динамика контейнерооборота и доля ВМТП',
+  },
+  {
+    ...vmtpSlide(15),
+    label: 'Линейный контейнерный и Ro-Ro сервис',
+  },
+  {
+    ...vmtpSlide(16),
+    label: 'Финальный слайд презентации ВМТП',
+  },
+];
+
+const comparisons = [
+  {
+    number: '01',
+    title: 'Цифры стали главным сообщением',
+    text: 'В ТЗ показатели шли сплошным перечнем. На слайде их семь: крупные цифры на фотографии порта, каждая считывается за пару секунд.',
+    before: vmtpBrief(5),
+    after: vmtpSlide(5).src,
+    beforeAlt: 'Текстовое ТЗ с перечнем показателей ВМТП',
+    afterAlt: 'Готовый слайд ВМТП сегодня с фотографией и крупными показателями',
+  },
+  {
+    number: '02',
+    title: 'Таблица превратилась в карту порта',
+    text: 'Длины путей, причалы, склады и специализация терминалов из таблицы ТЗ привязаны к схеме порта: видно, что где находится.',
+    before: vmtpBrief(6),
+    after: vmtpSlide(6).src,
+    beforeAlt: 'ТЗ со списком параметров и таблицей терминалов',
+    afterAlt: 'Готовый слайд со схемой терминалов Владивостокского порта',
+  },
+  {
+    number: '03',
+    title: 'Сервис показан в реальной среде',
+    text: 'Описание склада из ТЗ сжато до коротких тезисов, а фотография сразу показывает, о каком процессе речь.',
+    before: vmtpBrief(10),
+    after: vmtpSlide(10).src,
+    beforeAlt: 'Текстовое ТЗ о складе консолидации сборных грузов',
+    afterAlt: 'Готовый слайд о складе CFS с фотографией погрузчика и списком преимуществ',
+  },
+  {
+    number: '04',
+    title: 'Диаграмма получила контекст и акцент',
+    text: 'Фирменная палитра, подписи внутри столбцов и фотографический фон связывают график с презентацией и удерживают внимание на доле ВМТП.',
+    before: vmtpBrief(14),
+    after: vmtpSlide(14).src,
+    beforeAlt: 'Исходная столбчатая диаграмма контейнерооборота',
+    afterAlt: 'Готовая диаграмма контейнерооборота в фирменной палитре ВМТП',
+  },
+];
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Кейс',
+      links: [
+        { href: '#task', label: 'Задача и решения' },
+        { href: '#before-after', label: 'До / после' },
+        { href: '#gallery', label: 'Все 16 слайдов' },
+        { href: '#result', label: 'Результат' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/presentations/', label: 'Заказать презентацию' },
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+      ],
+    },
+  ],
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: title,
+    description,
+    url: `${site.url}/cases/presentation-vmtp/`,
+    dateCreated: '2019',
+    inLanguage: 'ru-RU',
+    image: finalSlides.map((slide) => `${site.url}${slide.src}`),
+    creator: {
+      '@type': 'Person',
+      name: 'Николай Ковтун',
+      url: site.url,
+    },
+    about: {
+      '@type': 'Organization',
+      name: 'Владивостокский морской торговый порт',
+      url: 'https://vmtp.ru',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Презентации', item: `${site.url}/presentations/` },
+      { '@type': 'ListItem', position: 3, name: 'Презентация для ВМТП', item: `${site.url}/cases/presentation-vmtp/` },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title={`${title} · Kovtun.studio`}
+  description={description}
+  keywords="дизайн презентации ВМТП, презентация порта, инфографика для презентации, визуализация данных, Николай Ковтун"
+  canonicalPath="/cases/presentation-vmtp/"
+  ogTitle={title}
+  ogDescription={description}
+  ogImage={`${assetRoot}/vmtp-presentation-case-study-og.webp`}
+  ogImageAlt="Титульный слайд презентации Владивостокского морского торгового порта"
+  ogType="article"
+  structuredData={structuredData}
+  bodyClass="case-page"
+>
+  <div class="page-shell" style={`--case-accent: ${accent}`}>
+    <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+    <main id="main-content">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <div class="container-wide">
+          <ol>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/presentations/">Презентации</a></li>
+            <li aria-current="page">ВМТП</li>
+          </ol>
+        </div>
+      </nav>
+
+      <section class="case-hero">
+        <div class="container-wide">
+          <p class="page-kicker">Кейс · презентация</p>
+          <div class="case-hero__top">
+            <h1>Презентация для <em>крупнейшего</em> порта Дальнего Востока</h1>
+            <p class="case-hero__summary">
+              ВМТП работает с 1897 года и входит в транспортную группу FESCO. 16 слайдов о возможностях порта: текстовое ТЗ, таблицы и цифры превратились в карты, схемы терминалов, инфографику и единую визуальную систему.
+            </p>
+          </div>
+          <div class="case-facts" aria-label="Ключевые факты проекта">
+            <div class="case-fact"><strong>16</strong><span>готовых слайдов</span></div>
+            <div class="case-fact"><strong>12</strong><span>слайдов текстового ТЗ</span></div>
+            <div class="case-fact"><strong>1</strong><span>визуальная система</span></div>
+          </div>
+        </div>
+      </section>
+
+      <figure class="case-cover">
+        <img
+          src={vmtpSlide(1).src}
+          alt="Титульный слайд презентации Владивостокского морского торгового порта"
+          width="2400"
+          height="1350"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <section class="case-section" id="task">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">01 / ЗАДАЧА</span>
+            <div>
+              <h2>Собрать из текстового ТЗ слайды, которые читаются с экрана</h2>
+              <div class="case-prose">
+                <p>
+                  Готовой презентации не было. Клиент прислал техническое задание: текст, таблицы и цифры по каждому слайду. Факты и структура уже были, оставалось найти для них визуальную форму.
+                </p>
+                <p>
+                  Нужно было показать географию, масштабы порта, устройство терминалов и маршруты так, чтобы зритель понимал их без пояснений докладчика.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-approach">
+            <article>
+              <span>01</span>
+              <h3>Расставили иерархию</h3>
+              <p>Один главный акцент на слайд: крупное число, схема, карта или изображение. Остальные данные работают как пояснение.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Показали вместо списка</h3>
+              <p>География стала картой, терминалы — схемой порта, оборудование — визуальными категориями, показатели — инфографикой.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Собрали систему</h3>
+              <p>Общая сетка, фирменная палитра, единое положение логотипа, заголовков и нумерации связали 16 слайдов в одно целое.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-comparison-section" id="before-after">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">02 / ДО — ПОСЛЕ</span>
+            <div>
+              <h2>Как страницы ТЗ становились слайдами</h2>
+              <div class="case-prose">
+                <p>Четыре пары показывают разные типы работы: иерархию цифр, пространственную схему, подачу сервиса и оформление диаграммы. Слева страница ТЗ, справа готовый слайд.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-comparisons">
+            {comparisons.map((item) => (
+              <article class="case-comparison">
+                <header class="case-comparison__head">
+                  <span>{item.number}</span>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                  </div>
+                </header>
+                <div class="case-comparison-grid">
+                  <figure>
+                    <figcaption>ТЗ / до</figcaption>
+                    <img src={item.before} alt={item.beforeAlt} width="1280" height="720" loading="lazy" />
+                  </figure>
+                  <figure>
+                    <figcaption>Готовый слайд / после</figcaption>
+                    <img src={item.after} alt={item.afterAlt} width="2000" height="1125" loading="lazy" />
+                  </figure>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--dark" id="result">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">03 / РЕЗУЛЬТАТ</span>
+            <div>
+              <h2>16 слайдов работают как одна система</h2>
+              <div class="case-prose">
+                <p>Показатели продаж или конверсии здесь никто не измерял, поэтому их в кейсе нет. Результат виден в самих слайдах: данные легко найти, сравнить и объяснить.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-results">
+            <article class="case-result">
+              <strong>01</strong>
+              <p>У каждого слайда один фокус: крупное число, карта, схема или фотография.</p>
+            </article>
+            <article class="case-result">
+              <strong>02</strong>
+              <p>Показатели и различия между терминалами видны сразу: крупные цифры и схемы вместо сплошного текста ТЗ.</p>
+            </article>
+            <article class="case-result">
+              <strong>03</strong>
+              <p>Карты, схемы, фотографии и диаграммы складываются в цельный рассказ о возможностях порта.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-media-section" id="gallery">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">04 / ПРЕЗЕНТАЦИЯ</span>
+            <div>
+              <h2>Все 16 слайдов крупным планом</h2>
+              <div class="case-prose">
+                <p>Нажмите на любой слайд, чтобы открыть его во весь экран. В просмотрщике доступны стрелки, клавиши ← → и миниатюры.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-gallery case-gallery--slides">
+            {finalSlides.map((slide, index) => (
+              <figure>
+                <button
+                  type="button"
+                  class="case-gallery-trigger"
+                  data-index={index}
+                  aria-label={`Открыть слайд ${index + 1}: ${slide.label}`}
+                >
+                  <img
+                    src={slide.thumb}
+                    alt={slide.label}
+                    width="520"
+                    height="293"
+                    loading="lazy"
+                  />
+                  <span class="case-gallery-zoom" aria-hidden="true">Смотреть крупнее</span>
+                </button>
+                <figcaption>{String(index + 1).padStart(2, '0')} / {slide.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <div class="lightbox case-lightbox" id="case-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр слайдов презентации ВМТП">
+          <div class="lightbox-stage">
+            <button class="lightbox-btn close" id="case-lb-close" aria-label="Закрыть просмотр">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+            <button class="lightbox-btn prev" id="case-lb-prev" aria-label="Предыдущий слайд">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <button class="lightbox-btn next" id="case-lb-next" aria-label="Следующий слайд">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+            <div class="lightbox-media lightbox-media--case-slides">
+              <img class="lightbox-image" id="case-lb-image" src="" alt="" />
+            </div>
+            <div class="lightbox-caption">
+              <span class="counter" id="case-lb-counter"></span>
+              <span id="case-lb-label"></span>
+            </div>
+            <div class="lightbox-thumbs" id="case-lb-thumbs"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--paper">
+        <div class="container-wide case-deliverables">
+          <div>
+            <span class="case-section__num">05 / СОСТАВ РАБОТ</span>
+            <h2>Что было сделано</h2>
+            <div class="case-credits">
+              <dl>
+                <div>
+                  <dt>Клиент</dt>
+                  <dd>Владивостокский морской торговый порт</dd>
+                </div>
+                <div>
+                  <dt>Город</dt>
+                  <dd>Владивосток</dd>
+                </div>
+                <div>
+                  <dt>Роль</dt>
+                  <dd>Дизайн презентации</dd>
+                </div>
+                <div>
+                  <dt>Дизайнер</dt>
+                  <dd>Николай Ковтун</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <ul>
+            <li>Дизайн 16 слайдов</li>
+            <li>Карты и маршрутные схемы</li>
+            <li>Инфографика терминалов и оборудования</li>
+            <li>Диаграммы и оформление данных</li>
+            <li>Единая сетка и визуальная система</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" id="contact">
+        <div class="container-wide">
+          <div class="portfolio-cta">
+            <h2>Нужна презентация из сложных материалов?</h2>
+            <p>Пришлите черновик, таблицы или готовый текст. Оценю объем и подскажу, как лучше собрать материал.</p>
+            <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">Прислать материалы на оценку <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <a class="case-next" href="/presentations/">
+        <span class="container-wide case-next__inner">
+          <span>
+            <small>Услуга</small>
+            <strong>Разработка презентаций</strong>
+          </span>
+          <span class="case-next__arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </main>
+
+    <Footer {...footer} />
+  </div>
+
+  <script is:inline define:vars={{ GALLERY: finalSlides, METRIKA_ID: site.metrika.id }}>
+    (() => {
+      const lightbox = document.getElementById('case-lightbox');
+      const image = document.getElementById('case-lb-image');
+      const label = document.getElementById('case-lb-label');
+      const counter = document.getElementById('case-lb-counter');
+      const thumbs = document.getElementById('case-lb-thumbs');
+      const closeButton = document.getElementById('case-lb-close');
+      const prevButton = document.getElementById('case-lb-prev');
+      const nextButton = document.getElementById('case-lb-next');
+      const triggers = Array.from(document.querySelectorAll('.case-gallery-trigger'));
+
+      if (!lightbox || !image || !label || !counter || !thumbs || !closeButton || !prevButton || !nextButton) return;
+
+      let current = 0;
+      let opener = null;
+      let touchStartX = 0;
+
+      const pad = (value) => String(value).padStart(2, '0');
+      const goal = (name, params) => {
+        if (typeof window.ym !== 'function') return;
+        try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
+      };
+
+      const updateThumbs = () => {
+        thumbs.querySelectorAll('.lightbox-thumb').forEach((thumb, index) => {
+          thumb.classList.toggle('is-active', index === current);
+          thumb.setAttribute('aria-current', index === current ? 'true' : 'false');
+        });
+        const active = thumbs.children[current];
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      };
+
+      const show = (index) => {
+        current = (index + GALLERY.length) % GALLERY.length;
+        const item = GALLERY[current];
+        image.src = item.src;
+        image.alt = item.label;
+        label.textContent = item.label;
+        counter.textContent = `${pad(current + 1)} / ${pad(GALLERY.length)}`;
+        updateThumbs();
+      };
+
+      GALLERY.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lightbox-thumb lightbox-thumb--case-slide';
+        button.setAttribute('aria-label', `Открыть слайд ${index + 1}`);
+        const thumbImage = document.createElement('img');
+        thumbImage.src = item.thumb;
+        thumbImage.alt = '';
+        thumbImage.loading = 'lazy';
+        button.appendChild(thumbImage);
+        button.addEventListener('click', () => show(index));
+        thumbs.appendChild(button);
+      });
+
+      const open = (index, trigger) => {
+        opener = trigger;
+        show(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-locked');
+        closeButton.focus();
+        goal('case_vmtp_slide_open', { index: index + 1 });
+      };
+
+      const close = () => {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-locked');
+        image.src = '';
+        if (opener) opener.focus();
+      };
+
+      triggers.forEach((trigger, index) => trigger.addEventListener('click', () => open(index, trigger)));
+      closeButton.addEventListener('click', close);
+      prevButton.addEventListener('click', () => show(current - 1));
+      nextButton.addEventListener('click', () => show(current + 1));
+      lightbox.addEventListener('click', (event) => { if (event.target === lightbox) close(); });
+      lightbox.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      lightbox.addEventListener('touchend', (event) => {
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) < 50) return;
+        show(current + (delta < 0 ? 1 : -1));
+      }, { passive: true });
+
+      document.addEventListener('keydown', (event) => {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+        if (event.key === 'Tab') {
+          const focusable = [closeButton, prevButton, nextButton, ...thumbs.querySelectorAll('button')];
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+          if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+      });
+    })();
+  </script>
+</BaseLayout>

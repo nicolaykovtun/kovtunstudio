@@ -87,7 +87,7 @@ themeColor: "#EF1C24"
 
 # Навигация в шапке
 nav:
-  - href: "/#cases"
+  - href: "/portfolio/"
     label: Портфолио
   - href: "/#what"
     label: Услуги
@@ -279,7 +279,7 @@ footer:
   columns:
     - title: Сервис
       links:
-        - { href: "/#cases", label: "Портфолио" }
+        - { href: "/portfolio/", label: "Портфолио" }
         - { href: "/#what", label: "Что делаю" }
         - { href: "/#pricing", label: "Цены" }
         - { href: "/#process", label: "Процесс" }

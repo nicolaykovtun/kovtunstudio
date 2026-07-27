@@ -5,6 +5,9 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://design.kovtun.studio',
   trailingSlash: 'ignore',
+  redirects: {
+    '/cases': '/portfolio/',
+  },
   server: {
     host: '127.0.0.1',  // явно IPv4, чтобы браузер не уходил на пустой IPv6
     port: 4321,

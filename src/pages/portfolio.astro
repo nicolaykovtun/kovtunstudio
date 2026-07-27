@@ -1,0 +1,652 @@
+---
+// portfolio.astro — каталог портфолио.
+// Два уровня: направление (упаковка / айдентика / сайты / презентации /
+// оклейка) × сфера бизнеса клиента. Оба уровня — из taxonomy.yaml,
+// кейсы — из cases.yaml, работы — из gallery.yaml.
+
+import fs from 'node:fs';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Lightbox from '../components/Lightbox.astro';
+import RevealScript from '../components/RevealScript.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+// пути относительно корня проекта (CWD при сборке)
+const site = yaml.load(fs.readFileSync('./src/data/site.yaml', 'utf8')) as any;
+const gallery = yaml.load(fs.readFileSync('./src/data/gallery.yaml', 'utf8')) as any[];
+const cases = yaml.load(fs.readFileSync('./src/data/cases.yaml', 'utf8')) as any[];
+const taxonomy = yaml.load(fs.readFileSync('./src/data/taxonomy.yaml', 'utf8')) as any;
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const caseBySlug = Object.fromEntries(cases.map(c => [c.slug, c]));
+const coverIds = new Set(cases.map(c => c.cover));
+
+// Работы, обогащённые направлением и сферой (через свой кейс)
+const works = gallery.map(g => ({
+  ...g,
+  direction: caseBySlug[g.project]?.direction,
+  sphereKey: caseBySlug[g.project]?.sphereKey,
+}));
+
+// Кол-во работ на кейс
+const countByProject = Object.fromEntries(
+  cases.map(c => [c.slug, gallery.filter(g => g.project === c.slug).length])
+);
+
+// Направления: счётчики кейсов и работ (пустые — «скоро»)
+const directions = taxonomy.directions.map((d: any, i: number) => {
+  const dirCases = cases.filter(c => c.direction === d.key);
+  return {
+    ...d,
+    num: pad(i + 1),
+    caseCount: dirCases.length,
+    workCount: dirCases.reduce((s, c) => s + (countByProject[c.slug] || 0), 0),
+  };
+});
+const activeDirections = directions.filter((d: any) => d.caseCount > 0);
+
+// Сферы: в фильтр — только те, где есть работы
+const spheres = taxonomy.spheres
+  .map((s: any) => ({
+    ...s,
+    workCount: works.filter(w => w.sphereKey === s.key).length,
+  }))
+  .filter((s: any) => s.workCount > 0);
+
+// Лайтбокс — весь каталог, в порядке gallery.yaml
+const lbItems = gallery.map(g => ({
+  src: `/assets/portfolio/full/${g.id}.webp`,
+  label: g.alt,
+}));
+
+const seoTitle = `Портфолио — графический дизайн: оклейка авто, айдентика, упаковка · Kovtun.studio`;
+const seoDescription =
+  `Каталог работ студии по направлениям: упаковка, логотип и фирменный стиль, сайты, презентации, ` +
+  `оклейка авто. Сейчас открыт раздел оклейки — ${cases.length} проектов, ${gallery.length} работ, ` +
+  `каждый кейс с задачей, решением и макетами под печать.`;
+---
+<BaseLayout title={seoTitle} description={seoDescription} canonicalPath="/portfolio/">
+  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+  <main id="top">
+
+    <!-- ── Шапка каталога ─────────────────────────────────────────── -->
+    <section class="p-hero">
+      <div class="container-wide">
+        <p class="p-crumb reveal">
+          <a href="/">Главная</a><span aria-hidden="true">/</span><span>Портфолио</span>
+        </p>
+        <h1 class="reveal" style="--reveal-delay: 60ms">
+          Пять направлений.<br>
+          <em class="accent">Один почерк.</em>
+        </h1>
+        <p class="p-lede reveal" style="--reveal-delay: 120ms">
+          Упаковка, айдентика, сайты, презентации и оклейка транспорта.
+          Каталог пополняется: сейчас открыт раздел оклейки авто —
+          зайдите в кейс, чтобы увидеть проект целиком, или кликните
+          любую работу, она откроется во весь экран.
+        </p>
+        <div class="p-meta reveal" style="--reveal-delay: 180ms">
+          <div class="item"><span class="num">{pad(directions.length)}</span><span class="lbl">Направлений работы</span></div>
+          <div class="item"><span class="num">{pad(cases.length)}</span><span class="lbl">Проектов в каталоге</span></div>
+          <div class="item"><span class="num">{gallery.length}</span><span class="lbl">Работ крупным планом</span></div>
+          <div class="item"><span class="num">{pad(spheres.length)}<span class="accent">+</span></span><span class="lbl">Сфер бизнеса клиентов</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Направления ────────────────────────────────────────────── -->
+    <section class="section-tight p-dirs">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2 class="reveal">Направления<br>каталога</h2>
+          <p class="aside reveal" style="--reveal-delay: 80ms">
+            Пять дисциплин одной студии. Разделы открываются по мере
+            переноса архива — начали с оклейки.
+          </p>
+        </div>
+        <ol class="dir-list">
+          {directions.map((d: any, i: number) => d.caseCount > 0 ? (
+            <li class="reveal" style={`--reveal-delay: ${i * 50}ms`}>
+              <a class="dir-row" href="#cases" data-goto-direction={d.key}>
+                <span class="dr-num" aria-hidden="true">{d.num}</span>
+                <span class="dr-name">{d.label}</span>
+                <span class="dr-count">{d.caseCount} проектов · {d.workCount} работ</span>
+                <span class="dr-arrow" aria-hidden="true">↓</span>
+              </a>
+            </li>
+          ) : (
+            <li class="reveal" style={`--reveal-delay: ${i * 50}ms`}>
+              <div class="dir-row is-soon">
+                <span class="dr-num" aria-hidden="true">{d.num}</span>
+                <span class="dr-name">{d.label}</span>
+                <span class="dr-soon">Скоро</span>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── Кейсы + фильтр ─────────────────────────────────────────── -->
+    <section class="section-tight p-cases" id="cases">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2 class="reveal">Кейсы —<br>проекты целиком</h2>
+          <p class="aside reveal" style="--reveal-delay: 80ms">
+            Задача, решение и все макеты одного проекта на отдельной
+            странице. Фильтр действует и на кейсы, и на сетку работ ниже.
+          </p>
+        </div>
+
+        <div class="filter-panel reveal">
+          <div class="filter-group" role="group" aria-label="Фильтр по направлению">
+            <span class="fg-label">Направление</span>
+            <div class="fg-chips">
+              <button type="button" class="chip is-active" data-dim="direction" data-value="all">Все</button>
+              {activeDirections.map((d: any) => (
+                <button type="button" class="chip" data-dim="direction" data-value={d.key}>
+                  {d.label} <span class="chip-n">{d.workCount}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div class="filter-group" role="group" aria-label="Фильтр по сфере бизнеса">
+            <span class="fg-label">Сфера</span>
+            <div class="fg-chips">
+              <button type="button" class="chip is-active" data-dim="sphere" data-value="all">Все</button>
+              {spheres.map((s: any) => (
+                <button type="button" class="chip" data-dim="sphere" data-value={s.key}>
+                  {s.label} <span class="chip-n">{s.workCount}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="case-index" id="case-index">
+          {cases.map((c, i) => (
+            <a
+              class="case-row reveal"
+              href={`/cases/${c.slug}/`}
+              data-direction={c.direction}
+              data-sphere={c.sphereKey}
+              style={`--reveal-delay: ${i * 60}ms`}
+            >
+              <span class="cr-num" aria-hidden="true">{pad(i + 1)}</span>
+              <span class="cr-thumb">
+                <img src={`/assets/portfolio/thumb/${c.cover}.webp`} alt="" loading="lazy" width="800" height="447" />
+              </span>
+              <span class="cr-body">
+                <span class="cr-name">{c.name}</span>
+                <span class="cr-meta">{c.sphere} · {c.vehicles}</span>
+              </span>
+              <span class="cr-tags">
+                <span class="cr-cat">{c.category}</span>
+                <span class="cr-count">{countByProject[c.slug]} работ</span>
+              </span>
+              <span class="cr-arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+        <p class="works-empty" id="cases-empty" hidden>По этому фильтру кейсов пока нет.</p>
+      </div>
+    </section>
+
+    <!-- ── Все работы ─────────────────────────────────────────────── -->
+    <section class="section p-grid" id="works">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2 class="reveal">Все работы<br>подряд</h2>
+          <p class="aside reveal" style="--reveal-delay: 80ms">
+            Кликните на изображение — откроется во весь экран.
+            Листайте стрелками или клавишами ← →.
+          </p>
+        </div>
+
+        <div class="works-grid" id="works-grid">
+          {works.map((g, i) => (
+            <button
+              type="button"
+              class:list={['work-tile', 'js-lb', 'reveal', { 'is-featured': coverIds.has(g.id) }]}
+              data-lb-index={i}
+              data-direction={g.direction}
+              data-sphere={g.sphereKey}
+              style={`--reveal-delay: ${(i % 4) * 50}ms`}
+              aria-label={`Открыть работу: ${g.alt}`}
+            >
+              <img
+                src={`/assets/portfolio/thumb/${g.id}.webp`}
+                alt={g.alt}
+                loading={i < 4 ? 'eager' : 'lazy'}
+                fetchpriority={i === 0 ? 'high' : undefined}
+                width="800"
+                height="447"
+              />
+              <span class="wt-shade" aria-hidden="true"></span>
+              <span class="wt-label">
+                <span class="wt-project">{caseBySlug[g.project]?.name}</span>
+                {g.alt}
+              </span>
+              <span class="hover-zoom" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg>
+              </span>
+            </button>
+          ))}
+        </div>
+        <p class="works-empty" id="works-empty" hidden>По этому фильтру работ пока нет.</p>
+      </div>
+    </section>
+
+    <CtaBand
+      title="Есть задача<br>по дизайну?"
+      text="Опишите проект — за пару часов отвечу и подскажу формат: от макета оклейки до фирменного стиля и презентации."
+      primaryLabel="Обсудить проект"
+      primaryHref="/#contact"
+      telegramUrl={site.contact.telegram}
+    />
+  </main>
+  <Footer {...site.footer} />
+
+  <Lightbox items={lbItems} metrikaId={site.metrika.id} />
+  <RevealScript />
+
+  <script is:inline define:vars={{ METRIKA_ID: site.metrika.id }}>
+    // Двухуровневый фильтр: направление × сфера.
+    // Применяется одновременно к кейсам (#case-index) и работам (#works-grid).
+    (function () {
+      "use strict";
+      var state = { direction: "all", sphere: "all" };
+      var chips = document.querySelectorAll(".filter-panel .chip");
+      var rows = document.querySelectorAll("#case-index .case-row");
+      var tiles = document.querySelectorAll("#works-grid .work-tile");
+      var casesEmpty = document.getElementById("cases-empty");
+      var worksEmpty = document.getElementById("works-empty");
+
+      function matches(el) {
+        return (state.direction === "all" || el.dataset.direction === state.direction)
+            && (state.sphere === "all" || el.dataset.sphere === state.sphere);
+      }
+
+      function apply() {
+        var visRows = 0, visTiles = 0;
+        Array.prototype.forEach.call(rows, function (el) {
+          var show = matches(el);
+          el.classList.toggle("is-hidden", !show);
+          if (show) visRows++;
+        });
+        Array.prototype.forEach.call(tiles, function (el) {
+          var show = matches(el);
+          el.classList.toggle("is-hidden", !show);
+          if (show) visTiles++;
+        });
+        casesEmpty.hidden = visRows > 0;
+        worksEmpty.hidden = visTiles > 0;
+        Array.prototype.forEach.call(chips, function (c) {
+          c.classList.toggle("is-active", state[c.dataset.dim] === c.dataset.value);
+        });
+      }
+
+      Array.prototype.forEach.call(chips, function (chip) {
+        chip.addEventListener("click", function () {
+          state[chip.dataset.dim] = chip.dataset.value;
+          apply();
+          if (typeof window.ym === "function") {
+            try {
+              window.ym(METRIKA_ID, "reachGoal", "portfolio_filter", {
+                direction: state.direction, sphere: state.sphere
+              });
+            } catch (e) {}
+          }
+        });
+      });
+
+      // Клик по направлению в списке — установить фильтр и проскроллить к кейсам
+      Array.prototype.forEach.call(document.querySelectorAll("[data-goto-direction]"), function (link) {
+        link.addEventListener("click", function () {
+          state.direction = link.dataset.gotoDirection;
+          state.sphere = "all";
+          apply();
+        });
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* ── Шапка каталога ─────────────────────────────────────────────── */
+  .p-hero {
+    padding: 96px 0 88px;
+    border-bottom: 1px solid var(--line-1);
+  }
+  .p-crumb {
+    font: 700 12px/1.2 var(--font-display);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    display: flex; align-items: center; gap: 12px;
+    margin: 0 0 40px;
+  }
+  .p-crumb a {
+    color: var(--fg-3);
+    border: 0;
+    transition: color var(--dur-fast);
+  }
+  .p-crumb a:hover { color: var(--ks-red); }
+  .p-crumb span[aria-hidden] { color: var(--line-2); }
+  .p-crumb span:last-child { color: var(--fg-1); }
+
+  .p-hero h1 {
+    font: 800 clamp(44px, 7vw, 104px)/0.98 var(--font-display);
+    letter-spacing: -0.035em;
+    color: var(--fg-1);
+    margin: 0 0 28px;
+  }
+  .p-hero h1 em { font-style: normal; }
+  .p-lede {
+    font: 400 clamp(16px, 1.3vw, 19px)/1.55 var(--font-body);
+    color: var(--fg-3);
+    max-width: 56ch;
+    margin: 0 0 64px;
+  }
+  .p-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding-top: 32px;
+    position: relative;
+  }
+  .p-meta::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+    background: var(--line-1);
+  }
+  .p-meta .num {
+    font: 800 36px/1 var(--font-display);
+    letter-spacing: -0.02em;
+    color: var(--fg-1);
+    display: block; margin-bottom: 8px;
+  }
+  .p-meta .num .accent { color: var(--ks-red); }
+  .p-meta .lbl {
+    font: 500 12px/1.4 var(--font-body);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  /* ── Направления ────────────────────────────────────────────────── */
+  .dir-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    border-top: 1px solid var(--line-1);
+    counter-reset: none;
+  }
+  .dir-row {
+    display: grid;
+    grid-template-columns: 72px 1fr auto 40px;
+    align-items: center;
+    gap: 28px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line-1);
+    text-decoration: none;
+    border-left: 0; border-right: 0;
+    transition: background var(--dur-base) var(--ease-out);
+  }
+  a.dir-row:hover { background: var(--bg-2); }
+  .dr-num {
+    font: 800 14px/1 var(--font-display);
+    letter-spacing: 0.08em;
+    color: var(--ks-red);
+    padding-left: 4px;
+  }
+  .dir-row.is-soon .dr-num { color: var(--fg-4); }
+  .dr-name {
+    font: 700 clamp(24px, 3.2vw, 44px)/1.05 var(--font-display);
+    letter-spacing: -0.02em;
+    color: var(--fg-1);
+    transition: color var(--dur-base);
+  }
+  a.dir-row:hover .dr-name { color: var(--ks-red); }
+  .dir-row.is-soon .dr-name { color: var(--fg-4); }
+  .dr-count {
+    font: 600 12px/1 var(--font-mono);
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+    white-space: nowrap;
+  }
+  .dr-soon {
+    font: 700 10px/1 var(--font-display);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--fg-3);
+    border: 1px solid var(--line-2);
+    padding: 7px 10px;
+    white-space: nowrap;
+  }
+  .dr-arrow {
+    font: 400 24px/1 var(--font-display);
+    color: var(--fg-1);
+    justify-self: end;
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
+  }
+  a.dir-row:hover .dr-arrow { transform: translateY(4px); color: var(--ks-red); }
+
+  @media (max-width: 700px) {
+    .dir-row { grid-template-columns: 44px 1fr auto; gap: 16px; padding: 20px 0; }
+    .dr-arrow { display: none; }
+    .dr-count { font-size: 11px; }
+  }
+
+  /* ── Фильтр: направление × сфера ────────────────────────────────── */
+  .filter-panel {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 40px;
+    padding: 24px 0;
+    border-top: 1px solid var(--line-1);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .filter-group {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    align-items: baseline;
+    gap: 20px;
+  }
+  .fg-label {
+    font: 700 11px/1 var(--font-display);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--fg-3);
+  }
+  .fg-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font: 700 13px/1 var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--fg-1);
+    background: transparent;
+    border: 1px solid var(--line-2);
+    padding: 15px 18px; /* ≥44px по высоте — тач-таргет */
+    display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    transition: background var(--dur-base) var(--ease-out),
+                color var(--dur-base) var(--ease-out),
+                border-color var(--dur-base) var(--ease-out);
+  }
+  .chip:hover { border-color: var(--fg-1); }
+  .chip.is-active {
+    background: var(--ks-charcoal);
+    border-color: var(--ks-charcoal);
+    color: #fff;
+  }
+  .chip-n {
+    font: 600 10px/1 var(--font-mono);
+    color: var(--fg-3);
+    transition: color var(--dur-base);
+  }
+  .chip.is-active .chip-n { color: var(--ks-red-300); }
+
+  @media (max-width: 700px) {
+    .filter-group { grid-template-columns: 1fr; gap: 10px; }
+  }
+
+  /* ── Индекс кейсов ──────────────────────────────────────────────── */
+  .case-index { border-top: 1px solid var(--line-1); }
+  .case-row {
+    display: grid;
+    grid-template-columns: 56px 132px 1fr auto 40px;
+    align-items: center;
+    gap: 28px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line-1);
+    text-decoration: none;
+    border-left: 0; border-right: 0;
+    position: relative;
+    transition: background var(--dur-base) var(--ease-out);
+  }
+  .case-row.is-hidden { display: none; }
+  .case-row:hover { background: var(--bg-2); }
+  .cr-num {
+    font: 800 14px/1 var(--font-display);
+    letter-spacing: 0.08em;
+    color: var(--fg-4);
+    padding-left: 4px;
+    transition: color var(--dur-base);
+  }
+  .case-row:hover .cr-num { color: var(--ks-red); }
+  .cr-thumb {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: var(--ks-charcoal);
+  }
+  .cr-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  .case-row:hover .cr-thumb img { transform: scale(1.06); }
+  .cr-body { min-width: 0; }
+  .cr-name {
+    display: block;
+    font: 700 clamp(22px, 2.4vw, 32px)/1.1 var(--font-display);
+    letter-spacing: -0.015em;
+    color: var(--fg-1);
+    margin-bottom: 6px;
+    transition: color var(--dur-base);
+  }
+  .case-row:hover .cr-name { color: var(--ks-red); }
+  .cr-meta {
+    display: block;
+    font: 400 14px/1.45 var(--font-body);
+    color: var(--fg-3);
+  }
+  .cr-tags {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    white-space: nowrap;
+  }
+  .cr-cat {
+    font: 700 10px/1 var(--font-display);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--fg-1);
+    border: 1px solid var(--line-2);
+    padding: 7px 10px;
+  }
+  .cr-count {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.06em;
+    color: var(--fg-3);
+  }
+  .cr-arrow {
+    font: 400 26px/1 var(--font-display);
+    color: var(--fg-1);
+    justify-self: end;
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
+  }
+  .case-row:hover .cr-arrow { transform: translateX(6px); color: var(--ks-red); }
+
+  @media (max-width: 900px) {
+    .case-row { grid-template-columns: 96px 1fr 32px; gap: 18px; padding: 18px 0; }
+    .cr-num, .cr-tags { display: none; }
+    .cr-thumb { aspect-ratio: 4/3; }
+  }
+
+  /* ── Сетка работ ────────────────────────────────────────────────── */
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
+    gap: 12px;
+  }
+  .work-tile {
+    position: relative;
+    overflow: hidden;
+    background: var(--ks-charcoal);
+    cursor: zoom-in;
+    aspect-ratio: 1/1;
+    border: 0; padding: 0;
+    display: block;
+    transition: transform var(--dur-base) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out);
+  }
+  .work-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .work-tile.is-featured { grid-column: span 2; grid-row: span 2; }
+  .work-tile.is-hidden { display: none; }
+  .work-tile img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 600ms var(--ease-out);
+  }
+  .work-tile:hover img { transform: scale(1.04); }
+  .wt-shade {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,.72) 100%);
+    opacity: 0;
+    transition: opacity var(--dur-base);
+    pointer-events: none;
+  }
+  .work-tile:hover .wt-shade { opacity: 1; }
+  .wt-label {
+    position: absolute; left: 14px; right: 14px; bottom: 12px;
+    color: #fff;
+    font: 500 12px/1.35 var(--font-body);
+    text-align: left;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--dur-base), transform var(--dur-base);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .wt-project {
+    display: block;
+    font: 700 10px/1 var(--font-display);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ks-red-300);
+    margin-bottom: 5px;
+  }
+  .work-tile:hover .wt-label { opacity: 1; transform: translateY(0); }
+  .work-tile .hover-zoom {
+    position: absolute; right: 10px; top: 10px;
+    width: 32px; height: 32px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: grid; place-items: center;
+    color: #fff;
+    opacity: 0;
+    transition: opacity var(--dur-base);
+    pointer-events: none;
+  }
+  .work-tile .hover-zoom svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .work-tile:hover .hover-zoom { opacity: 1; }
+
+  .works-empty {
+    margin: 40px 0 0;
+    font: 400 16px/1.5 var(--font-body);
+    color: var(--fg-3);
+  }
+
+  @media (max-width: 1100px) { .works-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 700px) {
+    .works-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .p-hero { padding: 64px 0 56px; }
+    .p-lede { margin-bottom: 44px; }
+    .p-meta { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  }
+</style>

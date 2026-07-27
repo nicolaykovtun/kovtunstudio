@@ -1,0 +1,539 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const assetRoot = '/assets/cases/presentation-edelweiss';
+const title = 'Edelweiss «Золотой Рог»: брошюра квартала бизнес-класса';
+const description = 'Кейс дизайна 18-страничной продающей брошюры для жилого квартала Edelweiss «Золотой Рог»: архитектура, инфраструктура, цифры и планы этажей.';
+const accent = '#C79A52';
+
+const nav = [
+  { href: '/portfolio/', label: 'Портфолио' },
+  { href: '/presentations/', label: 'Презентации' },
+  { href: '#system', label: 'Система' },
+  { href: '#gallery', label: 'Все страницы' },
+];
+
+const pageLabels = [
+  'Обложка брошюры жилого квартала Edelweiss Золотой Рог',
+  'Концепция проекта и панорама бухты Золотой Рог',
+  'Общий вид жилого квартала и корпуса первой очереди',
+  'Карта инфраструктуры района и время в пути',
+  'Масштаб проекта: площадь, квартиры и планировочные решения',
+  'Торговая улица и общественные пространства квартала',
+  'Благоустройство территории и ключевые сценарии двора',
+  'Схема первой очереди квартала с общественными пространствами',
+  'Корпуса A1 и A2: этажность, свет и панорамные виды',
+  'Подземный и гостевой паркинг жилого квартала',
+  'Генеральный план квартала и расположение первой очереди',
+  'Корпус A1: типовой план с 4 по 19 этаж',
+  'Корпус A1: типовой план с 20 по 22 этаж',
+  'Корпус A2: план третьего этажа',
+  'Корпус A2: план четвертого этажа',
+  'Корпус A2: типовой план с 5 по 14 этаж',
+  'Корпус A2: типовой план с 15 по 22 этаж',
+  'Финальная страница с призывом выбрать квартиру',
+];
+
+const pages = pageLabels.map((label, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  return {
+    src: `${assetRoot}/full/edelweiss-golden-rog-brochure-page-${number}.webp`,
+    thumb: `${assetRoot}/thumb/edelweiss-golden-rog-brochure-page-${number}-thumbnail.webp`,
+    label,
+  };
+});
+
+const chapters = [
+  {
+    number: '01',
+    title: 'Сначала — место и образ',
+    text: 'Концепция и карта инфраструктуры отвечают на первые вопросы покупателя: что это за проект, где он находится и чем интересна его локация.',
+    pages: [
+      { index: 1, caption: 'Концепция проекта' },
+      { index: 3, caption: 'Инфраструктура района' },
+    ],
+  },
+  {
+    number: '02',
+    title: 'Затем — масштаб и среда',
+    text: 'Крупные цифры дают опорные характеристики квартала, а отдельная страница благоустройства переводит их в понятные сценарии повседневной жизни.',
+    pages: [
+      { index: 4, caption: 'Масштаб проекта' },
+      { index: 6, caption: 'Благоустройство территории' },
+    ],
+  },
+  {
+    number: '03',
+    title: 'В финале — конкретный выбор',
+    text: 'После эмоциональной и содержательной части брошюра переходит к схеме квартала и планам этажей: покупатель видит корпус, расположение квартиры и направление вида.',
+    pages: [
+      { index: 10, caption: 'Генеральный план' },
+      { index: 11, caption: 'План типового этажа' },
+    ],
+  },
+];
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Кейс',
+      links: [
+        { href: '#task', label: 'Задача и решения' },
+        { href: '#system', label: 'Система брошюры' },
+        { href: '#gallery', label: 'Все 18 страниц' },
+        { href: '#result', label: 'Результат' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/presentations/', label: 'Заказать презентацию' },
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+      ],
+    },
+  ],
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: title,
+    description,
+    url: `${site.url}/cases/presentation-edelweiss/`,
+    dateCreated: '2025',
+    inLanguage: 'ru-RU',
+    image: pages.map((page) => `${site.url}${page.src}`),
+    creator: {
+      '@type': 'Person',
+      name: 'Николай Ковтун',
+      url: site.url,
+    },
+    about: {
+      '@type': 'Organization',
+      name: 'Edelweiss',
+      url: 'https://ewss.ru/',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Презентации', item: `${site.url}/presentations/` },
+      { '@type': 'ListItem', position: 3, name: 'Брошюра Edelweiss Золотой Рог', item: `${site.url}/cases/presentation-edelweiss/` },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title={`${title} · Kovtun.studio`}
+  description={description}
+  keywords="дизайн брошюры застройщика, презентация жилого комплекса, Edelweiss Золотой Рог, дизайн недвижимости, Николай Ковтун"
+  canonicalPath="/cases/presentation-edelweiss/"
+  ogTitle={title}
+  ogDescription={description}
+  ogImage={`${assetRoot}/edelweiss-golden-rog-brochure-case-study-og.webp`}
+  ogImageAlt="Обложка брошюры жилого квартала Edelweiss Золотой Рог"
+  ogType="article"
+  structuredData={structuredData}
+  bodyClass="case-page case-page--brochure"
+>
+  <div class="page-shell" style={`--case-accent: ${accent}`}>
+    <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+    <main id="main-content">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <div class="container-wide">
+          <ol>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/presentations/">Презентации</a></li>
+            <li aria-current="page">Edelweiss Золотой Рог</li>
+          </ol>
+        </div>
+      </nav>
+
+      <section class="case-hero">
+        <div class="container-wide">
+          <p class="page-kicker">Кейс · продающая брошюра</p>
+          <div class="case-hero__top">
+            <h1>Брошюра для квартала <em>бизнес-класса</em> над бухтой Золотой Рог</h1>
+            <p class="case-hero__summary">
+              Дизайн 18-страничной брошюры для отдела продаж жилого квартала Edelweiss «Золотой Рог». Тексты, рендеры, планы и остальные материалы предоставил клиент.
+            </p>
+          </div>
+          <div class="case-facts" aria-label="Ключевые факты проекта">
+            <div class="case-fact"><strong>18</strong><span>страниц брошюры</span></div>
+            <div class="case-fact"><strong>762</strong><span>квартиры по данным брошюры</span></div>
+            <div class="case-fact"><strong>32</strong><span>планировочных решения</span></div>
+          </div>
+        </div>
+      </section>
+
+      <figure class="case-cover">
+        <img
+          src={`${assetRoot}/edelweiss-golden-rog-brochure-cover.webp`}
+          alt="Обложка брошюры жилого квартала Edelweiss Золотой Рог"
+          width="2200"
+          height="1555"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <section class="case-section" id="task">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">01 / ЗАДАЧА</span>
+            <div>
+              <h2>Оформить материалы клиента в цельную брошюру</h2>
+              <div class="case-prose">
+                <p>
+                  Клиент предоставил тексты, архитектурные рендеры, карты, данные и планы этажей. Моя задача — дизайн и верстка 18 страниц; содержание оставалось за клиентом.
+                </p>
+                <p>
+                  Визуальная система должна была поддержать заданную последовательность брошюры и сохранить ясность каждой отдельно открытой страницы.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-approach">
+            <article>
+              <span>01</span>
+              <h3>Поддержана логика материалов</h3>
+              <p>Единая сетка связывает заданную клиентом последовательность: локация, масштаб, преимущества, схема квартала и планы.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Разделены уровни информации</h3>
+              <p>Большой рендер создает впечатление, крупная цифра фиксирует факт, а подписи и схемы отвечают на практические вопросы.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Сохранен спокойный тон</h3>
+              <p>Белое поле, черная типографика и теплый золотой акцент поддерживают архитектуру и не превращают материал в рекламный шум.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-comparison-section" id="system" style="background:#171612">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">02 / СИСТЕМА</span>
+            <div>
+              <h2>Дизайн поддерживает сценарий брошюры</h2>
+              <div class="case-prose">
+                <p>Три пары страниц показывают, как одна визуальная система объединяет предоставленные клиентом материалы — от образа проекта и преимуществ до технических деталей.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-comparisons">
+            {chapters.map((chapter) => (
+              <article class="case-comparison">
+                <header class="case-comparison__head">
+                  <span>{chapter.number}</span>
+                  <div>
+                    <h3>{chapter.title}</h3>
+                    <p>{chapter.text}</p>
+                  </div>
+                </header>
+                <div class="case-comparison-grid">
+                  {chapter.pages.map((item) => (
+                    <figure>
+                      <figcaption>{item.caption}</figcaption>
+                      <img
+                        src={pages[item.index].src}
+                        alt={pages[item.index].label}
+                        width="1800"
+                        height="1273"
+                        loading="lazy"
+                      />
+                    </figure>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--dark" id="result">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">03 / РЕЗУЛЬТАТ</span>
+            <div>
+              <h2>18 страниц собраны в единую визуальную систему</h2>
+              <div class="case-prose">
+                <p>Показатели продаж здесь не измерялись, поэтому их в кейсе нет. Результат виден в цельной подаче материалов клиента: от первого образа квартала до корпуса, этажа и планировки.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-results">
+            <article class="case-result">
+              <strong>01</strong>
+              <p>Рендеры, карта, цифры и планы собраны в единую визуальную систему с повторяемой сеткой.</p>
+            </article>
+            <article class="case-result">
+              <strong>02</strong>
+              <p>Ключевые характеристики вынесены в крупные цифры, пиктограммы и схемы: их видно без чтения длинных абзацев.</p>
+            </article>
+            <article class="case-result">
+              <strong>03</strong>
+              <p>Каждая страница отвечает на отдельный вопрос и может использоваться менеджером как самостоятельный аргумент.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-media-section" id="gallery">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">04 / БРОШЮРА</span>
+            <div>
+              <h2>Все 18 страниц крупным планом</h2>
+              <div class="case-prose">
+                <p>Нажмите на страницу, чтобы открыть ее во весь экран. В просмотрщике доступны стрелки, клавиши ← →, миниатюры и свайп на мобильном.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-gallery case-gallery--slides case-gallery--brochure">
+            {pages.map((page, index) => (
+              <figure>
+                <button
+                  type="button"
+                  class="case-gallery-trigger"
+                  data-index={index}
+                  aria-label={`Открыть страницу ${index + 1}: ${page.label}`}
+                >
+                  <img
+                    src={page.thumb}
+                    alt={page.label}
+                    width="720"
+                    height="509"
+                    loading="lazy"
+                  />
+                  <span class="case-gallery-zoom" aria-hidden="true">Смотреть крупнее</span>
+                </button>
+                <figcaption>{String(index + 1).padStart(2, '0')} / {page.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <div class="lightbox case-lightbox" id="case-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр страниц брошюры Edelweiss Золотой Рог">
+          <div class="lightbox-stage">
+            <button class="lightbox-btn close" id="case-lb-close" aria-label="Закрыть просмотр">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+            <button class="lightbox-btn prev" id="case-lb-prev" aria-label="Предыдущая страница">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <button class="lightbox-btn next" id="case-lb-next" aria-label="Следующая страница">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+            <div class="lightbox-media lightbox-media--case-slides lightbox-media--case-brochure">
+              <img class="lightbox-image" id="case-lb-image" src="" alt="" />
+            </div>
+            <div class="lightbox-caption">
+              <span class="counter" id="case-lb-counter"></span>
+              <span id="case-lb-label"></span>
+            </div>
+            <div class="lightbox-thumbs" id="case-lb-thumbs"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--paper">
+        <div class="container-wide case-deliverables">
+          <div>
+            <span class="case-section__num">05 / СОСТАВ РАБОТ</span>
+            <h2>Что было сделано</h2>
+            <div class="case-credits">
+              <dl>
+                <div>
+                  <dt>Клиент</dt>
+                  <dd>Edelweiss</dd>
+                </div>
+                <div>
+                  <dt>Проект</dt>
+                  <dd>Жилой квартал «Золотой Рог»</dd>
+                </div>
+                <div>
+                  <dt>Город</dt>
+                  <dd>Владивосток</dd>
+                </div>
+                <div>
+                  <dt>Год</dt>
+                  <dd>2025</dd>
+                </div>
+                <div>
+                  <dt>Дизайнер</dt>
+                  <dd>Николай Ковтун</dd>
+                </div>
+                <div>
+                  <dt>Роль</dt>
+                  <dd>Дизайн брошюры</dd>
+                </div>
+                <div>
+                  <dt>Формат</dt>
+                  <dd>Через внештатного маркетолога Edelweiss</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <ul>
+            <li>Дизайн и верстка 18 страниц</li>
+            <li>Визуальное оформление обложки</li>
+            <li>Компоновка рендеров и текстов клиента</li>
+            <li>Оформление карт, схем и данных</li>
+            <li>Верстка схем квартала и планов этажей</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" id="contact">
+        <div class="container-wide">
+          <div class="portfolio-cta">
+            <h2>Нужна презентация или брошюра для проекта?</h2>
+            <p>Пришлите текст, таблицы, рендеры или черновую структуру. Оценю объем и предложу логику материала.</p>
+            <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">Прислать материалы на оценку <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <a class="case-next" href="/cases/presentation-vmtp/">
+        <span class="container-wide case-next__inner">
+          <span>
+            <small>Следующий кейс</small>
+            <strong>Презентация ВМТП</strong>
+          </span>
+          <span class="case-next__arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </main>
+
+    <Footer {...footer} />
+  </div>
+
+  <script is:inline define:vars={{ GALLERY: pages, METRIKA_ID: site.metrika.id }}>
+    (() => {
+      const lightbox = document.getElementById('case-lightbox');
+      const image = document.getElementById('case-lb-image');
+      const label = document.getElementById('case-lb-label');
+      const counter = document.getElementById('case-lb-counter');
+      const thumbs = document.getElementById('case-lb-thumbs');
+      const closeButton = document.getElementById('case-lb-close');
+      const prevButton = document.getElementById('case-lb-prev');
+      const nextButton = document.getElementById('case-lb-next');
+      const triggers = Array.from(document.querySelectorAll('.case-gallery-trigger'));
+
+      if (!lightbox || !image || !label || !counter || !thumbs || !closeButton || !prevButton || !nextButton) return;
+
+      let current = 0;
+      let opener = null;
+      let touchStartX = 0;
+
+      const pad = (value) => String(value).padStart(2, '0');
+      const goal = (name, params) => {
+        if (typeof window.ym !== 'function') return;
+        try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
+      };
+
+      const updateThumbs = () => {
+        thumbs.querySelectorAll('.lightbox-thumb').forEach((thumb, index) => {
+          thumb.classList.toggle('is-active', index === current);
+          thumb.setAttribute('aria-current', index === current ? 'true' : 'false');
+        });
+        const active = thumbs.children[current];
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      };
+
+      const show = (index) => {
+        current = (index + GALLERY.length) % GALLERY.length;
+        const item = GALLERY[current];
+        image.src = item.src;
+        image.alt = item.label;
+        label.textContent = item.label;
+        counter.textContent = `${pad(current + 1)} / ${pad(GALLERY.length)}`;
+        updateThumbs();
+      };
+
+      GALLERY.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lightbox-thumb lightbox-thumb--case-slide lightbox-thumb--case-brochure';
+        button.setAttribute('aria-label', `Открыть страницу ${index + 1}`);
+        const thumbImage = document.createElement('img');
+        thumbImage.src = item.thumb;
+        thumbImage.alt = '';
+        thumbImage.loading = 'lazy';
+        button.appendChild(thumbImage);
+        button.addEventListener('click', () => show(index));
+        thumbs.appendChild(button);
+      });
+
+      const open = (index, trigger) => {
+        opener = trigger;
+        show(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-locked');
+        closeButton.focus();
+        goal('case_edelweiss_page_open', { index: index + 1 });
+      };
+
+      const close = () => {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-locked');
+        image.src = '';
+        if (opener) opener.focus();
+      };
+
+      triggers.forEach((trigger, index) => trigger.addEventListener('click', () => open(index, trigger)));
+      closeButton.addEventListener('click', close);
+      prevButton.addEventListener('click', () => show(current - 1));
+      nextButton.addEventListener('click', () => show(current + 1));
+      lightbox.addEventListener('click', (event) => { if (event.target === lightbox) close(); });
+      lightbox.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      lightbox.addEventListener('touchend', (event) => {
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) < 50) return;
+        show(current + (delta < 0 ? 1 : -1));
+      }, { passive: true });
+
+      document.addEventListener('keydown', (event) => {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+        if (event.key === 'Tab') {
+          const focusable = [closeButton, prevButton, nextButton, ...thumbs.querySelectorAll('button')];
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+          if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+      });
+    })();
+  </script>
+</BaseLayout>

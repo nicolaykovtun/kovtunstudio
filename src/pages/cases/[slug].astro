@@ -1,0 +1,471 @@
+---
+// cases/[slug].astro — страница кейса. Генерируется из cases.yaml:
+// одна запись в yaml = одна страница. Порядок в yaml задаёт «следующий кейс».
+
+import fs from 'node:fs';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import CtaBand from '../../components/CtaBand.astro';
+
+export async function getStaticPaths() {
+  // пути относительно корня проекта (CWD при сборке)
+  const cases = yaml.load(fs.readFileSync('./src/data/cases.yaml', 'utf8')) as any[];
+  return cases.map((c, i) => ({
+    params: { slug: c.slug },
+    props: {
+      c,
+      next: cases[(i + 1) % cases.length],
+    },
+  }));
+}
+
+const { c, next } = Astro.props as any;
+
+const site = yaml.load(fs.readFileSync('./src/data/site.yaml', 'utf8')) as any;
+const taxonomy = yaml.load(fs.readFileSync('./src/data/taxonomy.yaml', 'utf8')) as any;
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const pagePath = `/cases/${c.slug}/`;
+
+// Факты кейса — поля без значения (напр. «Носители» у не-оклейки) не выводятся
+const directionLabel = taxonomy.directions.find((d: any) => d.key === c.direction)?.label;
+const facts = [
+  { t: 'Клиент', v: c.name },
+  { t: 'Направление', v: directionLabel },
+  { t: 'Сфера', v: c.sphere },
+  { t: 'Формат', v: c.category },
+  { t: 'Носители', v: c.vehicles },
+  { t: 'Работ в кейсе', v: String(c.images.length) },
+].filter(f => f.v);
+
+// Лайтбокс кейса — изображения в порядке из cases.yaml
+const lbItems = c.images.map((img: any) => ({
+  src: `/assets/portfolio/full/${img.id}.webp`,
+  label: img.caption,
+}));
+
+// JSON-LD: хлебные крошки
+const ldBreadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Главная", "item": `${site.url}/` },
+    { "@type": "ListItem", "position": 2, "name": "Портфолио", "item": `${site.url}/portfolio/` },
+    { "@type": "ListItem", "position": 3, "name": c.name, "item": `${site.url}${pagePath}` },
+  ],
+};
+---
+<BaseLayout title={c.seoTitle} description={c.seoDescription} canonicalPath={pagePath} structuredData={[ldBreadcrumbs]}>
+  <Header nav={site.nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+  <main id="top">
+
+    <!-- ── Шапка кейса ────────────────────────────────────────────── -->
+    <section class="c-hero">
+      <div class="container-wide">
+        <p class="c-crumb reveal">
+          <a href="/">Главная</a><span aria-hidden="true">/</span><a href="/portfolio/">Портфолио</a><span aria-hidden="true">/</span><span>{c.name}</span>
+        </p>
+        <p class="c-cat reveal" style="--reveal-delay: 40ms">{c.category}</p>
+        <h1 class="reveal" style="--reveal-delay: 80ms">{c.title}<span class="dot"></span></h1>
+        <p class="c-lede reveal" style="--reveal-delay: 140ms">{c.intro}</p>
+
+        <dl class="c-facts reveal" style="--reveal-delay: 200ms">
+          {facts.map(f => (
+            <div class="item"><dt>{f.t}</dt><dd>{f.v}</dd></div>
+          ))}
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── Обложка ────────────────────────────────────────────────── -->
+    <section class="c-cover">
+      <div class="container-wide">
+        <button
+          type="button"
+          class="c-cover-frame js-lb reveal"
+          data-lb-index="0"
+          aria-label={`Открыть работу: ${c.images[0].caption}`}
+        >
+          <img
+            src={`/assets/portfolio/full/${c.cover}.webp`}
+            alt={c.images[0].caption}
+            loading="eager"
+            fetchpriority="high"
+            width="2400"
+            height="1323"
+          />
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Задача / Решение ───────────────────────────────────────── -->
+    <section class="section-tight c-body">
+      <div class="container">
+        <div class="cb-block reveal">
+          <div class="cb-label">
+            <span class="cb-num">01</span>
+            <h2>Задача</h2>
+          </div>
+          <p class="cb-text">{c.task}</p>
+        </div>
+        <div class="cb-block reveal">
+          <div class="cb-label">
+            <span class="cb-num">02</span>
+            <h2>Решение</h2>
+          </div>
+          <p class="cb-text">{c.solution}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Приёмы ─────────────────────────────────────────────────── -->
+    <section class="section c-moves">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2 class="reveal">Приёмы<br>в этом кейсе</h2>
+          <p class="aside reveal" style="--reveal-delay: 80ms">
+            Решения, которые заставляют оклейку работать — на дороге,
+            на парковке и в потоке.
+          </p>
+        </div>
+        <div class="steps">
+          {c.moves.map((m: any, i: number) => (
+            <div class="step reveal" style={`--reveal-delay: ${i * 70}ms`}>
+              <div class="step-num">{pad(i + 1)}</div>
+              <h3>{m.title}</h3>
+              <p>{m.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Галерея кейса ──────────────────────────────────────────── -->
+    <section class="section-tight c-gallery" id="works">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2 class="reveal">Макеты<br>крупным планом</h2>
+          <p class="aside reveal" style="--reveal-delay: 80ms">
+            Кликните на изображение — откроется во весь экран.
+            Листайте стрелками или клавишами ← →.
+          </p>
+        </div>
+        <div class="cg-grid">
+          {c.images.map((img: any, i: number) => (
+            <figure class:list={['cg-item', 'reveal', { 'is-wide': img.wide }]} style={`--reveal-delay: ${(i % 2) * 70}ms`}>
+              <button type="button" class="cg-frame js-lb" data-lb-index={i} aria-label={`Открыть работу: ${img.caption}`}>
+                <img
+                  src={`/assets/portfolio/full/${img.id}.webp`}
+                  alt={img.caption}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  width="2400"
+                  height="1323"
+                />
+                <span class="hover-zoom" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6"/><path d="M16 16l4 4"/></svg>
+                </span>
+              </button>
+              <figcaption>
+                <span class="cg-counter">{pad(i + 1)}</span>
+                {img.caption}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Результат ──────────────────────────────────────────────── -->
+    <section class="section-tight c-result">
+      <div class="container">
+        <div class="cr-inner reveal">
+          <p class="cr-over"><span class="bullet" aria-hidden="true"></span>Результат</p>
+          <p class="cr-big">{c.result}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Следующий кейс ─────────────────────────────────────────── -->
+    <a class="next-case" href={`/cases/${next.slug}/`}>
+      <div class="container-wide">
+        <span class="nc-over">Следующий кейс</span>
+        <span class="nc-row">
+          <span class="nc-name">{next.name}</span>
+          <span class="nc-thumb" aria-hidden="true">
+            <img src={`/assets/portfolio/thumb/${next.cover}.webp`} alt="" loading="lazy" width="800" height="447" />
+          </span>
+          <span class="nc-arrow" aria-hidden="true">→</span>
+        </span>
+        <span class="nc-meta">{next.sphere} · {next.vehicles}</span>
+      </div>
+    </a>
+
+    <CtaBand
+      title="Хотите так же —<br>под вашу задачу?"
+      text="Опишите машину и задачу — за пару часов отвечу и подскажу подходящий формат. Макет будет готов под печать за 3–7 дней."
+      primaryLabel="Обсудить проект"
+      primaryHref="/#contact"
+      telegramUrl={site.contact.telegram}
+    />
+  </main>
+  <Footer {...site.footer} />
+
+  <Lightbox items={lbItems} metrikaId={site.metrika.id} />
+  <RevealScript />
+</BaseLayout>
+
+<style>
+  /* ── Шапка кейса ────────────────────────────────────────────────── */
+  .c-hero { padding: 88px 0 72px; }
+  .c-crumb {
+    font: 700 12px/1.2 var(--font-display);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+    display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+    margin: 0 0 44px;
+  }
+  .c-crumb a { color: var(--fg-3); border: 0; transition: color var(--dur-fast); }
+  .c-crumb a:hover { color: var(--ks-red); }
+  .c-crumb span[aria-hidden] { color: var(--line-2); }
+  .c-crumb span:last-child { color: var(--fg-1); }
+
+  .c-cat {
+    font: 700 12px/1 var(--font-display);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ks-red);
+    margin: 0 0 20px;
+  }
+  .c-hero h1 {
+    font: 800 clamp(38px, 5.6vw, 88px)/1.0 var(--font-display);
+    letter-spacing: -0.03em;
+    color: var(--fg-1);
+    margin: 0 0 28px;
+    max-width: 20ch;
+  }
+  .c-lede {
+    font: 400 clamp(16px, 1.35vw, 20px)/1.55 var(--font-body);
+    color: var(--fg-2);
+    max-width: 58ch;
+    margin: 0 0 56px;
+  }
+  .c-facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin: 0;
+    padding-top: 28px;
+    position: relative;
+  }
+  .c-facts::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+    background: var(--line-1);
+  }
+  .c-facts dt {
+    font: 700 11px/1 var(--font-display);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--fg-3);
+    margin-bottom: 10px;
+  }
+  .c-facts dd {
+    font: 600 15px/1.4 var(--font-body);
+    color: var(--fg-1);
+    margin: 0;
+  }
+
+  /* ── Обложка ────────────────────────────────────────────────────── */
+  .c-cover-frame {
+    display: block; width: 100%;
+    padding: 0; border: 0;
+    background: var(--ks-charcoal);
+    cursor: zoom-in;
+    overflow: hidden;
+    aspect-ratio: 21/10;
+  }
+  .c-cover-frame img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 900ms var(--ease-out);
+  }
+  .c-cover-frame:hover img { transform: scale(1.02); }
+
+  /* ── Задача / Решение ───────────────────────────────────────────── */
+  .c-body { padding-top: 96px; }
+  .cb-block {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+    padding: 44px 0;
+    border-top: 1px solid var(--line-1);
+  }
+  .cb-block:last-child { border-bottom: 1px solid var(--line-1); }
+  .cb-num {
+    font: 800 14px/1 var(--font-display);
+    letter-spacing: 0.08em;
+    color: var(--ks-red);
+    display: block;
+    margin-bottom: 14px;
+  }
+  .cb-label h2 {
+    font: 700 clamp(24px, 2.4vw, 34px)/1.1 var(--font-display);
+    letter-spacing: -0.015em;
+    color: var(--fg-1);
+    margin: 0;
+  }
+  .cb-text {
+    font: 400 clamp(16px, 1.25vw, 19px)/1.6 var(--font-body);
+    color: var(--fg-2);
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  /* ── Приёмы (тёмная секция, сетка как «Процесс») ────────────────── */
+  .c-moves { background: var(--bg-dark); color: #fff; }
+  .c-moves .section-head h2 { color: #fff; }
+  .c-moves .section-head .aside { color: rgba(255,255,255,.7); }
+
+  /* ── Галерея кейса ──────────────────────────────────────────────── */
+  .cg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 24px;
+  }
+  .cg-item { margin: 0; }
+  .cg-item.is-wide { grid-column: 1 / -1; }
+  .cg-frame {
+    display: block; width: 100%;
+    padding: 0; border: 0;
+    background: var(--ks-charcoal);
+    cursor: zoom-in;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 3/2;
+  }
+  .cg-item.is-wide .cg-frame { aspect-ratio: 21/10; }
+  .cg-frame img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 700ms var(--ease-out);
+  }
+  .cg-frame:hover img { transform: scale(1.03); }
+  .cg-frame .hover-zoom {
+    position: absolute; right: 12px; top: 12px;
+    width: 34px; height: 34px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: grid; place-items: center;
+    color: #fff;
+    opacity: 0;
+    transition: opacity var(--dur-base);
+    pointer-events: none;
+  }
+  .cg-frame .hover-zoom svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .cg-frame:hover .hover-zoom { opacity: 1; }
+  .cg-item figcaption {
+    display: flex; align-items: baseline; gap: 14px;
+    font: 500 13px/1.45 var(--font-body);
+    color: var(--fg-3);
+    padding-top: 14px;
+  }
+  .cg-counter {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    color: var(--ks-red);
+    flex-shrink: 0;
+  }
+
+  /* ── Результат ──────────────────────────────────────────────────── */
+  .c-result { background: var(--bg-2); }
+  .cr-inner { padding: 24px 0; }
+  .cr-over {
+    font: 700 12px/1.2 var(--font-display);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-3);
+    display: flex; align-items: center; gap: 10px;
+    margin: 0 0 24px;
+  }
+  .cr-over .bullet {
+    width: 8px; height: 8px;
+    background: var(--ks-red);
+    display: inline-block;
+  }
+  .cr-big {
+    font: 600 clamp(20px, 2.2vw, 30px)/1.4 var(--font-display);
+    letter-spacing: -0.012em;
+    color: var(--fg-1);
+    margin: 0;
+    max-width: 34ch;
+  }
+
+  /* ── Следующий кейс ─────────────────────────────────────────────── */
+  .next-case {
+    display: block;
+    background: var(--ks-charcoal);
+    color: #fff;
+    padding: 88px 0;
+    text-decoration: none;
+    border: 0;
+    overflow: hidden;
+  }
+  .nc-over {
+    display: block;
+    font: 700 12px/1 var(--font-display);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-bottom: 28px;
+  }
+  .nc-row {
+    display: flex; align-items: center; gap: 36px;
+  }
+  .nc-name {
+    font: 800 clamp(40px, 7vw, 104px)/0.98 var(--font-display);
+    letter-spacing: -0.035em;
+    color: #fff;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+  .next-case:hover .nc-name { color: var(--ks-red-300); }
+  .nc-thumb {
+    width: 180px;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: translateX(-12px) scale(.96);
+    transition: opacity var(--dur-slow) var(--ease-out),
+                transform var(--dur-slow) var(--ease-out);
+  }
+  .nc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .next-case:hover .nc-thumb { opacity: 1; transform: none; }
+  .nc-arrow {
+    font: 300 clamp(40px, 5vw, 72px)/1 var(--font-display);
+    color: #fff;
+    margin-left: auto;
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
+  }
+  .next-case:hover .nc-arrow { transform: translateX(14px); color: var(--ks-red-300); }
+  .nc-meta {
+    display: block;
+    font: 400 15px/1.5 var(--font-body);
+    color: rgba(255,255,255,.6);
+    margin-top: 24px;
+  }
+
+  /* ── Мобильная адаптация ────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .c-hero { padding: 56px 0 48px; }
+    .c-crumb { margin-bottom: 32px; }
+    .c-facts { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .c-cover-frame { aspect-ratio: 16/10; }
+    .c-body { padding-top: 64px; }
+    .cb-block { grid-template-columns: 1fr; gap: 18px; padding: 32px 0; }
+    .cg-grid { grid-template-columns: 1fr; gap: 32px; }
+    .cg-item.is-wide .cg-frame,
+    .cg-frame { aspect-ratio: 16/10; }
+    .next-case { padding: 64px 0; }
+    .nc-thumb { display: none; }
+  }
+</style>

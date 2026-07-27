@@ -1,0 +1,123 @@
+# Раскладка изображений кейса. Пути в full/ и thumb/ строятся из имени файла:
+# full/<file>.webp и thumb/<file>-thumbnail.webp внутри assetRoot.
+assetRoot: /assets/cases/website-japan-shina
+
+cover:
+  src: japan-shina-website-cover.webp
+  alt: Первый экран сайта Japan Шина с заголовком о подборе шин и дисков
+
+og: japan-shina-website-cover.webp
+ogAlt: Главная страница сайта Japan Шина
+
+keywords: дизайн сайта шинного магазина, редизайн сайта, Japan Шина, подбор шин, Владивосток, Николай Ковтун
+
+resultTitle: Что дает такая структура
+
+ctaTitle: Нужен сайт, который объясняет ваш товар?
+ctaText: Пришлите ссылку на текущий сайт или расскажите про товар и услуги. Посмотрю, что мешает покупателю дойти до заявки.
+ctaButton: Обсудить сайт
+
+compare:
+  title: Как схемы превращались в дизайн
+  intro: >-
+    Структуру и тексты согласовали на вайрфреймах, поэтому спорные места
+    правились на схемах. Слева вайрфрейм, справа готовый макет.
+  items:
+    - number: '01'
+      title: Первый экран получил фокус
+      text: >-
+        На схеме проверяли порядок: заголовок, обещание, кнопка, четыре цифры
+        о компании. В дизайне добавились фотография шины и красный акцент,
+        порядок остался прежним.
+      before: japan-shina-wireframe-01-hero
+      after: japan-shina-home-01-hero
+      beforeAlt: Вайрфрейм первого экрана сайта Japan Шина
+      afterAlt: Готовый дизайн первого экрана сайта Japan Шина
+    - number: '02'
+      title: Рассказ о компании собран в один блок
+      text: >-
+        Текст о поставках, карта магазина и четыре показателя стоят рядом.
+        В дизайне блок ушел на темную подложку и отделился от остальной страницы.
+      before: japan-shina-wireframe-02-about
+      after: japan-shina-home-02-about
+      beforeAlt: Вайрфрейм блока о компании
+      afterAlt: Готовый дизайн блока о компании на темной подложке
+    - number: '03'
+      title: Карточка товара стала одинаковой для всех разделов
+      text: >-
+        Бренд, страна, характеристики и отметки о сезоне заняли фиксированные
+        места. Одна карточка работает для летних шин, зимних и дисков.
+      before: japan-shina-wireframe-04-catalog-summer
+      after: japan-shina-home-04-catalog-summer
+      beforeAlt: Вайрфрейм раздела летних шин
+      afterAlt: Готовый дизайн раздела летних шин с карточками товара
+    - number: '04'
+      title: Шиномонтаж показан как отдельная услуга
+      text: >-
+        Услуги, аргументы, адрес, часы работы и карта собраны в один блок,
+        чтобы человек мог записаться, не уходя со страницы.
+      before: japan-shina-wireframe-08-service
+      after: japan-shina-home-08-service
+      beforeAlt: Вайрфрейм блока шиномонтажа
+      afterAlt: Готовый дизайн блока шиномонтажа с картой проезда
+
+groups:
+  - id: home
+    title: Главная страница, блок за блоком
+    intro: "Пятнадцать блоков в порядке прокрутки: от первого экрана до подвала."
+    items:
+      - file: japan-shina-home-01-hero
+        label: Первый экран и показатели компании
+      - file: japan-shina-home-02-about
+        label: О компании, карта магазина и цифры
+      - file: japan-shina-home-03-categories
+        label: "Категории транспорта: от легковых до грузовых"
+      - file: japan-shina-home-04-catalog-summer
+        label: Каталог летних шин
+      - file: japan-shina-home-05-catalog-winter
+        label: Каталог зимних шин
+      - file: japan-shina-home-06-catalog-wheels
+        label: Литые и стальные диски, подсказка о подборе
+      - file: japan-shina-home-07-extras
+        label: Сопутствующие товары
+      - file: japan-shina-home-08-service
+        label: Шиномонтаж на Снеговой
+      - file: japan-shina-home-09-brands
+        label: Бренды в каталоге
+      - file: japan-shina-home-10-why
+        label: Девять причин покупать напрямую
+      - file: japan-shina-home-11-auctions
+        label: Подбор на японских аукционах
+      - file: japan-shina-home-12-reviews
+        label: Отзывы покупателей и документы
+      - file: japan-shina-home-13-news
+        label: Новости и акции
+      - file: japan-shina-home-14-contacts
+        label: Контакты и карта проезда
+      - file: japan-shina-home-15-footer
+        label: Подвал сайта
+
+  - id: forms
+    title: Три формы подбора
+    intro: >-
+      Покупатель редко знает типоразмер. Поэтому подбор разложен на два
+      сценария, а сложные вопросы уходят в техподдержку.
+    items:
+      - file: japan-shina-modal-01-by-car
+        label: "Подбор по автомобилю: марка, год, модель, тип двигателя"
+        tall: true
+      - file: japan-shina-modal-02-by-size
+        label: Подбор по размеру шины
+        tall: true
+      - file: japan-shina-modal-03-support
+        label: Форма технической поддержки
+        tall: true
+
+  - id: news
+    title: Раздел новостей
+    intro: Архив материалов и внутренняя страница статьи с блоком подбора сбоку.
+    items:
+      - file: japan-shina-news-01-archive
+        label: Архив новостей и медиа
+      - file: japan-shina-news-02-article
+        label: Страница материала с боковой колонкой

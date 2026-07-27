@@ -1,61 +1,90 @@
 # gallery.yaml — портфолио.
-# Добавить работу: одна строка с номером и подписью. Все.
+# Добавить работу: id + подпись + project (slug кейса из cases.yaml).
 # Превью грузится из assets/portfolio/thumb/<id>.webp,
 # полная версия из assets/portfolio/full/<id>.webp.
+# project связывает работу с кейсом (/cases/<slug>) и фильтрами каталога.
 
 - id: "01"
-  alt: BMW Z4 — рекламная оклейка
+  alt: BMW Z4 — имиджевая оклейка Green Power
+  project: green-power
 - id: "02"
-  alt: Lexus LX570 — имиджевая концепция
+  alt: Lexus LX570 — оклейка Green Power, задняя три четверти
+  project: green-power
 - id: "13"
-  alt: Toyota Probox — оклейка Japanhouse, общий план
+  alt: Toyota Probox — имиджевая оклейка Japanhouse, общий план
+  project: japanhouse
 - id: "03"
-  alt: Toyota Hiace — корпоративный фургон
+  alt: Toyota Hiace — фургон доставки Green Power
+  project: green-power
 - id: "04"
-  alt: Toyota Probox — расширенный дизайн
+  alt: Japanhouse — задняя три четверти, солнце и след протектора
+  project: japanhouse
 - id: "08"
-  alt: Lexus LX570 — фасадный план
+  alt: Lexus LX570 — Green Power, общий план
+  project: green-power
 - id: "20"
-  alt: Probox — деталь оклейки Japanhouse
+  alt: Japanhouse — деталь графики суми-э на борту
+  project: japanhouse
 - id: "05"
-  alt: Toyota Probox — оклейка Japanhouse
+  alt: Toyota Probox — рекламная оклейка Примгриль
+  project: primgril
 - id: "06"
-  alt: Probox — рекламная оклейка
+  alt: Toyota Probox — рекламная оклейка Japan Line
+  project: japan-line
 - id: "22"
-  alt: Probox — общий вид сзади
+  alt: Green Power — фрагмент борта фургона
+  project: green-power
 - id: "07"
-  alt: Probox — корпоративный транспорт
+  alt: Toyota Probox — рекламная оклейка Sila Car
+  project: sila-car
 - id: "09"
-  alt: Probox — фрагмент кузова
+  alt: Japan Line — боковая проекция
+  project: japan-line
 - id: "10"
-  alt: Probox — боковая проекция
+  alt: BMW Z4 — Green Power, боковая проекция
+  project: green-power
 - id: "11"
-  alt: Probox — деталь оклейки
+  alt: Примгриль — боковая проекция с продуктом
+  project: primgril
 - id: "12"
-  alt: Probox — рекламный фрагмент
+  alt: Green Power — борт фургона с продуктовой витриной
+  project: green-power
 - id: "14"
-  alt: Probox — крупный план задней стороны
+  alt: Sila Car — корма, логотип и телефоны
+  project: sila-car
 - id: "15"
-  alt: Probox — крупный план передней стороны
+  alt: Lexus LX570 — Green Power, корма
+  project: green-power
 - id: "16"
-  alt: Probox — деталь композиции
+  alt: Примгриль — корма, телефон и QR на заднем стекле
+  project: primgril
 - id: "17"
-  alt: Probox — фрагмент имиджевого макета
+  alt: Japanhouse — борт крупным планом
+  project: japanhouse
 - id: "18"
-  alt: Probox — переход графики на двери
+  alt: BMW Z4 — Green Power, деталь двери
+  project: green-power
 - id: "19"
-  alt: Probox — боковая часть с типографикой
+  alt: Примгриль — деталь борта с брикетами
+  project: primgril
 - id: "21"
-  alt: Probox — задние двери
+  alt: Japan Line — фрагмент борта, сайт и оффер
+  project: japan-line
 - id: "23"
-  alt: Probox — крупный план графики
+  alt: Japan Line — типографика крупным планом
+  project: japan-line
 - id: "24"
-  alt: Probox — деталь имиджевого макета
+  alt: Sila Car — деталь с фирменным спорткаром
+  project: sila-car
 - id: "25"
-  alt: Probox — крупный план кузова
+  alt: Lexus LX570 — Green Power, деталь двери
+  project: green-power
 - id: "26"
-  alt: Probox — переход графики на боку
+  alt: Sila Car — общий план
+  project: sila-car
 - id: "27"
-  alt: Probox — фрагмент оклейки
+  alt: BMW Z4 — Green Power, вид сверху
+  project: green-power
 - id: "28"
-  alt: Probox — крупный план кузова, сторона
+  alt: Toyota Hiace — Green Power, вид сверху
+  project: green-power

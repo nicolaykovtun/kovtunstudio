@@ -1,0 +1,567 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const assetRoot = '/assets/cases/brochure-metall-invest';
+const title = 'Брошюра М-Инвест: металл для знаковых строек Дальнего Востока';
+const description = 'Кейс дизайна и верстки 38-страничной корпоративной брошюры для компании «М-Инвест» на основе Word-ТЗ и действующего брендбука.';
+const accent = '#F26522';
+
+const nav = [
+  { href: '/portfolio/', label: 'Портфолио' },
+  { href: '/#what', label: 'Услуги' },
+  { href: '#system', label: 'Система' },
+  { href: '#gallery', label: 'Все страницы' },
+];
+
+const pageLabels = [
+  'Обложка корпоративной брошюры М-Инвест',
+  'Оглавление девяти разделов брошюры',
+  'Раздел о компании: производство металлопроката',
+  'О компании и ключевые принципы работы',
+  'Сервис, гибкость, оперативность и надежность',
+  'Обращение генерального директора',
+  'Портрет генерального директора',
+  'Продукция: основные виды металлопроката',
+  'Продукция: профнастил, металлочерепица и рулонная сталь',
+  'География поставок: вводная страница',
+  'Карта поставок по Дальнему Востоку',
+  'Услуги: продажа, обработка и сервисное сопровождение',
+  'Услуги: хранение, доставка и сопровождение',
+  'Партнеры и заводы-производители',
+  'Конкурентные преимущества компании',
+  'Объекты: вводная страница раздела',
+  'Приморская сцена Мариинского театра',
+  'Приморский океанариум',
+  'Кампус Дальневосточного федерального университета',
+  'Набережная Цесаревича',
+  'Развлекательный комплекс Tigre de Cristal',
+  'Космодром Восточный',
+  'Восточный порт',
+  'Дальневосточный завод Звезда',
+  'Пирсы для стратегических подводных лодок',
+  'Пирс в порту Певек',
+  'Сахалинская ГРЭС-2',
+  'Горнолыжный курорт Горный воздух',
+  'Угольный морской порт Шахтерск',
+  'Работа с резидентами ТОР и СПВ',
+  'Коммерческие и промышленные объекты',
+  'Участие в строительстве жилых зданий',
+  'Примеры жилых проектов',
+  'Основной вектор развития компании',
+  'Четыре направления развития',
+  'Отзывы и благодарственные письма',
+  'Продолжение отзывов партнеров',
+  'Контакты компании и задняя обложка',
+];
+
+const pages = pageLabels.map((label, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  return {
+    src: `${assetRoot}/full/metall-invest-corporate-brochure-page-${number}.webp`,
+    thumb: `${assetRoot}/thumb/metall-invest-corporate-brochure-page-${number}-thumbnail.webp`,
+    label,
+  };
+});
+
+const chapters = [
+  {
+    number: '01',
+    title: 'От ассортимента — к географии',
+    text: 'Пиктограммы превращают перечень металлопроката в быстрый визуальный каталог, а карта показывает масштаб поставок без длинного перечисления регионов.',
+    pages: [
+      { index: 7, caption: 'Продукция' },
+      { index: 10, caption: 'Карта поставок' },
+    ],
+  },
+  {
+    number: '02',
+    title: 'От услуг — к преимуществам',
+    text: 'Разные уровни информации разделены цветом, размером и форматом: услуги читаются карточками, преимущества — нумерованным блоком.',
+    pages: [
+      { index: 11, caption: 'Услуги' },
+      { index: 14, caption: 'Преимущества' },
+    ],
+  },
+  {
+    number: '03',
+    title: 'От компании — к объектам',
+    text: 'Насыщенные разделители создают паузы между плотными страницами, а фотографии объектов подтверждают масштаб компании конкретными примерами.',
+    pages: [
+      { index: 15, caption: 'Начало раздела' },
+      { index: 33, caption: 'Вектор развития' },
+    ],
+  },
+];
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Кейс',
+      links: [
+        { href: '#task', label: 'Задача и решения' },
+        { href: '#system', label: 'Система брошюры' },
+        { href: '#gallery', label: 'Все 38 страниц' },
+        { href: '#result', label: 'Результат' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/presentations/', label: 'Презентации и брошюры' },
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+      ],
+    },
+  ],
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: title,
+    description,
+    url: `${site.url}/cases/brochure-metall-invest/`,
+    dateCreated: '2021',
+    inLanguage: 'ru-RU',
+    image: pages.map((page) => `${site.url}${page.src}`),
+    creator: {
+      '@type': 'Person',
+      name: 'Николай Ковтун',
+      url: site.url,
+    },
+    about: {
+      '@type': 'Organization',
+      name: 'М-Инвест',
+      url: 'https://metall-dv.ru/',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Портфолио', item: `${site.url}/portfolio/` },
+      { '@type': 'ListItem', position: 3, name: 'Корпоративная брошюра М-Инвест', item: `${site.url}/cases/brochure-metall-invest/` },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title={`${title} · Kovtun.studio`}
+  description={description}
+  keywords="дизайн корпоративной брошюры, верстка брошюры о компании, М-Инвест, металлопрокат, графический дизайн Владивосток, Николай Ковтун"
+  canonicalPath="/cases/brochure-metall-invest/"
+  ogTitle={title}
+  ogDescription={description}
+  ogImage={`${assetRoot}/metall-invest-corporate-brochure-case-study-og.webp`}
+  ogImageAlt="Страницы корпоративной брошюры М-Инвест"
+  ogType="article"
+  structuredData={structuredData}
+  bodyClass="case-page case-page--portrait"
+>
+  <div class="page-shell" style={`--case-accent: ${accent}`}>
+    <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+    <main id="main-content">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <div class="container-wide">
+          <ol>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/portfolio/">Портфолио</a></li>
+            <li aria-current="page">Брошюра М-Инвест</li>
+          </ol>
+        </div>
+      </nav>
+
+      <section class="case-hero">
+        <div class="container-wide">
+          <p class="page-kicker">Кейс · корпоративная брошюра</p>
+          <div class="case-hero__top">
+            <h1>Брошюра поставщика металла для <em>знаковых</em> строек Дальнего Востока</h1>
+            <p class="case-hero__summary">
+              Дизайн и верстка 38-страничной брошюры «М-Инвест». На входе — готовое текстовое ТЗ в Word и действующий брендбук компании.
+            </p>
+          </div>
+          <div class="case-facts" aria-label="Ключевые факты проекта">
+            <div class="case-fact"><strong>38</strong><span>страниц брошюры</span></div>
+            <div class="case-fact"><strong>9</strong><span>смысловых разделов</span></div>
+            <div class="case-fact"><strong>2021</strong><span>год проекта</span></div>
+          </div>
+        </div>
+      </section>
+
+      <figure class="case-cover">
+        <img
+          src={`${assetRoot}/metall-invest-corporate-brochure-cover.webp`}
+          alt="Обложка корпоративной брошюры М-Инвест"
+          width="1240"
+          height="1754"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <section class="case-section" id="task">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">01 / ЗАДАЧА</span>
+            <div>
+              <h2>Превратить Word-ТЗ в печатную систему</h2>
+              <div class="case-prose">
+                <p>
+                  Клиент предоставил готовые тексты в Word, брендбук, фотографии и материалы о проектах. Нужно было собрать из разнородного содержания корпоративную брошюру, которая последовательно рассказывает о компании, продукции, сервисе и масштабе поставок.
+                </p>
+                <p>
+                  Главная сложность — сохранить правила фирменного стиля и одновременно найти разные способы подачи для длинного текста, каталога продукции, карты, фотографий объектов и благодарственных писем.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-approach">
+            <article>
+              <span>01</span>
+              <h3>Брендбук стал основой</h3>
+              <p>Фирменная палитра, Museo Sans Cyr, правила логотипа и диагональный мотив перенесены в многостраничный формат.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Текст получил иерархию</h3>
+              <p>Крупные номера и заголовки, вводные абзацы, карточки и подписи помогают быстро находить нужный уровень информации.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Страницы получили ритм</h3>
+              <p>Светлые информационные полосы чередуются с синими разделителями, фотографиями и акцентными разворотами.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-comparison-section" id="system" style="background:#073f6b">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">02 / СИСТЕМА</span>
+            <div>
+              <h2>Один бренд — разные типы содержания</h2>
+              <div class="case-prose">
+                <p>Модульная сетка объединяет 38 страниц, но каждый тип информации получает собственную форму: пиктограммы, карта, карточки услуг, фотографии или крупная типографика.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-comparisons">
+            {chapters.map((chapter) => (
+              <article class="case-comparison">
+                <header class="case-comparison__head">
+                  <span>{chapter.number}</span>
+                  <div>
+                    <h3>{chapter.title}</h3>
+                    <p>{chapter.text}</p>
+                  </div>
+                </header>
+                <div class="case-comparison-grid">
+                  {chapter.pages.map((item) => (
+                    <figure>
+                      <figcaption>{item.caption}</figcaption>
+                      <img
+                        src={pages[item.index].src}
+                        alt={pages[item.index].label}
+                        width="1280"
+                        height="1920"
+                        loading="lazy"
+                      />
+                    </figure>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--dark" id="result">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">03 / РЕЗУЛЬТАТ</span>
+            <div>
+              <h2>38 страниц работают как одна книга о компании</h2>
+              <div class="case-prose">
+                <p>Бизнес-эффект отдельно не измерялся, поэтому в кейсе нет неподтвержденных процентов. Результат дизайнерской работы — готовая многостраничная брошюра, в которой Word-ТЗ и материалы клиента стали последовательной визуальной системой.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-results">
+            <article class="case-result">
+              <strong>01</strong>
+              <p>Девять разделов различаются по функции, но сохраняют общую сетку, палитру и типографику.</p>
+            </article>
+            <article class="case-result">
+              <strong>02</strong>
+              <p>Продукция, география и услуги считываются при быстром просмотре благодаря пиктограммам и инфографике.</p>
+            </article>
+            <article class="case-result">
+              <strong>03</strong>
+              <p>Фотографии знаковых объектов переводят абстрактный масштаб поставок в конкретные примеры.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-media-section" id="gallery">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">04 / БРОШЮРА</span>
+            <div>
+              <h2>Все 38 страниц крупным планом</h2>
+              <div class="case-prose">
+                <p>Нажмите на страницу, чтобы открыть ее во весь экран. В просмотрщике доступны стрелки, клавиши ← →, миниатюры и свайп на мобильном.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-gallery case-gallery--slides case-gallery--portrait">
+            {pages.map((page, index) => (
+              <figure>
+                <button
+                  type="button"
+                  class="case-gallery-trigger"
+                  data-index={index}
+                  aria-label={`Открыть страницу ${index + 1}: ${page.label}`}
+                >
+                  <img
+                    src={page.thumb}
+                    alt={page.label}
+                    width="420"
+                    height="630"
+                    loading="lazy"
+                  />
+                  <span class="case-gallery-zoom" aria-hidden="true">Смотреть крупнее</span>
+                </button>
+                <figcaption>{String(index + 1).padStart(2, '0')} / {page.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <div class="lightbox case-lightbox" id="case-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр страниц корпоративной брошюры М-Инвест">
+          <div class="lightbox-stage">
+            <button class="lightbox-btn close" id="case-lb-close" aria-label="Закрыть просмотр">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+            <button class="lightbox-btn prev" id="case-lb-prev" aria-label="Предыдущая страница">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <button class="lightbox-btn next" id="case-lb-next" aria-label="Следующая страница">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+            <div class="lightbox-media lightbox-media--case-slides lightbox-media--case-portrait">
+              <img class="lightbox-image" id="case-lb-image" src="" alt="" />
+            </div>
+            <div class="lightbox-caption">
+              <span class="counter" id="case-lb-counter"></span>
+              <span id="case-lb-label"></span>
+            </div>
+            <div class="lightbox-thumbs" id="case-lb-thumbs"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--paper">
+        <div class="container-wide case-deliverables">
+          <div>
+            <span class="case-section__num">05 / СОСТАВ РАБОТ</span>
+            <h2>Что было сделано</h2>
+            <div class="case-credits">
+              <dl>
+                <div>
+                  <dt>Клиент</dt>
+                  <dd>М-Инвест</dd>
+                </div>
+                <div>
+                  <dt>Проект</dt>
+                  <dd>Корпоративная брошюра</dd>
+                </div>
+                <div>
+                  <dt>Город</dt>
+                  <dd>Владивосток</dd>
+                </div>
+                <div>
+                  <dt>Год</dt>
+                  <dd>2021</dd>
+                </div>
+                <div>
+                  <dt>Дизайнер</dt>
+                  <dd>Николай Ковтун</dd>
+                </div>
+                <div>
+                  <dt>Роль</dt>
+                  <dd>Дизайн и верстка</dd>
+                </div>
+                <div>
+                  <dt>Формат</dt>
+                  <dd>Через внештатного маркетолога компании</dd>
+                </div>
+                <div>
+                  <dt>Тексты</dt>
+                  <dd>Предоставлены клиентом в Word</dd>
+                </div>
+                <div>
+                  <dt>Фирменный стиль</dt>
+                  <dd>Предоставлен клиентом в брендбуке</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <ul>
+            <li>Дизайн-концепция в рамках брендбука</li>
+            <li>Модульная сетка и типографическая система</li>
+            <li>Верстка 38 страниц</li>
+            <li>Оформление карты, пиктограмм и товарных блоков</li>
+            <li>Компоновка фотографий объектов и отзывов</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" id="contact">
+        <div class="container-wide">
+          <div class="portfolio-cta">
+            <h2>Нужна брошюра о компании или продукте?</h2>
+            <p>Пришлите Word-файл, брендбук и материалы. Оценю объем, предложу структуру верстки и соберу макет для печати или цифровой отправки.</p>
+            <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">Прислать материалы на оценку <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <a class="case-next" href="/cases/presentation-edelweiss/">
+        <span class="container-wide case-next__inner">
+          <span>
+            <small>Следующий кейс</small>
+            <strong>Брошюра Edelweiss</strong>
+          </span>
+          <span class="case-next__arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </main>
+
+    <Footer {...footer} />
+  </div>
+
+  <script is:inline define:vars={{ GALLERY: pages, METRIKA_ID: site.metrika.id }}>
+    (() => {
+      const lightbox = document.getElementById('case-lightbox');
+      const image = document.getElementById('case-lb-image');
+      const label = document.getElementById('case-lb-label');
+      const counter = document.getElementById('case-lb-counter');
+      const thumbs = document.getElementById('case-lb-thumbs');
+      const closeButton = document.getElementById('case-lb-close');
+      const prevButton = document.getElementById('case-lb-prev');
+      const nextButton = document.getElementById('case-lb-next');
+      const triggers = Array.from(document.querySelectorAll('.case-gallery-trigger'));
+
+      if (!lightbox || !image || !label || !counter || !thumbs || !closeButton || !prevButton || !nextButton) return;
+
+      let current = 0;
+      let opener = null;
+      let touchStartX = 0;
+
+      const pad = (value) => String(value).padStart(2, '0');
+      const goal = (name, params) => {
+        if (typeof window.ym !== 'function') return;
+        try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
+      };
+
+      const updateThumbs = () => {
+        thumbs.querySelectorAll('.lightbox-thumb').forEach((thumb, index) => {
+          thumb.classList.toggle('is-active', index === current);
+          thumb.setAttribute('aria-current', index === current ? 'true' : 'false');
+        });
+        const active = thumbs.children[current];
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      };
+
+      const show = (index) => {
+        current = (index + GALLERY.length) % GALLERY.length;
+        const item = GALLERY[current];
+        image.src = item.src;
+        image.alt = item.label;
+        label.textContent = item.label;
+        counter.textContent = `${pad(current + 1)} / ${pad(GALLERY.length)}`;
+        updateThumbs();
+      };
+
+      GALLERY.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lightbox-thumb lightbox-thumb--case-slide lightbox-thumb--case-portrait';
+        button.setAttribute('aria-label', `Открыть страницу ${index + 1}`);
+        const thumbImage = document.createElement('img');
+        thumbImage.src = item.thumb;
+        thumbImage.alt = '';
+        thumbImage.loading = 'lazy';
+        button.appendChild(thumbImage);
+        button.addEventListener('click', () => show(index));
+        thumbs.appendChild(button);
+      });
+
+      const open = (index, trigger) => {
+        opener = trigger;
+        show(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-locked');
+        closeButton.focus();
+        goal('case_metall_invest_page_open', { index: index + 1 });
+      };
+
+      const close = () => {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-locked');
+        image.src = '';
+        if (opener) opener.focus();
+      };
+
+      triggers.forEach((trigger, index) => trigger.addEventListener('click', () => open(index, trigger)));
+      closeButton.addEventListener('click', close);
+      prevButton.addEventListener('click', () => show(current - 1));
+      nextButton.addEventListener('click', () => show(current + 1));
+      lightbox.addEventListener('click', (event) => { if (event.target === lightbox) close(); });
+      lightbox.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      lightbox.addEventListener('touchend', (event) => {
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) < 50) return;
+        show(current + (delta < 0 ? 1 : -1));
+      }, { passive: true });
+
+      document.addEventListener('keydown', (event) => {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+        if (event.key === 'Tab') {
+          const focusable = [closeButton, prevButton, nextButton, ...thumbs.querySelectorAll('button')];
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+          if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+      });
+    })();
+  </script>
+</BaseLayout>

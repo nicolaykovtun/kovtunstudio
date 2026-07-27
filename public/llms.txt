@@ -21,14 +21,15 @@
 
 - Главная: https://design.kovtun.studio/
 - Портфолио по пяти направлениям: https://design.kovtun.studio/portfolio/
-- Кейс Green Power — упаковка масел: https://design.kovtun.studio/cases/green-power-oils/
-- Кейс TopFils — ребрендинг: https://design.kovtun.studio/cases/topfils-rebranding/
-- Кейс сайта услуги по оклейке авто: https://design.kovtun.studio/cases/car-wrap-service-website/
+- Кейс Green Power — оклейка автопарка: https://design.kovtun.studio/cases/green-power/
+- Кейс Japanhouse — имиджевая оклейка: https://design.kovtun.studio/cases/japanhouse/
+- Кейс «Примгриль» — рекламная оклейка: https://design.kovtun.studio/cases/primgril/
+- Кейс Japan Line — оклейка автомобиля: https://design.kovtun.studio/cases/japan-line/
+- Кейс Sila Car — рекламная оклейка: https://design.kovtun.studio/cases/sila-car/
 - Разработка презентаций под ключ: https://design.kovtun.studio/presentations/
-- Кейс Japanhouse — оклейка авто: https://design.kovtun.studio/cases/japanhouse-car-wrap/
 - Что делаю: https://design.kovtun.studio/#what
 - Цены: https://design.kovtun.studio/#pricing
-- Примеры оклейки на главной: https://design.kovtun.studio/#cases
+- Все работы крупным планом: https://design.kovtun.studio/portfolio/#works
 - Процесс: https://design.kovtun.studio/#process
 - FAQ: https://design.kovtun.studio/#faq
 - Заявка: https://design.kovtun.studio/#contact

@@ -1,0 +1,87 @@
+---
+// CtaBand.astro — красная CTA-полоса для подстраниц (портфолио, кейсы).
+// Ведёт на форму главной и в Telegram.
+
+interface Props {
+  title: string;
+  text: string;
+  primaryLabel: string;
+  primaryHref: string;
+  telegramUrl: string;
+}
+const { title, text, primaryLabel, primaryHref, telegramUrl } = Astro.props;
+---
+<section class="cta-band">
+  <div class="container-wide">
+    <div class="cb-inner reveal">
+      <div class="cb-copy">
+        <h2 set:html={title}></h2>
+        <p>{text}</p>
+      </div>
+      <div class="cb-actions">
+        <a class="btn btn-white btn-lg" href={primaryHref}>
+          {primaryLabel} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn btn-ghost btn-lg" href={telegramUrl} target="_blank" rel="noopener">
+          Написать в Telegram
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    background: var(--ks-red);
+    color: #fff;
+    padding: 96px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-band::after {
+    content: "";
+    position: absolute;
+    right: -6vw; bottom: -14vw;
+    width: 34vw; height: 34vw;
+    border: 1.5vw solid rgba(255,255,255,.08);
+    pointer-events: none;
+  }
+  .cb-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .cb-copy h2 {
+    font: 800 clamp(32px, 4.4vw, 64px)/1.02 var(--font-display);
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin: 0 0 18px;
+    max-width: 16ch;
+  }
+  .cb-copy p {
+    font: 400 17px/1.55 var(--font-body);
+    color: rgba(255,255,255,.92);
+    margin: 0;
+    max-width: 44ch;
+  }
+  .cb-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    justify-self: end;
+  }
+  .cb-actions .btn { min-width: 280px; justify-content: center; }
+  .cb-actions .btn-ghost { color: #fff; border-color: rgba(255,255,255,.5); width: 100%; }
+  .cb-actions .btn-ghost:hover { border-color: #fff; background: rgba(255,255,255,.10); }
+
+  @media (max-width: 900px) {
+    .cta-band { padding: 72px 0; }
+    .cb-inner { grid-template-columns: 1fr; gap: 32px; }
+    .cb-actions { justify-self: stretch; }
+    .cb-actions .btn { width: 100%; min-width: 0; }
+  }
+</style>

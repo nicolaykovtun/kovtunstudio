@@ -1,0 +1,569 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const assetRoot = '/assets/cases/presentation-terney-farmer';
+const title = 'Тернейский фермер: тексты, структура и дизайн презентации';
+const description = 'Кейс презентации «Тернейский фермер»: новые тексты, структура, вайрфреймы и дизайн 15 слайдов на основе авторского логотипа и гайдбука.';
+const accent = '#32B62A';
+
+const nav = [
+  { href: '/portfolio/', label: 'Портфолио' },
+  { href: '/presentations/', label: 'Презентации' },
+  { href: '#process', label: 'Процесс' },
+  { href: '#gallery', label: 'Все слайды' },
+];
+
+const slideLabels = [
+  'Титульный слайд презентации Тернейский фермер',
+  'Направления развития и карта Тернейского района',
+  'Проблемы развития сельского хозяйства в районе',
+  'Значимость сельскохозяйственных производств',
+  'История создания предприятия',
+  'Овцеводство и система содержания животных',
+  'Овцеводство, поддержка и адаптация породы',
+  'Показатели продуктивности овцеводства',
+  'Развитие крупного рогатого скота',
+  'Показатели и география пчеловодства',
+  'Пасека и производство меда',
+  'Земледелие и площади сельскохозяйственных культур',
+  'Цитата о развитии сельского хозяйства',
+  'Благодарность за внимание',
+  'Контакты и направления деятельности предприятия',
+];
+
+const slides = slideLabels.map((label, index) => {
+  const number = String(index + 1).padStart(2, '0');
+  return {
+    src: `${assetRoot}/full/terneysky-fermer-presentation-slide-${number}.webp`,
+    thumb: `${assetRoot}/thumb/terneysky-fermer-presentation-slide-${number}-thumbnail.webp`,
+    label,
+  };
+});
+
+const processCases = [
+  {
+    number: '01',
+    title: 'Направления стали картой истории',
+    text: 'В исходнике направления работы перечислялись рядом с длинным абзацем. Вайрфрейм разделил контент на текст, карту и четыре направления, а дизайн связал их фирменными пиктограммами и зеленым маршрутом по региону.',
+    brief: `${assetRoot}/brief/terneysky-fermer-client-brief-slide-03.webp`,
+    wireframe: `${assetRoot}/wireframe/terneysky-fermer-presentation-wireframe-slide-02.webp`,
+    final: `${assetRoot}/full/terneysky-fermer-presentation-slide-02.webp`,
+    briefAlt: 'Исходный слайд ТЗ с направлениями развития Тернейского фермера',
+    wireframeAlt: 'Вайрфрейм слайда с направлениями и картой региона',
+    finalAlt: 'Финальный слайд с направлениями развития и картой Тернейского района',
+  },
+  {
+    number: '02',
+    title: 'Показатели получили иерархию',
+    text: 'Разрозненные цифры из рабочего макета собраны в три смысловых слоя: продуктивность, динамика по годам и рабочие места. В финале зеленые рамки и крупные значения помогают сравнивать показатели по горизонтали.',
+    brief: `${assetRoot}/brief/terneysky-fermer-client-brief-slide-05.webp`,
+    wireframe: `${assetRoot}/wireframe/terneysky-fermer-presentation-wireframe-slide-08.webp`,
+    final: `${assetRoot}/full/terneysky-fermer-presentation-slide-08.webp`,
+    briefAlt: 'Исходный рабочий слайд с показателями овцеводства',
+    wireframeAlt: 'Вайрфрейм с группировкой показателей овцеводства',
+    finalAlt: 'Финальный слайд с показателями продуктивности овец',
+  },
+  {
+    number: '03',
+    title: 'Пчеловодство стало системой фактов',
+    text: 'Сплошной текст и фотографии из ТЗ разделены на виды меда, показатели пасеки, карту медосбора и подтвержденный статус предприятия. Так один слайд отвечает сразу на вопросы «что», «сколько» и «где».',
+    brief: `${assetRoot}/brief/terneysky-fermer-client-brief-slide-09.webp`,
+    wireframe: `${assetRoot}/wireframe/terneysky-fermer-presentation-wireframe-slide-10.webp`,
+    final: `${assetRoot}/full/terneysky-fermer-presentation-slide-10.webp`,
+    briefAlt: 'Исходный слайд ТЗ о пчеловодстве',
+    wireframeAlt: 'Вайрфрейм слайда с видами меда и показателями пасеки',
+    finalAlt: 'Финальный слайд о пчеловодстве с картой и показателями',
+  },
+  {
+    number: '04',
+    title: 'Земледелие — от абзаца к масштабу',
+    text: 'Текст о технологиях и арендованных землях получил отдельный блок с площадями культур. Вайрфрейм закрепил композицию, а финальный кадр добавил фотографию, фирменный цвет и визуальный масштаб.',
+    brief: `${assetRoot}/brief/terneysky-fermer-client-brief-slide-10.webp`,
+    wireframe: `${assetRoot}/wireframe/terneysky-fermer-presentation-wireframe-slide-12.webp`,
+    final: `${assetRoot}/full/terneysky-fermer-presentation-slide-12.webp`,
+    briefAlt: 'Исходный слайд ТЗ о земледелии',
+    wireframeAlt: 'Вайрфрейм слайда о земледелии и площадях культур',
+    finalAlt: 'Финальный слайд о земледелии с показателями и фотографией',
+  },
+];
+
+const brandFrames = [
+  { src: `${assetRoot}/brand/terneysky-fermer-brand-guide-logo-system.webp`, label: 'Логотип и конструкция фирменного блока' },
+  { src: `${assetRoot}/brand/terneysky-fermer-brand-guide-color-palette.webp`, label: 'Фирменная палитра бренда' },
+  { src: `${assetRoot}/brand/terneysky-fermer-brand-guide-typography.webp`, label: 'Типографическая система гайдбука' },
+];
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Кейс',
+      links: [
+        { href: '#task', label: 'Задача и решения' },
+        { href: '#brand', label: 'Логотип и гайдбук' },
+        { href: '#process', label: 'ТЗ, вайрфреймы, дизайн' },
+        { href: '#gallery', label: 'Все 15 слайдов' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/presentations/', label: 'Заказать презентацию' },
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+      ],
+    },
+  ],
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: title,
+    description,
+    url: `${site.url}/cases/presentation-terney-farmer/`,
+    dateCreated: '2023',
+    inLanguage: 'ru-RU',
+    image: slides.map((slide) => `${site.url}${slide.src}`),
+    creator: {
+      '@type': 'Person',
+      name: 'Николай Ковтун',
+      url: site.url,
+    },
+    about: {
+      '@type': 'Organization',
+      name: 'Тернейский фермер',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: 'Презентации', item: `${site.url}/presentations/` },
+      { '@type': 'ListItem', position: 3, name: 'Презентация Тернейский фермер', item: `${site.url}/cases/presentation-terney-farmer/` },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title={`${title} · Kovtun.studio`}
+  description={description}
+  keywords="дизайн презентации сельскохозяйственного предприятия, Тернейский фермер, структура презентации, тексты для презентации, вайрфреймы слайдов, гайдбук, Николай Ковтун"
+  canonicalPath="/cases/presentation-terney-farmer/"
+  ogTitle={title}
+  ogDescription={description}
+  ogImage={`${assetRoot}/terneysky-fermer-presentation-case-study-og.webp`}
+  ogImageAlt="Титульный слайд презентации Тернейский фермер"
+  ogType="article"
+  structuredData={structuredData}
+  bodyClass="case-page case-page--terney"
+>
+  <div class="page-shell" style={`--case-accent: ${accent}`}>
+    <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+    <main id="main-content">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <div class="container-wide">
+          <ol>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/presentations/">Презентации</a></li>
+            <li aria-current="page">Тернейский фермер</li>
+          </ol>
+        </div>
+      </nav>
+
+      <section class="case-hero">
+        <div class="container-wide">
+          <p class="page-kicker">Кейс · презентация и айдентика</p>
+          <div class="case-hero__top">
+            <h1>Презентация фермы: тексты, структура и дизайн в <em>одних</em> руках</h1>
+            <p class="case-hero__summary">
+              Новые тексты, структура, вайрфреймы и дизайн 15 слайдов для «Тернейского фермера». Визуальная основа — логотип и гайдбук, которые я разработал для бренда ранее.
+            </p>
+          </div>
+          <div class="case-facts" aria-label="Ключевые факты проекта">
+            <div class="case-fact"><strong>11</strong><span>слайдов исходного ТЗ</span></div>
+            <div class="case-fact"><strong>15</strong><span>готовых слайдов</span></div>
+            <div class="case-fact"><strong>3</strong><span>этапа от текста до дизайна</span></div>
+          </div>
+        </div>
+      </section>
+
+      <figure class="case-cover">
+        <img
+          src={`${assetRoot}/terneysky-fermer-presentation-cover.webp`}
+          alt="Титульный слайд презентации Тернейский фермер"
+          width="1600"
+          height="900"
+          fetchpriority="high"
+        />
+      </figure>
+
+      <section class="case-section" id="task">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">01 / ЗАДАЧА</span>
+            <div>
+              <h2>Сначала содержание, потом форма</h2>
+              <div class="case-prose">
+                <p>Клиент предоставил PowerPoint-ТЗ с фактами, длинными текстами и фотографиями. Косметический редизайн задачу бы не решил: нужна была новая презентация о предприятии, его контексте и направлениях развития.</p>
+                <p>Я переработал тексты, расширил материал с 11 до 15 слайдов, выстроил последовательность, проверил ее на вайрфреймах и только после этого перешел к дизайну.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-approach">
+            <article>
+              <span>01</span>
+              <h3>Переписал тексты</h3>
+              <p>Разделил длинные абзацы на тезисы, убрал повторы и вынес проверяемые цифры в самостоятельные информационные блоки.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Собрал структуру</h3>
+              <p>История движется от особенностей района и проблем сельского хозяйства к предприятию, направлениям работы и конкретным показателям.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Проверил до дизайна</h3>
+              <p>Все 15 композиций сначала появились в черно-белых вайрфреймах: так логика, иерархия и объем текста были решены отдельно от декоративного слоя.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--paper" id="brand">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">02 / АЙДЕНТИКА</span>
+            <div>
+              <h2>Презентация продолжила созданный ранее бренд</h2>
+              <div class="case-prose">
+                <p>До работы над слайдами я разработал для «Тернейского фермера» логотип и девятистраничный гайдбук. Он зафиксировал конструкцию фирменного блока, охранное поле, цветовые версии, палитру, Bernier Shade для акцидентных заголовков и Circe для регулярного набора.</p>
+                <p>В презентации эти правила стали рабочей системой: зеленый выделяет выводы и показатели, темный цвет удерживает структуру, а графика бренда связывает карты, пиктограммы и фотографии.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-brand-grid">
+            {brandFrames.map((frame) => (
+              <figure>
+                <img src={frame.src} alt={frame.label} width="1800" height="1013" loading="lazy" />
+                <figcaption>{frame.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="case-comparison-section" id="process">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">03 / ПРОЦЕСС</span>
+            <div>
+              <h2>ТЗ → вайрфрейм → дизайн</h2>
+              <div class="case-prose">
+                <p>Четыре последовательности показывают не только визуальную разницу, но и работу над содержанием. Слева — материал клиента, в центре — структура без декоративного слоя, справа — финальный слайд.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-comparisons">
+            {processCases.map((item) => (
+              <article class="case-comparison">
+                <header class="case-comparison__head">
+                  <span>{item.number}</span>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
+                  </div>
+                </header>
+                <div class="case-process-grid">
+                  <figure>
+                    <figcaption>ТЗ клиента</figcaption>
+                    <img src={item.brief} alt={item.briefAlt} width="1600" height="900" loading="lazy" />
+                  </figure>
+                  <figure>
+                    <figcaption>Вайрфрейм</figcaption>
+                    <img src={item.wireframe} alt={item.wireframeAlt} width="1800" height="1013" loading="lazy" />
+                  </figure>
+                  <figure>
+                    <figcaption>Финальный дизайн</figcaption>
+                    <img src={item.final} alt={item.finalAlt} width="2200" height="1238" loading="lazy" />
+                  </figure>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--dark" id="result">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">04 / РЕЗУЛЬТАТ</span>
+            <div>
+              <h2>15 слайдов — один рассказ о предприятии</h2>
+              <div class="case-prose">
+                <p>Показатели продаж или конверсии клиент не предоставил, поэтому их в кейсе нет. Результат виден в переходе от исходного ТЗ к последовательной презентации, где содержание, структура и фирменный стиль работают вместе.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-results">
+            <article class="case-result">
+              <strong>01</strong>
+              <p>Материал получил новую логику: регион и проблемы → история → направления → показатели → итог.</p>
+            </article>
+            <article class="case-result">
+              <strong>02</strong>
+              <p>Карты, фотографии и цифры получили свои роли; длинные тексты больше не конкурируют с визуальными доказательствами.</p>
+            </article>
+            <article class="case-result">
+              <strong>03</strong>
+              <p>Логотип и гайдбук масштабированы на новый носитель без потери узнаваемости бренда.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-media-section" id="gallery">
+        <div class="container-wide">
+          <div class="case-section__head">
+            <span class="case-section__num">05 / ПРЕЗЕНТАЦИЯ</span>
+            <div>
+              <h2>Все 15 слайдов крупным планом</h2>
+              <div class="case-prose">
+                <p>Нажмите на любой слайд, чтобы открыть его во весь экран. В просмотрщике доступны стрелки, клавиши ← →, миниатюры и свайп на мобильном.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-gallery case-gallery--slides">
+            {slides.map((slide, index) => (
+              <figure>
+                <button
+                  type="button"
+                  class="case-gallery-trigger"
+                  data-index={index}
+                  aria-label={`Открыть слайд ${index + 1}: ${slide.label}`}
+                >
+                  <img src={slide.thumb} alt={slide.label} width="520" height="293" loading="lazy" />
+                  <span class="case-gallery-zoom" aria-hidden="true">Смотреть крупнее</span>
+                </button>
+                <figcaption>{String(index + 1).padStart(2, '0')} / {slide.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <div class="lightbox case-lightbox" id="case-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Просмотр слайдов презентации Тернейский фермер">
+          <div class="lightbox-stage">
+            <button class="lightbox-btn close" id="case-lb-close" aria-label="Закрыть просмотр">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </button>
+            <button class="lightbox-btn prev" id="case-lb-prev" aria-label="Предыдущий слайд">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <button class="lightbox-btn next" id="case-lb-next" aria-label="Следующий слайд">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
+            <div class="lightbox-media lightbox-media--case-slides">
+              <img class="lightbox-image" id="case-lb-image" src="" alt="" />
+            </div>
+            <div class="lightbox-caption">
+              <span class="counter" id="case-lb-counter"></span>
+              <span id="case-lb-label"></span>
+            </div>
+            <div class="lightbox-thumbs" id="case-lb-thumbs"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section case-section--paper">
+        <div class="container-wide case-deliverables">
+          <div>
+            <span class="case-section__num">06 / СОСТАВ РАБОТ</span>
+            <h2>Что было сделано</h2>
+            <div class="case-credits">
+              <dl>
+                <div>
+                  <dt>Клиент</dt>
+                  <dd>Тернейский фермер</dd>
+                </div>
+                <div>
+                  <dt>Регион</dt>
+                  <dd>Приморский край</dd>
+                </div>
+                <div>
+                  <dt>Год</dt>
+                  <dd>2023</dd>
+                </div>
+                <div>
+                  <dt>Дизайнер</dt>
+                  <dd>Николай Ковтун</dd>
+                </div>
+                <div>
+                  <dt>Роль</dt>
+                  <dd>Тексты, структура, вайрфреймы и дизайн</dd>
+                </div>
+                <div>
+                  <dt>Айдентика</dt>
+                  <dd>Логотип и гайдбук — Николай Ковтун</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <ul>
+            <li>Новые тексты на основе материалов клиента</li>
+            <li>Структура 15-слайдовой презентации</li>
+            <li>Вайрфреймы всех 15 слайдов</li>
+            <li>Дизайн и верстка презентации</li>
+            <li>Визуализация показателей и географии</li>
+            <li>Логотип и девятистраничный гайдбук, разработанные ранее</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section" id="contact">
+        <div class="container-wide">
+          <div class="portfolio-cta">
+            <h2>Есть ТЗ, но нет ясной презентации?</h2>
+            <p>Пришлите исходный PowerPoint, тексты и фотографии. Я помогу переработать содержание, выстроить структуру и довести материал до финального дизайна.</p>
+            <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">Прислать материалы на оценку <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <a class="case-next" href="/cases/presentation-vmtp/">
+        <span class="container-wide case-next__inner">
+          <span>
+            <small>Следующий кейс</small>
+            <strong>Презентация ВМТП</strong>
+          </span>
+          <span class="case-next__arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+    </main>
+
+    <Footer {...footer} />
+  </div>
+
+  <script is:inline define:vars={{ GALLERY: slides, METRIKA_ID: site.metrika.id }}>
+    (() => {
+      const lightbox = document.getElementById('case-lightbox');
+      const image = document.getElementById('case-lb-image');
+      const label = document.getElementById('case-lb-label');
+      const counter = document.getElementById('case-lb-counter');
+      const thumbs = document.getElementById('case-lb-thumbs');
+      const closeButton = document.getElementById('case-lb-close');
+      const prevButton = document.getElementById('case-lb-prev');
+      const nextButton = document.getElementById('case-lb-next');
+      const triggers = Array.from(document.querySelectorAll('.case-gallery-trigger'));
+
+      if (!lightbox || !image || !label || !counter || !thumbs || !closeButton || !prevButton || !nextButton) return;
+
+      let current = 0;
+      let opener = null;
+      let touchStartX = 0;
+
+      const pad = (value) => String(value).padStart(2, '0');
+      const goal = (name, params) => {
+        if (typeof window.ym !== 'function') return;
+        try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
+      };
+
+      const updateThumbs = () => {
+        thumbs.querySelectorAll('.lightbox-thumb').forEach((thumb, index) => {
+          thumb.classList.toggle('is-active', index === current);
+          thumb.setAttribute('aria-current', index === current ? 'true' : 'false');
+        });
+        const active = thumbs.children[current];
+        if (active && typeof active.scrollIntoView === 'function') {
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      };
+
+      const show = (index) => {
+        current = (index + GALLERY.length) % GALLERY.length;
+        const item = GALLERY[current];
+        image.src = item.src;
+        image.alt = item.label;
+        label.textContent = item.label;
+        counter.textContent = `${pad(current + 1)} / ${pad(GALLERY.length)}`;
+        updateThumbs();
+      };
+
+      GALLERY.forEach((item, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lightbox-thumb lightbox-thumb--case-slide';
+        button.setAttribute('aria-label', `Открыть слайд ${index + 1}`);
+        const thumbImage = document.createElement('img');
+        thumbImage.src = item.thumb;
+        thumbImage.alt = '';
+        thumbImage.loading = 'lazy';
+        button.appendChild(thumbImage);
+        button.addEventListener('click', () => show(index));
+        thumbs.appendChild(button);
+      });
+
+      const open = (index, trigger) => {
+        opener = trigger;
+        show(index);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-locked');
+        closeButton.focus();
+        goal('case_terney_slide_open', { index: index + 1 });
+      };
+
+      const close = () => {
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-locked');
+        image.src = '';
+        if (opener) opener.focus();
+      };
+
+      triggers.forEach((trigger, index) => trigger.addEventListener('click', () => open(index, trigger)));
+      closeButton.addEventListener('click', close);
+      prevButton.addEventListener('click', () => show(current - 1));
+      nextButton.addEventListener('click', () => show(current + 1));
+      lightbox.addEventListener('click', (event) => { if (event.target === lightbox) close(); });
+      lightbox.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      lightbox.addEventListener('touchend', (event) => {
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) < 50) return;
+        show(current + (delta < 0 ? 1 : -1));
+      }, { passive: true });
+
+      document.addEventListener('keydown', (event) => {
+        if (!lightbox.classList.contains('is-open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+        if (event.key === 'Tab') {
+          const focusable = [closeButton, prevButton, nextButton, ...thumbs.querySelectorAll('button')];
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+          if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+      });
+    })();
+  </script>
+</BaseLayout>
