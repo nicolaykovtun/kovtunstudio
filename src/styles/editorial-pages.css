@@ -350,7 +350,7 @@
 .case-prose ul { margin: 0; padding-left: 1.2em; }
 .case-prose li + li { margin-top: 16px; }
 
-.case-approach { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 64px; background: var(--line-2); border: 1px solid var(--line-2); }
+.case-approach { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; margin-top: 64px; background: var(--line-2); border: 1px solid var(--line-2); }
 .case-approach article { padding: 36px; background: var(--bg-1); }
 .case-approach span { display: block; margin-bottom: 72px; color: var(--ks-red); font: 800 13px/1 var(--font-display); }
 .case-approach h3 { margin: 0 0 14px; font-size: 25px; }
@@ -548,7 +548,7 @@
 .case-media-placeholder strong { max-width: 9ch; font: 800 clamp(34px, 5vw, 72px)/.9 var(--font-display); letter-spacing: -.05em; }
 .case-media-placeholder small { font: 650 12px/1.4 var(--font-body); }
 
-.case-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.case-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 56px; }
 .case-result { padding-top: 24px; border-top: 3px solid var(--ks-red); }
 .case-page .case-result { border-top-color: var(--case-accent, var(--ks-red)); }
 .case-result strong { display: block; margin-bottom: 16px; color: var(--ks-red); font: 800 13px/1 var(--font-display); }

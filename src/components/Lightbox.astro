@@ -4,7 +4,7 @@
 // Использует те же css-классы .lightbox*, что и лайтбокс главной (global.css).
 
 interface Props {
-  items: { src: string; label: string }[];
+  items: { src: string; thumb?: string; label: string }[];
   metrikaId: number;
 }
 const { items, metrikaId } = Astro.props;
@@ -47,7 +47,9 @@ const { items, metrikaId } = Astro.props;
     var current = null;
 
     function pad(n) { return String(n).padStart(2, "0"); }
-    function toThumb(src) { return src.replace("/full/", "/thumb/"); }
+    function toThumb(item) {
+      return item.thumb || item.src.replace("/full/", "/thumb/");
+    }
 
     function buildThumbs() {
       var frag = document.createDocumentFragment();
@@ -56,7 +58,7 @@ const { items, metrikaId } = Astro.props;
         btn.className = "lightbox-thumb";
         btn.setAttribute("aria-label", "Открыть работу " + (i + 1));
         var img = document.createElement("img");
-        img.src = toThumb(it.src);
+        img.src = toThumb(it);
         img.alt = "";
         img.loading = "lazy";
         btn.appendChild(img);
