@@ -204,7 +204,7 @@ const seoDescription =
         </div>
 
         <div class="filter-panel reveal">
-          <div class="filter-group" role="group" aria-label="Фильтр по направлению">
+          <div class="filter-group filter-group--direction" role="group" aria-label="Фильтр по направлению">
             <span class="fg-label">Направление</span>
             <div class="fg-chips">
               <button type="button" class="chip is-active" data-dim="direction" data-value="all">Все</button>
@@ -215,15 +215,27 @@ const seoDescription =
               ))}
             </div>
           </div>
-          <div class="filter-group" role="group" aria-label="Фильтр по сфере бизнеса">
-            <span class="fg-label">Сфера</span>
-            <div class="fg-chips">
-              <button type="button" class="chip is-active" data-dim="sphere" data-value="all">Все</button>
-              {spheres.map((s: any) => (
-                <button type="button" class="chip" data-dim="sphere" data-value={s.key}>
-                  {s.label} <span class="chip-n">{s.caseCount}</span>
-                </button>
-              ))}
+          <div class="filter-group filter-group--sphere">
+            <span class="fg-label" id="sphere-label">Сфера</span>
+            <div class="fg-select-wrap" data-sphere-select>
+              <button
+                type="button"
+                class="fg-select-trigger"
+                id="sphere-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="sphere-listbox"
+                aria-labelledby="sphere-label"
+              >
+                <span class="fg-select-value" data-select-value>Все сферы</span>
+                <span class="fg-select-arrow" aria-hidden="true">▾</span>
+              </button>
+              <ul class="fg-select-list" id="sphere-listbox" role="listbox" aria-labelledby="sphere-label" tabindex="-1" hidden>
+                <li role="option" class="fg-select-option is-selected" data-value="all" aria-selected="true">Все сферы</li>
+                {spheres.map((s: any) => (
+                  <li role="option" class="fg-select-option" data-value={s.key} aria-selected="false">{s.label} · {s.caseCount}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -326,6 +338,13 @@ const seoDescription =
         sphere: params.get("sphere") || "all",
       };
       var chips = document.querySelectorAll(".filter-panel .chip");
+      var sphereWrap = document.querySelector("[data-sphere-select]");
+      var sphereTrigger = document.getElementById("sphere-trigger");
+      var sphereList = document.getElementById("sphere-listbox");
+      var sphereValueLabel = sphereTrigger && sphereTrigger.querySelector("[data-select-value]");
+      var sphereOptions = sphereList
+        ? Array.prototype.slice.call(sphereList.querySelectorAll(".fg-select-option"))
+        : [];
       var rows = document.querySelectorAll("#case-index .case-row");
       var tiles = document.querySelectorAll("#works-grid .work-tile");
       var casesEmpty = document.getElementById("cases-empty");
@@ -334,6 +353,19 @@ const seoDescription =
       function matches(el) {
         return (state.direction === "all" || el.dataset.direction === state.direction)
             && (state.sphere === "all" || el.dataset.sphere === state.sphere);
+      }
+
+      function syncSphereUI() {
+        var activeOption = null;
+        Array.prototype.forEach.call(sphereOptions, function (opt) {
+          var isSelected = opt.dataset.value === state.sphere;
+          opt.classList.toggle("is-selected", isSelected);
+          opt.setAttribute("aria-selected", String(isSelected));
+          if (isSelected) activeOption = opt;
+        });
+        if (activeOption && sphereValueLabel) {
+          sphereValueLabel.textContent = activeOption.textContent;
+        }
       }
 
       function apply() {
@@ -353,21 +385,95 @@ const seoDescription =
         Array.prototype.forEach.call(chips, function (c) {
           c.classList.toggle("is-active", state[c.dataset.dim] === c.dataset.value);
         });
+        syncSphereUI();
+      }
+
+      function reportFilterGoal() {
+        if (typeof window.ym === "function") {
+          try {
+            window.ym(METRIKA_ID, "reachGoal", "portfolio_filter", {
+              direction: state.direction, sphere: state.sphere
+            });
+          } catch (e) {}
+        }
       }
 
       Array.prototype.forEach.call(chips, function (chip) {
         chip.addEventListener("click", function () {
           state[chip.dataset.dim] = chip.dataset.value;
           apply();
-          if (typeof window.ym === "function") {
-            try {
-              window.ym(METRIKA_ID, "reachGoal", "portfolio_filter", {
-                direction: state.direction, sphere: state.sphere
-              });
-            } catch (e) {}
-          }
+          reportFilterGoal();
         });
       });
+
+      // Кастомный дропдаун «Сфера»: кнопка + список, чтобы полностью
+      // контролировать подсветку (нативный <select> её не отдаёт).
+      if (sphereWrap && sphereTrigger && sphereList) {
+        var openSphereList = function () {
+          sphereList.hidden = false;
+          sphereTrigger.setAttribute("aria-expanded", "true");
+        };
+        var closeSphereList = function () {
+          sphereList.hidden = true;
+          sphereTrigger.setAttribute("aria-expanded", "false");
+        };
+        var selectSphere = function (opt) {
+          state.sphere = opt.dataset.value;
+          apply();
+          reportFilterGoal();
+        };
+
+        sphereTrigger.addEventListener("click", function () {
+          if (sphereTrigger.getAttribute("aria-expanded") === "true") {
+            closeSphereList();
+          } else {
+            openSphereList();
+          }
+        });
+
+        sphereTrigger.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openSphereList();
+            var toFocus = sphereList.querySelector(".is-selected") || sphereOptions[0];
+            if (toFocus) toFocus.focus();
+          } else if (e.key === "Escape") {
+            closeSphereList();
+          }
+        });
+
+        Array.prototype.forEach.call(sphereOptions, function (opt, i) {
+          opt.setAttribute("tabindex", "-1");
+          opt.addEventListener("click", function () {
+            selectSphere(opt);
+            closeSphereList();
+            sphereTrigger.focus();
+          });
+          opt.addEventListener("keydown", function (e) {
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              var next = sphereOptions[i + 1];
+              if (next) next.focus();
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              var prev = sphereOptions[i - 1];
+              if (prev) prev.focus(); else sphereTrigger.focus();
+            } else if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              selectSphere(opt);
+              closeSphereList();
+              sphereTrigger.focus();
+            } else if (e.key === "Escape") {
+              closeSphereList();
+              sphereTrigger.focus();
+            }
+          });
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!sphereWrap.contains(e.target)) closeSphereList();
+        });
+      }
 
       // Клик по направлению в списке — установить фильтр и проскроллить к кейсам
       Array.prototype.forEach.call(document.querySelectorAll("[data-goto-direction]"), function (link) {
@@ -513,23 +619,35 @@ const seoDescription =
 
   /* ── Фильтр: направление × сфера ────────────────────────────────── */
   .filter-panel {
-    display: grid;
-    gap: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 32px;
     margin-bottom: 40px;
     padding: 24px 0;
     border-top: 1px solid var(--line-1);
     border-bottom: 1px solid var(--line-1);
   }
-  .filter-group {
+  .filter-group--direction {
     display: grid;
     grid-template-columns: 132px 1fr;
     align-items: baseline;
     gap: 20px;
+    flex: 1 1 420px;
+    min-width: 0;
+  }
+  .filter-group--sphere {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
   }
   .fg-label {
     font: 700 11px/1 var(--font-display);
     letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--fg-3);
+    white-space: nowrap;
   }
   .fg-chips { display: flex; flex-wrap: wrap; gap: 10px; }
   .chip {
@@ -558,8 +676,78 @@ const seoDescription =
   }
   .chip.is-active .chip-n { color: var(--ks-red-300); }
 
-  @media (max-width: 700px) {
-    .filter-group { grid-template-columns: 1fr; gap: 10px; }
+  .fg-select-wrap {
+    position: relative;
+    display: inline-flex;
+    min-width: 240px;
+  }
+  .fg-select-trigger {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    font: 700 13px/1 var(--font-display);
+    letter-spacing: 0.02em;
+    color: var(--fg-1);
+    background: transparent;
+    border: 1px solid var(--line-2);
+    padding: 15px 18px; /* ≥44px по высоте — тач-таргет */
+    cursor: pointer;
+    transition: border-color var(--dur-base) var(--ease-out);
+  }
+  .fg-select-trigger:hover { border-color: var(--fg-1); }
+  .fg-select-trigger:focus-visible,
+  .fg-select-trigger[aria-expanded="true"] {
+    outline: none;
+    border-color: var(--ks-red);
+  }
+  .fg-select-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fg-select-arrow {
+    font-size: 12px;
+    color: var(--fg-3);
+    pointer-events: none;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .fg-select-trigger[aria-expanded="true"] .fg-select-arrow { transform: rotate(180deg); }
+
+  .fg-select-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    z-index: 20;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    box-shadow: var(--shadow-2);
+  }
+  .fg-select-option {
+    padding: 12px 14px;
+    font: 600 13px/1.3 var(--font-display);
+    letter-spacing: 0.01em;
+    color: var(--fg-1);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .fg-select-option:hover,
+  .fg-select-option:focus {
+    background: var(--bg-2);
+    outline: none;
+  }
+  .fg-select-option.is-selected { color: var(--ks-red); font-weight: 700; }
+
+  @media (max-width: 900px) {
+    .filter-panel { flex-direction: column; align-items: stretch; }
+    .filter-group--direction { grid-template-columns: 1fr; gap: 10px; }
+    .filter-group--sphere { margin-left: 0; }
+    .fg-select-wrap { min-width: 0; width: 100%; }
   }
 
   /* ── Индекс кейсов ──────────────────────────────────────────────── */
@@ -569,7 +757,8 @@ const seoDescription =
     grid-template-columns: 56px 132px 1fr auto 40px;
     align-items: center;
     gap: 28px;
-    padding: 22px 0;
+    padding: 22px 20px;
+    margin: 0 -20px;
     border-bottom: 1px solid var(--line-1);
     text-decoration: none;
     border-left: 0; border-right: 0;
@@ -636,7 +825,7 @@ const seoDescription =
   .case-row:hover .cr-arrow { transform: translateX(6px); color: var(--case-row-accent, var(--ks-red)); }
 
   @media (max-width: 900px) {
-    .case-row { grid-template-columns: 96px 1fr 32px; gap: 18px; padding: 18px 0; }
+    .case-row { grid-template-columns: 96px 1fr 32px; gap: 18px; padding: 18px 14px; margin: 0 -14px; }
     .cr-num, .cr-tags { display: none; }
     .cr-thumb { aspect-ratio: 4/3; }
   }
