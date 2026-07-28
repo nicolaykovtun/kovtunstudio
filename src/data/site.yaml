@@ -64,8 +64,21 @@ contact:
   telegramHandle: "@nikolaikovtun"
   max: https://max.ru/u/f9LHodD0cOJpy1QklwsaX-PXbW9mle18e4QDY96_GFFojLKBQRpgjpbQ4Ds
   maxHandle: "Николай Ковтун"
+  email: mail@kovtunstudio.ru
   phone: "+7 908 449-72-60"
   phoneTel: "+79084497260"
+
+# Реквизиты владельца сайта и оператора персональных данных
+legal:
+  owner: "Индивидуальный предприниматель Ковтун Николай Олегович"
+  ownerShort: "ИП Ковтун Николай Олегович"
+  inn: "254010580884"
+  ogrnip: "323253600052481"
+  registrationDate: "29 июня 2023 года"
+  registrationAuthority: "Межрайонная инспекция ФНС России № 15 по Приморскому краю"
+  location: "Россия, Приморский край, г. Владивосток"
+  policyDate: "28 июля 2026 года"
+  policyVersion: "1.0"
 
 # Аналитика
 metrika:
@@ -94,11 +107,24 @@ nav:
   - href: "/"
     label: Услуги
     children:
-      - { href: "/portfolio/?direction=packaging", label: "Упаковка" }
-      - { href: "/portfolio/?direction=identity", label: "Логотип и фирменный стиль" }
-      - { href: "/portfolio/?direction=web", label: "Сайты" }
-      - { href: "/presentations/", label: "Презентации" }
-      - { href: "/car-wrap/", label: "Оклейка авто" }
+      - href: "/portfolio/?direction=packaging"
+        label: Упаковка
+        desc: "Коробки, этикетки, упаковка под печать"
+      - href: "/portfolio/?direction=identity"
+        label: "Логотип и фирменный стиль"
+        desc: "Знак, палитра, гайдлайны бренда"
+      - href: "/portfolio/?direction=web"
+        label: Сайты
+        desc: "Лендинги и сайты для бизнеса"
+        image: /assets/cases/website-japan-shina/thumb/japan-shina-home-01-hero-thumbnail.webp
+      - href: "/presentations/"
+        label: Презентации
+        desc: "Слайды и брошюры, которые продают идею"
+        image: /assets/cases/presentation-vmtp/thumb/vmtp-presentation-cover-thumbnail.webp
+      - href: "/car-wrap/"
+        label: "Оклейка авто"
+        desc: "Макеты оклейки коммерческого транспорта"
+        image: /assets/portfolio/thumb/01.webp
   - href: "/#contact"
     label: Контакты
   - href: "/#faq"
@@ -267,8 +293,8 @@ cta:
     car: { label: "Марка и модель авто", placeholder: "Например, Mercedes Sprinter 2022 / Газель Next" }
     message: { label: "Задача — коротко (необязательно)", placeholder: "Что должно быть на машине, какой бюджет, сроки" }
   privacy: >-
-    Нажимая «Отправить», вы соглашаетесь, что я обработаю ваши
-    контакты, чтобы ответить.
+    Поля не отправляются на сервер сайта. Сообщение уйдет только после
+    отправки в выбранном вами мессенджере.
   submit: "Отправить в Telegram"
   successTitle: "Сообщение собрано"
   successText: >-
@@ -303,3 +329,9 @@ footer:
         - { href: "/#contact", label: "Оставить заявку" }
   copy: "© {year} Kovtun.studio. Все права защищены."
   copyTagline: "Графический дизайн · Владивосток · РФ"
+  legalLinks:
+    - { href: "/legal/", label: "Правовая информация" }
+    - { href: "/privacy/", label: "Персональные данные" }
+    - { href: "/consent/", label: "Согласие" }
+    - { href: "/cookies/", label: "Cookies" }
+    - { href: "#cookie-settings", label: "Настройки cookies" }

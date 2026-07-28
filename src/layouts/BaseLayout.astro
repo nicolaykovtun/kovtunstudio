@@ -121,6 +121,7 @@ const pageStructuredData = [ldBusiness, ...structuredData];
 import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/editorial-pages.css';
+import CookieConsent from '../components/CookieConsent.astro';
 ---
 <!doctype html>
 <html lang={site.lang}>
@@ -181,35 +182,36 @@ import '../styles/editorial-pages.css';
     <script type="application/ld+json" set:html={JSON.stringify(item)} />
   ))}
 
-  <!-- Yandex.Metrika counter (deferred — грузится после window.load) -->
-  <script is:inline define:vars={{ metrikaId: site.metrika.id, metrikaOpts: site.metrika.options }}>
-    window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
-    window.ym.l = 1 * new Date();
-    ym(metrikaId, 'init', metrikaOpts);
-    function _loadMetrika() {
-      if (window.__ymLoaded) return; window.__ymLoaded = true;
-      var s = document.createElement('script');
-      s.async = 1;
-      s.src = 'https://mc.yandex.ru/metrika/tag.js?id=' + metrikaId;
-      document.head.appendChild(s);
-    }
-    if (document.readyState === 'complete') { setTimeout(_loadMetrika, 0); }
-    else { window.addEventListener('load', function () { setTimeout(_loadMetrika, 1500); }); }
-    ['mousemove', 'touchstart', 'scroll', 'keydown'].forEach(function (ev) {
-      window.addEventListener(ev, function once() {
-        _loadMetrika();
-        ['mousemove', 'touchstart', 'scroll', 'keydown'].forEach(function (e2) {
-          window.removeEventListener(e2, once);
-        });
-      }, { passive: true, once: true });
-    });
-  </script>
-  <noscript><div><img src={`https://mc.yandex.ru/watch/${site.metrika.id}`} style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-  <!-- /Yandex.Metrika counter -->
 </head>
 <body class={bodyClass}>
   <a class="skip-link" href="#main-content">Перейти к содержанию</a>
   <slot />
+  <CookieConsent metrikaId={site.metrika.id} metrikaOptions={site.metrika.options} />
+
+  <script is:inline>
+    (function () {
+      document.querySelectorAll('form[data-legal-consent]').forEach(function (form) {
+        var checkbox = form.querySelector('[data-consent-checkbox]');
+        var error = form.querySelector('[data-consent-error]');
+        if (!checkbox || !error) return;
+
+        form.addEventListener('submit', function (event) {
+          if (checkbox.checked) {
+            error.hidden = true;
+            return;
+          }
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          error.hidden = false;
+          checkbox.focus();
+        }, true);
+
+        checkbox.addEventListener('change', function () {
+          if (checkbox.checked) error.hidden = true;
+        });
+      });
+    })();
+  </script>
 
   <!-- Общий stagger reveal для содержательных блоков на всех страницах. -->
   <script is:inline>

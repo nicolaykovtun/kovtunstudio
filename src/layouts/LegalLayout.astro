@@ -1,0 +1,96 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import site from '../lib/site';
+import '../styles/legal-pages.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  eyebrow?: string;
+  intro: string;
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  eyebrow = 'Правовая информация',
+  intro,
+} = Astro.props;
+
+const legalNav = [
+  { href: '/legal/', label: 'Реквизиты и условия' },
+  { href: '/privacy/', label: 'Обработка персональных данных' },
+  { href: '/consent/', label: 'Согласие на обработку' },
+  { href: '/cookies/', label: 'Использование cookies' },
+];
+---
+
+<BaseLayout
+  title={`${title} · Kovtun.studio`}
+  description={description}
+  canonicalPath={canonicalPath}
+  ogTitle={`${title} · Kovtun.studio`}
+  ogDescription={description}
+  ogImage={null}
+  bodyClass="legal-body"
+>
+  <Header
+    nav={site.nav}
+    phone={site.contact.phone}
+    phoneTel={site.contact.phoneTel}
+    telegramUrl={site.contact.telegram}
+    maxUrl={site.contact.max}
+  />
+
+  <main id="main-content" class="legal-page">
+    <header class="legal-hero">
+      <div class="container-wide">
+        <p class="legal-eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p class="legal-intro">{intro}</p>
+        <dl class="legal-revision">
+          <div>
+            <dt>Редакция</dt>
+            <dd>{site.legal.policyVersion}</dd>
+          </div>
+          <div>
+            <dt>Дата</dt>
+            <dd>{site.legal.policyDate}</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <div class="container-wide legal-shell">
+      <aside class="legal-sidebar">
+        <nav aria-label="Юридические документы">
+          {legalNav.map(item => (
+            <a href={item.href} aria-current={canonicalPath === item.href ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <div class="operator-card">
+          <span>Владелец сайта и оператор</span>
+          <strong>{site.legal.ownerShort}</strong>
+          <dl>
+            <div><dt>ИНН</dt><dd>{site.legal.inn}</dd></div>
+            <div><dt>ОГРНИП</dt><dd>{site.legal.ogrnip}</dd></div>
+          </dl>
+          <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+        </div>
+      </aside>
+
+      <article class="legal-content">
+        <slot />
+      </article>
+    </div>
+  </main>
+
+  <Footer {...site.footer} />
+</BaseLayout>

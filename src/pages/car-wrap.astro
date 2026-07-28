@@ -138,6 +138,7 @@ const ldPortfolioImages = {
       METRIKA_ID: site.metrika.id,
       TELEGRAM_URL: site.contact.telegram,
       MAX_URL: site.contact.max,
+      CONSENT_MARKER: `Согласие на обработку персональных данных: да · редакция ${site.legal.policyVersion} от ${site.legal.policyDate} · ${site.url}/consent/`,
     }}
   >
     (function () {
@@ -248,6 +249,7 @@ const ldPortfolioImages = {
         if (d.name) lines.push("Имя: " + d.name);
         if (d.car) lines.push("Авто: " + d.car);
         if (d.message) lines.push("\nЗадача:\n" + d.message);
+        lines.push("\n" + CONSENT_MARKER);
         return lines.join("\n");
       }
       function buildTelegramURL(text) {

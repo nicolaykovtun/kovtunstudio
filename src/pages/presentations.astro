@@ -139,7 +139,7 @@ const contactData = {
     car: { label: 'Задача и объем', placeholder: 'Например: питч инвестору, около 15 слайдов' },
     message: { label: 'Что есть по тексту (необязательно)', placeholder: 'Готовый текст, черновик без разбивки или только идея' },
   },
-  privacy: 'Нажимая «Отправить», вы соглашаетесь, что я обработаю ваши контакты, чтобы ответить.',
+  privacy: 'Поля не отправляются на сервер сайта. Сообщение уйдет только после отправки в выбранном вами мессенджере.',
   submit: 'Обсудить презентацию',
   successTitle: 'Сообщение собрано',
   successText: 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.',
@@ -490,7 +490,13 @@ const faqLd = {
 
   <Footer {...footer} />
 
-  <script is:inline define:vars={{ TELEGRAM_URL: site.contact.telegram, MAX_URL: site.contact.max, METRIKA_ID: site.metrika.id, GALLERY: presentationGalleryForJs }}>
+  <script is:inline define:vars={{
+    TELEGRAM_URL: site.contact.telegram,
+    MAX_URL: site.contact.max,
+    METRIKA_ID: site.metrika.id,
+    GALLERY: presentationGalleryForJs,
+    CONSENT_MARKER: `Согласие на обработку персональных данных: да · редакция ${site.legal.policyVersion} от ${site.legal.policyDate} · ${site.url}/consent/`,
+  }}>
     (function () {
       'use strict';
 
@@ -687,6 +693,7 @@ const faqLd = {
         if (data.name) lines.push('Имя: ' + data.name);
         if (data.task) lines.push('Задача и объем: ' + data.task);
         if (data.materials) lines.push('\nМатериалы:\n' + data.materials);
+        lines.push('\n' + CONSENT_MARKER);
         return lines.join('\n');
       }
 

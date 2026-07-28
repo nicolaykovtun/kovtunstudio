@@ -1,5 +1,10 @@
 ---
-interface NavChild { href: string; label: string }
+interface NavChild {
+  href: string;
+  label: string;
+  desc?: string;
+  image?: string;
+}
 interface NavItem { href: string; label: string; children?: NavChild[] }
 interface Props {
   nav: NavItem[];
@@ -36,12 +41,40 @@ const isItemActive = (item: NavItem) =>
     <nav aria-label="Главная навигация">
       {nav.map(item => (
         item.children ? (
-          <div class="nav-item">
+          <div class="nav-item nav-item--mega">
             <a href={item.href} aria-current={isItemActive(item) ? 'page' : undefined}>{item.label}</a>
-            <div class="nav-dropdown">
-              {item.children.map(child => (
-                <a href={child.href} aria-current={isPageMatch(child.href) ? 'page' : undefined}>{child.label}</a>
-              ))}
+            <div class="mega-dropdown">
+              <div class="mega-dropdown__inner">
+                <div class="mega-tabs" data-mega-tabs>
+                  <span class="mega-tabs__indicator" aria-hidden="true"></span>
+                  {item.children.map((child, i) => (
+                    <a
+                      href={child.href}
+                      class="mega-tab"
+                      data-mega-tab={i}
+                      aria-current={isPageMatch(child.href) ? 'page' : undefined}
+                    >
+                      <span class="mega-tab__title">{child.label}</span>
+                      {child.desc && <span class="mega-tab__desc">{child.desc}</span>}
+                    </a>
+                  ))}
+                </div>
+                <div class="mega-preview" data-mega-preview>
+                  {item.children.map((child, i) => (
+                    <a href={child.href} class="mega-preview__item" data-mega-panel={i}>
+                      <span class="mega-preview__frame">
+                        {child.image ? (
+                          <img src={child.image} alt="" loading="lazy" width="480" height="300" />
+                        ) : (
+                          <span class="mega-preview__soon">
+                            <span class="mega-preview__soon-label">Скоро</span>
+                          </span>
+                        )}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         ) : (
@@ -176,5 +209,65 @@ const isItemActive = (item: NavItem) =>
         isOpen = false;
       }
     });
+  })();
+</script>
+
+<script>
+  // Мега-дропдаун «Услуги»: наведение/фокус на пункт переключает превью
+  // справа и двигает подложку-индикатор за курсором (как shifting-tabs).
+  (function () {
+    var tabsWrap = document.querySelector('[data-mega-tabs]');
+    var previewWrap = document.querySelector('[data-mega-preview]');
+    if (!tabsWrap || !previewWrap) return;
+
+    var tabs = Array.prototype.slice.call(tabsWrap.querySelectorAll('[data-mega-tab]'));
+    var panels = Array.prototype.slice.call(previewWrap.querySelectorAll('[data-mega-panel]'));
+    var indicator = tabsWrap.querySelector('.mega-tabs__indicator');
+    var activeIndex = 0;
+    var matchedCurrent = false;
+
+    tabs.forEach(function (tab, i) {
+      if (tab.getAttribute('aria-current') === 'page') { activeIndex = i; matchedCurrent = true; }
+    });
+    // Ни один пункт не активен (мы не на одной из страниц-направлений) —
+    // открываем превью на первом пункте с реальной картинкой кейса,
+    // а не на плейсхолдере «Скоро».
+    if (!matchedCurrent) {
+      for (var i = 0; i < panels.length; i++) {
+        if (panels[i].querySelector('img')) { activeIndex = i; break; }
+      }
+    }
+
+    function setActive(index) {
+      activeIndex = index;
+      tabs.forEach(function (tab, i) { tab.classList.toggle('is-hover', i === index); });
+      panels.forEach(function (panel, i) { panel.classList.toggle('is-active', i === index); });
+      var tab = tabs[index];
+      if (tab && indicator) {
+        indicator.style.transform = 'translateY(' + tab.offsetTop + 'px)';
+        indicator.style.height = tab.offsetHeight + 'px';
+        indicator.style.opacity = '1';
+      }
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('mouseenter', function () { setActive(i); });
+      tab.addEventListener('focus', function () { setActive(i); });
+    });
+
+    // Начальная позиция индикатора (без анимации первого прыжка)
+    function placeInitial() {
+      indicator.style.transition = 'none';
+      setActive(activeIndex);
+      // вернуть анимацию на следующий кадр
+      requestAnimationFrame(function () {
+        indicator.style.transition = '';
+      });
+    }
+    placeInitial();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(placeInitial);
+    }
+    window.addEventListener('resize', function () { setActive(activeIndex); });
   })();
 </script>

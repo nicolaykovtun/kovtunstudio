@@ -150,36 +150,149 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   display: flex;
   align-items: center;
 }
-.k-header nav .nav-dropdown {
+
+/* ─── Мега-дропдаун «Услуги» — список направлений + превью справа ───
+   Слева — направления (текстовые вкладки с подложкой-индикатором,
+   которая едет за курсором/фокусом). Справа — превью наведенного
+   направления: картинка кейса + подпись. Раскрывается по hover/focus
+   так же, как обычный dropdown (см. .nav-item:hover выше). */
+.k-header nav .nav-item--mega .mega-dropdown {
   position: absolute;
   top: calc(100% + 14px);
   left: 50%;
   transform: translate(-50%, 6px);
-  min-width: 260px;
+  width: 800px;
+  max-width: calc(100vw - 48px);
   background: var(--bg-1);
   border: 1px solid var(--line-1);
+  border-radius: var(--r-3);
   box-shadow: var(--shadow-3);
-  padding: 8px;
   opacity: 0;
   visibility: hidden;
+  overflow: hidden;
   transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility var(--dur-base);
   z-index: 50;
 }
-.k-header nav .nav-item:hover .nav-dropdown,
-.k-header nav .nav-item:focus-within .nav-dropdown {
+.k-header nav .nav-item--mega:hover .mega-dropdown,
+.k-header nav .nav-item--mega:focus-within .mega-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0);
 }
-.k-header nav .nav-dropdown a {
-  display: block;
-  padding: 12px 14px;
-  font: 500 14px/1.3 var(--font-body);
+.mega-dropdown__inner { display: flex; align-items: stretch; }
+
+/* Левая колонка — вкладки направлений */
+.mega-tabs {
+  position: relative;
+  flex: 0 0 248px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mega-tabs__indicator {
+  position: absolute;
+  left: 10px; right: 10px; top: 0;
+  height: 0;
+  background: var(--bg-2);
+  border-radius: var(--r-2);
+  opacity: 0;
+  transition: transform var(--dur-base) var(--ease-out), height var(--dur-base) var(--ease-out), opacity var(--dur-fast);
+  z-index: 0;
+  pointer-events: none;
+}
+/* Специфичность важна: общее правило «.k-header nav a» (padding: 6px 0)
+   иначе перебивает паддинги вкладки — держим селектор длиннее его. */
+.k-header nav .mega-tabs .mega-tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 14px;
+  margin: 0;
+  border-radius: var(--r-2);
   color: var(--fg-1);
   border: 0;
-  white-space: nowrap;
+  text-decoration: none;
 }
-.k-header nav .nav-dropdown a:hover { background: var(--bg-2); color: var(--ks-red); }
+.mega-tab__title {
+  font: 700 14px/1.2 var(--font-display);
+  letter-spacing: -0.005em;
+}
+.mega-tab__desc {
+  font: 400 12.5px/1.4 var(--font-body);
+  color: var(--fg-3);
+}
+.k-header nav .mega-tab[aria-current="page"] .mega-tab__title { color: var(--ks-red); }
+
+/* Правая колонка — превью наведенного направления (кросс-фейд).
+   Ширина трека задана явно в 1fr (иначе процент от неопределенной
+   ширины схлопывается в 0), а высота — по контенту: рамка превью
+   сама задает себе высоту через aspect-ratio от уже известной
+   ширины, так что картинка получает максимум места и не мельчает. */
+.mega-preview {
+  position: relative;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  border-left: 1px solid var(--line-1);
+  background: var(--bg-3);
+}
+.k-header nav .mega-preview .mega-preview__item {
+  grid-area: 1 / 1;
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(8px) scale(.98);
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  border: 0;
+  text-decoration: none;
+  color: var(--fg-1);
+}
+.k-header nav .mega-preview .mega-preview__item.is-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+}
+.mega-preview__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-2);
+  overflow: hidden;
+  background: var(--bg-1);
+}
+.mega-preview__frame img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 500ms var(--ease-out);
+}
+.mega-preview__item:hover .mega-preview__frame img { transform: scale(1.03); }
+.mega-preview__soon {
+  width: 100%; height: 100%;
+  display: grid; place-items: center;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 10px, rgba(255,255,255,.05) 10px 11px),
+    var(--ks-charcoal);
+}
+.mega-preview__soon-label {
+  font: 700 11px/1 var(--font-display);
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: var(--r-2);
+  padding: 8px 12px;
+}
 
 .k-header .actions { display: flex; align-items: center; gap: 12px; }
 /* header CTA: text turns black on hover (bright red kept for contrast) */
@@ -1373,10 +1486,21 @@ body.theme-dark .k-footer { background: #0a0a0a; }
   transition: color var(--dur-fast);
 }
 .k-footer a:hover { color: var(--ks-red); }
-.k-footer .bottom {
-  margin-top: 64px;
-  padding-top: 24px;
+.k-footer .footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 56px;
+  padding-top: 22px;
   border-top: 1px solid rgba(255,255,255,.12);
+}
+.k-footer .footer-legal a {
+  font: 500 12px/1.4 var(--font-body);
+  color: rgba(255,255,255,.68);
+}
+.k-footer .bottom {
+  margin-top: 22px;
+  padding-top: 0;
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
   font: 500 12px/1 var(--font-mono);
   color: rgba(255,255,255,.5);

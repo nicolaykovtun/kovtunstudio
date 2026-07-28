@@ -9,8 +9,9 @@ interface Props {
   columns: Column[];
   copy: string;
   copyTagline: string;
+  legalLinks?: { href: string; label: string }[];
 }
-const { tagline, columns, copy, copyTagline } = Astro.props;
+const { tagline, columns, copy, copyTagline, legalLinks = [] } = Astro.props;
 const year = new Date().getFullYear();
 const copyText = copy.replace('{year}', String(year));
 ---
@@ -32,6 +33,9 @@ const copyText = copy.replace('{year}', String(year));
           {col.info?.map(line => <span class="v">{line}</span>)}
         </div>
       ))}
+    </div>
+    <div class="footer-legal" aria-label="Правовая информация">
+      {legalLinks.map(link => <a href={link.href}>{link.label}</a>)}
     </div>
     <div class="bottom">
       <span>{copyText}</span>
