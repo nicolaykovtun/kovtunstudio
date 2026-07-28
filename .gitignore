@@ -23,3 +23,9 @@ _*.bat
 
 # Local backups of original (pre-optimized) image assets — not for repo
 assets/**/original/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example

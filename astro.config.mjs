@@ -2,16 +2,21 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
+import cloudflare from "@astrojs/cloudflare";
+
 export default defineConfig({
   site: 'https://design.kovtun.studio',
   trailingSlash: 'ignore',
+
   redirects: {
     '/cases': '/portfolio/',
   },
+
   server: {
     host: '127.0.0.1',  // явно IPv4, чтобы браузер не уходил на пустой IPv6
     port: 4321,
   },
+
   integrations: [
     sitemap({
       // Все статические страницы и кейсы попадают в sitemap автоматически.
@@ -20,8 +25,11 @@ export default defineConfig({
       lastmod: new Date(),
     }),
   ],
+
   build: {
     // Атрибут asset hash для cache-busting (важно при правках CSS/JS)
     assets: '_assets',
   },
+
+  adapter: cloudflare()
 });
