@@ -9,10 +9,11 @@ const { metrikaId, metrikaOptions } = Astro.props;
 
 <aside class="cookie-consent" id="cookie-consent" aria-labelledby="cookie-consent-title" hidden>
   <div class="cookie-consent__copy">
-    <strong id="cookie-consent-title">Можно включить аналитику?</strong>
+    <strong id="cookie-consent-title">Можно включить полную аналитику?</strong>
     <p>
-      Яндекс Метрика помогает понять, какие страницы полезны. Она включится только с вашего
-      согласия. Без согласия сайт продолжит работать.
+      Сейчас Яндекс Метрика считает просмотры обезличенно: без cookies и без записи действий.
+      С вашего разрешения добавятся cookies и Вебвизор — так видно, что на сайте работает плохо.
+      Откажетесь — сайт продолжит работать как обычно.
       <a href="/cookies/">Подробнее о cookies</a>
     </p>
   </div>
@@ -45,7 +46,17 @@ const { metrikaId, metrikaOptions } = Astro.props;
     var CONSENT_VERSION = '1';
     var banner = document.getElementById('cookie-consent');
     var settingsButton = document.getElementById('cookie-settings-button');
-    var isLoaded = false;
+
+    // Режим до согласия: счетчик работает, но без cookies и без Вебвизора.
+    // Так код Метрики всегда есть в DOM — робот Яндекса видит его и может
+    // использовать обход страниц по счетчику в Вебмастере.
+    var ANON_OPTIONS = Object.assign({}, METRIKA_OPTIONS, {
+      withoutCookies: true,
+      webvisor: false
+    });
+
+    var tagRequested = false;
+    var initMode = null; // null | 'anon' | 'full'
 
     function readChoice() {
       try {
@@ -82,21 +93,38 @@ const { metrikaId, metrikaOptions } = Astro.props;
       });
     }
 
-    function loadMetrika() {
-      if (isLoaded || window.__ymLoaded) return;
-      isLoaded = true;
-      window.__ymLoaded = true;
-      window['disableYaCounter' + METRIKA_ID] = false;
+    function ensureTag() {
+      if (tagRequested) return;
+      tagRequested = true;
       window.ym = window.ym || function () {
         (window.ym.a = window.ym.a || []).push(arguments);
       };
       window.ym.l = 1 * new Date();
-      window.ym(METRIKA_ID, 'init', METRIKA_OPTIONS);
 
       var script = document.createElement('script');
       script.async = true;
       script.src = 'https://mc.yandex.ru/metrika/tag.js?id=' + METRIKA_ID;
       document.head.appendChild(script);
+    }
+
+    // Обезличенный режим: хит уходит, cookies не пишутся, Вебвизор выключен.
+    function loadMetrikaAnonymous() {
+      if (initMode) return;
+      initMode = 'anon';
+      window['disableYaCounter' + METRIKA_ID] = false;
+      ensureTag();
+      window.ym(METRIKA_ID, 'init', ANON_OPTIONS);
+    }
+
+    // Полный режим: cookies, Вебвизор, склейка визитов одного посетителя.
+    function loadMetrikaFull() {
+      if (initMode === 'full') return;
+      window['disableYaCounter' + METRIKA_ID] = false;
+      ensureTag();
+      window.ym(METRIKA_ID, 'init', METRIKA_OPTIONS);
+      // Если счетчик уже был поднят обезличенно, Метрика игнорирует повторный
+      // init в этой загрузке страницы: полный режим включится со следующей.
+      initMode = 'full';
     }
 
     function disableMetrika() {
@@ -117,7 +145,7 @@ const { metrikaId, metrikaOptions } = Astro.props;
 
     function applyChoice(choice) {
       saveChoice(choice);
-      if (choice === 'granted') loadMetrika();
+      if (choice === 'granted') loadMetrikaFull();
       else disableMetrika();
       hideBanner();
       document.dispatchEvent(new CustomEvent('ks:analytics-consent', { detail: { choice: choice } }));
@@ -125,13 +153,13 @@ const { metrikaId, metrikaOptions } = Astro.props;
 
     var choice = readChoice();
     if (choice === 'granted') {
-      loadMetrika();
+      loadMetrikaFull();
       hideBanner();
     } else if (choice === 'denied') {
       disableMetrika();
       hideBanner();
     } else {
-      disableMetrika();
+      loadMetrikaAnonymous();
       showBanner();
     }
 
