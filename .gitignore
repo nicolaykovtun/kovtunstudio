@@ -23,3 +23,12 @@ _*.bat
 
 # Local backups of original (pre-optimized) image assets — not for repo
 assets/**/original/
+
+# Исходные макеты кейсов — только на машине Николая. Из cases/ в репозиторий
+# идут лишь case.md и gallery.yaml; картинки для сайта нарезаются
+# в public/assets/cases/<slug>/. Правило от обратного: у кейсов нет единой
+# папки с исходниками — где-то Raw/, где-то raw/, где-то файлы в корне.
+cases/**
+!cases/*/
+!cases/*/case.md
+!cases/*/gallery.yaml
