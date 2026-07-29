@@ -38,3 +38,5 @@ spheres:
     label: Сельское хозяйство
   - key: real-estate
     label: Недвижимость
+  - key: accounting
+    label: Бухгалтерские услуги

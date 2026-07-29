@@ -1,0 +1,154 @@
+# Раскладка изображений кейса. Пути в full/ и thumb/ строятся из имени файла:
+# full/<file>.webp и thumb/<file>-thumbnail.webp внутри assetRoot.
+assetRoot: /assets/cases/website-kapital-inform
+
+cover:
+  src: kapital-inform-website-cover.webp
+  alt: Первый экран сайта Капиталъ Информ с заголовком «Аутсорсинг бухгалтерии»
+
+og: kapital-inform-website-cover.webp
+ogAlt: Главная страница сайта бухгалтерской компании Капиталъ Информ
+
+keywords: дизайн сайта бухгалтерской компании, аутсорсинг бухгалтерии, Капиталъ Информ, вайрфреймы сайта, Владивосток, Николай Ковтун
+
+resultTitle: Что дает такая сборка
+
+ctaTitle: Нужен сайт для услуги, которую трудно показать?
+ctaText: Расскажите, что продаете и кому. Посмотрю, из каких блоков собрать страницу и чем закрыть вопрос о доверии.
+ctaButton: Обсудить сайт
+
+compare:
+  title: Как схемы превращались в дизайн
+  intro: >-
+    Порядок блоков и тексты согласовали на вайрфреймах, поэтому в дизайне
+    менялась подача, а не структура. Слева схема, справа готовый макет.
+  items:
+    - number: '01'
+      title: Первый экран не поменял порядок
+      text: >-
+        На схеме проверяли порядок: заголовок, обещание, две кнопки и список
+        услуг строкой. В дизайне серый прямоугольник стал фотографией под
+        красной заливкой, а желтая диагональ подхватила цвет логотипа.
+      before: kapital-wireframe-01-hero
+      after: kapital-home-01-hero
+      beforeAlt: Вайрфрейм первого экрана сайта Капиталъ Информ
+      afterAlt: Готовый дизайн первого экрана сайта Капиталъ Информ
+    - number: '02'
+      title: Карточка услуги получила иконку вместо картинки
+      text: >-
+        В схеме у каждой из шести услуг стояла заглушка под изображение.
+        В дизайне ее заменила линейная иконка: карточки стали легче, а название
+        и описание вышли на первый план.
+      before: kapital-wireframe-03-services
+      after: kapital-home-03-services
+      beforeAlt: Вайрфрейм блока ключевых услуг
+      afterAlt: Готовый дизайн блока ключевых услуг с иконками
+    - number: '03'
+      title: Семь причин стали нумерованной сеткой
+      text: >-
+        Схема задала неравные карточки: первая причина крупнее остальных.
+        В дизайне номера 01–07 набраны красным поверх обесцвеченных фотографий,
+        поэтому блок читается как список, а не как галерея.
+      before: kapital-wireframe-05-why
+      after: kapital-home-05-why
+      beforeAlt: Вайрфрейм блока причин выбрать компанию
+      afterAlt: Готовый дизайн блока с семью причинами и крупными номерами
+    - number: '04'
+      title: Сторону компании выделили карточкой
+      text: >-
+        На схеме это два одинаковых списка на белом фоне. В дизайне левая
+        колонка ушла в серую рамку, правая встала на белую карточку с тенью
+        и красным заголовком — сторона компании читается первой.
+      before: kapital-wireframe-07-versus
+      after: kapital-home-07-versus
+      beforeAlt: Вайрфрейм блока сравнения бухгалтеров
+      afterAlt: Готовый дизайн блока сравнения с выделенной колонкой компании
+
+groups:
+  - id: home
+    title: Главная страница, блок за блоком
+    intro: "Четырнадцать блоков в порядке прокрутки: от первого экрана до подвала."
+    items:
+      - file: kapital-home-01-hero
+        label: Первый экран и список из десяти услуг
+      - file: kapital-home-02-audience
+        label: "Кому подходит: шесть отраслей клиентов"
+      - file: kapital-home-03-services
+        label: Шесть ключевых услуг, каждая ведет на свою страницу
+      - file: kapital-home-04-consult
+        label: Обратный звонок с фотографией специалиста
+      - file: kapital-home-05-why
+        label: Семь причин выбрать компанию
+      - file: kapital-home-06-team
+        label: "Команда: кто за что отвечает"
+      - file: kapital-home-07-versus
+        label: Сравнение с неопытным бухгалтером
+      - file: kapital-home-08-benefits
+        label: Что клиент получает, когда отдает бухгалтерию
+      - file: kapital-home-09-cta
+        label: Короткая форма заявки в красной плашке
+      - file: kapital-home-10-cases
+        label: Бизнес-кейсы с целью и решением
+      - file: kapital-home-11-letters
+        label: Благодарственные письма клиентов
+      - file: kapital-home-12-partners
+        label: Партнеры компании
+      - file: kapital-home-13-office
+        label: Офис, телефоны, график работы и карта
+      - file: kapital-home-14-footer
+        label: Подвал сайта
+
+  - id: pages
+    title: Внутренние страницы — шесть услуг и контакты
+    intro: >-
+      У всех шести услуг последовательность блоков одна и та же: меняются
+      заголовок, состав услуги и аргументы. Контакты — короткая страница
+      с адресом, телефонами и картой.
+    items:
+      - file: kapital-page-01-restore
+        label: Восстановление бухгалтерии
+      - file: kapital-page-02-complex
+        label: Комплексное бухгалтерское обслуживание
+      - file: kapital-page-03-professional
+        label: Профессиональное ведение бухгалтерии
+      - file: kapital-page-04-consulting
+        label: Консультирование по налогообложению
+      - file: kapital-page-05-reporting
+        label: Сдача отчетности
+      - file: kapital-page-06-registration
+        label: Регистрация предприятий
+      - file: kapital-page-07-contacts
+        label: Контакты и карта проезда
+
+  - id: wireframes
+    title: Вайрфреймы главной страницы
+    intro: >-
+      Тринадцать схем, на которых согласовали структуру и тексты. Блока
+      с благодарственными письмами здесь еще нет — он появился в дизайне.
+    items:
+      - file: kapital-wireframe-01-hero
+        label: Первый экран и список услуг
+      - file: kapital-wireframe-02-audience
+        label: Шесть отраслей клиентов
+      - file: kapital-wireframe-03-services
+        label: Ключевые услуги
+      - file: kapital-wireframe-04-consult
+        label: Блок обратного звонка
+      - file: kapital-wireframe-05-why
+        label: Семь причин выбрать компанию
+      - file: kapital-wireframe-06-team
+        label: Команда и роли
+      - file: kapital-wireframe-07-versus
+        label: Сравнение с неопытным бухгалтером
+      - file: kapital-wireframe-08-benefits
+        label: Что клиент получает, когда отдает бухгалтерию
+      - file: kapital-wireframe-09-cta
+        label: Короткая форма заявки
+      - file: kapital-wireframe-10-cases
+        label: Бизнес-кейсы
+      - file: kapital-wireframe-12-partners
+        label: Партнеры
+      - file: kapital-wireframe-13-office
+        label: Офис и карта
+      - file: kapital-wireframe-14-footer
+        label: Подвал сайта

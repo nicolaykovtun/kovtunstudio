@@ -4,6 +4,7 @@
  */
 export const caseCatalogOrder = [
   'website-japan-shina',
+  'website-kapital-inform',
   'presentation-edelweiss',
   'presentation-terney-farmer',
   'brochure-metall-invest',
