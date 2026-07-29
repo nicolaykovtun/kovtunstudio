@@ -1,0 +1,80 @@
+{
+  "outDir": "public/assets/cases/landing-japan-shina",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) —  Home.jpg",
+    "top": 0,
+    "height": 1960,
+    "name": "japan-shina-website-cover"
+  },
+  "sources": [
+    {
+      "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) —  Home.jpg",
+      "prefix": "japan-shina-home",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1843 },
+        { "name": "about", "top": 1843, "bottom": 3566 },
+        { "name": "categories", "top": 3566, "bottom": 4766 },
+        { "name": "catalog-summer", "top": 4766, "bottom": 6514 },
+        { "name": "catalog-winter", "top": 6514, "bottom": 8222 },
+        { "name": "catalog-wheels", "top": 8222, "bottom": 9950 },
+        { "name": "extras", "top": 9950, "bottom": 11261 },
+        { "name": "service", "top": 11261, "bottom": 12912 },
+        { "name": "brands", "top": 12912, "bottom": 13733 },
+        { "name": "why", "top": 13733, "bottom": 15442 },
+        { "name": "auctions", "top": 15442, "bottom": 16862 },
+        { "name": "reviews", "top": 16862, "bottom": 18086 },
+        { "name": "news", "top": 18086, "bottom": 19315 },
+        { "name": "contacts", "top": 19315, "bottom": 20362 },
+        { "name": "footer", "top": 20362, "bottom": 21162 }
+      ]
+    },
+    {
+      "file": "cases/Landing-japan-shina/raw/Wireframes Home.jpg",
+      "prefix": "japan-shina-wireframe",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1757 },
+        { "name": "about", "top": 1757, "bottom": 3384 },
+        { "name": "categories", "top": 3384, "bottom": 4762 },
+        { "name": "catalog-summer", "top": 4762, "bottom": 6523 },
+        { "name": "catalog-winter", "top": 6523, "bottom": 8213 },
+        { "name": "catalog-wheels", "top": 8213, "bottom": 9998 },
+        { "name": "extras", "top": 9998, "bottom": 11357 },
+        { "name": "service", "top": 11357, "bottom": 13042 },
+        { "name": "brands", "top": 13042, "bottom": 13622 },
+        { "name": "why", "top": 13622, "bottom": 15758 },
+        { "name": "auctions", "top": 15758, "bottom": 17160 },
+        { "name": "reviews", "top": 17160, "bottom": 18552 },
+        { "name": "news", "top": 18552, "bottom": 19752 },
+        { "name": "contacts", "top": 19752, "bottom": 20918 },
+        { "name": "footer", "top": 20918, "bottom": 21734 }
+      ]
+    },
+    {
+      "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) - News.jpg",
+      "prefix": "japan-shina-news",
+      "blocks": [{ "name": "archive", "top": 0, "bottom": 5052 }]
+    },
+    {
+      "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) - News 1.jpg",
+      "prefix": "japan-shina-news",
+      "blocks": [{ "name": "article", "order": 2, "top": 0, "bottom": 5490 }]
+    },
+    {
+      "file": "cases/Landing-japan-shina/raw/Design - Modal -  Подбор шин и дисков по автомобилю.jpg",
+      "prefix": "japan-shina-modal",
+      "blocks": [{ "name": "by-car", "top": 0, "bottom": 1318 }]
+    },
+    {
+      "file": "cases/Landing-japan-shina/raw/Design - Modal - Подбор шин и дисков по размеру.jpg",
+      "prefix": "japan-shina-modal",
+      "blocks": [{ "name": "by-size", "order": 2, "top": 0, "bottom": 1376 }]
+    },
+    {
+      "file": "cases/Landing-japan-shina/raw/Design - Modal - Tech Support Form.jpg",
+      "prefix": "japan-shina-modal",
+      "blocks": [{ "name": "support", "order": 3, "top": 0, "bottom": 1258 }]
+    }
+  ]
+}

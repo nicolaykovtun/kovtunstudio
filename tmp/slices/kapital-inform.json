@@ -1,0 +1,90 @@
+{
+  "outDir": "public/assets/cases/website-kapital-inform",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "fullQuality": 82,
+  "thumbQuality": 72,
+  "cover": {
+    "file": "cases/Website-Kapital-Inform/Raw/Design - Главная.jpg",
+    "top": 0,
+    "height": 1980,
+    "name": "kapital-inform-website-cover",
+    "background": "#ffffff"
+  },
+  "sources": [
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Главная.jpg",
+      "prefix": "kapital-home",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1800 },
+        { "order": 2, "name": "audience", "top": 1800, "bottom": 3888 },
+        { "order": 3, "name": "services", "top": 3888, "bottom": 6700 },
+        { "order": 4, "name": "consult", "top": 6700, "bottom": 8260 },
+        { "order": 5, "name": "why", "top": 8260, "bottom": 10886 },
+        { "order": 6, "name": "team", "top": 10886, "bottom": 13280 },
+        { "order": 7, "name": "versus", "top": 13280, "bottom": 14600 },
+        { "order": 8, "name": "benefits", "top": 14600, "bottom": 16258 },
+        { "order": 9, "name": "cta", "top": 16258, "bottom": 16949 },
+        { "order": 10, "name": "cases", "top": 16949, "bottom": 18720 },
+        { "order": 11, "name": "letters", "top": 18720, "bottom": 20045 },
+        { "order": 12, "name": "partners", "top": 20045, "bottom": 21091 },
+        { "order": 13, "name": "office", "top": 21091, "bottom": 22590 },
+        { "order": 14, "name": "footer", "top": 22590, "bottom": 23372 }
+      ]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Wireframes - Главная.jpg",
+      "prefix": "kapital-wireframe",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1810 },
+        { "order": 2, "name": "audience", "top": 1810, "bottom": 3845 },
+        { "order": 3, "name": "services", "top": 3845, "bottom": 5846 },
+        { "order": 4, "name": "consult", "top": 5846, "bottom": 7354 },
+        { "order": 5, "name": "why", "top": 7354, "bottom": 9926 },
+        { "order": 6, "name": "team", "top": 9926, "bottom": 12336 },
+        { "order": 7, "name": "versus", "top": 12336, "bottom": 13526 },
+        { "order": 8, "name": "benefits", "top": 13526, "bottom": 15019 },
+        { "order": 9, "name": "cta", "top": 15019, "bottom": 15686 },
+        { "order": 10, "name": "cases", "top": 15686, "bottom": 17424 },
+        { "order": 12, "name": "partners", "top": 17424, "bottom": 18408 },
+        { "order": 13, "name": "office", "top": 18408, "bottom": 19843 },
+        { "order": 14, "name": "footer", "top": 19843, "bottom": 20818 }
+      ]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design -  Восстановление бухгалтерии.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 1, "name": "restore" }]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Комплексное бухгалтерское обслуживание.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 2, "name": "complex" }]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Профессиональное ведение бухгалтерии компании.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 3, "name": "professional" }]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Консультирование.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 4, "name": "consulting" }]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Сдача отчетности.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 5, "name": "reporting" }]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Регистрация предприятий.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 6, "name": "registration" }]
+    },
+    {
+      "file": "cases/Website-Kapital-Inform/Raw/Design - Контакты.jpg",
+      "prefix": "kapital-page",
+      "blocks": [{ "order": 7, "name": "contacts" }]
+    }
+  ]
+}
