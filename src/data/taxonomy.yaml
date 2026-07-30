@@ -40,3 +40,5 @@ spheres:
     label: Недвижимость
   - key: accounting
     label: Бухгалтерские услуги
+  - key: engineering-systems
+    label: Инженерные системы

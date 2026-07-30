@@ -1,0 +1,70 @@
+{
+  "outDir": "public/assets/cases/identity-trubovarnya",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_1.jpg",
+    "top": 0,
+    "height": 3000,
+    "name": "trubovarnya-identity-cover",
+    "background": "#98a2ae"
+  },
+  "sources": [
+    {
+      "file": "cases/Trubovarnya Eremeev/Logo/Raw/Logo-Трубоварня Еремеева-Основной.jpg",
+      "prefix": "trubovarnya-logo",
+      "blocks": [{ "name": "main", "order": 1 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Logo/Raw/Logo-Трубоварня Еремеева-2.jpg",
+      "prefix": "trubovarnya-logo",
+      "blocks": [{ "name": "on-yellow", "order": 2 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Logo/Raw/Logo-Трубоварня Еремеева-3.jpg",
+      "prefix": "trubovarnya-logo",
+      "blocks": [{ "name": "on-navy", "order": 3 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Logo/Raw/Logo-Трубоварня Еремеева-Для черного фона.jpg",
+      "prefix": "trubovarnya-logo",
+      "blocks": [{ "name": "mono-light", "order": 4 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Logo/Raw/Logo-Трубоварня Еремеева-Для белого фона.jpg",
+      "prefix": "trubovarnya-logo",
+      "blocks": [{ "name": "mono-dark", "order": 5 }]
+    },
+
+    {
+      "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_1.jpg",
+      "prefix": "trubovarnya-guidebook",
+      "blocks": [{ "name": "cover", "order": 1 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_2.jpg",
+      "prefix": "trubovarnya-guidebook",
+      "blocks": [{ "name": "safe-area", "order": 2 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_3.jpg",
+      "prefix": "trubovarnya-guidebook",
+      "blocks": [{ "name": "versions", "order": 3 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_4.jpg",
+      "prefix": "trubovarnya-guidebook",
+      "blocks": [{ "name": "misuse", "order": 4 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_5.jpg",
+      "prefix": "trubovarnya-guidebook",
+      "blocks": [{ "name": "colors", "order": 5 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Guidebook/Raw/Guidebook-Трубоварня Еремеев_Страница_6.jpg",
+      "prefix": "trubovarnya-guidebook",
+      "blocks": [{ "name": "type", "order": 6 }]
+    }
+  ]
+}

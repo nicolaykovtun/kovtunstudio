@@ -14,6 +14,7 @@ const targets = [
   'Website-Greatway',
   'Website-Kapital-Inform',
   'Website-B2B Cosmetics',
+  'Trubovarnya Eremeev',
 ];
 
 const exts = new Set(['.jpg', '.jpeg', '.png', '.webp']);

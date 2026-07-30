@@ -3,6 +3,8 @@
  * Новые редакционные проекты идут первыми, архив оклейки — следом.
  */
 export const caseCatalogOrder = [
+  'identity-trubovarnya',
+  'website-trubovarnya',
   'website-japan-shina',
   'website-kapital-inform',
   'presentation-edelweiss',

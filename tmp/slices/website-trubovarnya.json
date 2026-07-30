@@ -1,0 +1,65 @@
+{
+  "outDir": "public/assets/cases/website-trubovarnya",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Home.jpg",
+    "top": 0,
+    "height": 1392,
+    "name": "trubovarnya-website-cover",
+    "background": "#f7be00"
+  },
+  "sources": [
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Home.jpg",
+      "prefix": "trubovarnya-home",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1550 },
+        { "name": "about", "top": 1550, "bottom": 2702 },
+        { "name": "services", "top": 2702, "bottom": 4157 },
+        { "name": "projects", "top": 4157, "bottom": 5918 },
+        { "name": "process", "top": 5918, "bottom": 7070 },
+        { "name": "video", "top": 7070, "bottom": 8405 },
+        { "name": "footer", "top": 8405, "bottom": 9458 }
+      ]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Wireframes - 1920px - Home.jpg",
+      "prefix": "trubovarnya-wireframe",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1550 },
+        { "name": "about", "top": 1550, "bottom": 2702 },
+        { "name": "services", "top": 2702, "bottom": 4157 },
+        { "name": "projects", "top": 4157, "bottom": 5918 },
+        { "name": "process", "top": 5918, "bottom": 7070 },
+        { "name": "video", "top": 7070, "bottom": 8405 },
+        { "name": "footer", "top": 8405, "bottom": 9458 }
+      ]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Услуги.jpg",
+      "prefix": "trubovarnya-page",
+      "blocks": [{ "name": "services", "order": 1 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Комбинированные  системы отопления.jpg",
+      "prefix": "trubovarnya-page",
+      "blocks": [{ "name": "service", "order": 2 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Реализованные проекты.jpg",
+      "prefix": "trubovarnya-page",
+      "blocks": [{ "name": "projects", "order": 3 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Проект 1.jpg",
+      "prefix": "trubovarnya-page",
+      "blocks": [{ "name": "project", "order": 4 }]
+    },
+    {
+      "file": "cases/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Контакты.jpg",
+      "prefix": "trubovarnya-page",
+      "blocks": [{ "name": "contacts", "order": 5 }]
+    }
+  ]
+}
