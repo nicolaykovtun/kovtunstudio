@@ -34,6 +34,17 @@ export interface CaseGalleryGroup {
   items: CaseMedia[];
 }
 
+/**
+ * Соседние кейсы того же клиента: одна работа, разложенная на несколько
+ * страниц. Заголовок и обложка подтягиваются по slug из коллекции кейсов,
+ * поэтому в gallery.yaml достаточно slug, подписи и одной фразы.
+ */
+export interface CaseRelated {
+  title: string;
+  intro?: string;
+  items: Array<{ slug: string; label: string; text: string }>;
+}
+
 export interface EditorialCaseConfig {
   bodyVariant?: string;
   cover: { src: string; alt: string };
@@ -42,6 +53,7 @@ export interface EditorialCaseConfig {
   resultTitle?: string;
   resultIntro?: string;
   groups: CaseGalleryGroup[];
+  related?: CaseRelated;
   order: string[];
   cta?: { title: string; text: string; button: string };
   keywords?: string;

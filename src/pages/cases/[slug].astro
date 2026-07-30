@@ -74,7 +74,7 @@ function configFromGallery(c: any): EditorialCaseConfig {
     label: 'МАКЕТЫ',
     title: group.title,
     intro: group.intro,
-    layout: group.items.some((item: any) => item.tall) ? 'tall' : 'screens',
+    layout: group.layout ?? (group.items.some((item: any) => item.tall) ? 'tall' : 'screens'),
     theme: 'dark',
     interactive: true,
     items: group.items.map((item: any) => ({
@@ -118,12 +118,14 @@ function configFromGallery(c: any): EditorialCaseConfig {
     story,
     resultTitle: gallery.resultTitle,
     groups,
+    related: gallery.related,
     order: [
       'task',
       ...(story ? [story.id] : []),
       'result',
       ...groups.map((group) => group.id),
       'works',
+      ...(gallery.related ? ['related'] : []),
     ],
     cta: gallery.ctaTitle
       ? {
@@ -238,6 +240,27 @@ const lightboxItems = groups
   .flatMap((group) => group.items)
   .map((item) => ({ src: item.src, thumb: item.thumb, label: item.label }));
 
+// Соседние кейсы того же клиента: в gallery.yaml лежит только slug, заголовок
+// и обложку берем из самой коллекции, чтобы они не расходились с кейсом.
+const relatedPool = await getCollection('cases', ({ data }) => !data.draft);
+const relatedIndex = new Map(relatedPool.map((entry) => [entry.id, entry.data]));
+const relatedCases = (config.related?.items ?? [])
+  .map((item) => {
+    const target = relatedIndex.get(item.slug);
+    if (!target) {
+      throw new Error(`Кейс ${c.slug}: в related указан неизвестный slug «${item.slug}»`);
+    }
+    const gallery = target.gallery as any;
+    return {
+      href: `/cases/${item.slug}/`,
+      label: item.label,
+      text: item.text,
+      title: target.shortTitle || target.title,
+      cover: gallery ? `${gallery.assetRoot}/${gallery.cover.src}` : undefined,
+      coverAlt: gallery?.cover.alt ?? target.shortTitle,
+    };
+  });
+
 const sectionRecords = config.order.map((id, index) => ({
   id,
   number: pad(index + 1),
@@ -245,18 +268,24 @@ const sectionRecords = config.order.map((id, index) => ({
   group: groups.find((group) => group.id === id),
 }));
 
+// Галереи носят общую подпись «МАКЕТЫ»: у кейса с двумя группами в меню
+// выходили два одинаковых пункта. Оставляем первый по каждой подписи.
+const navSections = sectionRecords
+  .filter((section) => section.id !== 'works' && section.id !== 'result')
+  .map((section) => ({
+    href: `#${section.id}`,
+    label:
+      section.id === 'task'
+        ? 'Задача'
+        : section.id === 'related'
+          ? 'ЭТОТ ЖЕ КЛИЕНТ'
+          : section.story?.label ?? section.group?.label ?? section.id,
+  }));
 const nav = [
   { href: '/portfolio/', label: 'Портфолио' },
-  ...sectionRecords
-    .filter((section) => section.id !== 'works' && section.id !== 'result')
-    .slice(0, 3)
-    .map((section) => ({
-      href: `#${section.id}`,
-      label:
-        section.id === 'task'
-          ? 'Задача'
-          : section.story?.label ?? section.group?.label ?? section.id,
-    })),
+  ...navSections
+    .filter((item, index) => navSections.findIndex((other) => other.label === item.label) === index)
+    .slice(0, 3),
 ];
 
 const footer = {
@@ -273,7 +302,9 @@ const footer = {
               ? 'Результат'
               : section.id === 'works'
                 ? 'Состав работ'
-                : section.story?.title ?? section.group?.title ?? section.id,
+                : section.id === 'related'
+                  ? 'Этот же клиент'
+                  : section.story?.title ?? section.group?.title ?? section.id,
       })),
     },
     site.footer.columns[1],
@@ -556,6 +587,35 @@ const cta = config.cta ?? {
                 <ul>
                   {c.deliverables.map((item: string) => <li>{item}</li>)}
                 </ul>
+              </div>
+            </section>
+          )}
+
+          {section.id === 'related' && config.related && (
+            <section class="case-section case-related-section" id="related">
+              <div class="container-wide">
+                <span class="case-section__num">{section.number} / ЭТОТ ЖЕ КЛИЕНТ</span>
+                <h2>{config.related.title}</h2>
+                {config.related.intro && (
+                  <div class="case-prose"><p>{config.related.intro}</p></div>
+                )}
+                <div class="case-related">
+                  {relatedCases.map((item) => (
+                    <a class="case-related__card" href={item.href}>
+                      {item.cover && (
+                        <span class="case-related__media">
+                          <img src={item.cover} alt={item.coverAlt} loading="lazy" decoding="async" />
+                        </span>
+                      )}
+                      <span class="case-related__body">
+                        <small>{item.label}</small>
+                        <strong>{item.title}</strong>
+                        <span>{item.text}</span>
+                      </span>
+                      <span class="case-related__arrow" aria-hidden="true">→</span>
+                    </a>
+                  ))}
+                </div>
               </div>
             </section>
           )}

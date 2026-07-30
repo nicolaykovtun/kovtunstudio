@@ -96,6 +96,13 @@ const galleryGroup = z.object({
   id: z.string(),
   title: z.string(),
   intro: z.string().optional(),
+  /**
+   * Раскладка плиток. По умолчанию выбирается сама: `tall`, если хоть у одного
+   * элемента стоит tall, иначе `screens`. Задавать вручную нужно там, где
+   * автоматика промахивается — например, у страниц гайдбука 16:9: в `tall`
+   * они летербоксятся до половины плитки, а `slides` показывает их целиком.
+   */
+  layout: z.enum(['screens', 'tall', 'slides', 'brochure', 'portrait']).optional(),
   items: z.array(galleryItem).min(1),
 });
 
@@ -109,6 +116,17 @@ const comparisonItem = z.object({
   afterAlt: z.string(),
   beforeCaption: z.string().default('Вайрфрейм / до'),
   afterCaption: z.string().default('Дизайн / после'),
+});
+
+/**
+ * Соседний кейс того же клиента. Нужен, когда одна работа разложена
+ * на несколько страниц: сайт отдельно, фирменный стиль отдельно.
+ * slug ищется среди опубликованных кейсов, заголовок и обложка берутся оттуда.
+ */
+const relatedItem = z.object({
+  slug: z.string(),
+  label: z.string(),
+  text: z.string(),
 });
 
 const cases = defineCollection({
@@ -173,6 +191,13 @@ const cases = defineCollection({
           })
           .optional(),
         groups: z.array(galleryGroup).default([]),
+        related: z
+          .object({
+            title: z.string(),
+            intro: z.string().optional(),
+            items: z.array(relatedItem).min(1),
+          })
+          .optional(),
         resultTitle: z.string().optional(),
         ctaTitle: z.string().optional(),
         ctaText: z.string().optional(),

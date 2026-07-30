@@ -339,6 +339,23 @@
 .case-section--dark { background: var(--ks-charcoal); color: #fff; }
 .case-section--dark h2,
 .case-section--dark h3 { color: #fff; }
+/* Глобальное `p { color: var(--fg-2) }` перебивает наследуемый белый: --fg-2
+   равен --ks-charcoal, то есть цвету подложки, и абзац пропадал. Задаем явно. */
+.case-section--dark .case-prose p,
+.case-section--dark .case-prose li { color: rgba(255,255,255,.72); }
+
+/* Акцент кейса на темных подложках. Темный акцент (например #011D4C
+   у Трубоварни) на #0b1d2b, #444443 и #111 нечитаем, поэтому осветляем его,
+   а не берем как есть. Светлые акценты от этого почти не меняются. */
+.case-page .case-comparison-section .case-section__num,
+.case-page .case-section--dark .case-section__num,
+.case-page .case-media-section .case-section__num,
+.case-page .case-section--dark .case-result strong {
+  color: color-mix(in srgb, var(--case-accent, var(--ks-red)) 50%, #fff);
+}
+.case-page .case-section--dark .case-result {
+  border-top-color: color-mix(in srgb, var(--case-accent, var(--ks-red)) 50%, #fff);
+}
 .case-section__head { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 64px; align-items: start; }
 .case-section__num { color: var(--ks-red); font: 750 13px/1 var(--font-display); letter-spacing: .14em; }
 .case-section h2,
@@ -355,6 +372,51 @@
 .case-approach span { display: block; margin-bottom: 72px; color: var(--ks-red); font: 800 13px/1 var(--font-display); }
 .case-approach h3 { margin: 0 0 14px; font-size: 25px; }
 .case-approach p { margin: 0; color: var(--fg-3); line-height: 1.6; }
+
+/* ─── Соседние кейсы того же клиента ────────────────────────────────────
+   Одна работа, разложенная на несколько страниц: сайт отдельно, фирменный
+   стиль отдельно. Карточка ведет на соседний кейс и показывает его обложку. */
+.case-related-section { background: var(--bg-2); }
+.case-related-section h2 { margin-bottom: 24px; }
+.case-related-section .case-prose { margin-bottom: 48px; }
+/* Карточек обычно одна-две: flex, а не auto-fit, чтобы одиночная карточка
+   не растягивалась на всю ширину контейнера. */
+.case-related { display: flex; flex-wrap: wrap; gap: 24px; }
+.case-related__card {
+  flex: 1 1 340px;
+  max-width: 560px;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 24px;
+  gap: 24px;
+  align-items: center;
+  padding: 20px;
+  color: inherit;
+  text-decoration: none;
+  background: var(--bg-1);
+  border: 1px solid var(--line-2);
+  transition: border-color .18s ease, transform .18s ease;
+}
+.case-related__card:hover { border-color: var(--case-accent, var(--ks-red)); transform: translateY(-2px); }
+.case-related__media { display: block; overflow: hidden; background: var(--bg-2); }
+.case-related__media img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.case-related__body { display: block; min-width: 0; }
+.case-related__body small {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--fg-3);
+  font: 700 11px/1.2 var(--font-display);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.case-related__body strong { display: block; margin-bottom: 8px; font: 780 22px/1.15 var(--font-display); letter-spacing: -.02em; }
+.case-related__body span { display: block; color: var(--fg-3); font-size: 15px; line-height: 1.5; }
+.case-related__arrow { color: var(--case-accent, var(--ks-red)); font-size: 20px; }
+.case-related__card:hover .case-related__arrow { transform: translateX(3px); }
+
+@media (max-width: 600px) {
+  .case-related__card { grid-template-columns: minmax(0, 1fr) 24px; gap: 16px; }
+  .case-related__media { grid-column: 1 / -1; }
+}
 
 .case-comparison-section {
   padding: 120px 0;
@@ -374,7 +436,7 @@
   margin-bottom: 36px;
 }
 .case-comparison__head > span {
-  color: var(--case-accent, var(--ks-red));
+  color: color-mix(in srgb, var(--case-accent, var(--ks-red)) 50%, #fff);
   font: 800 13px/1 var(--font-display);
   letter-spacing: .12em;
 }
