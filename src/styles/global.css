@@ -1409,7 +1409,24 @@ body.theme-dark .k-form .field > .lbl { background: #1c1c1b; }
 @media (max-width: 480px) { .k-form .field-row { grid-template-columns: 1fr; } }
 
 /* Единственная главная кнопка отправки (Telegram) */
-.k-form .btn-send { width: 100%; justify-content: center; }
+.k-form .btn-send {
+  width: 100%;
+  justify-content: center;
+  /* Ярлык длинный — «Открыть Telegram с готовым сообщением», а базовый .btn
+     запрещает перенос. Внутри грида это поднимает min-content дорожки до 375px
+     и выталкивает всю секцию заявки за пределы экрана: на 375px страница
+     разъезжалась по горизонтали на 64px. Здесь перенос разрешаем. */
+  white-space: normal;
+  text-align: center;
+}
+
+/* Грид-элементы по умолчанию имеют min-width: auto и не дают дорожке сжаться
+   уже своего содержимого. Обнуляем, чтобы одна широкая строка внутри формы
+   больше не могла вытолкнуть секцию за вьюпорт. */
+.cta-wrap > *,
+.k-form,
+.k-form #form-fields,
+.k-form #form-success { min-width: 0; }
 
 /* MAX — тихая текстовая ссылка под главной кнопкой, а не вторая равная кнопка */
 .k-form .max-quiet-link {
