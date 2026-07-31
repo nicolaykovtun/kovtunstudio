@@ -1,16 +1,16 @@
 {
-  "outDir": "public/assets/cases/landing-japan-shina",
+  "outDir": "public/assets/cases/website-japan-shina",
   "fullWidth": 1440,
   "thumbWidth": 640,
   "cover": {
-    "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) —  Home.jpg",
+    "file": "cases/published/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) —  Home.jpg",
     "top": 0,
     "height": 1960,
     "name": "japan-shina-website-cover"
   },
   "sources": [
     {
-      "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) —  Home.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) —  Home.jpg",
       "prefix": "japan-shina-home",
       "blocks": [
         { "name": "hero", "top": 0, "bottom": 1843 },
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "file": "cases/Landing-japan-shina/raw/Wireframes Home.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Wireframes Home.jpg",
       "prefix": "japan-shina-wireframe",
       "blocks": [
         { "name": "hero", "top": 0, "bottom": 1757 },
@@ -52,27 +52,27 @@
       ]
     },
     {
-      "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) - News.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) - News.jpg",
       "prefix": "japan-shina-news",
       "blocks": [{ "name": "archive", "top": 0, "bottom": 5052 }]
     },
     {
-      "file": "cases/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) - News 1.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Japan Шина — Design (Desktop 1440) - News 1.jpg",
       "prefix": "japan-shina-news",
       "blocks": [{ "name": "article", "order": 2, "top": 0, "bottom": 5490 }]
     },
     {
-      "file": "cases/Landing-japan-shina/raw/Design - Modal -  Подбор шин и дисков по автомобилю.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Design - Modal -  Подбор шин и дисков по автомобилю.jpg",
       "prefix": "japan-shina-modal",
       "blocks": [{ "name": "by-car", "top": 0, "bottom": 1318 }]
     },
     {
-      "file": "cases/Landing-japan-shina/raw/Design - Modal - Подбор шин и дисков по размеру.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Design - Modal - Подбор шин и дисков по размеру.jpg",
       "prefix": "japan-shina-modal",
       "blocks": [{ "name": "by-size", "order": 2, "top": 0, "bottom": 1376 }]
     },
     {
-      "file": "cases/Landing-japan-shina/raw/Design - Modal - Tech Support Form.jpg",
+      "file": "cases/published/Landing-japan-shina/raw/Design - Modal - Tech Support Form.jpg",
       "prefix": "japan-shina-modal",
       "blocks": [{ "name": "support", "order": 3, "top": 0, "bottom": 1258 }]
     }

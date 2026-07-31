@@ -93,7 +93,7 @@ publicationPermission: да
 - Сайт клиента: https://ewss.ru/
 - Страница проекта: https://ewss.ru/projects/zolotoy-rog/
 - Сайт жилого комплекса: https://ewss-zolotoyrog.ru/
-- Папка с исходниками: F:\dev\design.kovtun.studio\cases\Presentation-Edelweiss
+- Папка с исходниками: cases/published/Presentation-Edelweiss
 - Дополнительные факты: 18 JPG-страниц брошюры
 
 ## Комментарии для публикации

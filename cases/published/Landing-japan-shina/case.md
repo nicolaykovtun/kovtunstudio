@@ -90,7 +90,7 @@ publicationPermission: да
 ## Ссылки и источники
 
 - Сайт клиента: нет, на момент публикации сайт не запущен
-- Папка с исходниками: cases/Landing-japan-shina
+- Папка с исходниками: cases/published/Landing-japan-shina
 - Исходные макеты: raw/Japan Шина — Design (Desktop 1440)
 - Вайрфреймы: raw/Wireframes Home.jpg
 

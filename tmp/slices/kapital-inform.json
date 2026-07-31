@@ -5,7 +5,7 @@
   "fullQuality": 82,
   "thumbQuality": 72,
   "cover": {
-    "file": "cases/Website-Kapital-Inform/Raw/Design - Главная.jpg",
+    "file": "cases/published/Website-Kapital-Inform/Raw/Design - Главная.jpg",
     "top": 0,
     "height": 1980,
     "name": "kapital-inform-website-cover",
@@ -13,7 +13,7 @@
   },
   "sources": [
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Главная.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Главная.jpg",
       "prefix": "kapital-home",
       "blocks": [
         { "order": 1, "name": "hero", "top": 0, "bottom": 1800 },
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Wireframes - Главная.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Wireframes - Главная.jpg",
       "prefix": "kapital-wireframe",
       "blocks": [
         { "order": 1, "name": "hero", "top": 0, "bottom": 1810 },
@@ -52,37 +52,37 @@
       ]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design -  Восстановление бухгалтерии.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design -  Восстановление бухгалтерии.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 1, "name": "restore" }]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Комплексное бухгалтерское обслуживание.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Комплексное бухгалтерское обслуживание.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 2, "name": "complex" }]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Профессиональное ведение бухгалтерии компании.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Профессиональное ведение бухгалтерии компании.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 3, "name": "professional" }]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Консультирование.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Консультирование.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 4, "name": "consulting" }]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Сдача отчетности.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Сдача отчетности.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 5, "name": "reporting" }]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Регистрация предприятий.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Регистрация предприятий.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 6, "name": "registration" }]
     },
     {
-      "file": "cases/Website-Kapital-Inform/Raw/Design - Контакты.jpg",
+      "file": "cases/published/Website-Kapital-Inform/Raw/Design - Контакты.jpg",
       "prefix": "kapital-page",
       "blocks": [{ "order": 7, "name": "contacts" }]
     }

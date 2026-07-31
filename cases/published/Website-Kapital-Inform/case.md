@@ -99,7 +99,7 @@ publicationPermission: да
 ## Ссылки и источники
 
 - Сайт клиента: https://kapitalinform.ru/
-- Папка с исходниками: cases/Website-Kapital-Inform
+- Папка с исходниками: cases/published/Website-Kapital-Inform
 - Исходные макеты: Raw/Design — восемь страниц
 - Вайрфреймы: Raw/Wireframes — восемь страниц
 

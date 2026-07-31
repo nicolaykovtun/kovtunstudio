@@ -1,21 +1,31 @@
 // Разведка исходников кейсов: размеры, вес, соотношение сторон.
+// Запуск: node tmp/scan-cases.mjs [часть имени папки]
+// Без аргумента печатает все папки кейсов из cases/published и cases/unpublished.
+// С аргументом — только те, чье имя его содержит: node tmp/scan-cases.mjs greatway
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
 const root = path.resolve('cases');
-const targets = [
-  'Landing-japan-shina',
-  'Landing-ptksk',
-  'Landing-Mercator-maritime',
-  'Landing-Kuznitsa dushi',
-  'Landing-Ektostroy',
-  'Landing-EVG-Group',
-  'Website-Greatway',
-  'Website-Kapital-Inform',
-  'Website-B2B Cosmetics',
-  'Trubovarnya Eremeev',
-];
+const filter = (process.argv[2] ?? '').toLowerCase();
+
+/** Папки кейсов внутри групп published/ и unpublished/. */
+function findCaseDirs() {
+  const out = [];
+  for (const group of fs.readdirSync(root, { withFileTypes: true })) {
+    if (!group.isDirectory()) continue;
+    const groupDir = path.join(root, group.name);
+    for (const entry of fs.readdirSync(groupDir, { withFileTypes: true })) {
+      if (entry.isDirectory()) out.push(path.join(group.name, entry.name));
+    }
+  }
+  return out.sort();
+}
+
+const targets = findCaseDirs().filter((name) => name.toLowerCase().includes(filter));
+if (!targets.length) {
+  console.log(filter ? `Ничего не нашлось по «${filter}»` : 'В cases/ нет папок кейсов');
+}
 
 const exts = new Set(['.jpg', '.jpeg', '.png', '.webp']);
 

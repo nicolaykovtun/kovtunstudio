@@ -90,7 +90,7 @@ publicationPermission: да
 ## Ссылки и источники
 
 - Сайт клиента: https://vmtp.ru
-- Папка с исходниками: текущая папка проекта
+- Папка с исходниками: cases/published/Presentation-VMTP
 - Исходное ТЗ: изображения `TS-slide-*.JPG`
 - Финальная презентация: изображения `slide-*.jpg` и `cover.jpg`
 

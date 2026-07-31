@@ -27,14 +27,33 @@ function readGallery(dir: string): Record<string, unknown> | undefined {
   return (yaml.load(fs.readFileSync(file, 'utf8')) as Record<string, unknown>) ?? undefined;
 }
 
-/** Папки кейсов, где лежит заполненный case.md. */
+/**
+ * Папки кейсов, где лежит заполненный case.md.
+ *
+ * Кейсы разложены по группам — `cases/published/` и `cases/unpublished/`, —
+ * поэтому папку проекта ищем и прямо в cases/, и на уровень глубже. Глубже
+ * не спускаемся: внутри папки кейса лежат исходные макеты, и рекурсия по ним
+ * заставила бы обходить сотни мегабайт при каждой пересборке.
+ */
 function findCaseFiles(): string[] {
   if (!fs.existsSync(CASES_DIR)) return [];
-  return fs
-    .readdirSync(CASES_DIR, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => path.join(CASES_DIR, entry.name, 'case.md'))
-    .filter((file) => fs.existsSync(file));
+
+  const files: string[] = [];
+  const visit = (dir: string, depth: number) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const child = path.join(dir, entry.name);
+      const caseFile = path.join(child, 'case.md');
+      if (fs.existsSync(caseFile)) {
+        files.push(caseFile);
+        continue;
+      }
+      if (depth > 0) visit(child, depth - 1);
+    }
+  };
+  visit(CASES_DIR, 1);
+
+  return files;
 }
 
 const caseLoader: Loader = {
