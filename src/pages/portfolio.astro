@@ -80,6 +80,14 @@ const cases = [
   ...editorialCases,
 ].sort((a, b) => caseOrderIndex(a.slug) - caseOrderIndex(b.slug));
 
+// Числительное словом для лида: в тексте «13 кейсов» читается хуже, чем «тринадцать».
+const numerals = [
+  'ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять',
+  'десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать',
+  'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать', 'двадцать',
+];
+const casesWord = numerals[cases.length] ?? String(cases.length);
+
 const caseBySlug = Object.fromEntries(cases.map(c => [c.slug, c]));
 const coverIds = new Set(legacyCases.map(c => c.cover));
 
@@ -143,9 +151,9 @@ const seoDescription =
         </h1>
         <p class="p-lede reveal" style="--reveal-delay: 120ms">
           Упаковка, айдентика, сайты, презентации и оклейка транспорта.
-          В каталоге уже тринадцать подробных кейсов: от фирменного стиля и сайтов
-          до корпоративных брошюр и транспорта. Откройте проект целиком
-          или рассмотрите макеты оклейки во весь экран.
+          В каталоге уже {casesWord} {plural(cases.length, 'подробный кейс', 'подробных кейса', 'подробных кейсов')}:
+          от фирменного стиля и сайтов до корпоративных брошюр и транспорта.
+          Откройте проект целиком или рассмотрите макеты оклейки во весь экран.
         </p>
         <div class="p-meta reveal" style="--reveal-delay: 180ms">
           <div class="item"><span class="num">{pad(directions.length)}</span><span class="lbl">Направлений работы</span></div>

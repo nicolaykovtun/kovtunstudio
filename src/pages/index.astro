@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
@@ -10,57 +11,111 @@ import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
 import RevealScript from '../components/RevealScript.astro';
+import { directionByCategory } from '../data/case-catalog';
+import { editorialCaseConfigs } from '../data/case-page-config';
 
 const dataDir = path.resolve('./src/data');
 const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
 const taxonomy = yaml.load(fs.readFileSync(path.join(dataDir, 'taxonomy.yaml'), 'utf8')) as any;
 
 // Тексты и переходы по направлениям — ключ соответствует taxonomy.yaml.
-// Направления без опубликованных кейсов (packaging, identity) помечены
-// soon: true и ведут в портфолио с фильтром, где показан пустой экран.
-const directionContent: Record<string, { text: string; status: string; soon?: boolean; ctaLabel: string; href: string }> = {
+// Числа в плашках НЕ прописываются руками: они считаются ниже по кейсам,
+// иначе после каждой публикации приходится помнить про этот блок.
+// `prefix` — то, что стоит перед счетчиком, если у направления есть что сказать
+// сверх количества кейсов.
+// `status` получает посчитанные количества кейсов и работ и возвращает строку
+// плашки. Направление без кейсов до этого не доходит — там всегда «скоро».
+const directionContent: Record<
+  string,
+  { text: string; href: string; status: (cases: number, works: number) => string }
+> = {
   packaging: {
     text: 'Дизайн упаковки для розницы и HoReCa. Отдаю макет, готовый к печати.',
-    status: 'Работы пока не опубликованы',
-    soon: true,
-    ctaLabel: 'Смотреть направление',
     href: '/portfolio/?direction=packaging',
+    status: (cases) => `${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
   },
   identity: {
     text: 'Логотип, палитра, шрифты и правила их применения. По ним дальше собираются упаковка, сайт и презентации.',
-    status: 'Работы пока не опубликованы',
-    soon: true,
-    ctaLabel: 'Смотреть направление',
     href: '/portfolio/?direction=identity',
+    status: (cases) => `${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
   },
   web: {
     text: 'Сайты и одностраничники для бизнеса: структура, тексты и готовые страницы.',
-    status: '1 кейс в портфолио',
-    ctaLabel: 'Смотреть кейс',
     href: '/portfolio/?direction=web',
+    status: (cases) => `${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
   },
   presentations: {
     text: 'Структура, текст, слайды и инфографика: питчи, отчеты, маркетинг-киты.',
-    status: 'Калькулятор цены · 4 кейса',
-    ctaLabel: 'Смотреть направление',
     href: '/presentations/',
+    status: (cases) => `Калькулятор цены · ${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')}`,
   },
   wrap: {
     text: 'Рекламная, брендовая и имиджевая оклейка коммерческого транспорта. Фургоны, такси, доставка, спецтехника.',
-    status: 'От 10 000 ₽ · 28 работ',
-    ctaLabel: 'Смотреть направление',
     href: '/car-wrap/',
+    status: (_cases, works) => `От 10 000 ₽ · ${works} ${plural(works, 'работа', 'работы', 'работ')}`,
   },
 };
 
 const pad = (n: number) => String(n).padStart(2, '0');
+const plural = (n: number, one: string, few: string, many: string) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
 
-const directions = taxonomy.directions.map((d: any, i: number) => ({
-  num: pad(i + 1),
-  key: d.key,
-  label: d.label,
-  ...directionContent[d.key],
-}));
+// Кейсы и работы по направлениям: те же источники, что и в портфолио, —
+// legacy cases.yaml, коллекция из cases/ и gallery.yaml с работами оклейки.
+// Направление без кейсов показывается как «скоро».
+const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 'utf8')) as any[];
+const worksGallery = yaml.load(fs.readFileSync(path.join(dataDir, 'gallery.yaml'), 'utf8')) as any[];
+const editorialEntries = (await getCollection('cases', ({ data }) => !data.draft))
+  .filter((entry) => Boolean(entry.data.gallery) || Boolean(editorialCaseConfigs[entry.id]));
+
+const directionOfCase: Record<string, string> = {};
+for (const c of legacyCases) {
+  const key = c.direction ?? directionByCategory[c.category];
+  if (key) directionOfCase[c.slug] = key;
+}
+for (const entry of editorialEntries) {
+  const key = directionByCategory[entry.data.category];
+  if (key) directionOfCase[entry.data.slug] = key;
+}
+
+const countCases = (key: string) =>
+  Object.values(directionOfCase).filter((d) => d === key).length;
+const countWorks = (key: string) =>
+  worksGallery.filter((w) => directionOfCase[w.project] === key).length;
+
+const directions = taxonomy.directions.map((d: any, i: number) => {
+  const content = directionContent[d.key];
+  const cases = countCases(d.key);
+  return {
+    num: pad(i + 1),
+    key: d.key,
+    label: d.label,
+    text: content.text,
+    href: content.href,
+    soon: cases === 0,
+    status: cases === 0 ? 'Работы пока не опубликованы' : content.status(cases, countWorks(d.key)),
+    ctaLabel: cases === 1 ? 'Смотреть кейс' : 'Смотреть направление',
+  };
+});
+
+const totalCases = Object.keys(directionOfCase).length;
+const wrapWorks = countWorks('wrap');
+const proofNums =
+  `${totalCases} ${plural(totalCases, 'разобранный кейс', 'разобранных кейса', 'разобранных кейсов')}` +
+  ` и ${wrapWorks} ${plural(wrapWorks, 'работа', 'работы', 'работ')} по оклейке в портфолио.`;
+
+const publishedCount = directions.filter((d: any) => !d.soon).length;
+const numeralDative = ['нулю', 'одному', 'двум', 'трем', 'четырем', 'пяти'];
+const directionsLede =
+  publishedCount === directions.length
+    ? 'По всем направлениям работы опубликованы в портфолио.'
+    : `По ${numeralDative[publishedCount] ?? publishedCount} направлени${publishedCount === 1 ? 'ю' : 'ям'} работы уже опубликованы. По остальным примеры пришлю в переписке.`;
 
 const benefits = [
   {
@@ -209,7 +264,7 @@ const faqLd = {
       <div class="container-wide">
         <div class="section-head">
           <h2>Пять направлений</h2>
-          <p class="aside">По трем направлениям работы уже опубликованы. По упаковке и айдентике примеры пришлю в переписке.</p>
+          <p class="aside">{directionsLede}</p>
         </div>
         <div class="dir-grid">
           {directions.map((d: any, i: number) => (
@@ -238,7 +293,7 @@ const faqLd = {
               <b>«Трубоварня Еремеева»</b>. Металлургия, агробизнес, логистика и порт,
               автобизнес, бухгалтерские услуги, инженерные системы.
             </p>
-            <p class="proof-nums">13 разобранных кейсов и 28 работ по оклейке в портфолио.</p>
+            <p class="proof-nums">{proofNums}</p>
           </div>
           <a class="btn btn-dark" href="/portfolio/">
             Смотреть портфолио <span class="arrow" aria-hidden="true">→</span>
