@@ -24,6 +24,12 @@ _*.bat
 # Local backups of original (pre-optimized) image assets — not for repo
 assets/**/original/
 
+# Настройки Claude Code. Конфиг запуска дев-сервера коммитим: по нему
+# preview-инструменты поднимают сервер у любого, кто клонировал репозиторий.
+# Личные настройки и локальные переопределения — нет.
+.claude/*
+!.claude/launch.json
+
 # Исходные макеты кейсов — только на машине Николая. Из cases/ в репозиторий
 # идут лишь case.md и gallery.yaml; картинки для сайта нарезаются
 # в public/assets/cases/<slug>/. Правило от обратного: у кейсов нет единой
