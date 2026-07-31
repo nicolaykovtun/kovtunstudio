@@ -330,8 +330,8 @@ https://design.kovtun.studio
 | `Landing-Kuznitsa dushi` | лендинг + вайрфрейм |
 | `Landing-EVG-Group` | лендинг + вайрфрейм |
 | `Landing-Ektostroy` | лендинг + вайрфрейм |
-| `Green Power` | макеты оклейки машин. Кейс уже есть, но старый, на `cases.yaml` |
-| `Website-EON` | папка пустая, материала нет |
+| `Green Power` | логотип, гайдбук, знаки для этикетки, лендинг с вайрфреймом, макеты оклейки. Стиль собран в `identity-green-power`, лендинг — в `website-green-power`, оклейка — старый кейс на `cases.yaml`. **Осторожно: в папке `Landing` лежат два проекта.** Пара `Design 1920.png` / `Wireframes 1920.png` — это Green Power. Набор `Design - 1920w - …` и `Wireframe - 1920w - …` с поп-апами — это EON Phuket, он попал сюда по ошибке |
+| `Website-EON` | папка пустая, а материал EON лежит в `Green Power/Landing`: 7 макетов страниц, 7 вайрфреймов, 12 поп-апов |
 | `Trubovarnya Eremeev` | только исходники, кейсы собраны в двух соседних папках |
 
 Полные пары «дизайн + вайрфрейм» дают секцию «до — после». Без вайрфреймов кейс
@@ -341,8 +341,8 @@ https://design.kovtun.studio
 
 | Slug | Направление |
 |---|---|
-| `identity-trubovarnya` | фирменный стиль |
-| `website-trubovarnya` | сайт |
+| `identity-green-power`, `identity-trubovarnya` | фирменный стиль |
+| `website-green-power`, `website-trubovarnya` | сайт |
 | `website-japan-shina` | сайт |
 | `website-kapital-inform` | сайт |
 | `presentation-edelweiss`, `presentation-terney-farmer`, `presentation-vmtp` | презентации |

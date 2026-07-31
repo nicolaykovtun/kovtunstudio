@@ -1,0 +1,43 @@
+{
+  "outDir": "public/assets/cases/website-green-power",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/unpublished/Green Power/Landing/Raw/Design 1920.png",
+    "top": 0,
+    "height": 1718,
+    "name": "green-power-website-cover",
+    "background": "#ffffff"
+  },
+  "sources": [
+    {
+      "file": "cases/unpublished/Green Power/Landing/Raw/Design 1920.png",
+      "prefix": "green-power-home",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1718 },
+        { "order": 2, "name": "about", "top": 1718, "bottom": 2789 },
+        { "order": 3, "name": "products", "top": 2789, "bottom": 5515 },
+        { "order": 4, "name": "advantages", "top": 5515, "bottom": 8074 },
+        { "order": 5, "name": "recipes", "top": 8074, "bottom": 10877 },
+        { "order": 6, "name": "telegram", "top": 10877, "bottom": 12082 },
+        { "order": 7, "name": "events", "top": 12082, "bottom": 13493 },
+        { "order": 8, "name": "proof", "top": 13493, "bottom": 15139 },
+        { "order": 9, "name": "philosophy", "top": 15139, "bottom": 16493 },
+        { "order": 10, "name": "team", "top": 16493, "bottom": 17827 },
+        { "order": 11, "name": "map", "top": 17827, "bottom": 19406 },
+        { "order": 12, "name": "footer", "top": 19406, "bottom": 20386 }
+      ]
+    },
+    {
+      "file": "cases/unpublished/Green Power/Landing/Raw/Wireframes 1920.png",
+      "prefix": "green-power-wireframe",
+      "_комментарий": "Резы те же, что у дизайна: оба макета 3840x20386, геометрия совпадает пиксель в пиксель. Нарезаны только четыре блока — те, что стоят парами в секции «до — после».",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1718 },
+        { "order": 3, "name": "products", "top": 2789, "bottom": 5515 },
+        { "order": 4, "name": "advantages", "top": 5515, "bottom": 8074 },
+        { "order": 6, "name": "telegram", "top": 10877, "bottom": 12082 }
+      ]
+    }
+  ]
+}
