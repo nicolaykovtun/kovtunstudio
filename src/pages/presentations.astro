@@ -259,7 +259,6 @@ const presentationCases = (await getCollection('cases', ({ data }) => !data.draf
     return {
       slug: c.slug,
       title: c.shortTitle || c.client,
-      categoryLabel: c.categoryLabel,
       meta: [c.segmentLabel, c.year, c.location].filter(Boolean).join(' · '),
       coverSrc: cover.src,
       coverAlt: cover.alt,
@@ -490,7 +489,6 @@ const faqLd = {
                 />
               </span>
               <span class="pcase__body">
-                <small>{item.categoryLabel}</small>
                 <strong>{item.title}</strong>
                 <span class="pcase__meta">{item.meta}</span>
               </span>

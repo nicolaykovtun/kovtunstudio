@@ -912,14 +912,6 @@
   /* место под стрелку в правом нижнем углу */
   padding-right: 56px;
 }
-.pcase__body small {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--fg-3);
-  font: 700 11px/1.2 var(--font-display);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
 .pcase__body strong {
   display: block;
   margin-bottom: 8px;

@@ -17,7 +17,7 @@ publicationPermission: да
 
 ## Короткое название
 
-Edelweiss Золотой Рог
+Брошюра Edelweiss Золотой Рог
 
 ## Короткое описание
 
