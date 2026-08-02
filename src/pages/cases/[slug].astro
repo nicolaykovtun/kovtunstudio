@@ -75,6 +75,7 @@ function configFromGallery(c: any): EditorialCaseConfig {
     title: group.title,
     intro: group.intro,
     layout: group.layout ?? (group.items.some((item: any) => item.tall) ? 'tall' : 'screens'),
+    ratio: group.ratio,
     theme: 'dark',
     interactive: true,
     items: group.items.map((item: any) => ({
@@ -543,7 +544,9 @@ const cta = config.cta ?? {
                     </div>
                   </div>
                 </div>
-                <div class={`case-gallery${section.group.layout && section.group.layout !== 'default' ? ` case-gallery--${section.group.layout}` : ''}`}>
+                <div
+                  class={`case-gallery${section.group.layout && section.group.layout !== 'default' ? ` case-gallery--${section.group.layout}` : ''}${section.group.ratio ? ' case-gallery--exact' : ''}`}
+                >
                   {section.group.items.map((item) => (
                     <figure>
                       {section.group?.interactive === false ? (
@@ -552,6 +555,7 @@ const cta = config.cta ?? {
                         <button
                           type="button"
                           class="case-gallery-trigger js-lb"
+                          style={section.group?.ratio ? `aspect-ratio: ${section.group.ratio}` : undefined}
                           data-lb-index={item.lightboxIndex}
                           aria-label={`Открыть изображение: ${item.label}`}
                         >
