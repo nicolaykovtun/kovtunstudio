@@ -517,10 +517,21 @@
 }
 .case-gallery--brochure { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .case-gallery--brochure .case-gallery-trigger { aspect-ratio: 2339 / 1654; background: #f2f0eb; }
-.case-gallery--brochure img { object-fit: contain; }
+/* height и aspect-ratio сбрасываем, как в screens и tall: без этого картинка
+   держит базовые 4:3 из .case-gallery img, оказывается ниже плитки, и снизу
+   остается полоса фона. */
+.case-gallery--brochure img {
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
 .case-gallery--portrait { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
 .case-gallery--portrait .case-gallery-trigger { aspect-ratio: 2 / 3; background: #eef2f5; }
-.case-gallery--portrait img { object-fit: contain; }
+.case-gallery--portrait img {
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
 .case-gallery figcaption { padding-top: 10px; color: rgba(255,255,255,.6); font-size: 13px; }
 .case-gallery-trigger {
   position: relative;

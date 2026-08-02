@@ -312,6 +312,10 @@ export const editorialCaseConfigs: Record<string, EditorialCaseConfig> = {
         label: 'БРОШЮРА',
         title: 'Все 38 страниц крупным планом',
         layout: 'portrait',
+        // Страницы брошюры — А4, 210x297: это 0,707, а плитка portrait держит
+        // 2:3, то есть 0,667. Задаем пропорцию под страницу, иначе она
+        // вписывается в плитку с серыми полями сверху и снизу.
+        ratio: '210 / 297',
         theme: 'dark',
         interactive: true,
         items: metallPages,
