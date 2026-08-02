@@ -67,16 +67,16 @@ const editorialCases = editorialEntries.map((entry) => {
 });
 
 const cases = [
-  ...legacyCases.map((c) => {
-    const workCount = gallery.filter(g => g.project === c.slug).length;
-    return {
-      ...c,
-      details: c.vehicles,
-      coverSrc: `/assets/portfolio/thumb/${c.cover}.webp`,
-      coverAlt: c.images.find((image: any) => image.id === c.cover)?.caption ?? c.title,
-      countLabel: `${workCount} ${plural(workCount, 'работа', 'работы', 'работ')}`,
-    };
-  }),
+  // У кейсов оклейки в cases.yaml нет года, поэтому подпись на карточке
+  // пустая: раньше там стояло число ракурсов из gallery.yaml, но это виды
+  // одной работы, а не отдельные работы.
+  ...legacyCases.map((c) => ({
+    ...c,
+    details: c.vehicles,
+    coverSrc: `/assets/portfolio/thumb/${c.cover}.webp`,
+    coverAlt: c.images.find((image: any) => image.id === c.cover)?.caption ?? c.title,
+    countLabel: '',
+  })),
   ...editorialCases,
 ].sort((a, b) => caseOrderIndex(a.slug) - caseOrderIndex(b.slug));
 
@@ -158,7 +158,6 @@ const seoDescription =
         <div class="p-meta reveal" style="--reveal-delay: 180ms">
           <div class="item"><span class="num">{pad(directions.length)}</span><span class="lbl">Направлений работы</span></div>
           <div class="item"><span class="num">{pad(cases.length)}</span><span class="lbl">Проектов в каталоге</span></div>
-          <div class="item"><span class="num">{gallery.length}</span><span class="lbl">Работ крупным планом</span></div>
           <div class="item"><span class="num">{pad(spheres.length)}<span class="accent">+</span></span><span class="lbl">Сфер бизнеса клиентов</span></div>
         </div>
       </div>
@@ -182,7 +181,6 @@ const seoDescription =
                 <span class="dr-name">{d.label}</span>
                 <span class="dr-count">
                   {d.caseCount} {plural(d.caseCount, 'кейс', 'кейса', 'кейсов')}
-                  {d.workCount > 0 && ` · ${d.workCount} ${plural(d.workCount, 'работа', 'работы', 'работ')}`}
                 </span>
                 <span class="dr-arrow" aria-hidden="true">↓</span>
               </a>
@@ -267,7 +265,7 @@ const seoDescription =
               </span>
               <span class="cr-tags">
                 <span class="cr-cat">{c.category}</span>
-                <span class="cr-count">{c.countLabel}</span>
+                {c.countLabel && <span class="cr-count">{c.countLabel}</span>}
               </span>
               <span class="cr-arrow" aria-hidden="true">→</span>
             </a>
@@ -541,7 +539,7 @@ const seoDescription =
   }
   .p-meta {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 32px;
     padding-top: 32px;
     position: relative;

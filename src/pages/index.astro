@@ -52,7 +52,7 @@ const directionContent: Record<
   wrap: {
     text: 'Рекламная, брендовая и имиджевая оклейка коммерческого транспорта. Фургоны, такси, доставка, спецтехника.',
     href: '/car-wrap/',
-    status: (_cases, works) => `От 10 000 ₽ · ${works} ${plural(works, 'работа', 'работы', 'работ')}`,
+    status: (cases) => `От 10 000 ₽ · ${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
   },
 };
 
@@ -66,11 +66,11 @@ const plural = (n: number, one: string, few: string, many: string) => {
   return many;
 };
 
-// Кейсы и работы по направлениям: те же источники, что и в портфолио, —
-// legacy cases.yaml, коллекция из cases/ и gallery.yaml с работами оклейки.
-// Направление без кейсов показывается как «скоро».
+// Кейсы по направлениям: те же источники, что и в портфолио, — legacy
+// cases.yaml и коллекция из cases/. Направление без кейсов показывается
+// как «скоро». Считаем только кейсы: отдельные ракурсы оклейки из
+// gallery.yaml — это виды одной и той же работы, а не разные работы.
 const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 'utf8')) as any[];
-const worksGallery = yaml.load(fs.readFileSync(path.join(dataDir, 'gallery.yaml'), 'utf8')) as any[];
 const editorialEntries = (await getCollection('cases', ({ data }) => !data.draft))
   .filter((entry) => Boolean(entry.data.gallery) || Boolean(editorialCaseConfigs[entry.id]));
 
@@ -86,8 +86,6 @@ for (const entry of editorialEntries) {
 
 const countCases = (key: string) =>
   Object.values(directionOfCase).filter((d) => d === key).length;
-const countWorks = (key: string) =>
-  worksGallery.filter((w) => directionOfCase[w.project] === key).length;
 
 const directions = taxonomy.directions.map((d: any, i: number) => {
   const content = directionContent[d.key];
@@ -99,16 +97,14 @@ const directions = taxonomy.directions.map((d: any, i: number) => {
     text: content.text,
     href: content.href,
     soon: cases === 0,
-    status: cases === 0 ? 'Работы пока не опубликованы' : content.status(cases, countWorks(d.key)),
+    status: cases === 0 ? 'Работы пока не опубликованы' : content.status(cases),
     ctaLabel: cases === 1 ? 'Смотреть кейс' : 'Смотреть направление',
   };
 });
 
 const totalCases = Object.keys(directionOfCase).length;
-const wrapWorks = countWorks('wrap');
 const proofNums =
-  `${totalCases} ${plural(totalCases, 'разобранный кейс', 'разобранных кейса', 'разобранных кейсов')}` +
-  ` и ${wrapWorks} ${plural(wrapWorks, 'работа', 'работы', 'работ')} по оклейке в портфолио.`;
+  `${totalCases} ${plural(totalCases, 'разобранный кейс', 'разобранных кейса', 'разобранных кейсов')} в портфолио.`;
 
 const publishedCount = directions.filter((d: any) => !d.soon).length;
 const numeralDative = ['нулю', 'одному', 'двум', 'трем', 'четырем', 'пяти'];
