@@ -113,6 +113,10 @@ nav:
       - href: "/portfolio/?direction=identity"
         label: "Логотип и фирменный стиль"
         desc: "Знак, палитра, гайдлайны бренда"
+        # Обложка гайдбука Green Power: ровно 16:9, как рамка превью, поэтому
+        # заполняет ее без полей. Плашка «Скоро» показывается, только когда
+        # у направления нет картинки, — у упаковки кейсов еще нет.
+        image: /assets/cases/identity-green-power/thumb/green-power-guidebook-01-cover-thumbnail.webp
       - href: "/portfolio/?direction=web"
         label: Сайты
         desc: "Лендинги и сайты для бизнеса"
