@@ -5,6 +5,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import FAQ from '../../components/FAQ.astro';
 import site from '../../lib/site';
 
 export async function getStaticPaths() {
@@ -107,18 +108,6 @@ const structuredData = [ldArticle, ...(ldFaq ? [ldFaq] : []), ldBreadcrumbs];
         <Content />
       </article>
 
-      {d.faq.length > 0 && (
-        <section class="post-faq" aria-label="Частые вопросы">
-          <h2>Частые вопросы</h2>
-          {d.faq.map((item) => (
-            <details>
-              <summary>{item.q}</summary>
-              <p>{item.a}</p>
-            </details>
-          ))}
-        </section>
-      )}
-
       <aside class="post-cta">
         <h2>Делаю первое звено цепочки</h2>
         <p>
@@ -132,6 +121,10 @@ const structuredData = [ldArticle, ...(ldFaq ? [ldFaq] : []), ldBreadcrumbs];
         </p>
       </aside>
     </div>
+
+    {d.faq.length > 0 && (
+      <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={d.faq} />
+    )}
   </main>
 
   <Footer {...site.footer} />
@@ -200,23 +193,6 @@ const structuredData = [ldArticle, ...(ldFaq ? [ldFaq] : []), ldBreadcrumbs];
     vertical-align: top;
   }
   .post-content :global(th) { font-weight: 600; }
-  .post-faq { margin-top: 48px; }
-  .post-faq h2 { margin: 0 0 18px; font-size: clamp(21px, 2.6vw, 27px); }
-  .post-faq details {
-    border-bottom: 1px solid var(--line-strong);
-    padding: 14px 0;
-  }
-  .post-faq summary {
-    cursor: pointer;
-    font: var(--t-body-l);
-    font-weight: 600;
-  }
-  .post-faq p {
-    margin: 12px 0 4px;
-    font: var(--t-body);
-    line-height: 1.6;
-    color: var(--ks-charcoal);
-  }
   .post-cta {
     margin-top: 56px;
     padding: 28px;
