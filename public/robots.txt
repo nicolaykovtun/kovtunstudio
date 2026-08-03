@@ -4,17 +4,11 @@
 User-agent: *
 Allow: /
 Disallow: /assets/portfolio/original/
-Disallow: /assets/tier-basic/original/
-Disallow: /assets/tier-extended/original/
-Disallow: /assets/tier-image/original/
 
 # Яндекс
 User-agent: Yandex
 Allow: /
 Disallow: /assets/portfolio/original/
-Disallow: /assets/tier-basic/original/
-Disallow: /assets/tier-extended/original/
-Disallow: /assets/tier-image/original/
 Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content
 
 Sitemap: https://design.kovtun.studio/sitemap-index.xml
