@@ -98,7 +98,7 @@ publicationPermission: да, без личных данных
 ## Ссылки и источники
 
 - Сайт клиента: https://greenpowerrussia.com/
-- Папка с исходниками: cases/unpublished/Green Power/Logo, cases/unpublished/Green Power/Guidebook
+- Папка с исходниками: cases/published/Green Power - Identity/source/Logo, cases/published/Green Power - Identity/source/Guidebook
 - Кейс оклейки автопарка: /cases/green-power/
 
 ## Комментарии для публикации

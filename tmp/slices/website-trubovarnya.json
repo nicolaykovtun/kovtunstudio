@@ -3,7 +3,7 @@
   "fullWidth": 1440,
   "thumbWidth": 640,
   "cover": {
-    "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Home.jpg",
+    "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Home.jpg",
     "top": 0,
     "height": 1392,
     "name": "trubovarnya-website-cover",
@@ -11,7 +11,7 @@
   },
   "sources": [
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Home.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Home.jpg",
       "prefix": "trubovarnya-home",
       "blocks": [
         { "name": "hero", "top": 0, "bottom": 1550 },
@@ -24,7 +24,7 @@
       ]
     },
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Wireframes - 1920px - Home.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Wireframes - 1920px - Home.jpg",
       "prefix": "trubovarnya-wireframe",
       "blocks": [
         { "name": "hero", "top": 0, "bottom": 1550 },
@@ -37,27 +37,27 @@
       ]
     },
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Услуги.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Услуги.jpg",
       "prefix": "trubovarnya-page",
       "blocks": [{ "name": "services", "order": 1 }]
     },
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Комбинированные  системы отопления.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Комбинированные  системы отопления.jpg",
       "prefix": "trubovarnya-page",
       "blocks": [{ "name": "service", "order": 2 }]
     },
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Реализованные проекты.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Реализованные проекты.jpg",
       "prefix": "trubovarnya-page",
       "blocks": [{ "name": "projects", "order": 3 }]
     },
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Проект 1.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Проект 1.jpg",
       "prefix": "trubovarnya-page",
       "blocks": [{ "name": "project", "order": 4 }]
     },
     {
-      "file": "cases/unpublished/Trubovarnya Eremeev/Website/Raw/Design - 1920px - Контакты.jpg",
+      "file": "cases/published/Trubovarnya Eremeev - Website/source/Website/Raw/Design - 1920px - Контакты.jpg",
       "prefix": "trubovarnya-page",
       "blocks": [{ "name": "contacts", "order": 5 }]
     }

@@ -79,18 +79,18 @@ for (const source of sources) {
 
 // Обложка 16:9: верхняя часть указанного макета, обрезанная по центру.
 if (config.cover) {
-  const { file, top = 0, height, name } = config.cover;
+  const { file, top = 0, height, name, fit = 'contain' } = config.cover;
   const meta = await sharp(file, { limitInputPixels: false }).metadata();
   const cropHeight = height ?? Math.round((meta.width / 16) * 9);
   const coverPath = path.join(outDir, `${name}.webp`);
-  // fit contain, а не cover: обложка не должна резать макет по краям и не должна
-  // захватывать половину соседнего блока. Недостающее добираем фоном.
+  // По умолчанию contain: обложка не режет макет по краям. Для широкого
+  // первого экрана можно явно включить cover в конфиге и кадрировать края.
   await sharp(file, { limitInputPixels: false })
     .extract({ left: 0, top, width: meta.width, height: cropHeight })
     .resize({
       width: 1600,
       height: 900,
-      fit: 'contain',
+      fit,
       background: config.cover.background ?? '#ffffff',
     })
     .webp({ quality: 84 })

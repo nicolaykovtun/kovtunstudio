@@ -1,0 +1,40 @@
+{
+  "outDir": "public/assets/cases/website-ptksk",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/published/PTKSK - Website/source/Landing/Raw/Design - 1920 v2.jpg",
+    "top": 0,
+    "height": 1515,
+    "name": "ptksk-website-cover",
+    "fit": "cover",
+    "background": "#003D7C"
+  },
+  "sources": [
+    {
+      "file": "cases/published/PTKSK - Website/source/Landing/Raw/Design - 1920 v2.jpg",
+      "prefix": "ptksk-home",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1515 },
+        { "order": 2, "name": "numbers-and-benefits", "top": 1515, "bottom": 4120 },
+        { "order": 3, "name": "services", "top": 4120, "bottom": 6835 },
+        { "order": 4, "name": "advantages", "top": 6835, "bottom": 8620 },
+        { "order": 5, "name": "projects", "top": 8620, "bottom": 10250 },
+        { "order": 6, "name": "about", "top": 10250, "bottom": 12000 },
+        { "order": 7, "name": "partners-and-presentation", "top": 12000, "bottom": 14890 },
+        { "order": 8, "name": "faq", "top": 14890, "bottom": 15900 },
+        { "order": 9, "name": "contacts", "top": 15900, "bottom": 19425 }
+      ]
+    },
+    {
+      "file": "cases/published/PTKSK - Website/source/Landing/Raw/Design - PopUp - Бесплатную консультация.jpg",
+      "prefix": "ptksk-popup",
+      "blocks": [{ "order": 1, "name": "consultation" }]
+    },
+    {
+      "file": "cases/published/PTKSK - Website/source/Landing/Raw/Design - PopUp - Рассчитаем стоимость вашего объекта.jpg",
+      "prefix": "ptksk-popup",
+      "blocks": [{ "order": 2, "name": "estimate" }]
+    }
+  ]
+}

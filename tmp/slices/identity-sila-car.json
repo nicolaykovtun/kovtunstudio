@@ -1,0 +1,70 @@
+{
+  "outDir": "public/assets/cases/identity-sila-car",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car.jpg",
+    "top": 0,
+    "height": 4500,
+    "name": "sila-car-identity-cover",
+    "background": "#101820"
+  },
+  "sources": [
+    {
+      "file": "tmp/derived/sila-car/logo-main.png",
+      "prefix": "sila-car-logo",
+      "blocks": [{ "name": "main", "order": 1 }]
+    },
+    {
+      "file": "tmp/derived/sila-car/logo-on-red.png",
+      "prefix": "sila-car-logo",
+      "blocks": [{ "name": "on-red", "order": 2 }]
+    },
+    {
+      "file": "tmp/derived/sila-car/logo-on-gray.png",
+      "prefix": "sila-car-logo",
+      "blocks": [{ "name": "on-gray", "order": 3 }]
+    },
+    {
+      "file": "tmp/derived/sila-car/logo-mono-light.png",
+      "prefix": "sila-car-logo",
+      "blocks": [{ "name": "mono-light", "order": 4 }]
+    },
+    {
+      "file": "tmp/derived/sila-car/logo-mono-dark.png",
+      "prefix": "sila-car-logo",
+      "blocks": [{ "name": "mono-dark", "order": 5 }]
+    },
+
+    {
+      "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car.jpg",
+      "prefix": "sila-car-guidebook",
+      "blocks": [{ "name": "cover", "order": 1 }]
+    },
+    {
+      "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car2.jpg",
+      "prefix": "sila-car-guidebook",
+      "blocks": [{ "name": "safe-area", "order": 2 }]
+    },
+    {
+      "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car3.jpg",
+      "prefix": "sila-car-guidebook",
+      "blocks": [{ "name": "versions", "order": 3 }]
+    },
+    {
+      "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car4.jpg",
+      "prefix": "sila-car-guidebook",
+      "blocks": [{ "name": "colors", "order": 4 }]
+    },
+    {
+      "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car5.jpg",
+      "prefix": "sila-car-guidebook",
+      "blocks": [{ "name": "type", "order": 5 }]
+    },
+    {
+      "file": "cases/published/Sila Car - Identity/source/Guidebook/Guidebook-Sila.car6.jpg",
+      "prefix": "sila-car-guidebook",
+      "blocks": [{ "name": "banner", "order": 6 }]
+    }
+  ]
+}

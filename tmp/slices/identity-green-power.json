@@ -3,7 +3,7 @@
   "fullWidth": 1440,
   "thumbWidth": 640,
   "cover": {
-    "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_1.jpg",
+    "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_1.jpg",
     "top": 0,
     "height": 3000,
     "name": "green-power-identity-cover",
@@ -37,48 +37,48 @@
     },
 
     {
-      "file": "cases/unpublished/Green Power/Logo/Raw/ПРОИЗВЕДЕНО В ПРИМОРЬЕ v1.jpg",
+      "file": "cases/published/Green Power - Identity/source/Logo/Raw/ПРОИЗВЕДЕНО В ПРИМОРЬЕ v1.jpg",
       "prefix": "green-power-mark",
       "blocks": [{ "name": "primorye", "order": 1 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Logo/Raw/ПРОИЗВЕДЕНО В ПРИМОРЬЕ v2.jpg",
+      "file": "cases/published/Green Power - Identity/source/Logo/Raw/ПРОИЗВЕДЕНО В ПРИМОРЬЕ v2.jpg",
       "prefix": "green-power-mark",
       "blocks": [{ "name": "primorye-open", "order": 2 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Logo/Raw/Без ГМО.jpg",
+      "file": "cases/published/Green Power - Identity/source/Logo/Raw/Без ГМО.jpg",
       "prefix": "green-power-mark",
       "blocks": [{ "name": "non-gmo", "order": 3 }]
     },
 
     {
-      "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_1.jpg",
+      "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_1.jpg",
       "prefix": "green-power-guidebook",
       "blocks": [{ "name": "cover", "order": 1 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_2.jpg",
+      "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_2.jpg",
       "prefix": "green-power-guidebook",
       "blocks": [{ "name": "safe-area", "order": 2 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_3.jpg",
+      "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_3.jpg",
       "prefix": "green-power-guidebook",
       "blocks": [{ "name": "versions", "order": 3 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_4.jpg",
+      "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_4.jpg",
       "prefix": "green-power-guidebook",
       "blocks": [{ "name": "misuse", "order": 4 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_5.jpg",
+      "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_5.jpg",
       "prefix": "green-power-guidebook",
       "blocks": [{ "name": "colors", "order": 5 }]
     },
     {
-      "file": "cases/unpublished/Green Power/Guidebook/Raw/Guidebook-Green Power_Страница_6.jpg",
+      "file": "cases/published/Green Power - Identity/source/Guidebook/Raw/Guidebook-Green Power_Страница_6.jpg",
       "prefix": "green-power-guidebook",
       "blocks": [{ "name": "type", "order": 6 }]
     }

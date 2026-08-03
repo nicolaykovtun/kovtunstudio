@@ -38,6 +38,7 @@ assets/**/original/
 # в путях. Первый уровень тоже оставлен: кейс, забытый в корне cases/, все равно
 # попадет в репозиторий, а не потеряется молча.
 cases/**
+!cases/README.md
 !cases/*/
 !cases/*/case.md
 !cases/*/gallery.yaml

@@ -98,7 +98,7 @@ publicationPermission: да, без имени владельца
 ## Ссылки и источники
 
 - Сайт клиента: был запущен на trubovarnya.ru, на момент публикации не работает
-- Папка с исходниками: cases/unpublished/Trubovarnya Eremeev/Website
+- Папка с исходниками: cases/published/Trubovarnya Eremeev - Website/source/Website
 - Соседний кейс: /cases/identity-trubovarnya/
 
 ## Комментарии для публикации

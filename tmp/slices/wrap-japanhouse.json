@@ -4,7 +4,7 @@
   "thumbWidth": 640,
   "sources": [
     {
-      "file": "cases/unpublished/CarWrap-Japan House/Probox 2017-3.jpg",
+      "file": "cases/published/CarWrap-Japan House/Probox 2017-3.jpg",
       "prefix": "japanhouse-print",
       "blocks": [{ "name": "probox", "order": 1 }]
     }

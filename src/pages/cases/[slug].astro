@@ -269,23 +269,51 @@ const lightboxItems = groups
   .map((item) => ({ src: item.src, thumb: item.thumb, label: item.label }));
 
 // Соседние кейсы того же клиента: в gallery.yaml лежит только slug, заголовок
-// и обложку берем из самой коллекции, чтобы они не расходились с кейсом.
+// и обложку берем из источника данных, чтобы они не расходились с кейсом.
+// Пять старых кейсов оклейки живут не в content collection, а в cases.yaml,
+// поэтому индекс объединяет оба источника.
 const relatedPool = await getCollection('cases', ({ data }) => !data.draft);
-const relatedIndex = new Map(relatedPool.map((entry) => [entry.id, entry.data]));
+const relatedLegacyPool = yaml.load(
+  fs.readFileSync(path.join(dataDir, 'cases.yaml'), 'utf8'),
+) as any[];
+const relatedIndex = new Map<
+  string,
+  { title: string; cover?: string; coverAlt?: string }
+>();
+
+for (const entry of relatedPool) {
+  const target = entry.data;
+  const gallery = target.gallery as any;
+  relatedIndex.set(entry.id, {
+    title: target.shortTitle || target.title,
+    cover: gallery ? `${gallery.assetRoot}/${gallery.cover.src}` : undefined,
+    coverAlt: gallery?.cover.alt ?? target.shortTitle,
+  });
+}
+
+for (const target of relatedLegacyPool) {
+  relatedIndex.set(target.slug, {
+    title: target.name || target.title,
+    cover: `/assets/portfolio/thumb/${target.cover}.webp`,
+    coverAlt:
+      target.images.find((image: any) => image.id === target.cover)?.caption ??
+      target.title,
+  });
+}
+
 const relatedCases = (config.related?.items ?? [])
   .map((item) => {
     const target = relatedIndex.get(item.slug);
     if (!target) {
       throw new Error(`Кейс ${c.slug}: в related указан неизвестный slug «${item.slug}»`);
     }
-    const gallery = target.gallery as any;
     return {
       href: `/cases/${item.slug}/`,
       label: item.label,
       text: item.text,
-      title: target.shortTitle || target.title,
-      cover: gallery ? `${gallery.assetRoot}/${gallery.cover.src}` : undefined,
-      coverAlt: gallery?.cover.alt ?? target.shortTitle,
+      title: target.title,
+      cover: target.cover,
+      coverAlt: target.coverAlt,
     };
   });
 

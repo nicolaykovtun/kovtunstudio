@@ -100,7 +100,7 @@ publicationPermission: да, без личных данных
 ## Ссылки и источники
 
 - Сайт клиента: был запущен на greenpowersd.ru, сейчас домен ведет на другую сборку
-- Папка с исходниками: cases/unpublished/Green Power/Landing
+- Папка с исходниками: cases/published/Green Power - Website/source/Landing
 - Соседний кейс: /cases/identity-green-power/
 
 ## Комментарии для публикации

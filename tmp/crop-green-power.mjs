@@ -19,7 +19,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const root = 'cases/unpublished/Green Power';
+const root = 'cases/published/Green Power - Identity/source';
 const guidebookVersions = path.join(root, 'Guidebook/Raw/Guidebook-Green Power_Страница_3.jpg');
 const logoSheet = path.join(root, 'Logo/Raw/Logo-Green Power-1.jpg');
 const outDir = 'tmp/derived/green-power';

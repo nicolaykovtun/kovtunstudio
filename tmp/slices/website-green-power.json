@@ -3,7 +3,7 @@
   "fullWidth": 1440,
   "thumbWidth": 640,
   "cover": {
-    "file": "cases/unpublished/Green Power/Landing/Raw/Design 1920.png",
+    "file": "cases/published/Green Power - Website/source/Landing/Raw/Design 1920.png",
     "top": 0,
     "height": 1718,
     "name": "green-power-website-cover",
@@ -11,7 +11,7 @@
   },
   "sources": [
     {
-      "file": "cases/unpublished/Green Power/Landing/Raw/Design 1920.png",
+      "file": "cases/published/Green Power - Website/source/Landing/Raw/Design 1920.png",
       "prefix": "green-power-home",
       "blocks": [
         { "order": 1, "name": "hero", "top": 0, "bottom": 1718 },
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "file": "cases/unpublished/Green Power/Landing/Raw/Wireframes 1920.png",
+      "file": "cases/published/Green Power - Website/source/Landing/Raw/Wireframes 1920.png",
       "prefix": "green-power-wireframe",
       "_комментарий": "Резы те же, что у дизайна: оба макета 3840x20386, геометрия совпадает пиксель в пиксель. Нарезаны только четыре блока — те, что стоят парами в секции «до — после».",
       "blocks": [

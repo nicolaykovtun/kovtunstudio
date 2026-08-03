@@ -28,9 +28,11 @@
 
 - [Фирменный стиль Green Power](https://design.kovtun.studio/cases/identity-green-power/): знак-дерево в пяти исполнениях, гайдбук на 8 страниц, знаки для этикетки. Производство здорового питания
 - [Фирменный стиль Трубоварни Еремеевой](https://design.kovtun.studio/cases/identity-trubovarnya/): логотип в пяти исполнениях и гайдбук с правилами для печати. Монтаж систем отопления
+- [Фирменный стиль Sila Car](https://design.kovtun.studio/cases/identity-sila-car/): спорткар в пяти исполнениях, палитра Pantone и гайдбук с макетами баннера и режимника
 
 ## Кейсы: сайты
 
+- [Сайт ПТК «Стройконструкция»](https://design.kovtun.studio/cases/website-ptksk/): лендинг производителя металлоконструкций с четырьмя услугами, проектами и двумя сценариями заявки
 - [Сайт Green Power](https://design.kovtun.studio/cases/website-green-power/): одностраничник на 12 блоков для производителя сыродавленных масел, вайрфрейм и сборка на WordPress
 - [Сайт Трубоварни Еремеевой](https://design.kovtun.studio/cases/website-trubovarnya/): шесть страниц, бюджет и срок каждого объекта видны до звонка
 - [Сайт Japan Шина](https://design.kovtun.studio/cases/website-japan-shina/): подбор шин и дисков за пять минут, три формы подбора
