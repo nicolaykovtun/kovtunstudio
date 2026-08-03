@@ -247,6 +247,8 @@ const blog = defineCollection({
     title: z.string(),
     seoTitle: z.string().optional(),
     description: z.string(),
+    cover: z.string().optional(),
+    coverAlt: z.string().optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     section: z.string(),
