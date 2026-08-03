@@ -1,0 +1,134 @@
+---
+// Список статей блога. Схема — CollectionPage со списком BlogPosting.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import site from '../../lib/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const title = 'Статьи о дизайне для бизнеса · Kovtun.studio';
+const description =
+  'Практика студии: оклейка и брендирование авто, фирменный стиль, сайты и презентации. ' +
+  'Реальные цены, сроки и разборы проектов от Николая Ковтуна.';
+
+const dateFmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const ldCollection = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Статьи Kovtun.studio',
+  description,
+  url: `${site.url}/blog/`,
+  inLanguage: 'ru',
+  hasPart: posts.map((post) => ({
+    '@type': 'BlogPosting',
+    headline: post.data.title,
+    url: `${site.url}/blog/${post.id}/`,
+    datePublished: post.data.pubDate.toISOString().split('T')[0],
+  })),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath="/blog/"
+  ogTitle={title}
+  ogDescription={description}
+  structuredData={[ldCollection]}
+>
+  <Header
+    nav={site.nav}
+    phone={site.contact.phone}
+    phoneTel={site.contact.phoneTel}
+    telegramUrl={site.contact.telegram}
+    maxUrl={site.contact.max}
+  />
+
+  <main id="main-content" class="blog-page">
+    <div class="container-wide blog-shell">
+      <header class="blog-hero">
+        <p class="blog-eyebrow">Статьи</p>
+        <h1>Практика дизайна для бизнеса</h1>
+        <p class="blog-intro">
+          Разборы реальных проектов студии: цены, сроки, ошибки и выводы.
+          Без теории ради теории — только то, что проверено работой.
+        </p>
+      </header>
+
+      <div class="blog-list">
+        {posts.map((post) => (
+          <article class="blog-card">
+            <p class="blog-card-meta">
+              <span>{post.data.section}</span>
+              <time datetime={post.data.pubDate.toISOString().split('T')[0]}>
+                {dateFmt.format(post.data.pubDate)}
+              </time>
+            </p>
+            <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
+            <p class="blog-card-desc">{post.data.description}</p>
+            <a class="blog-card-more" href={`/blog/${post.id}/`}>Читать статью</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer {...site.footer} />
+</BaseLayout>
+
+<style>
+  .blog-shell {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-block: clamp(32px, 6vw, 72px);
+  }
+  .blog-eyebrow {
+    font: var(--t-overline);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ks-grey);
+    margin: 0 0 12px;
+  }
+  .blog-hero h1 {
+    margin: 0 0 14px;
+    font-size: clamp(28px, 4.5vw, 44px);
+    line-height: 1.15;
+  }
+  .blog-intro {
+    font: var(--t-body-l);
+    line-height: 1.6;
+    color: var(--ks-charcoal);
+    margin: 0 0 44px;
+    max-width: 60ch;
+  }
+  .blog-card {
+    border-top: 1px solid var(--line-strong);
+    padding: 26px 0 30px;
+  }
+  .blog-card-meta {
+    display: flex;
+    gap: 16px;
+    font: var(--t-caption);
+    color: var(--ks-grey);
+    margin: 0 0 10px;
+  }
+  .blog-card h2 {
+    margin: 0 0 10px;
+    font-size: clamp(20px, 2.6vw, 26px);
+    line-height: 1.25;
+  }
+  .blog-card h2 a { color: inherit; text-decoration: none; }
+  .blog-card h2 a:hover { color: var(--fg-accent); }
+  .blog-card-desc {
+    font: var(--t-body);
+    line-height: 1.6;
+    margin: 0 0 14px;
+    max-width: 64ch;
+  }
+  .blog-card-more { font-weight: 600; }
+</style>

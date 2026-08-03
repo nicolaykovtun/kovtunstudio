@@ -1,0 +1,235 @@
+---
+// Страница статьи блога. Контент — из коллекции blog (src/content/blog/*.md).
+// JSON-LD: BlogPosting + FAQPage (из шапки статьи) + BreadcrumbList.
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import site from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+
+const canonicalPath = `/blog/${post.id}/`;
+const pageUrl = new URL(canonicalPath, `${site.url}/`).toString();
+const pageTitle = `${d.seoTitle ?? d.title} · Kovtun.studio`;
+
+const dateFmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const published = dateFmt.format(d.pubDate);
+const isoDate = (value: Date) => value.toISOString().split('T')[0];
+
+const ldArticle = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: d.title,
+  description: d.description,
+  inLanguage: 'ru',
+  datePublished: isoDate(d.pubDate),
+  dateModified: isoDate(d.updatedDate ?? d.pubDate),
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  articleSection: d.section,
+  author: {
+    '@type': 'Person',
+    name: site.author.name,
+    jobTitle: site.author.jobTitle,
+    url: `${site.url}/`,
+    sameAs: [site.contact.telegram],
+  },
+  publisher: { '@id': `${site.url}/#business` },
+};
+
+const ldFaq = d.faq.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: d.faq.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    }
+  : null;
+
+const ldBreadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Статьи', item: `${site.url}/blog/` },
+    { '@type': 'ListItem', position: 3, name: d.title, item: pageUrl },
+  ],
+};
+
+const structuredData = [ldArticle, ...(ldFaq ? [ldFaq] : []), ldBreadcrumbs];
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={d.description}
+  canonicalPath={canonicalPath}
+  ogTitle={pageTitle}
+  ogDescription={d.description}
+  ogType="article"
+  structuredData={structuredData}
+>
+  <Header
+    nav={site.nav}
+    phone={site.contact.phone}
+    phoneTel={site.contact.phoneTel}
+    telegramUrl={site.contact.telegram}
+    maxUrl={site.contact.max}
+  />
+
+  <main id="main-content" class="post-page">
+    <div class="container-wide post-shell">
+      <nav class="post-breadcrumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a>
+        <span aria-hidden="true">/</span>
+        <a href="/blog/">Статьи</a>
+      </nav>
+
+      <header class="post-hero">
+        <p class="post-eyebrow">{d.section}</p>
+        <h1>{d.title}</h1>
+        <p class="post-meta">
+          <span>{site.author.name}, {site.author.jobTitle.toLowerCase()}</span>
+          <time datetime={isoDate(d.pubDate)}>{published}</time>
+        </p>
+      </header>
+
+      <article class="post-content">
+        <Content />
+      </article>
+
+      {d.faq.length > 0 && (
+        <section class="post-faq" aria-label="Частые вопросы">
+          <h2>Частые вопросы</h2>
+          {d.faq.map((item) => (
+            <details>
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </section>
+      )}
+
+      <aside class="post-cta">
+        <h2>Делаю первое звено цепочки</h2>
+        <p>
+          Дизайн — моя часть работы: макеты под печать, которые производство
+          берет без доработок. Работаю удаленно по всей России, по запросу
+          подскажу проверенных печатников и оклейщиков во Владивостоке.
+        </p>
+        <p class="post-cta-links">
+          <a class="btn btn-primary" href={d.serviceLink}>{d.serviceLabel}</a>
+          {d.caseLink && <a class="post-cta-case" href={d.caseLink}>{d.caseLabel}</a>}
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <Footer {...site.footer} />
+</BaseLayout>
+
+<style>
+  .post-shell {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-block: clamp(32px, 6vw, 72px);
+  }
+  .post-breadcrumbs {
+    display: flex;
+    gap: 10px;
+    font: var(--t-caption);
+    color: var(--ks-grey);
+    margin-bottom: 28px;
+  }
+  .post-breadcrumbs a { color: inherit; }
+  .post-eyebrow {
+    font: var(--t-overline);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ks-grey);
+    margin: 0 0 12px;
+  }
+  .post-hero h1 {
+    margin: 0 0 16px;
+    font-size: clamp(28px, 4.5vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font: var(--t-body-s);
+    color: var(--ks-grey);
+    margin: 0 0 36px;
+  }
+  .post-content :global(h2) {
+    margin: 44px 0 14px;
+    font-size: clamp(21px, 2.6vw, 27px);
+    line-height: 1.25;
+  }
+  .post-content :global(p),
+  .post-content :global(li) {
+    font: var(--t-body-l);
+    line-height: 1.65;
+  }
+  .post-content :global(p) { margin: 0 0 16px; }
+  .post-content :global(ul),
+  .post-content :global(ol) { padding-left: 22px; margin: 0 0 16px; }
+  .post-content :global(li) { margin-bottom: 8px; }
+  .post-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 24px;
+    font: var(--t-body-s);
+  }
+  .post-content :global(th),
+  .post-content :global(td) {
+    border-bottom: 1px solid var(--line-strong);
+    padding: 10px 12px 10px 0;
+    text-align: left;
+    vertical-align: top;
+  }
+  .post-content :global(th) { font-weight: 600; }
+  .post-faq { margin-top: 48px; }
+  .post-faq h2 { margin: 0 0 18px; font-size: clamp(21px, 2.6vw, 27px); }
+  .post-faq details {
+    border-bottom: 1px solid var(--line-strong);
+    padding: 14px 0;
+  }
+  .post-faq summary {
+    cursor: pointer;
+    font: var(--t-body-l);
+    font-weight: 600;
+  }
+  .post-faq p {
+    margin: 12px 0 4px;
+    font: var(--t-body);
+    line-height: 1.6;
+    color: var(--ks-charcoal);
+  }
+  .post-cta {
+    margin-top: 56px;
+    padding: 28px;
+    background: var(--ks-paper);
+    border-radius: 16px;
+  }
+  .post-cta h2 { margin: 0 0 10px; font-size: clamp(19px, 2.2vw, 24px); }
+  .post-cta p { margin: 0 0 16px; font: var(--t-body); line-height: 1.6; }
+  .post-cta-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+  .post-cta-case { font-weight: 600; }
+</style>

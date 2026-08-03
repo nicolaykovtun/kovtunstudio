@@ -53,6 +53,11 @@
 - [Japan Line](https://design.kovtun.studio/cases/japan-line/): название во весь борт, автомобили под заказ из Японии
 - [Sila Car](https://design.kovtun.studio/cases/sila-car/): рекламная оклейка, автотехника с аукционов Японии
 
+## Статьи
+
+- [Все статьи](https://design.kovtun.studio/blog/): разборы реальных проектов студии: цены, сроки, ошибки и выводы
+- [Дизайн, печать и поклейка: почему рекламу на авто делают три разных подрядчика](https://design.kovtun.studio/blog/dizajn-pechat-poklejka-reklamy-na-avto/): из чего складывается брендирование авто, цены и сроки трех этапов на примере фургона Green Power, разбор ошибки дизайнера в 50 см
+
 ## Разделы страниц
 
 - [Что делаю](https://design.kovtun.studio/car-wrap/#what): виды оклейки: рекламная, брендовая, имиджевая

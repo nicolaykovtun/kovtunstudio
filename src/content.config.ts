@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 import type { Loader } from 'astro/loaders';
 
 import { parseCaseBody } from './lib/case-content';
@@ -238,4 +239,24 @@ const cases = defineCollection({
   }),
 });
 
-export const collections = { cases };
+// Статьи блога под AI-SEO. Файл = статья, имя файла = slug (/blog/<slug>/).
+// FAQ живет в шапке: страница рендерит из него и видимый блок, и FAQPage schema.
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    seoTitle: z.string().optional(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    section: z.string(),
+    serviceLink: z.string(),
+    serviceLabel: z.string(),
+    caseLink: z.string().optional(),
+    caseLabel: z.string().optional(),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { cases, blog };
