@@ -38,7 +38,11 @@
   --ks-white:       #FFFFFF;   /* CANVAS — default page                    */
 
   /* ---------- Greyscale (user-supplied) ------------------------------- */
-  --ks-grey:        #87888A;   /* mid neutral / secondary text             */
+  /* Был #87888A — на белом это 3,55:1, на светло-серых подложках 3,25:1,
+     то есть ниже нормы 4,5:1 для обычного текста (WCAG AA). Затемнен до
+     минимума, который проходит на обоих фонах: 5,03 на белом, 4,61 на #F5F5F5.
+     Питает только --fg-3; в темной теме --fg-3 задан отдельно. */
+  --ks-grey:        #6E6F71;   /* mid neutral / secondary text             */
   --ks-grey-300:    #B1B3B4;   /* dividers, disabled                       */
   --ks-paper:       #F5F5F5;   /* alt surface                              */
   --ks-black:       #000000;

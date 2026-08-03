@@ -100,7 +100,12 @@ const isItemActive = (item: NavItem) =>
     </div>
   </div>
 
-  <div class="card-nav-panel" id="card-nav-panel" aria-hidden="true">
+  <!-- Закрытая панель свернута через height: 0 и overflow: hidden, но ссылки
+       внутри остаются в потоке и ловят фокус табом. Для aria-hidden это
+       нарушение: скринридер элемент не видит, а фокус в него попадает.
+       Атрибут inert выключает и фокус, и дерево доступности; JS снимает его
+       при открытии. -->
+  <div class="card-nav-panel" id="card-nav-panel" aria-hidden="true" inert>
     <div class="card-nav-panel__inner container-wide">
       <div class="nav-card nav-card--dark">
         <div class="nav-card__label">Навигация</div>
@@ -177,6 +182,7 @@ const isItemActive = (item: NavItem) =>
       toggle.classList.toggle('is-open', isOpen);
       toggle.setAttribute('aria-expanded', String(isOpen));
       panel.setAttribute('aria-hidden', String(!isOpen));
+      panel.toggleAttribute('inert', !isOpen);
       panel.classList.toggle('is-open', isOpen);
       if (isOpen) {
         openPanel();
@@ -193,6 +199,7 @@ const isItemActive = (item: NavItem) =>
         toggle.classList.remove('is-open');
         toggle.setAttribute('aria-expanded', 'false');
         panel.setAttribute('aria-hidden', 'true');
+        panel.setAttribute('inert', '');
         panel.classList.remove('is-open');
         closePanel();
       });
