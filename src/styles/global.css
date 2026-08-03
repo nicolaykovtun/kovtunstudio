@@ -957,8 +957,10 @@ body.lightbox-locked { overflow: hidden; }
 .tier:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
 
 /* example image on top of tier */
+/* Пример работы в карточке тарифа — один снимок из портфолио. Рамка 16:9
+   под пропорцию этих снимков (~1,8), поэтому обрезка не больше 3%. */
 .tier .tier-example {
-  aspect-ratio: 4/3;
+  aspect-ratio: 16/9;
   background: var(--ks-charcoal);
   position: relative;
   overflow: hidden;
@@ -1613,3 +1615,72 @@ html.js-reveal .reveal.is-visible {
     transition: none;
   }
 }
+
+/* ─── Карточки кейсов на лендингах направлений ────────────────────────
+   Обложка кейса ведет на разбор проекта целиком. Используются на двух
+   лендингах: /presentations/ и /car-wrap/. На обоих раньше висела сетка
+   отдельных картинок в лайтбоксе — слайды одной презентации и ракурсы
+   оклейки. Кейс полезнее: из него видно задачу и решение. */
+.pcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.pcase {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  color: inherit;
+  text-decoration: none;
+  background: var(--bg-1);
+  border: 1px solid var(--line-2);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.pcase:hover,
+.pcase:focus-visible { border-color: var(--ks-red); transform: translateY(-3px); }
+.pcase__media { display: block; overflow: hidden; background: var(--bg-2); }
+.pcase__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.pcase:hover .pcase__media img { transform: scale(1.03); }
+.pcase__body {
+  display: block;
+  padding: 22px 24px 24px;
+  /* место под стрелку в правом нижнем углу */
+  padding-right: 56px;
+}
+.pcase__body strong {
+  display: block;
+  margin-bottom: 8px;
+  font: 780 21px/1.2 var(--font-display);
+  letter-spacing: -0.02em;
+}
+.pcase__meta { display: block; color: var(--fg-3); font-size: 14px; line-height: 1.5; }
+.pcase__arrow {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  color: var(--ks-red);
+  font-size: 20px;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.pcase:hover .pcase__arrow { transform: translateX(4px); }
+
+/* Пять кейсов оклейки в автосетке встают как 4 + 1, и вторая строка выглядит
+   пустой. Три в ряд дают 3 + 2 — ряды заполнены ровнее. */
+.pcase-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+@media (max-width: 900px) {
+  .pcase-grid--three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .pcase-grid { grid-template-columns: 1fr; }
+  .pcase-grid--three { grid-template-columns: 1fr; }
+}
+

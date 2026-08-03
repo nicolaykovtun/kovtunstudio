@@ -9,7 +9,7 @@ import Hero from '../components/Hero.astro';
 import Marquee from '../components/Marquee.astro';
 import WhatGrid from '../components/WhatGrid.astro';
 import Pricing from '../components/Pricing.astro';
-import Gallery from '../components/Gallery.astro';
+import { caseOrderIndex } from '../data/case-catalog';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
@@ -20,7 +20,7 @@ const dataDir = path.resolve('./src/data');
 const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
 const tiers = yaml.load(fs.readFileSync(path.join(dataDir, 'tiers.yaml'), 'utf8')) as any[];
 const faq = yaml.load(fs.readFileSync(path.join(dataDir, 'faq.yaml'), 'utf8')) as any[];
-const gallery = yaml.load(fs.readFileSync(path.join(dataDir, 'gallery.yaml'), 'utf8')) as any[];
+const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 'utf8')) as any[];
 
 // Локальная навигация страницы (как у /presentations/) — этот лендинг
 // больше не главная, поэтому не использует общий site.nav.
@@ -56,11 +56,20 @@ const footer = {
   ],
 };
 
-// Данные для JS-скрипта: только что нужно для лайтбокса
-const galleryForJs = gallery.map(g => ({
-  src: `/assets/portfolio/full/${g.id}.webp`,
-  label: g.alt,
-}));
+// Кейсы оклейки — карточками, как на /presentations/. Раньше здесь была
+// сетка отдельных ракурсов в лайтбоксе: 28 картинок без задачи и решения.
+// Кейсы лежат в cases.yaml, порядок — канонический из каталога.
+const wrapCases = legacyCases
+  .filter((c: any) => c.direction === 'wrap')
+  .sort((a: any, b: any) => caseOrderIndex(a.slug) - caseOrderIndex(b.slug))
+  .map((c: any) => ({
+    slug: c.slug,
+    title: c.name,
+    meta: [c.sphere, c.vehicles].filter(Boolean).join(' · '),
+    coverSrc: `/assets/portfolio/full/${c.cover}.webp`,
+    coverAlt:
+      c.images.find((image: any) => image.id === c.cover)?.caption ?? c.title,
+  }));
 
 // JSON-LD этой услуги — раньше жил в BaseLayout и подключался только на
 // главной; теперь страница сама отвечает за свою разметку (см. правку
@@ -91,20 +100,26 @@ const ldFaq = {
   })),
 };
 
-const ldPortfolioImages = {
+// Раньше секция портфолио была галереей картинок, и разметка описывала ее как
+// ImageGallery. Теперь на странице карточки кейсов, поэтому и разметка — список
+// работ со ссылками на разборы.
+const ldPortfolioCases = {
   '@context': 'https://schema.org',
-  '@type': 'ImageGallery',
+  '@type': 'ItemList',
   '@id': `${site.url}/car-wrap/#portfolio`,
-  name: 'Портфолио дизайна оклейки авто Kovtun.studio',
+  name: 'Кейсы дизайна оклейки авто Kovtun.studio',
   url: `${site.url}/car-wrap/`,
-  associatedMedia: gallery.slice(0, site.cases.preview).map((item: any, index: number) => ({
-    '@type': 'ImageObject',
-    name: item.alt,
-    description: item.alt,
-    contentUrl: `${site.url}/assets/portfolio/full/${item.id}.webp`,
-    thumbnailUrl: `${site.url}/assets/portfolio/thumb/${item.id}.webp`,
-    representativeOfPage: index === 0,
-    creator: { '@id': `${site.url}/#business` },
+  numberOfItems: wrapCases.length,
+  itemListElement: wrapCases.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'CreativeWork',
+      name: item.title,
+      url: `${site.url}/cases/${item.slug}/`,
+      image: `${site.url}${item.coverSrc}`,
+      creator: { '@id': `${site.url}/#business` },
+    },
   })),
 };
 ---
@@ -115,7 +130,7 @@ const ldPortfolioImages = {
   canonicalPath="/car-wrap/"
   ogTitle="Дизайн оклейки авто — макеты для коммерческого транспорта"
   ogDescription="Макеты оклейки от 10 000 ₽: брендинг, реклама, имиджевая концепция. Под печать, без сюрпризов в продакшене. Заявка — в Telegram @nikolaikovtun."
-  structuredData={[ldService, ldFaq, ldPortfolioImages]}
+  structuredData={[ldService, ldFaq, ldPortfolioCases]}
 >
   <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
   <main id="main-content">
@@ -123,7 +138,45 @@ const ldPortfolioImages = {
     <Marquee {...site.marquee} />
     <WhatGrid {...site.whatDo} />
     <Pricing {...site.pricing} tiers={tiers} />
-    <Gallery {...site.cases} items={gallery} />
+    <section class="section section-tight" id="cases">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2 set:html={site.cases.title}></h2>
+          </div>
+          <p class="aside">{site.cases.aside}</p>
+        </div>
+
+        <div class="pcase-grid pcase-grid--three">
+          {wrapCases.map((item, i) => (
+            <a class="pcase" href={`/cases/${item.slug}/`}>
+              <span class="pcase__media">
+                <img
+                  src={item.coverSrc}
+                  alt={item.coverAlt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  decoding="async"
+                  width="2400"
+                  height="1340"
+                />
+              </span>
+              <span class="pcase__body">
+                <strong>{item.title}</strong>
+                <span class="pcase__meta">{item.meta}</span>
+              </span>
+              <span class="pcase__arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+
+        <div class="gallery-more">
+          <a class="btn btn-dark btn-lg" href="/portfolio/?direction=wrap">
+            {site.cases.ctaAll} <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
     <ProcessSteps {...site.process} />
     <FounderSection data={site.founderSection} />
     <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={faq} />
@@ -134,7 +187,6 @@ const ldPortfolioImages = {
   <script
     is:inline
     define:vars={{
-      GALLERY: galleryForJs,
       METRIKA_ID: site.metrika.id,
       TELEGRAM_URL: site.contact.telegram,
       MAX_URL: site.contact.max,
@@ -150,98 +202,6 @@ const ldPortfolioImages = {
           try { window.ym(METRIKA_ID, "reachGoal", name, params || {}); } catch (e) {}
         }
       }
-
-      /* ─── Lightbox ─── */
-      var lb = document.getElementById("lightbox");
-      var lbImage = document.getElementById("lb-image");
-      var lbLabel = document.getElementById("lb-label");
-      var lbCounter = document.getElementById("lb-counter");
-      var lbThumbs = document.getElementById("lb-thumbs");
-      var current = null;
-
-      function pad(n) { return String(n).padStart(2, "0"); }
-      function toThumb(src) { return src.replace("/full/", "/thumb/"); }
-
-      function buildThumbs() {
-        var frag = document.createDocumentFragment();
-        GALLERY.forEach(function (it, i) {
-          var btn = document.createElement("button");
-          btn.className = "lightbox-thumb";
-          btn.setAttribute("aria-label", "Открыть работу " + (i + 1));
-          var img = document.createElement("img");
-          img.src = toThumb(it.src);
-          img.alt = "";
-          img.loading = "lazy";
-          btn.appendChild(img);
-          btn.addEventListener("click", function (e) { e.stopPropagation(); openLb(i); });
-          frag.appendChild(btn);
-        });
-        lbThumbs.appendChild(frag);
-      }
-
-      function preloadNeighbors(i) {
-        var n = GALLERY.length;
-        [(i + 1) % n, (i - 1 + n) % n].forEach(function (j) {
-          var im = new Image();
-          im.src = GALLERY[j].src;
-        });
-      }
-
-      function render() {
-        var it = GALLERY[current];
-        lbImage.src = it.src;
-        lbImage.alt = it.label;
-        lbLabel.textContent = it.label;
-        lbCounter.textContent = pad(current + 1) + " / " + pad(GALLERY.length);
-        var thumbs = lbThumbs.children;
-        for (var i = 0; i < thumbs.length; i++) {
-          thumbs[i].classList.toggle("is-active", i === current);
-        }
-        var active = thumbs[current];
-        if (active && active.scrollIntoView) {
-          active.scrollIntoView({ block: "nearest", inline: "center" });
-        }
-        preloadNeighbors(current);
-      }
-
-      function openLb(i) {
-        current = i;
-        lb.classList.add("is-open");
-        document.body.classList.add("lightbox-locked");
-        render();
-        goal("portfolio_open", { index: i + 1 });
-      }
-
-      function closeLb() {
-        current = null;
-        lb.classList.remove("is-open");
-        document.body.classList.remove("lightbox-locked");
-      }
-
-      function nav(delta) {
-        if (current === null) return;
-        var n = GALLERY.length;
-        current = (current + delta + n) % n;
-        render();
-      }
-
-      buildThumbs();
-
-      Array.prototype.forEach.call(document.querySelectorAll(".gallery-item"), function (el) {
-        el.addEventListener("click", function () { openLb(parseInt(el.dataset.index, 10)); });
-      });
-      var allBtn = document.getElementById("gallery-all");
-      if (allBtn) allBtn.addEventListener("click", function () { openLb(0); });
-      document.getElementById("lb-close").addEventListener("click", closeLb);
-      document.getElementById("lb-prev").addEventListener("click", function () { nav(-1); });
-      document.getElementById("lb-next").addEventListener("click", function () { nav(1); });
-      lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
-      document.addEventListener("keydown", function (e) {
-        if (current === null) return;
-        if (e.key === "Escape") closeLb();
-        else if (e.key === "ArrowLeft") nav(-1);
-        else if (e.key === "ArrowRight") nav(1);
-      });
 
       /* ─── Сборка сообщения и ссылки на мессенджер ─── */
       function buildMessage(d) {
