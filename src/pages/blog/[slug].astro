@@ -176,9 +176,9 @@ const tgChannel = 'https://t.me/kovtundesign';
                 </div>
               </div>
               <p class="post-author-text">
-                {site.author.jobTitle}, основатель Kovtun.studio. Упаковка,
-                фирменный стиль, сайты, презентации и оклейка авто.
-                В дизайне с 2010 года.
+                Графический дизайнер. Kovtun.studio — я сам, без команды и менеджеров:
+                веду проект от брифа до готового файла. Упаковка, фирменный стиль,
+                сайты, презентации и оклейка авто. В дизайне с 2010 года.
                 Пишу о работе в <a href={tgChannel} target="_blank" rel="noopener">телеграм-канале</a>.
               </p>
             </div>
@@ -235,6 +235,17 @@ const tgChannel = 'https://t.me/kovtundesign';
 </BaseLayout>
 
 <script is:inline>
+  // Блок подписки на канал встает в середину статьи — перед средним H2.
+  (() => {
+    const block = document.querySelector('.post-subscribe');
+    const content = document.querySelector('.post-content');
+    if (!block || !content) return;
+    const heads = content.querySelectorAll('h2');
+    if (heads.length < 3) return;
+    const middle = heads[Math.floor(heads.length / 2)];
+    middle.parentNode.insertBefore(block, middle);
+  })();
+
   // Подсветка текущего раздела в оглавлении.
   (() => {
     const links = Array.from(document.querySelectorAll('.post-toc a'));
@@ -363,8 +374,9 @@ const tgChannel = 'https://t.me/kovtundesign';
   }
   .post-cta-case { font-weight: 600; }
 
-  .post-subscribe {
-    margin-top: 24px;
+  .post-subscribe,
+  .post-content :global(.post-subscribe) {
+    margin: 36px 0;
     padding: 28px;
     border: 1px solid var(--line-strong);
     display: flex;
