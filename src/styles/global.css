@@ -560,7 +560,7 @@ html.reveal-motion [data-reveal-group].is-revealed[data-reveal-item] {
 .hero-dark::before {
   content: ""; position: absolute; inset: 0; z-index: 1;
   background:
-    radial-gradient(800px 500px at 80% 30%, rgba(239,28,36,.18), transparent 70%),
+    radial-gradient(800px 500px at 80% 30%, rgba(217,22,32,.18), transparent 70%),
     linear-gradient(180deg, transparent 0%, rgba(0,0,0,.4) 100%);
 }
 .hero-dark .inner {

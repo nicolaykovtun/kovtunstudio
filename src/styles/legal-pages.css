@@ -9,7 +9,7 @@
   padding: 112px 0 72px;
   color: #fff;
   background:
-    linear-gradient(120deg, rgba(239,28,36,.92), rgba(239,28,36,.72)),
+    linear-gradient(120deg, rgba(217,22,32,.92), rgba(217,22,32,.72)),
     var(--ks-red);
 }
 
@@ -22,6 +22,11 @@
 }
 
 .legal-hero h1 {
+  /* Без этого заголовок берет color из общего правила h1 в tokens.css и на
+     красном фоне выходит темно-серым: 1,9:1 вместо нормы 3:1 для крупного
+     текста, и читается еле-еле. Остальные красные и темные геро задают цвет
+     явно (.hero-red h1, .hero-dark h1) — здесь этого не хватало. */
+  color: inherit;
   max-width: 15ch;
   margin: 0;
   font: 760 clamp(42px, 7vw, 88px)/.96 var(--font-display);

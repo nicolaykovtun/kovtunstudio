@@ -527,7 +527,7 @@
 }
 
 .scenario-picker input:checked + span {
-  background: rgba(239,28,36,.12);
+  background: rgba(217,22,32,.12);
   border-color: var(--ks-red);
 }
 

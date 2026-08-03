@@ -25,8 +25,13 @@
        • 20 %  Charcoal  — deep accent. Headings, dark sections, footer.
      Navy #002136 is reserved for the logo SVG only — not a UI surface.
      --------------------------------------------------------------------- */
-  --ks-red:         #EF1C24;   /* PRIMARY brand colour                     */
-  --ks-red-700:     #C5141B;   /* hover / pressed                          */
+  /* Был #EF1C24: с белым текстом это 4,32:1, чуть ниже нормы 4,5:1 (WCAG AA).
+     Задеты были кнопка заявки, телефон в шапке, активный пункт меню и кнопка
+     cookie. Тон тот же, яркость снижена до 5,14:1. Ховер затемнен вслед за
+     базой, чтобы шаг между состояниями остался таким же заметным (1,54x
+     по яркости, как было у пары #EF1C24 / #C5141B). */
+  --ks-red:         #D91620;   /* PRIMARY brand colour                     */
+  --ks-red-700:     #B31016;   /* hover / pressed                          */
   --ks-red-300:     #FF5A60;   /* highlight on dark                        */
   --ks-red-user:    #E53124;   /* user-supplied red (alt swatch)           */
   --ks-red-50:      #FEE7E8;   /* tinted surface for callouts              */
