@@ -129,6 +129,8 @@ nav:
         label: "Оклейка авто"
         desc: "Макеты оклейки коммерческого транспорта"
         image: /assets/portfolio/thumb/01.webp
+  - href: "/blog/"
+    label: Мысли
   - href: "/#contact"
     label: Контакты
   - href: "/#faq"
@@ -315,6 +317,7 @@ footer:
     - title: Сервис
       links:
         - { href: "/portfolio/", label: "Портфолио" }
+        - { href: "/blog/", label: "Мысли" }
         - { href: "/#directions", label: "Направления" }
         - { href: "/#process", label: "Процесс" }
         - { href: "/#faq", label: "FAQ" }
