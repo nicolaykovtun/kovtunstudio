@@ -1,0 +1,12 @@
+{
+  "outDir": "public/assets/cases/primgril",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "sources": [
+    {
+      "file": "cases/unpublished/CarWrap-Primgril/Probox Primgril.jpg",
+      "prefix": "primgril-print",
+      "blocks": [{ "name": "probox", "order": 1 }]
+    }
+  ]
+}
