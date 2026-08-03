@@ -148,6 +148,14 @@ function legacyPage(raw: any): { content: any; config: EditorialCaseConfig } {
     thumb: `/assets/portfolio/thumb/${image.id}.webp`,
     label: image.caption,
   }));
+  // Макеты под печать лежат отдельно от ракурсов: у каждого кейса своя папка
+  // в /assets/cases/<slug>/, нарезка — tmp/slices/wrap-<slug>.json.
+  // thumb не задаем намеренно: макет показывается во всю ширину секции,
+  // и миниатюра на 640px растянулась бы вдвое.
+  const printLayouts: CaseMedia[] = (raw.layouts ?? []).map((layout: any) => ({
+    src: `/assets/cases/${raw.slug}/full/${layout.file}.webp`,
+    label: layout.caption,
+  }));
 
   return {
     content: {
@@ -185,7 +193,7 @@ function legacyPage(raw: any): { content: any; config: EditorialCaseConfig } {
       groups: [
         {
           id: 'gallery',
-          label: 'МАКЕТЫ',
+          label: 'РАКУРСЫ',
           title: 'Оклейка крупным планом',
           intro: 'Ракурсы, детали и раскладка графики на кузове.',
           layout: 'default',
@@ -193,8 +201,27 @@ function legacyPage(raw: any): { content: any; config: EditorialCaseConfig } {
           interactive: true,
           items,
         },
+        // Макеты под печать: раскладка проекций, по которой печатают пленку.
+        // Секция появляется, только если у кейса заполнено поле layouts.
+        ...(printLayouts.length
+          ? [
+              {
+                id: 'print',
+                label: 'МАКЕТЫ',
+                title:
+                  printLayouts.length > 1 ? 'Макеты под печать' : 'Макет под печать',
+                intro:
+                  'Раскладка проекций кузова — то, что уходит в печать пленки.' +
+                  ' Нажмите, чтобы рассмотреть детали.',
+                layout: 'sheet' as const,
+                theme: 'dark' as const,
+                interactive: true,
+                items: printLayouts,
+              },
+            ]
+          : []),
       ],
-      order: ['task', 'result', 'gallery', 'works'],
+      order: ['task', 'result', 'gallery', ...(printLayouts.length ? ['print'] : []), 'works'],
       cta: {
         title: 'Нужен дизайн оклейки?',
         text: 'Пришлите фотографии и модель автомобиля — предложу формат работы и состав макета.',

@@ -748,6 +748,23 @@
   object-fit: contain;
 }
 
+/* Макет под печать: одна проекция кузова на строку, во всю ширину. Высота
+   у каждого файла своя (борт пробокса это 1:3,6, а вид сверху родстера 1:1,6),
+   поэтому пропорцию не фиксируем вовсе — картинка задает высоту плитки сама.
+   Фон белый: макеты нарисованы на белом листе, на темной секции они читаются
+   как лист бумаги. */
+.case-gallery--sheet { grid-template-columns: 1fr; gap: 32px; }
+.case-gallery--sheet figure,
+.case-gallery--sheet figure:only-child,
+.case-gallery--sheet figure:first-child:nth-last-child(3) { grid-column: auto; }
+.case-gallery--sheet .case-gallery-trigger { aspect-ratio: auto; background: #fff; }
+.case-gallery--sheet img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
 /* Плитка под размер картинки. Пропорция приходит из gallery.yaml полем ratio
    и ставится инлайном на саму плитку, поэтому картинка заполняет ее целиком
    и полей фона не остается. Без этого знак 8:9 в плитке 4:5 вписывался

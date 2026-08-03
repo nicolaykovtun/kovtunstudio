@@ -1,0 +1,12 @@
+{
+  "outDir": "public/assets/cases/japanhouse",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "sources": [
+    {
+      "file": "cases/unpublished/CarWrap-Japan House/Probox 2017-3.jpg",
+      "prefix": "japanhouse-print",
+      "blocks": [{ "name": "probox", "order": 1 }]
+    }
+  ]
+}

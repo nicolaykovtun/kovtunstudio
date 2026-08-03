@@ -1,0 +1,12 @@
+{
+  "outDir": "public/assets/cases/sila-car",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "sources": [
+    {
+      "file": "cases/unpublished/Sila Car/Car wrap/Probox 2017-print.jpg",
+      "prefix": "sila-car-print",
+      "blocks": [{ "name": "probox", "order": 1 }]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "outDir": "public/assets/cases/green-power",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "sources": [
+    {
+      "file": "cases/unpublished/Green Power/Обклейка машин/BMW Z4 2019/BMW Z4 2019 v2.3.jpg",
+      "prefix": "green-power-print",
+      "blocks": [{ "name": "bmw-z4", "order": 1 }]
+    },
+    {
+      "file": "cases/unpublished/Green Power/Обклейка машин/LEXUS LX570 2020/LEXUS LX570 2020 v1.jpg",
+      "prefix": "green-power-print",
+      "blocks": [{ "name": "lexus-lx570", "order": 2 }]
+    },
+    {
+      "file": "cases/unpublished/Green Power/Обклейка машин/Toyota Hiace 2015/Снимок экрана 2025-06-19 114310.png",
+      "prefix": "green-power-print",
+      "blocks": [{ "name": "toyota-hiace", "order": 3 }]
+    }
+  ]
+}

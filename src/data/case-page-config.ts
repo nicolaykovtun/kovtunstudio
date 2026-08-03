@@ -28,7 +28,7 @@ export interface CaseGalleryGroup {
   label: string;
   title: string;
   intro?: string;
-  layout?: 'default' | 'screens' | 'tall' | 'slides' | 'brochure' | 'portrait' | 'brand';
+  layout?: 'default' | 'screens' | 'tall' | 'slides' | 'brochure' | 'portrait' | 'sheet' | 'brand';
   /**
    * Пропорция плитки в виде CSS aspect-ratio, например «8 / 9». Задается там,
    * где картинки группы не совпадают с пропорцией раскладки: иначе плитка

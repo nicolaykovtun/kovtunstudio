@@ -1,0 +1,12 @@
+{
+  "outDir": "public/assets/cases/japan-line",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "sources": [
+    {
+      "file": "cases/unpublished/CarWrap-Japan Line/Probox Japan Line DV v2.jpg",
+      "prefix": "japan-line-print",
+      "blocks": [{ "name": "probox", "order": 1 }]
+    }
+  ]
+}
