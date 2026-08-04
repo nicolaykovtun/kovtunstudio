@@ -79,7 +79,8 @@ const ldBreadcrumbs = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
-    { '@type': 'ListItem', position: 2, name: 'Мысли', item: `${site.url}/blog/` },
+    // Для роботов раздел называется «Статьи»: видимое «Мысли» — только для людей.
+    { '@type': 'ListItem', position: 2, name: 'Статьи', item: `${site.url}/blog/` },
     { '@type': 'ListItem', position: 3, name: d.title, item: pageUrl },
   ],
 };
