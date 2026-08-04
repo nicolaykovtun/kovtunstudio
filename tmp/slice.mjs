@@ -54,17 +54,33 @@ for (const source of sources) {
       height,
     });
 
+    // padTo дополняет блок полями до заданной пропорции («1520 / 940»).
+    // Нужно там, где в одной группе галереи лежат картинки разных пропорций:
+    // плитка с полем ratio заполняется по object-fit: cover и обрезала бы их.
+    // Поля заливаются цветом секции, поэтому на странице их не видно.
+    const [padW, padH] = (block.padTo ?? '').split('/').map((n) => Number(n.trim()));
+    const padRatio = padW && padH ? padW / padH : null;
+    const resizeTo = (width) =>
+      padRatio
+        ? {
+            width,
+            height: Math.round(width / padRatio),
+            fit: 'contain',
+            background: block.padBackground ?? '#ffffff',
+          }
+        : { width };
+
     const fullPath = path.join(fullDir, `${base}.webp`);
     await region
       .clone()
-      .resize({ width: fullWidth })
+      .resize(resizeTo(fullWidth))
       .webp({ quality: fullQuality })
       .toFile(fullPath);
 
     const thumbPath = path.join(thumbDir, `${base}-thumbnail.webp`);
     await region
       .clone()
-      .resize({ width: thumbWidth })
+      .resize(resizeTo(thumbWidth))
       .webp({ quality: thumbQuality })
       .toFile(thumbPath);
 
@@ -79,18 +95,21 @@ for (const source of sources) {
 
 // Обложка 16:9: верхняя часть указанного макета, обрезанная по центру.
 if (config.cover) {
-  const { file, top = 0, height, name, fit = 'contain' } = config.cover;
+  const { file, top = 0, height, name, fit = 'contain', position } = config.cover;
   const meta = await sharp(file, { limitInputPixels: false }).metadata();
   const cropHeight = height ?? Math.round((meta.width / 16) * 9);
   const coverPath = path.join(outDir, `${name}.webp`);
-  // По умолчанию contain: обложка не режет макет по краям. Для широкого
-  // первого экрана можно явно включить cover в конфиге и кадрировать края.
+  // По умолчанию contain: обложка не режет макет по краям, поля заливаются
+  // цветом плашки макета. Если вверху фотография, а не плашка, поля видны
+  // полосами — тогда fit: cover и position, чтобы кадрировать с нужного края
+  // и не потерять логотип или заголовок.
   await sharp(file, { limitInputPixels: false })
     .extract({ left: 0, top, width: meta.width, height: cropHeight })
     .resize({
       width: 1600,
       height: 900,
       fit,
+      position,
       background: config.cover.background ?? '#ffffff',
     })
     .webp({ quality: 84 })

@@ -7,21 +7,24 @@
   "cover": {
     "file": "cases/published/Website-EON/Raw/Design - 1920w - Home.png",
     "top": 0,
-    "height": 1610,
+    "height": 1556,
+    "_комментарий": "1556, а не 1600: с 1560 у первого экрана начинаются скругленные углы, и в кадре обложки они читались темной зазубриной",
     "name": "eon-phuket-website-cover",
-    "background": "#3F141A"
+    "fit": "cover",
+    "position": "left"
   },
   "sources": [
     {
       "file": "cases/published/Website-EON/Raw/Design - 1920w - Home.png",
       "prefix": "eon-home",
+      "_комментарий": "плитка галереи 16:10 обрезает блок по бокам тем сильнее, чем он ниже. Контентная колонка макета начинается на 18,3% ширины, поэтому блок не должен быть шире 2,4:1 — иначе срез съедает метку и начало заголовка. Из-за этого «about» дотянут до 3210",
       "blocks": [
-        { "order": 1, "name": "hero", "top": 0, "bottom": 1610 },
-        { "order": 2, "name": "about", "top": 1610, "bottom": 2948 },
-        { "order": 3, "name": "spaces", "top": 2948, "bottom": 4917 },
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1600 },
+        { "order": 2, "name": "about", "top": 1610, "bottom": 3210 },
+        { "order": 3, "name": "spaces", "top": 2990, "bottom": 4917 },
         { "order": 4, "name": "lounge", "top": 4917, "bottom": 7718 },
-        { "order": 5, "name": "prices", "top": 7718, "bottom": 9331 },
-        { "order": 6, "name": "family", "top": 9331, "bottom": 11102 },
+        { "order": 5, "name": "prices", "top": 7718, "bottom": 9312 },
+        { "order": 6, "name": "family", "top": 9312, "bottom": 11102 },
         { "order": 7, "name": "map", "top": 11102, "bottom": 13130 },
         { "order": 8, "name": "life", "top": 13130, "bottom": 15694 },
         { "order": 9, "name": "gallery", "top": 15694, "bottom": 17386 },
@@ -31,11 +34,11 @@
     {
       "file": "cases/published/Website-EON/Raw/Wireframe - 1920w - Home.png",
       "prefix": "eon-wireframe",
+      "_комментарий": "высоты подобраны в пару к блокам дизайна: в секции «до — после» картинки идут с height: auto, и при разной пропорции пара выходит разной высоты",
       "blocks": [
-        { "order": 1, "name": "hero", "top": 0, "bottom": 1536 },
-        { "order": 2, "name": "about", "top": 1536, "bottom": 2967 },
-        { "order": 5, "name": "prices", "top": 7651, "bottom": 9245 },
-        { "order": 7, "name": "map", "top": 11068, "bottom": 13011 }
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1600 },
+        { "order": 2, "name": "about", "top": 1536, "bottom": 3136 },
+        { "order": 5, "name": "prices", "top": 7651, "bottom": 9245 }
       ]
     },
     {
@@ -81,17 +84,24 @@
     {
       "file": "cases/published/Website-EON/Raw/Design - POP UP -  Day Pass.png",
       "prefix": "eon-popup",
-      "blocks": [{ "order": 1, "name": "daypass" }]
+      "_комментарий": "три окна разной пропорции в одной группе: дополняем до 1520/940 цветом секции #111, иначе плитка обрезала бы кнопку у спецпредложения",
+      "blocks": [
+        { "order": 1, "name": "daypass", "padTo": "1520 / 940", "padBackground": "#111111" }
+      ]
     },
     {
       "file": "cases/published/Website-EON/Raw/Design - POP UP - Специальное предложение.png",
       "prefix": "eon-popup",
-      "blocks": [{ "order": 2, "name": "offer" }]
+      "blocks": [
+        { "order": 2, "name": "offer", "padTo": "1520 / 940", "padBackground": "#111111" }
+      ]
     },
     {
       "file": "cases/published/Website-EON/Raw/Design - POP UP - Заявка получена.png",
       "prefix": "eon-popup",
-      "blocks": [{ "order": 3, "name": "sent" }]
+      "blocks": [
+        { "order": 3, "name": "sent", "padTo": "1520 / 940", "padBackground": "#111111" }
+      ]
     }
   ]
 }
