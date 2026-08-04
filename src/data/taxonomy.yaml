@@ -42,3 +42,5 @@ spheres:
     label: Бухгалтерские услуги
   - key: engineering-systems
     label: Инженерные системы
+  - key: wellness
+    label: Спа и велнес

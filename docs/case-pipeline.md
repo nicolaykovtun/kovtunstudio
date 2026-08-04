@@ -353,14 +353,16 @@ https://design.kovtun.studio
 |---|---|
 | `Website-Greatway` | 17 макетов страниц, грузоперевозки. Вайрфреймов нет |
 | `Website-B2B Cosmetics` | 9 макетов + 10 страниц ТЗ от заказчика, косметика |
-| `Landing-ptksk` | лендинг + два поп-апа |
 | `Landing-Mercator-maritime` | лендинг + вайрфрейм |
 | `Landing-Kuznitsa dushi` | лендинг + вайрфрейм |
 | `Landing-EVG-Group` | лендинг + вайрфрейм |
 | `Landing-Ektostroy` | лендинг + вайрфрейм |
-| `Green Power` | логотип, гайдбук, знаки для этикетки, лендинг с вайрфреймом, макеты оклейки. Стиль собран в `identity-green-power`, лендинг — в `website-green-power`, оклейка — старый кейс на `cases.yaml`. **Осторожно: в папке `Landing` лежат два проекта.** Пара `Design 1920.png` / `Wireframes 1920.png` — это Green Power. Набор `Design - 1920w - …` и `Wireframe - 1920w - …` с поп-апами — это EON Phuket, он попал сюда по ошибке |
-| `Website-EON` | папка пустая, а материал EON лежит в `Green Power/Landing`: 7 макетов страниц, 7 вайрфреймов, 12 поп-апов |
-| `Trubovarnya Eremeev` | только исходники, кейсы собраны в двух соседних папках |
+
+Материал EON разобран и собран в `website-eon-phuket`: макеты перенесены из
+`Green Power/Landing` в `cases/published/Website-EON/Raw`. Там оказалось
+не 7 страниц, а 5 плюс одно состояние формы бронирования, и 6 поп-апов, а не 12:
+шесть файлов из двенадцати были вайрфреймами. Файл `1920w - Booking  v2.png`
+без префикса `Wireframe -` — это тоже вайрфрейм.
 
 Полные пары «дизайн + вайрфрейм» дают секцию «до — после». Без вайрфреймов кейс
 собирается только галереей макетов.
@@ -369,10 +371,11 @@ https://design.kovtun.studio
 
 | Slug | Направление |
 |---|---|
-| `identity-green-power`, `identity-trubovarnya` | фирменный стиль |
+| `identity-green-power`, `identity-trubovarnya`, `identity-sila-car` | фирменный стиль |
 | `website-green-power`, `website-trubovarnya` | сайт |
-| `website-japan-shina` | сайт |
+| `website-japan-shina`, `website-ptksk` | сайт |
 | `website-kapital-inform` | сайт |
+| `website-eon-phuket` | сайт |
 | `presentation-edelweiss`, `presentation-terney-farmer`, `presentation-vmtp` | презентации |
 | `brochure-metall-invest` | брошюра |
 | `green-power`, `japanhouse`, `primgril`, `japan-line`, `sila-car` | оклейка, legacy `cases.yaml` |

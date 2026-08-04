@@ -9,6 +9,7 @@ export const caseCatalogOrder = [
   'website-trubovarnya',
   'identity-sila-car',
   'website-ptksk',
+  'website-eon-phuket',
   'website-japan-shina',
   'website-kapital-inform',
   'presentation-edelweiss',

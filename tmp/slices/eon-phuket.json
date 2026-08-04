@@ -1,0 +1,97 @@
+{
+  "outDir": "public/assets/cases/website-eon-phuket",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "fullQuality": 82,
+  "thumbQuality": 72,
+  "cover": {
+    "file": "cases/published/Website-EON/Raw/Design - 1920w - Home.png",
+    "top": 0,
+    "height": 1610,
+    "name": "eon-phuket-website-cover",
+    "background": "#3F141A"
+  },
+  "sources": [
+    {
+      "file": "cases/published/Website-EON/Raw/Design - 1920w - Home.png",
+      "prefix": "eon-home",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1610 },
+        { "order": 2, "name": "about", "top": 1610, "bottom": 2948 },
+        { "order": 3, "name": "spaces", "top": 2948, "bottom": 4917 },
+        { "order": 4, "name": "lounge", "top": 4917, "bottom": 7718 },
+        { "order": 5, "name": "prices", "top": 7718, "bottom": 9331 },
+        { "order": 6, "name": "family", "top": 9331, "bottom": 11102 },
+        { "order": 7, "name": "map", "top": 11102, "bottom": 13130 },
+        { "order": 8, "name": "life", "top": 13130, "bottom": 15694 },
+        { "order": 9, "name": "gallery", "top": 15694, "bottom": 17386 },
+        { "order": 10, "name": "footer", "top": 17386, "bottom": 19792 }
+      ]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Wireframe - 1920w - Home.png",
+      "prefix": "eon-wireframe",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 1536 },
+        { "order": 2, "name": "about", "top": 1536, "bottom": 2967 },
+        { "order": 5, "name": "prices", "top": 7651, "bottom": 9245 },
+        { "order": 7, "name": "map", "top": 11068, "bottom": 13011 }
+      ]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - 1920w - Booking.png",
+      "prefix": "eon-page",
+      "blocks": [{ "order": 1, "name": "booking" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - 1920w - Booking  v2.png",
+      "prefix": "eon-page",
+      "blocks": [{ "order": 2, "name": "guests" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - 1920w - Архив блога.png",
+      "prefix": "eon-page",
+      "blocks": [{ "order": 3, "name": "archive" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - 1920w - Страница блога.png",
+      "prefix": "eon-page",
+      "blocks": [{ "order": 4, "name": "post" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - 1920w - Страница события.png",
+      "prefix": "eon-page",
+      "blocks": [{ "order": 5, "name": "event" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - POP UP - Exclusive Membership - Ежемесячно.png",
+      "prefix": "eon-membership",
+      "blocks": [{ "order": 1, "name": "month" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - POP UP - Exclusive Membership - Полгода.png",
+      "prefix": "eon-membership",
+      "blocks": [{ "order": 2, "name": "half" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - POP UP - Exclusive Membership - Ежемесячно год.png",
+      "prefix": "eon-membership",
+      "blocks": [{ "order": 3, "name": "year" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - POP UP -  Day Pass.png",
+      "prefix": "eon-popup",
+      "blocks": [{ "order": 1, "name": "daypass" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - POP UP - Специальное предложение.png",
+      "prefix": "eon-popup",
+      "blocks": [{ "order": 2, "name": "offer" }]
+    },
+    {
+      "file": "cases/published/Website-EON/Raw/Design - POP UP - Заявка получена.png",
+      "prefix": "eon-popup",
+      "blocks": [{ "order": 3, "name": "sent" }]
+    }
+  ]
+}
