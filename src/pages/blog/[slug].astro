@@ -284,6 +284,7 @@ const tgChannel = 'https://t.me/kovtundesign';
     margin-bottom: 28px;
   }
   .post-breadcrumbs a { color: inherit; }
+  .post-breadcrumbs a:hover { color: var(--ks-red); }
 
   .post-layout {
     display: grid;
@@ -445,7 +446,8 @@ const tgChannel = 'https://t.me/kovtundesign';
     color: var(--ks-grey);
     text-decoration: none;
   }
-  .post-toc a:hover { color: var(--ks-black); }
+  /* Ховер — красный, как у всех ссылок сайта. Черный — только маркер текущего раздела. */
+  .post-toc a:hover { color: var(--ks-red); }
   .post-toc a.is-active { color: var(--ks-black); font-weight: 600; }
 
   .post-related { padding-bottom: clamp(48px, 7vw, 96px); }
