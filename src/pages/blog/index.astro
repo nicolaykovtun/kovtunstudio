@@ -1,5 +1,7 @@
 ---
-// Список статей блога. Схема — CollectionPage со списком BlogPosting.
+// Список статей блога. Редакционная лента на всю ширину сайта:
+// обложка · крупная дата · заголовок с рубрикой · описание.
+// Схема — CollectionPage со списком BlogPosting.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
@@ -15,7 +17,10 @@ const description =
   'Практика студии: оклейка и брендирование авто, фирменный стиль, сайты и презентации. ' +
   'Реальные цены, сроки и разборы проектов от Николая Ковтуна.';
 
-const dateFmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+const pad = (n: number) => String(n).padStart(2, '0');
+const dayMonth = (d: Date) => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}`;
+const yearShort = (d: Date) => String(d.getFullYear()).slice(2);
+const isoDate = (d: Date) => d.toISOString().split('T')[0];
 
 const ldCollection = {
   '@context': 'https://schema.org',
@@ -28,7 +33,7 @@ const ldCollection = {
     '@type': 'BlogPosting',
     headline: post.data.title,
     url: `${site.url}/blog/${post.id}/`,
-    datePublished: post.data.pubDate.toISOString().split('T')[0],
+    datePublished: isoDate(post.data.pubDate),
   })),
 };
 ---
@@ -50,10 +55,12 @@ const ldCollection = {
   />
 
   <main id="main-content" class="blog-page">
-    <div class="container-wide blog-shell">
+    <div class="container-wide">
       <header class="blog-hero">
-        <p class="blog-eyebrow">Мысли</p>
-        <h1>Практика дизайна для бизнеса</h1>
+        <div>
+          <p class="blog-eyebrow">Мысли</p>
+          <h1>Практика дизайна для бизнеса</h1>
+        </div>
         <p class="blog-intro">
           Разборы реальных проектов студии: цены, сроки, ошибки и выводы.
           Без теории ради теории — только то, что проверено работой.
@@ -62,22 +69,25 @@ const ldCollection = {
 
       <div class="blog-list">
         {posts.map((post) => (
-          <article class="blog-card">
-            {post.data.cover && (
-              <a href={`/blog/${post.id}/`} class="blog-card-cover">
-                <img src={post.data.cover} alt={post.data.coverAlt ?? post.data.title} loading="lazy" />
-              </a>
-            )}
-            <div class="blog-card-body">
-              <p class="blog-card-meta">
-                <span>{post.data.section}</span>
-                <time datetime={post.data.pubDate.toISOString().split('T')[0]}>
-                  {dateFmt.format(post.data.pubDate)}
-                </time>
-              </p>
+          <article class="blog-row">
+            <a href={`/blog/${post.id}/`} class="blog-row-cover" aria-hidden="true" tabindex="-1">
+              {post.data.cover && (
+                <img src={post.data.cover} alt="" loading="lazy" />
+              )}
+            </a>
+            <p class="blog-row-date">
+              <time datetime={isoDate(post.data.pubDate)}>
+                <span class="blog-row-daymonth">{dayMonth(post.data.pubDate)}</span>
+                <span class="blog-row-year">{yearShort(post.data.pubDate)}</span>
+              </time>
+            </p>
+            <div class="blog-row-main">
               <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
-              <p class="blog-card-desc">{post.data.description}</p>
-              <a class="blog-card-more" href={`/blog/${post.id}/`}>Читать статью</a>
+              <span class="blog-row-tag">{post.data.section}</span>
+            </div>
+            <div class="blog-row-side">
+              <p class="blog-row-desc">{post.data.description}</p>
+              <a class="blog-row-more" href={`/blog/${post.id}/`}>Читать статью</a>
             </div>
           </article>
         ))}
@@ -89,10 +99,12 @@ const ldCollection = {
 </BaseLayout>
 
 <style>
-  .blog-shell {
-    max-width: 760px;
-    margin-inline: auto;
-    padding-block: clamp(32px, 6vw, 72px);
+  .blog-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: end;
+    padding-block: clamp(32px, 6vw, 80px) clamp(20px, 3vw, 36px);
   }
   .blog-eyebrow {
     font: var(--t-overline);
@@ -102,59 +114,103 @@ const ldCollection = {
     margin: 0 0 12px;
   }
   .blog-hero h1 {
-    margin: 0 0 14px;
-    font-size: clamp(28px, 4.5vw, 44px);
-    line-height: 1.15;
+    margin: 0;
+    font-size: clamp(30px, 5vw, 56px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
   }
   .blog-intro {
     font: var(--t-body-l);
     line-height: 1.6;
     color: var(--ks-charcoal);
-    margin: 0 0 44px;
-    max-width: 60ch;
+    margin: 0;
+    max-width: 46ch;
+    justify-self: end;
   }
-  .blog-card {
-    border-top: 1px solid var(--line-strong);
-    padding: 26px 0 30px;
+
+  .blog-list { border-bottom: 1px solid var(--line-strong); }
+  .blog-row {
     display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    gap: 24px;
-    align-items: start;
+    grid-template-columns: 240px 140px minmax(0, 1.3fr) minmax(0, 1fr);
+    border-top: 1px solid var(--line-strong);
+    padding-block: 28px;
   }
-  .blog-card-cover {
+  .blog-row-cover {
     display: block;
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: var(--ks-paper);
+    margin-right: 28px;
   }
-  .blog-card-cover img {
+  .blog-row-cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.4s var(--ease-out);
   }
-  @media (max-width: 700px) {
-    .blog-card { grid-template-columns: 1fr; gap: 16px; }
-  }
-  .blog-card-meta {
+  .blog-row:hover .blog-row-cover img { transform: scale(1.03); }
+
+  .blog-row-date { margin: 0; padding-inline: 4px 20px; }
+  .blog-row-date time { display: flex; flex-direction: column; line-height: 1.1; }
+  .blog-row-daymonth { font-size: clamp(22px, 2.2vw, 30px); font-weight: 700; }
+  .blog-row-year { font-size: clamp(18px, 1.8vw, 24px); font-weight: 700; color: var(--ks-grey); }
+
+  .blog-row-main {
+    border-left: 1px solid var(--line-strong);
+    padding-inline: 28px;
     display: flex;
-    gap: 16px;
-    font: var(--t-caption);
-    color: var(--ks-grey);
-    margin: 0 0 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
   }
-  .blog-card h2 {
-    margin: 0 0 10px;
-    font-size: clamp(20px, 2.6vw, 26px);
+  .blog-row-main h2 {
+    margin: 0;
+    font-size: clamp(20px, 2.4vw, 28px);
     line-height: 1.25;
   }
-  .blog-card h2 a { color: inherit; text-decoration: none; }
-  .blog-card h2 a:hover { color: var(--fg-accent); }
-  .blog-card-desc {
-    font: var(--t-body);
-    line-height: 1.6;
-    margin: 0 0 14px;
-    max-width: 64ch;
+  .blog-row-main h2 a { color: inherit; text-decoration: none; }
+  .blog-row-main h2 a:hover { color: var(--ks-red); }
+  .blog-row-tag {
+    font: var(--t-caption);
+    color: var(--ks-grey);
+    border: 1px solid var(--line-strong);
+    padding: 3px 10px;
   }
-  .blog-card-more { font-weight: 600; }
+
+  .blog-row-side {
+    padding-left: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .blog-row-desc {
+    margin: 0;
+    font: var(--t-body-s);
+    line-height: 1.55;
+    max-width: 52ch;
+  }
+  .blog-row-more { font-weight: 600; }
+
+  @media (max-width: 1000px) {
+    .blog-hero { grid-template-columns: 1fr; align-items: start; }
+    .blog-intro { justify-self: start; }
+    .blog-row { grid-template-columns: 180px 90px minmax(0, 1fr); }
+    .blog-row-cover { margin-right: 20px; }
+    .blog-row-main { padding-inline: 20px; border-left: none; }
+    .blog-row-side {
+      grid-column: 2 / -1;
+      padding-left: 20px;
+      padding-top: 14px;
+    }
+  }
+  @media (max-width: 640px) {
+    .blog-row { grid-template-columns: 1fr; gap: 14px; }
+    .blog-row-cover { margin-right: 0; }
+    .blog-row-date { padding-inline: 0; }
+    .blog-row-date time { flex-direction: row; gap: 6px; }
+    .blog-row-main { padding-inline: 0; }
+    .blog-row-side { grid-column: auto; padding: 0; }
+  }
 </style>
