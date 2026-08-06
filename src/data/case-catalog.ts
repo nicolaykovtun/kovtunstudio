@@ -12,6 +12,8 @@ export const caseCatalogOrder = [
   'website-eon-phuket',
   'website-japan-shina',
   'website-kapital-inform',
+  'website-kuznitsa-dushi',
+  'website-ektostroy',
   'presentation-edelweiss',
   'presentation-terney-farmer',
   'brochure-metall-invest',

@@ -1,0 +1,50 @@
+{
+  "outDir": "public/assets/cases/website-ektostroy",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/published/Landing-Ektostroy/Raw/Design.jpg",
+    "top": 0,
+    "height": 1080,
+    "name": "ektostroy-cover",
+    "background": "#FFFFFF"
+  },
+  "sources": [
+    {
+      "file": "cases/published/Landing-Ektostroy/Raw/Design.jpg",
+      "prefix": "ektostroy-landing",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1188 },
+        { "name": "system", "top": 1188, "bottom": 2513 },
+        { "name": "steps", "top": 2513, "bottom": 3451 },
+        { "name": "help", "top": 3451, "bottom": 4272 },
+        { "name": "price", "top": 4272, "bottom": 4915 },
+        { "name": "montage", "top": 4915, "bottom": 6713 },
+        { "name": "team", "top": 6713, "bottom": 8054 },
+        { "name": "reviews", "top": 8054, "bottom": 9487 },
+        { "name": "support", "top": 9487, "bottom": 10308 },
+        { "name": "advantages", "top": 10308, "bottom": 10975 },
+        { "name": "demo", "top": 10975, "bottom": 12300 },
+        { "name": "form", "top": 12300, "bottom": 13606 }
+      ]
+    },
+    {
+      "file": "cases/published/Landing-Ektostroy/Raw/Wireframes.jpg",
+      "prefix": "ektostroy-wireframe",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1186 },
+        { "name": "system", "top": 1186, "bottom": 2422 },
+        { "name": "steps", "top": 2422, "bottom": 3348 },
+        { "name": "help", "top": 3348, "bottom": 4181 },
+        { "name": "price", "top": 4181, "bottom": 4810 },
+        { "name": "montage", "top": 4810, "bottom": 6684 },
+        { "name": "team", "top": 6684, "bottom": 7795 },
+        { "name": "reviews", "top": 7795, "bottom": 8962 },
+        { "name": "support", "top": 8962, "bottom": 9790 },
+        { "name": "advantages", "top": 9790, "bottom": 10409 },
+        { "name": "demo", "top": 10409, "bottom": 11378 },
+        { "name": "form", "top": 11378, "bottom": 12858 }
+      ]
+    }
+  ]
+}

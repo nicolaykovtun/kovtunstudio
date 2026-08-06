@@ -44,3 +44,7 @@ spheres:
     label: Инженерные системы
   - key: wellness
     label: Спа и велнес
+  - key: retreats
+    label: Выездные мужские программы
+  - key: smart-home
+    label: Умный дом

@@ -1,0 +1,45 @@
+{
+  "outDir": "public/assets/cases/website-kuznitsa-dushi",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/published/Landing-Kuznitsa dushi/Raw/Design-1920.jpg",
+    "top": 0,
+    "name": "kuznitsa-dushi-cover",
+    "background": "#F1E3BE"
+  },
+  "sources": [
+    {
+      "file": "cases/published/Landing-Kuznitsa dushi/Raw/Design-1920.jpg",
+      "prefix": "kuznitsa-landing",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 2270 },
+        { "name": "about", "top": 2270, "bottom": 4670 },
+        { "name": "days", "top": 4670, "bottom": 6317 },
+        { "name": "results", "top": 6317, "bottom": 7747 },
+        { "name": "program", "top": 7747, "bottom": 9500 },
+        { "name": "included", "top": 9500, "bottom": 10920 },
+        { "name": "reviews", "top": 10920, "bottom": 12211 },
+        { "name": "form", "top": 12211, "bottom": 13824 },
+        { "name": "faq", "top": 13824, "bottom": 15250 },
+        { "name": "cta", "top": 15250, "bottom": 16370 }
+      ]
+    },
+    {
+      "file": "cases/published/Landing-Kuznitsa dushi/Raw/Wireframes - 1920.jpg",
+      "prefix": "kuznitsa-wireframe",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 2270 },
+        { "name": "about", "top": 2270, "bottom": 4670 },
+        { "name": "days", "top": 4670, "bottom": 6317 },
+        { "name": "results", "top": 6317, "bottom": 7747 },
+        { "name": "program", "top": 7747, "bottom": 9500 },
+        { "name": "included", "top": 9500, "bottom": 10920 },
+        { "name": "reviews", "top": 10920, "bottom": 12211 },
+        { "name": "form", "top": 12211, "bottom": 13824 },
+        { "name": "faq", "top": 13824, "bottom": 15250 },
+        { "name": "cta", "top": 15250, "bottom": 16370 }
+      ]
+    }
+  ]
+}
