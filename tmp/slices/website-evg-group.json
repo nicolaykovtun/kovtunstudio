@@ -1,0 +1,46 @@
+{
+  "outDir": "public/assets/cases/website-evg-group",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/published/Landing-EVG-Group/Raw/Design.jpg",
+    "top": 0,
+    "height": 1500,
+    "name": "evg-cover",
+    "fit": "cover"
+  },
+  "sources": [
+    {
+      "file": "cases/published/Landing-EVG-Group/Raw/Design.jpg",
+      "prefix": "evg-landing",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1840 },
+        { "name": "projects", "top": 1840, "bottom": 3031 },
+        { "name": "condo", "top": 3031, "bottom": 4250 },
+        { "name": "photos-condo", "top": 4250, "bottom": 5140 },
+        { "name": "reasons", "top": 5140, "bottom": 6300 },
+        { "name": "flight", "top": 6300, "bottom": 7776 },
+        { "name": "phuket", "top": 7776, "bottom": 10388 },
+        { "name": "photos-calypso", "top": 10388, "bottom": 11112 },
+        { "name": "free-stay", "top": 11112, "bottom": 12460 },
+        { "name": "form", "top": 12460, "bottom": 14150 }
+      ]
+    },
+    {
+      "file": "cases/published/Landing-EVG-Group/Raw/Wireframes.jpg",
+      "prefix": "evg-wireframe",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1400 },
+        { "name": "projects", "top": 1400, "bottom": 2790 },
+        { "name": "condo", "top": 2790, "bottom": 4190 },
+        { "name": "photos-condo", "top": 4190, "bottom": 4985 },
+        { "name": "reasons", "top": 4985, "bottom": 6426 },
+        { "name": "flight", "top": 6426, "bottom": 7815 },
+        { "name": "phuket", "top": 7815, "bottom": 10083 },
+        { "name": "free-stay", "top": 10083, "bottom": 11480 },
+        { "name": "photos-calypso", "top": 11480, "bottom": 12275 },
+        { "name": "form", "top": 12275, "bottom": 14006 }
+      ]
+    }
+  ]
+}

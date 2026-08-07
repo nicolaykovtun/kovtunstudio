@@ -1,0 +1,118 @@
+{
+  "outDir": "public/assets/cases/website-greatway",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "fullQuality": 82,
+  "thumbQuality": 72,
+  "cover": {
+    "file": "cases/published/Website-Greatway/Raw/Home page.jpg",
+    "top": 0,
+    "height": 1906,
+    "name": "greatway-cover",
+    "fit": "cover"
+  },
+  "sources": [
+    {
+      "file": "cases/published/Website-Greatway/Raw/Home page.jpg",
+      "prefix": "greatway-home",
+      "blocks": [
+        { "name": "hero", "top": 0, "bottom": 1906 },
+        { "name": "clients", "top": 1906, "bottom": 3197 },
+        { "name": "services", "top": 3197, "bottom": 4805 },
+        { "name": "route", "top": 4805, "bottom": 6125 },
+        { "name": "china", "top": 6125, "bottom": 8342 },
+        { "name": "partners", "top": 8342, "bottom": 9605 },
+        { "name": "transport", "top": 9605, "bottom": 11333 },
+        { "name": "calc", "top": 11333, "bottom": 12384 },
+        { "name": "footer", "top": 12384, "bottom": 13770 }
+      ]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Перевозка контейнеров.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 1, "name": "containers" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Перевозка сборных грузов.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 2, "name": "groupage" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Перевозка негабаритных грузов.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 3, "name": "oversized" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Перевозки сыпучих и навалочных грузов.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 4, "name": "bulk" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Агентские услуги в Китае.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 5, "name": "china" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Судовое агентирование.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 6, "name": "ship-agency" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Направления грузоперевозок.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 7, "name": "directions" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Все кейсы.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 8, "name": "projects" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Страница кейса.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 9, "name": "project" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Контакты.jpg",
+      "prefix": "greatway-page",
+      "blocks": [{ "order": 10, "name": "contacts" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Автомобильные перевозки.jpg",
+      "prefix": "greatway-modal",
+      "blocks": [{ "order": 1, "name": "road" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Железнодорожные грузоперевозки.jpg",
+      "prefix": "greatway-modal",
+      "blocks": [{ "order": 2, "name": "rail" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Морские и речные  грузоперевозки.jpg",
+      "prefix": "greatway-modal",
+      "blocks": [{ "order": 3, "name": "sea" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Авиа перевозки.jpg",
+      "prefix": "greatway-modal",
+      "blocks": [{ "order": 4, "name": "air" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Мультимодальные грузоперевозки.jpg",
+      "prefix": "greatway-modal",
+      "blocks": [{ "order": 5, "name": "multimodal" }]
+    },
+    {
+      "file": "cases/published/Website-Greatway/Raw/Форма расчета стомости маршрута.jpg",
+      "prefix": "greatway-modal",
+      "blocks": [
+        {
+          "order": 6,
+          "name": "calc",
+          "padTo": "2128 / 1528",
+          "padBackground": "#FFFFFF"
+        }
+      ]
+    }
+  ]
+}
