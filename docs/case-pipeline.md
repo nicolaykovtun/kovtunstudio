@@ -206,6 +206,9 @@ node tmp/check-page.mjs "dist/cases/<slug>/index.html"               # пров�
    как есть. Не подбирайте приблизительную сферу — добавьте новую.
 3. Добавить клиента и его сферу в `proof-names` — `src/pages/index.astro`.
    Это единственный список на сайте, который не считается сам, см. ниже.
+4. Добавить ссылку на кейс в `public/llms.txt`, в раздел своего направления.
+   Забудете — сборка не пройдет: `npm run build` начинается с `scripts/check-llms.mjs`,
+   и он называет недостающие строки поименно.
 
 ## Счетчики: где какие числа
 
@@ -351,10 +354,8 @@ https://design.kovtun.studio
 
 | Папка | Что внутри |
 |---|---|
-| `Website-Greatway` | 17 макетов страниц, грузоперевозки. Вайрфреймов нет |
 | `Website-B2B Cosmetics` | 9 макетов + 10 страниц ТЗ от заказчика, косметика |
 | `Landing-Mercator-maritime` | лендинг + вайрфрейм |
-| `Landing-EVG-Group` | лендинг + вайрфрейм |
 
 Материал EON разобран и собран в `website-eon-phuket`: макеты перенесены из
 `Green Power/Landing` в `cases/published/Website-EON/Raw`. Там оказалось
@@ -373,8 +374,8 @@ https://design.kovtun.studio
 | `website-green-power`, `website-trubovarnya` | сайт |
 | `website-japan-shina`, `website-ptksk` | сайт |
 | `website-kapital-inform` | сайт |
-| `website-eon-phuket` | сайт |
-| `website-kuznitsa-dushi`, `website-ektostroy` | лендинг |
+| `website-eon-phuket`, `website-greatway` | сайт |
+| `website-kuznitsa-dushi`, `website-ektostroy`, `website-evg-group` | лендинг |
 | `presentation-edelweiss`, `presentation-terney-farmer`, `presentation-vmtp` | презентации |
 | `brochure-metall-invest` | брошюра |
 | `green-power`, `japanhouse`, `primgril`, `japan-line`, `sila-car` | оклейка, legacy `cases.yaml` |
