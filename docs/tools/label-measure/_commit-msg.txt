@@ -1,0 +1,14 @@
+Статья про этикетки: черновик, картинки и отложенная публикация 17.08
+
+Статья лежит с draft: true, на сайте ее нет. Публикацию 17 августа
+делает workflow publish-scheduled-post.yml на серверах GitHub, компьютер
+для этого не нужен. Он снимает черновик скриптом publish-blog-post.cjs,
+дописывает строку в llms.txt, коммитит, собирает и выкатывает на Pages.
+Деплой продублирован внутри workflow намеренно: пуш встроенным токеном
+Actions не запускает deploy.yml.
+
+Также: инструменты обмера этикеток в docs/tools/label-measure,
+справочник по маркировке в docs/ai-seo, черновик кейса этикеток масла.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01KqziWBBr9C2ieUER3u3ZWc

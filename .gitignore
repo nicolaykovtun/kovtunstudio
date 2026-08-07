@@ -21,6 +21,10 @@ dist/
 # Локальные хелперы (только для машины Николая)
 _*.bat
 
+# Файлы, помеченные к ручному удалению. У Claude нет прав удалять файлы
+# на машине, поэтому мусор он переименовывает с этим префиксом.
+_to_delete_*
+
 # Local backups of original (pre-optimized) image assets — not for repo
 assets/**/original/
 
