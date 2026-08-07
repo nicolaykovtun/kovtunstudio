@@ -31,6 +31,20 @@ const isPageMatch = (href: string) => {
 };
 const isItemActive = (item: NavItem) =>
   isPageMatch(item.href) || (item.children?.some(child => isPageMatch(child.href)) ?? false);
+
+// У пункта-кнопки своей страницы нет, поэтому «где я нахожусь» для него
+// определяют только дочерние ссылки. Иначе «Услуги» с href="/" горели бы
+// красным на главной, хотя кнопка никуда не ведет.
+const isTriggerActive = (item: NavItem) =>
+  item.children?.some(child => isPageMatch(child.href)) ?? false;
+
+// Пункты с вложенными ссылками получают панель мега-меню. Панели лежат
+// не внутри пункта, а одним блоком под строкой шапки: так они занимают
+// всю ширину и при переходе с одного пункта на другой не закрываются,
+// а меняют высоту. Индекс пункта связывает кнопку и ее панель.
+const megaItems = nav
+  .map((item, index) => ({ item, index }))
+  .filter(entry => entry.item.children && entry.item.children.length > 0);
 ---
 <header class="k-header">
   <div class="container-wide row">
@@ -39,44 +53,21 @@ const isItemActive = (item: NavItem) =>
       <img class="logo-light" src="/assets/logo-on-dark.svg" alt="Kovtun.studio">
     </a>
     <nav aria-label="Главная навигация">
-      {nav.map(item => (
-        item.children ? (
-          <div class="nav-item nav-item--mega">
-            <a href={item.href} aria-current={isItemActive(item) ? 'page' : undefined}>{item.label}</a>
-            <div class="mega-dropdown">
-              <div class="mega-dropdown__inner">
-                <div class="mega-tabs" data-mega-tabs>
-                  <span class="mega-tabs__indicator" aria-hidden="true"></span>
-                  {item.children.map((child, i) => (
-                    <a
-                      href={child.href}
-                      class="mega-tab"
-                      data-mega-tab={i}
-                      aria-current={isPageMatch(child.href) ? 'page' : undefined}
-                    >
-                      <span class="mega-tab__title">{child.label}</span>
-                      {child.desc && <span class="mega-tab__desc">{child.desc}</span>}
-                    </a>
-                  ))}
-                </div>
-                <div class="mega-preview" data-mega-preview>
-                  {item.children.map((child, i) => (
-                    <a href={child.href} class="mega-preview__item" data-mega-panel={i}>
-                      <span class="mega-preview__frame">
-                        {child.image ? (
-                          <img src={child.image} alt="" loading="lazy" width="480" height="300" />
-                        ) : (
-                          <span class="mega-preview__soon">
-                            <span class="mega-preview__soon-label">Скоро</span>
-                          </span>
-                        )}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+      {nav.map((item, index) => (
+        item.children && item.children.length > 0 ? (
+          <button
+            type="button"
+            class:list={['nav-trigger', { 'is-current': isTriggerActive(item) }]}
+            data-mega-trigger={index}
+            aria-expanded="false"
+            aria-controls={`mega-panel-${index}`}
+          >
+            {item.label}
+            <svg class="nav-trigger__chevron" viewBox="0 0 10 6" aria-hidden="true" focusable="false">
+              <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         ) : (
           <a href={item.href} aria-current={isItemActive(item) ? 'page' : undefined}>{item.label}</a>
         )
@@ -99,6 +90,48 @@ const isItemActive = (item: NavItem) =>
       </button>
     </div>
   </div>
+
+  {megaItems.length > 0 && (
+    <!-- Мега-меню: одна раскрывающаяся полоса под строкой шапки. Панели
+         пунктов сложены в одну клетку грида, поэтому переход с «Услуг» на
+         другой пункт не закрывает меню, а меняет его высоту. Высоту в
+         пикселях ставит JS: анимировать height: auto браузер не умеет. -->
+    <div class="mega" data-mega aria-hidden="true">
+      <div class="mega__stack">
+        {megaItems.map(({ item, index }) => (
+          <div class="mega__panel" id={`mega-panel-${index}`} data-mega-panel={index} inert>
+            <div class="container-wide mega__grid">
+              {item.children!.map(child => (
+                <a class="mega-card" href={child.href} aria-current={isPageMatch(child.href) ? 'page' : undefined}>
+                  <span class="mega-card__frame">
+                    {child.image ? (
+                      <img src={child.image} alt="" loading="lazy" width="480" height="270" />
+                    ) : (
+                      <span class="mega-card__soon">
+                        <span class="mega-card__soon-label">Скоро</span>
+                      </span>
+                    )}
+                  </span>
+                  <span class="mega-card__meta">
+                    <span class="mega-card__text">
+                      <span class="mega-card__title">{child.label}</span>
+                      {child.desc && <span class="mega-card__desc">{child.desc}</span>}
+                    </span>
+                    <span class="mega-card__arrow" aria-hidden="true">
+                      <svg viewBox="0 0 14 14" focusable="false">
+                        <path d="M3 11L11 3M11 3H4.6M11 3v6.4" fill="none" stroke="currentColor"
+                              stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
 
   <!-- Закрытая панель свернута через height: 0 и overflow: hidden, но ссылки
        внутри остаются в потоке и ловят фокус табом. Для aria-hidden это
@@ -220,61 +253,127 @@ const isItemActive = (item: NavItem) =>
 </script>
 
 <script>
-  // Мега-дропдаун «Услуги»: наведение/фокус на пункт переключает превью
-  // справа и двигает подложку-индикатор за курсором (как shifting-tabs).
+  // Мега-меню шапки: наведение на пункт со стрелкой раскрывает полосу с
+  // карточками направлений. Переход на соседний такой пункт не закрывает
+  // полосу — она меняет высоту под новую панель. Уводим курсор из шапки
+  // (или Esc) — закрывается.
   (function () {
-    var tabsWrap = document.querySelector('[data-mega-tabs]');
-    var previewWrap = document.querySelector('[data-mega-preview]');
-    if (!tabsWrap || !previewWrap) return;
+    var header = document.querySelector('.k-header');
+    var mega = document.querySelector('[data-mega]');
+    if (!header || !mega) return;
 
-    var tabs = Array.prototype.slice.call(tabsWrap.querySelectorAll('[data-mega-tab]'));
-    var panels = Array.prototype.slice.call(previewWrap.querySelectorAll('[data-mega-panel]'));
-    var indicator = tabsWrap.querySelector('.mega-tabs__indicator');
-    var activeIndex = 0;
-    var matchedCurrent = false;
+    var triggers = Array.prototype.slice.call(header.querySelectorAll('[data-mega-trigger]'));
+    var panels = Array.prototype.slice.call(mega.querySelectorAll('[data-mega-panel]'));
+    var plainLinks = Array.prototype.slice.call(header.querySelectorAll('nav a'));
+    if (!triggers.length || !panels.length) return;
 
-    tabs.forEach(function (tab, i) {
-      if (tab.getAttribute('aria-current') === 'page') { activeIndex = i; matchedCurrent = true; }
-    });
-    // Ни один пункт не активен (мы не на одной из страниц-направлений) —
-    // открываем превью на первом пункте с реальной картинкой кейса,
-    // а не на плейсхолдере «Скоро».
-    if (!matchedCurrent) {
+    var openIndex = -1;
+
+    function panelFor(index) {
       for (var i = 0; i < panels.length; i++) {
-        if (panels[i].querySelector('img')) { activeIndex = i; break; }
+        if (panels[i].getAttribute('data-mega-panel') === String(index)) return panels[i];
       }
+      return null;
     }
 
-    function setActive(index) {
-      activeIndex = index;
-      tabs.forEach(function (tab, i) { tab.classList.toggle('is-hover', i === index); });
-      panels.forEach(function (panel, i) { panel.classList.toggle('is-active', i === index); });
-      var tab = tabs[index];
-      if (tab && indicator) {
-        indicator.style.transform = 'translateY(' + tab.offsetTop + 'px)';
-        indicator.style.height = tab.offsetHeight + 'px';
-        indicator.style.opacity = '1';
-      }
+    function open(index) {
+      var panel = panelFor(index);
+      if (!panel || openIndex === index) return;
+      openIndex = index;
+
+      panels.forEach(function (p) {
+        var isActive = p === panel;
+        p.classList.toggle('is-active', isActive);
+        p.toggleAttribute('inert', !isActive);
+      });
+      triggers.forEach(function (t) {
+        var isActive = t.getAttribute('data-mega-trigger') === String(index);
+        t.classList.toggle('is-open', isActive);
+        t.setAttribute('aria-expanded', String(isActive));
+      });
+
+      header.classList.add('has-mega-open');
+      mega.setAttribute('aria-hidden', 'false');
+      mega.style.height = panel.offsetHeight + 'px';
     }
 
-    tabs.forEach(function (tab, i) {
-      tab.addEventListener('mouseenter', function () { setActive(i); });
-      tab.addEventListener('focus', function () { setActive(i); });
+    function close() {
+      if (openIndex === -1) return;
+      openIndex = -1;
+      panels.forEach(function (p) {
+        p.classList.remove('is-active');
+        p.setAttribute('inert', '');
+      });
+      triggers.forEach(function (t) {
+        t.classList.remove('is-open');
+        t.setAttribute('aria-expanded', 'false');
+      });
+      header.classList.remove('has-mega-open');
+      mega.setAttribute('aria-hidden', 'true');
+      mega.style.height = '0px';
+    }
+
+    // Мышь есть — работает наведение. На тач-устройстве браузер подделывает
+    // mouseenter при тапе, и панель открывалась бы и тут же закрывалась
+    // кликом, поэтому там оставляем только клик.
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    triggers.forEach(function (trigger) {
+      var index = Number(trigger.getAttribute('data-mega-trigger'));
+      if (canHover) {
+        trigger.addEventListener('mouseenter', function () { open(index); });
+      }
+      // Клик — для клавиатуры и тач-устройств, где наведения нет.
+      trigger.addEventListener('click', function () {
+        if (openIndex === index) close(); else open(index);
+      });
     });
 
-    // Начальная позиция индикатора (без анимации первого прыжка)
-    function placeInitial() {
-      indicator.style.transition = 'none';
-      setActive(activeIndex);
-      // вернуть анимацию на следующий кадр
-      requestAnimationFrame(function () {
-        indicator.style.transition = '';
+    if (canHover) {
+      // Наведение на пункт без вложенных ссылок закрывает раскрытую полосу:
+      // иначе она висит над страницей, пока курсор гуляет по шапке.
+      plainLinks.forEach(function (link) {
+        link.addEventListener('mouseenter', close);
+      });
+      header.addEventListener('mouseleave', close);
+    } else {
+      // Тап мимо шапки — закрыть.
+      document.addEventListener('click', function (e) {
+        if (openIndex === -1 || header.contains(e.target)) return;
+        close();
       });
     }
-    placeInitial();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(placeInitial);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || openIndex === -1) return;
+      var trigger = header.querySelector('[data-mega-trigger="' + openIndex + '"]');
+      close();
+      if (trigger) trigger.focus();
+    });
+
+    // Ушли фокусом за пределы шапки (таб из последней карточки) — закрыть.
+    header.addEventListener('focusout', function (e) {
+      if (!e.relatedTarget || header.contains(e.relatedTarget)) return;
+      close();
+    });
+
+    // Высота полосы задана в пикселях, а содержимое панели может стать выше
+    // уже после открытия: догрузился шрифт и подписи перенеслись иначе,
+    // догрузилась картинка, изменилась ширина окна. Наблюдатель ловит все
+    // три случая — иначе низ карточек обрезался.
+    function resync() {
+      if (openIndex === -1) return;
+      var panel = panelFor(openIndex);
+      if (panel) mega.style.height = panel.offsetHeight + 'px';
     }
-    window.addEventListener('resize', function () { setActive(activeIndex); });
+    if (window.ResizeObserver) {
+      var observer = new ResizeObserver(resync);
+      panels.forEach(function (p) { observer.observe(p); });
+    } else {
+      window.addEventListener('resize', resync);
+      mega.querySelectorAll('img').forEach(function (img) {
+        img.addEventListener('load', resync);
+      });
+    }
   })();
 </script>

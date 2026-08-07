@@ -109,6 +109,9 @@ body.theme-dark {
 body.theme-dark .k-header {
   background: rgba(19,19,18,.84);
 }
+/* С открытой полосой мега-меню шапка становится плотной: сквозь
+   полупрозрачную подложку просвечивал бы контент страницы. */
+.k-header.has-mega-open { background: var(--bg-1); }
 .k-header .row {
   display: flex; align-items: center; justify-content: space-between;
   padding-top: 18px;
@@ -144,154 +147,175 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
   padding-bottom: 4px;
 }
 
-/* ─── Пункт меню с выпадающим списком («Услуги») ───────────────────── */
-.k-header nav .nav-item {
-  position: relative;
-  display: flex;
-  align-items: center;
+/* ─── Пункт меню, раскрывающий мега-полосу («Услуги») ───────────────
+   Кнопка, а не ссылка: у пункта нет своей страницы, его задача —
+   открыть панель. Внешне не отличается от соседних ссылок. */
+.k-header nav .nav-trigger {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 500 14px/1 var(--font-body);
+  color: var(--fg-1);
+  background: none; border: 0; padding: 6px 0;
+  cursor: pointer;
+  transition: color var(--dur-fast);
 }
+.k-header nav .nav-trigger:hover,
+.k-header nav .nav-trigger.is-open { color: var(--ks-red); }
+.k-header nav .nav-trigger.is-current {
+  color: var(--ks-red);
+  border-bottom: 2px solid var(--ks-red);
+  padding-bottom: 4px;
+}
+.nav-trigger__chevron {
+  width: 10px; height: 6px;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.k-header nav .nav-trigger.is-open .nav-trigger__chevron { transform: rotate(180deg); }
 
-/* ─── Мега-дропдаун «Услуги» — список направлений + превью справа ───
-   Слева — направления (текстовые вкладки с подложкой-индикатором,
-   которая едет за курсором/фокусом). Справа — превью наведенного
-   направления: картинка кейса + подпись. Раскрывается по hover/focus
-   так же, как обычный dropdown (см. .nav-item:hover выше). */
-.k-header nav .nav-item--mega .mega-dropdown {
+/* ─── Мега-меню — полоса с карточками направлений ───────────────────
+   Раскрывается из самой шапки во всю ее ширину и накрывает страницу
+   (position: absolute — иначе рост шапки сдвигал бы контент вниз).
+   Высоту в пикселях ставит JS: height: auto не анимируется. */
+.mega {
   position: absolute;
-  top: calc(100% + 14px);
-  left: 50%;
-  transform: translate(-50%, 6px);
-  width: 800px;
-  max-width: calc(100vw - 48px);
+  top: 100%; left: 0; right: 0;
+  height: 0;
+  overflow: hidden;
   background: var(--bg-1);
-  border: 1px solid var(--line-1);
-  border-radius: var(--r-3);
-  box-shadow: var(--shadow-3);
+  transition: height var(--dur-slow) var(--ease-out);
+  z-index: 45;
+}
+.k-header.has-mega-open .mega { border-bottom: 1px solid var(--line-1); }
+/* Панели пунктов лежат в одной клетке грида: высота полосы едет от одной
+   к другой, а карточки в это время перекрещиваются прозрачностью. */
+.mega__stack { display: grid; grid-template-columns: 1fr; }
+.mega__panel {
+  grid-area: 1 / 1;
+  /* Без align-self панели растянулись бы до высоты самой высокой из них,
+     и полоса перестала бы менять высоту при переходе между пунктами. */
+  align-self: start;
+  /* min-width: auto у grid-элемента не дает панели сжаться ниже min-content
+     сетки карточек — на ширине около 1024 она вылезала за край шапки. */
+  min-width: 0;
+  padding: 24px 0 32px;
   opacity: 0;
   visibility: hidden;
-  overflow: hidden;
-  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility var(--dur-base);
-  z-index: 50;
+  transition: opacity var(--dur-base) var(--ease-out), visibility var(--dur-base);
 }
-.k-header nav .nav-item--mega:hover .mega-dropdown,
-.k-header nav .nav-item--mega:focus-within .mega-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
-}
-.mega-dropdown__inner { display: flex; align-items: stretch; }
-
-/* Левая колонка — вкладки направлений */
-.mega-tabs {
-  position: relative;
-  flex: 0 0 248px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.mega-tabs__indicator {
-  position: absolute;
-  left: 10px; right: 10px; top: 0;
-  height: 0;
-  background: var(--bg-2);
-  border-radius: var(--r-2);
-  opacity: 0;
-  transition: transform var(--dur-base) var(--ease-out), height var(--dur-base) var(--ease-out), opacity var(--dur-fast);
-  z-index: 0;
-  pointer-events: none;
-}
-/* Специфичность важна: общее правило «.k-header nav a» (padding: 6px 0)
-   иначе перебивает паддинги вкладки — держим селектор длиннее его. */
-.k-header nav .mega-tabs .mega-tab {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 11px 14px;
-  margin: 0;
-  border-radius: var(--r-2);
-  color: var(--fg-1);
-  border: 0;
-  text-decoration: none;
-}
-.mega-tab__title {
-  font: 700 14px/1.2 var(--font-display);
-  letter-spacing: -0.005em;
-}
-.mega-tab__desc {
-  font: 400 12.5px/1.4 var(--font-body);
-  color: var(--fg-3);
-}
-.k-header nav .mega-tab[aria-current="page"] .mega-tab__title { color: var(--ks-red); }
-
-/* Правая колонка — превью наведенного направления (кросс-фейд).
-   Ширина трека задана явно в 1fr (иначе процент от неопределенной
-   ширины схлопывается в 0), а высота — по контенту: рамка превью
-   сама задает себе высоту через aspect-ratio от уже известной
-   ширины, так что картинка получает максимум места и не мельчает. */
-.mega-preview {
-  position: relative;
-  flex: 1 1 auto;
+.mega__panel.is-active { opacity: 1; visibility: visible; }
+.mega__grid {
   display: grid;
-  grid-template-columns: 1fr;
-  border-left: 1px solid var(--line-1);
-  background: var(--bg-3);
+  /* 160px — минимум, при котором пять направлений держатся в одну строку
+     до ширины окна ~920px; ниже 901px полоса не показывается вовсе. */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  /* Карточки одной высоты: у «Логотипа и фирменного стиля» название
+     переносится на две строки, и по контенту ряд получался рваным. */
+  align-items: stretch;
 }
-.k-header nav .mega-preview .mega-preview__item {
-  grid-area: 1 / 1;
+
+/* Карточка направления: превью кейса, название, стрелка. Подпись под
+   картинкой, а не поверх нее: превью — скриншоты и обложки, текст на
+   них не читается. */
+.k-header .mega-card {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 10px 10px 12px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-3);
+  background: var(--bg-1);
+  text-decoration: none;
+  color: var(--fg-1);
+  /* Карточки поднимаются на место друг за другом — полоса раскрывается,
+     а не появляется целиком. Задержка вынесена в переменную: общий
+     transition-delay тормозил бы и подсветку карточки под курсором. */
+  --rise-delay: 0ms;
+  transform: translateY(10px);
+  transition: background var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out) var(--rise-delay);
+}
+.mega__panel.is-active .mega-card { transform: none; }
+.mega-card:nth-child(2) { --rise-delay: 40ms; }
+.mega-card:nth-child(3) { --rise-delay: 80ms; }
+.mega-card:nth-child(4) { --rise-delay: 120ms; }
+.mega-card:nth-child(5) { --rise-delay: 160ms; }
+.k-header .mega-card:hover { background: var(--bg-2); border-color: var(--line-2); }
+/* Высота превью фиксированная, а не через aspect-ratio: иначе панель из
+   двух карточек становится вдвое выше панели из пяти — карточки шире,
+   значит и выше. Полоса меню должна держать примерно одну высоту. */
+.mega-card__frame {
   display: block;
   width: 100%;
-  padding: 14px;
-  margin: 0;
-  opacity: 0;
-  transform: translateX(8px) scale(.98);
-  pointer-events: none;
-  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
-  border: 0;
-  text-decoration: none;
-  color: var(--fg-1);
-}
-.k-header nav .mega-preview .mega-preview__item.is-active {
-  opacity: 1;
-  transform: translateX(0) scale(1);
-  pointer-events: auto;
-}
-.mega-preview__frame {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 150px;
   border-radius: var(--r-2);
   overflow: hidden;
-  background: var(--bg-1);
+  background: var(--bg-3);
 }
-.mega-preview__frame img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+.mega-card__frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
   display: block;
   transition: transform 500ms var(--ease-out);
 }
-.mega-preview__item:hover .mega-preview__frame img { transform: scale(1.03); }
-.mega-preview__soon {
+.mega-card:hover .mega-card__frame img { transform: scale(1.04); }
+.mega-card__soon {
   width: 100%; height: 100%;
   display: grid; place-items: center;
   background:
     repeating-linear-gradient(135deg, transparent 0 10px, rgba(255,255,255,.05) 10px 11px),
     var(--ks-charcoal);
 }
-.mega-preview__soon-label {
+.mega-card__soon-label {
   font: 700 11px/1 var(--font-display);
   letter-spacing: 0.16em; text-transform: uppercase;
   color: rgba(255,255,255,.72);
   border: 1px solid rgba(255,255,255,.28);
   border-radius: var(--r-2);
   padding: 8px 12px;
+}
+.mega-card__meta {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 0 4px;
+}
+.mega-card__text { display: flex; flex-direction: column; gap: 4px; }
+/* Место под две строки заголовка: «Логотип и фирменный стиль» переносится,
+   и без резерва подписи в соседних карточках стояли на разной высоте. */
+.mega-card__title {
+  font: 700 14px/1.25 var(--font-display);
+  letter-spacing: -0.005em;
+  min-height: 2.5em;
+}
+.mega-card__desc { font: 400 12.5px/1.4 var(--font-body); color: var(--fg-3); }
+.k-header .mega-card[aria-current="page"] .mega-card__title { color: var(--ks-red); }
+.mega-card__arrow {
+  flex: 0 0 auto;
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--bg-2);
+  color: var(--fg-1);
+  transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+}
+.mega-card__arrow svg { width: 14px; height: 14px; }
+.mega-card:hover .mega-card__arrow { background: var(--ks-red); color: #fff; }
+
+/* На узком десктопе карточки сужаются, и подписи разгоняют полосу до
+   350px в высоту. Названия направлений и превью там достаточно. */
+@media (max-width: 1120px) {
+  .mega-card__desc { display: none; }
+}
+
+/* Полосу открывает наведение — на тач-устройствах его нет, там работает
+   мобильное меню, а не эта панель. */
+@media (max-width: 900px) {
+  .mega { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mega, .mega__panel, .nav-trigger__chevron,
+  .mega-card, .mega-card__frame img, .mega-card__arrow {
+    transition-duration: 1ms;
+    --rise-delay: 0ms;
+  }
+  .mega-card { transform: none; }
 }
 
 .k-header .actions { display: flex; align-items: center; gap: 12px; }
