@@ -286,17 +286,25 @@ body.theme-dark .k-header .brand .logo-light { display: block; }
 }
 .mega-card__desc { font: 400 12.5px/1.4 var(--font-body); color: var(--fg-3); }
 .k-header .mega-card[aria-current="page"] .mega-card__title { color: var(--ks-red); }
+/* Квадратная рамка, не круг: в шапке нет других круглых элементов,
+   а рамка повторяет форму превью и плашки «Скоро». */
 .mega-card__arrow {
   flex: 0 0 auto;
   width: 26px; height: 26px;
   display: grid; place-items: center;
-  border-radius: 50%;
-  background: var(--bg-2);
-  color: var(--fg-1);
-  transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-2);
+  color: var(--fg-3);
+  transition: border-color var(--dur-base) var(--ease-out),
+              background var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out);
 }
 .mega-card__arrow svg { width: 14px; height: 14px; }
-.mega-card:hover .mega-card__arrow { background: var(--ks-red); color: #fff; }
+.mega-card:hover .mega-card__arrow {
+  border-color: var(--ks-red);
+  background: var(--ks-red);
+  color: #fff;
+}
 
 /* На узком десктопе карточки сужаются, и подписи разгоняют полосу до
    350px в высоту. Названия направлений и превью там достаточно. */
