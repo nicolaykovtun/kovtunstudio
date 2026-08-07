@@ -134,6 +134,6 @@ groups:
       - file: eon-popup-01-daypass
         label: Окно Day Pass — что входит в один день и форма заявки
       - file: eon-popup-02-offer
-        label: Спецпредложение — десять бесплатных Day Pass за почту
+        label: Спецпредложение — розыгрыш десяти бесплатных Day Pass
       - file: eon-popup-03-sent
         label: Экран «Заявка получена»
