@@ -10,7 +10,6 @@ pubDate: 2026-08-17
 section: Упаковка
 serviceLink: /portfolio/
 serviceLabel: Дизайн упаковки и этикеток
-draft: true
 faq:
   - q: Что обязательно должно быть на этикетке продуктов?
     a: >-
