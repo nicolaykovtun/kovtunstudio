@@ -1,0 +1,126 @@
+{
+  "outDir": "public/assets/cases/website-b2b-cosmetics",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "fullQuality": 82,
+  "thumbQuality": 72,
+  "cover": {
+    "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Главная.jpg",
+    "top": 0,
+    "height": 2160,
+    "name": "b2b-cosmetics-website-cover",
+    "background": "#ffffff"
+  },
+  "sources": [
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Главная.jpg",
+      "prefix": "b2b-home",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 2280 },
+        { "order": 2, "name": "why", "top": 2280, "bottom": 3610 },
+        { "order": 3, "name": "audience", "top": 3610, "bottom": 5338 },
+        { "order": 4, "name": "earnings", "top": 5338, "bottom": 6581 },
+        { "order": 5, "name": "documents", "top": 6581, "bottom": 8923 },
+        { "order": 6, "name": "terms", "top": 8923, "bottom": 10550 },
+        { "order": 7, "name": "price", "top": 10550, "bottom": 12470 },
+        { "order": 8, "name": "brands", "top": 12470, "bottom": 15322 },
+        { "order": 9, "name": "footer", "top": 15322, "bottom": 16134 }
+      ]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Главная.jpg",
+      "prefix": "b2b-wireframe",
+      "blocks": [
+        { "order": 1, "name": "hero", "top": 0, "bottom": 2078 },
+        { "order": 3, "name": "audience", "top": 4272, "bottom": 6461 },
+        { "order": 6, "name": "terms", "top": 8486, "bottom": 10805 },
+        { "order": 8, "name": "brands", "top": 12907, "bottom": 17320 }
+      ]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Страница товара - BioAqua.jpg",
+      "prefix": "b2b-brand",
+      "blocks": [{ "order": 1, "name": "bioaqua" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Страница товара - rorec.jpg",
+      "prefix": "b2b-brand",
+      "blocks": [{ "order": 2, "name": "rorec" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Страница товара - Laikou.jpg",
+      "prefix": "b2b-brand",
+      "blocks": [{ "order": 3, "name": "laikou" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Страница товара - One Spring.jpg",
+      "prefix": "b2b-brand",
+      "blocks": [{ "order": 4, "name": "one-spring" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Страница товара - Images.jpg",
+      "prefix": "b2b-brand",
+      "blocks": [{ "order": 5, "name": "images" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Организаторам СП.jpg",
+      "prefix": "b2b-page",
+      "blocks": [{ "order": 1, "name": "organizers" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Доставка и оплата.jpg",
+      "prefix": "b2b-page",
+      "blocks": [{ "order": 2, "name": "delivery" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/Design - Доставка и оплата-1.jpg",
+      "prefix": "b2b-page",
+      "blocks": [{ "order": 3, "name": "contacts" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Главная.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 1, "name": "home" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Организаторам СП.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 2, "name": "organizers" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Доставка и оплата.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 3, "name": "delivery" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Контакты.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 4, "name": "contacts" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Биоаква.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 5, "name": "bioaqua" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - rorec.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 6, "name": "rorec" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Laikou.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 7, "name": "laikou" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - One spring.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 8, "name": "one-spring" }]
+    },
+    {
+      "file": "cases/published/Website-B2B-Cosmetics/Raw/ТЗ-от-заказчика - Images.jpg",
+      "prefix": "b2b-tz",
+      "blocks": [{ "order": 9, "name": "images" }]
+    }
+  ]
+}

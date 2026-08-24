@@ -13,6 +13,7 @@ export const caseCatalogOrder = [
   'website-greatway',
   'website-japan-shina',
   'website-kapital-inform',
+  'website-b2b-cosmetics',
   'website-kuznitsa-dushi',
   'website-ektostroy',
   'website-evg-group',
