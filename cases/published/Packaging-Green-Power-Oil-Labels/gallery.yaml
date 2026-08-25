@@ -1,0 +1,159 @@
+# Раскладка изображений кейса. Пути строятся из имени файла:
+# full/<file>.webp и thumb/<file>-thumbnail.webp внутри assetRoot.
+# Картинки собираются скриптом docs/tools/label-measure/make-case-images.cjs
+assetRoot: /assets/cases/labels-green-power-oil
+
+cover:
+  # Счет видов из alt убран: сводный кадр «Все масла» сейчас показывает 13 пар
+  # из 16. Пересоберете исходник — верните «16 видов» сюда и в ogAlt.
+  src: green-power-oil-cover.webp
+  alt: Линейка сыродавленных масел Green Power в бутылках 100 и 250 мл
+
+og: green-power-oil-cover.webp
+ogAlt: Этикетки сыродавленного масла Green Power на бутылках двух объемов
+
+keywords: дизайн этикетки, этикетка для масла, упаковка продуктов питания, линейка SKU, маркировка ТР ТС 022/2011, сыродавленное масло, Green Power, Владивосток, Николай Ковтун
+
+# Шаблон это поле не рендерит: configFromGallery в src/pages/cases/[slug].astro
+# берет только cover, compare, groups, related и подписи. Лид страницы — из
+# «Короткого описания» в case.md.
+intro: >-
+  Производство запускалось с нуля: этикетки не существовало, а линейка выходила
+  сразу из шестнадцати видов, каждый в двух объемах. Обязательная маркировка
+  забирает фиксированную площадь на каждом из 32 макетов.
+
+resultTitle: Что система дала линейке
+
+ctaTitle: Нужна этикетка, которая переживет расширение линейки?
+ctaText: >-
+  Расскажите, сколько видов и объемов планируется и в какой типографии печатаете.
+  Соберу систему так, чтобы новый вид вставал на готовую сетку, а обязательная
+  маркировка укладывалась в допустимый кегль без переверстки макета.
+ctaButton: Обсудить дизайн этикетки
+
+groups:
+  - id: bottles
+    title: Линейка в бутылках
+    # Рендеры вертикальные, 2:3. Плитку задаем под картинку, иначе бутылки
+    # обрезаются по высоте.
+    layout: tall
+    ratio: 2 / 3
+    intro: >-
+      Каждый вид разливается в две бутылки, 100 и 250 мл. На полке ряд читается
+      как один бренд из-за бронзового знака и белого поля, а нужное масло
+      покупатель находит по фотографии сырья вверху этикетки.
+    items:
+      - file: green-power-oil-bottles-01-kedrovyj-oreh
+        label: Масло кедрового ореха
+      - file: green-power-oil-bottles-02-lnyanoe
+        label: Льняное масло
+      - file: green-power-oil-bottles-03-podsolnechnoe
+        label: Подсолнечное масло
+      - file: green-power-oil-bottles-04-rastoropsha
+        label: Масло расторопши
+      - file: green-power-oil-bottles-05-gorchichnoe
+        label: Горчичное масло
+      - file: green-power-oil-bottles-06-fistashkovoe
+        label: Фисташковое масло
+      - file: green-power-oil-bottles-07-greckij-oreh
+        label: Масло грецкого ореха
+      - file: green-power-oil-bottles-08-abrikosovaya-kostochka
+        label: Масло абрикосовой косточки
+
+  - id: labels
+    title: Все шестнадцать видов, плоские макеты
+    # Этикетка 125×130 мм, файл 1064x1106. Плитку задаем по реальной пропорции.
+    # Шестнадцать штук — весь ассортимент, счет в заголовке сходится с сеткой.
+    layout: tall
+    ratio: 125 / 130
+    intro: >-
+      Здесь линейка целиком, в формате под 250 мл. Обязательные сведения занимают
+      левую колонку и нижнюю служебную полосу. Подписи полей бронзовые, значения
+      черные: колонка читается таблицей и не сливается в серое пятно. Дизайну
+      остаются верх и центр, и меняются в них только фотография сырья, название
+      и блок пользы — остальное на всех шестнадцати макетах одно и то же.
+    items:
+      - file: green-power-oil-label-01-kedrovyj-oreh
+        label: Кедрового ореха, 250 мл
+      - file: green-power-oil-label-02-lnyanoe
+        label: Льняное, 250 мл
+      - file: green-power-oil-label-03-podsolnechnoe
+        label: Подсолнечное, 250 мл
+      - file: green-power-oil-label-04-rastoropsha
+        label: Расторопши, 250 мл
+      - file: green-power-oil-label-05-gorchichnoe
+        label: Горчичное, 250 мл
+      - file: green-power-oil-label-06-chernyj-tmin
+        label: Черного тмина, 250 мл
+      - file: green-power-oil-label-07-greckij-oreh
+        label: Грецкого ореха, 250 мл
+      - file: green-power-oil-label-08-mindalnoe
+        label: Миндальное, 250 мл
+      - file: green-power-oil-label-09-fistashkovoe
+        label: Фисташковое, 250 мл
+      - file: green-power-oil-label-10-konoplyanoe
+        label: Ядер семян конопли, 250 мл
+      - file: green-power-oil-label-11-kokosovoe
+        label: Мякоти кокоса, 250 мл
+      - file: green-power-oil-label-12-amarantovoe
+        label: Амарантовое, 250 мл
+      - file: green-power-oil-label-13-oblepihovoe
+        label: Облепиховое, 250 мл
+      - file: green-power-oil-label-14-ryzhikovoe
+        label: Рыжиковое, 250 мл
+      - file: green-power-oil-label-15-abrikosovaya-kostochka
+        label: Абрикосовой косточки, 250 мл
+      - file: green-power-oil-label-16-shtirijskaya-tykva
+        label: Штирийской тыквы, 250 мл
+
+  - id: formats
+    title: Два формата в одном масштабе
+    layout: slides
+    ratio: 1600 / 935
+    intro: >-
+      Под 250 мл формат 125×130 мм, под 100 мл — 100×80 мм. Пропорция другая,
+      поэтому макет перекладывали заново, а не масштабировали. Обязательный текст
+      на малом формате прижат к нижней допустимой планке кегля и все равно
+      забирает 34% площади против 28% на большом — свободного поля под дизайн
+      остается треть вместо сорока процентов.
+    items:
+      - file: green-power-oil-two-formats
+        label: Одно масло в двух форматах, оба в одном масштабе
+
+  - id: postcard
+    title: Открытка-вкладка
+    # Ни slides, ни brochure. В slides сетка на 4 колонки, и две картинки садятся
+    # по четверти ширины — открытку в такой плитке не прочитать. В brochure нет
+    # сброса grid-column, базовый span 6 упирается в 3 колонки, и обе открытки
+    # разъезжаются во всю ширину, по экрану на штуку. screens дает 3 колонки,
+    # а ratio снимает обрезку.
+    layout: screens
+    ratio: 618 / 444
+    intro: >-
+      История производства на этикетку не помещалась. Отжим в деревянном бочонке,
+      трехэтапная обработка сырья и пять правил «без» ушли на двустороннюю
+      открытку 105×74 мм, которую вкладывают в упаковку.
+    items:
+      - file: green-power-oil-postcard-01-cover
+        label: Обложка открытки
+      - file: green-power-oil-postcard-02-inside
+        label: Разворот с правилами производства
+
+related:
+  # Три карточки, а не четыре: сетка кладет их в один ряд, четвертая уезжает
+  # на вторую строку одна. Сайт Green Power остался в «Ссылках и источниках».
+  title: Та же система, соседние линейки
+  intro: >-
+    Масло, соки и ореховая паста рисовались одновременно как одна система.
+    Знак, постоянные строки и круглые печати у них общие, а обязательный текст
+    разложен по-разному — под каждую упаковку свой прием.
+  items:
+    - slug: labels-green-power-juice
+      label: Этикетки соков
+      text: '19 вкусов в формате 42×76 мм: обязательное целиком унесено на оборот.'
+    - slug: labels-green-power-paste
+      label: Этикетки пасты
+      text: Пять ореховых паст на ленте 100×40 мм вокруг банки, маркировка по флангам.
+    - slug: identity-green-power
+      label: Фирменный стиль
+      text: Знак-дерево, пять исполнений, гайдбук на 8 страниц и знаки для этикетки.

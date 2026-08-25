@@ -115,6 +115,15 @@ const directions = taxonomy.directions.map((d: any, i: number) => {
 });
 const activeDirections = directions.filter((d: any) => d.caseCount > 0);
 
+// Подводка к списку направлений. Раньше строка была зашита руками — «уже открыты
+// сайты, презентации и оклейка авто» — и устарела, как только упаковка набрала
+// кейсы. Считаем ее из тех же данных, что и сам список.
+const listWords = (items: string[]) =>
+  items.length < 2 ? (items[0] ?? '') : items.slice(0, -1).join(', ') + ' и ' + items.at(-1);
+const openDirections = activeDirections.length === directions.length
+  ? 'Открыты все разделы: в каждом есть разобранные кейсы.'
+  : `Уже открыты ${listWords(activeDirections.map((d: any) => d.label.toLowerCase()))}; остальные разделы появятся после переноса архива.`;
+
 // Сферы: в фильтр — только те, где есть работы
 const spheres = taxonomy.spheres
   .map((s: any) => ({
@@ -169,8 +178,7 @@ const seoDescription =
         <div class="section-head">
           <h2 class="reveal">Направления<br>каталога</h2>
           <p class="aside reveal" style="--reveal-delay: 80ms">
-            Пять дисциплин одной студии. Уже открыты сайты, презентации
-            и оклейка авто; остальные разделы появятся после переноса архива.
+            Пять дисциплин одной студии. {openDirections}
           </p>
         </div>
         <ol class="dir-list">

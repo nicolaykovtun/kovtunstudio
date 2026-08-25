@@ -5,6 +5,9 @@
 export const caseCatalogOrder = [
   'identity-green-power',
   'website-green-power',
+  'labels-green-power-oil',
+  'labels-green-power-juice',
+  'labels-green-power-paste',
   'identity-trubovarnya',
   'website-trubovarnya',
   'identity-sila-car',

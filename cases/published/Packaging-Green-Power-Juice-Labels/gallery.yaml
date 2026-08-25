@@ -1,0 +1,165 @@
+# Раскладка изображений кейса. Пути строятся из имени файла:
+# full/<file>.webp и thumb/<file>-thumbnail.webp внутри assetRoot.
+# Картинки собираются скриптом docs/tools/label-measure/make-juice-paste-images.cjs
+assetRoot: /assets/cases/labels-green-power-juice
+
+cover:
+  # Кадр magnific_ksxXpiL16B, выбран Николаем. Шаблон режет обложку в 16:9
+  # с object-fit: cover, поэтому кадрируем заранее — иначе срезало бы крышки.
+  src: green-power-juice-cover.webp
+  alt: Семь бутылок сока прямого отжима Green Power в ряд, от тыквенного до гранатового
+
+og: green-power-juice-cover.webp
+ogAlt: Соки прямого отжима Green Power, линейка в бутылках 330 мл
+
+keywords: дизайн этикетки, этикетка для сока, упаковка напитков, сок прямого отжима, линейка SKU, маркировка ТР ТС 022/2011, Green Power, Владивосток, Николай Ковтун
+
+resultTitle: Что система дала линейке
+
+ctaTitle: Линейка растет, а этикетка каждый раз рисуется заново?
+ctaText: >-
+  Расскажите, сколько вкусов планируется, какая тара и есть ли место
+  под оборотную этикетку. Соберу систему так, чтобы обязательная маркировка
+  встала один раз, а новый вкус собирался заменой фона и фотографий.
+ctaButton: Обсудить дизайн этикетки
+
+groups:
+  - id: faces
+    title: Все девятнадцать вкусов
+    # Лицевая этикетка 42×76 мм, файл 495x884. Плитку задаем по пропорции файла.
+    # Раскладка slides: четыре колонки, иначе девятнадцать вертикальных плиток
+    # растягивают секцию на пять экранов.
+    layout: slides
+    ratio: 495 / 884
+    intro: >-
+      Порядок тот же, что на полке: от желтых к зеленым. Заливка у каждой
+      этикетки взята от цвета самого сока, сырье разлетается по полю кусками.
+      Постоянны знак, строки «ПИТАНИЕ ДЛЯ ЖИЗНИ» и «Высший сорт», две круглые
+      печати, бейдж «Взболтни меня» и объем 330 мл.
+    items:
+      - file: green-power-juice-face-01-ananas
+        label: Ананас
+      - file: green-power-juice-face-02-imuniti-pak
+        label: Имунити пак
+      - file: green-power-juice-face-03-apelsinovyj
+        label: Апельсиновый
+      - file: green-power-juice-face-04-dedushkina-tykva
+        label: Дедушкина тыква
+      - file: green-power-juice-face-05-morkov
+        label: Морковь
+      - file: green-power-juice-face-06-novogodnyaya-skazka
+        label: Новогодняя сказка, сезонный
+      - file: green-power-juice-face-07-ogonek
+        label: Огонек
+      - file: green-power-juice-face-08-notki-oseni
+        label: Нотки осени
+      - file: green-power-juice-face-09-letnij-briz
+        label: Летний бриз
+      - file: green-power-juice-face-10-tropicheskij-raj
+        label: Тропический рай
+      - file: green-power-juice-face-11-tomatnyj
+        label: Тот самый томатный
+      - file: green-power-juice-face-12-myatnyj-arbuz
+        label: Мятный арбуз
+      - file: green-power-juice-face-13-granatovyj-raj
+        label: Гранатовый рай
+      - file: green-power-juice-face-14-svekla
+        label: Свекла
+      - file: green-power-juice-face-15-na-everest
+        label: На эверест
+      - file: green-power-juice-face-16-organik-detoks
+        label: Органик детокс
+      - file: green-power-juice-face-17-yabloko
+        label: Яблоко
+      - file: green-power-juice-face-18-krasavchik
+        label: Красавчик
+      - file: green-power-juice-face-19-selderej
+        label: Сельдерей
+
+  - id: pairs
+    title: Лицо и оборот
+    # Склейка двух этикеток на белом, 1038x884.
+    layout: tall
+    ratio: 1038 / 884
+    intro: >-
+      Оборот устроен одинаково у всех девятнадцати: таблица пищевой ценности,
+      состав, штрихкод, знак EAC, поле даты розлива, срок годности пять суток,
+      условия хранения, адрес изготовителя, QR и горячая линия. Красится он
+      в цвет своего вкуса. Где нужно, добавляется строка про аллерген —
+      у «Органик детокса» это сельдерей.
+    items:
+      - file: green-power-juice-pair-01-ananas
+        label: Ананас, лицо и оборот
+      - file: green-power-juice-pair-11-tomatnyj
+        label: Тот самый томатный, лицо и оборот
+      - file: green-power-juice-pair-15-na-everest
+        label: На эверест, лицо и оборот
+      - file: green-power-juice-pair-19-selderej
+        label: Сельдерей, лицо и оборот
+
+  - id: lineup
+    title: Вся линейка в кадре
+    # Один широкий кадр во всю ширину: в slides у одиночной плитки срабатывает
+    # правило figure:only-child со span 12.
+    layout: slides
+    ratio: 2400 / 1340
+    intro: >-
+      Вся линейка разом. Ради этого кадра линейку и собирали по цвету: рядом
+      бутылки читаются градиентом, и нужный вкус находится по пятну заливки
+      раньше, чем по названию.
+    items:
+      - file: green-power-juice-lineup
+        label: Линейка соков прямого отжима в ряд
+
+  - id: bottles
+    title: Соки в бутылке
+    layout: tall
+    ratio: 2 / 3
+    intro: >-
+      Бутылка 330 мл с зеленой крышкой. В холодильной витрине ряд читается
+      цветом, а бейдж «Взболтни меня» виден раньше названия: сок прямого отжима
+      расслаивается, и это подсказка, а не украшение.
+    items:
+      - file: green-power-juice-bottle-01-ananas
+        label: Ананас
+      - file: green-power-juice-bottle-02-imuniti-pak
+        label: Имунити пак
+      - file: green-power-juice-bottle-04-dedushkina-tykva
+        label: Дедушкина тыква
+      - file: green-power-juice-bottle-05-morkov
+        label: Морковь
+      - file: green-power-juice-bottle-06-novogodnyaya-skazka
+        label: Новогодняя сказка
+      - file: green-power-juice-bottle-08-notki-oseni
+        label: Нотки осени
+      - file: green-power-juice-bottle-09-letnij-briz
+        label: Летний бриз
+      - file: green-power-juice-bottle-10-tropicheskij-raj
+        label: Тропический рай
+      - file: green-power-juice-bottle-11-tomatnyj
+        label: Тот самый томатный
+      - file: green-power-juice-bottle-13-granatovyj-raj
+        label: Гранатовый рай
+      - file: green-power-juice-bottle-15-na-everest
+        label: На эверест
+      - file: green-power-juice-bottle-16-organik-detoks
+        label: Органик детокс
+      - file: green-power-juice-bottle-17-yabloko
+        label: Яблоко
+
+related:
+  title: Та же система, соседние линейки
+  intro: >-
+    Соки, масло и ореховая паста рисовались одновременно как одна система.
+    Знак, постоянные строки и круглые печати у них общие, а обязательный текст
+    разложен по-разному — под каждую упаковку свой прием.
+  items:
+    - slug: labels-green-power-oil
+      label: Этикетки масла
+      text: '16 видов в двух форматах бутылки: обязательное в левой колонке и нижней полосе.'
+    - slug: labels-green-power-paste
+      label: Этикетки пасты
+      text: Пять ореховых паст на ленте 100×40 мм вокруг банки, маркировка по флангам.
+    - slug: identity-green-power
+      label: Фирменный стиль
+      text: Знак-дерево, пять исполнений, гайдбук на 8 страниц и знаки для этикетки.

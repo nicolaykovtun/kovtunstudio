@@ -382,13 +382,19 @@
 /* Карточек обычно одна-две: flex, а не auto-fit, чтобы одиночная карточка
    не растягивалась на всю ширину контейнера. */
 .case-related { display: flex; flex-wrap: wrap; gap: 24px; }
+/* Обложка сверху, текст под ней. В два столбца текст жило, пока карточек было
+   одна-две; на трех колонка сжимается до 140px и описание рассыпается
+   по одному слову в строку. */
 .case-related__card {
-  flex: 1 1 340px;
+  flex: 1 1 300px;
   max-width: 560px;
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) 24px;
-  gap: 24px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) 24px;
+  grid-template-areas:
+    'media media'
+    'body  arrow';
+  gap: 18px 20px;
+  align-items: start;
   padding: 20px;
   color: inherit;
   text-decoration: none;
@@ -397,9 +403,9 @@
   transition: border-color .18s ease, transform .18s ease;
 }
 .case-related__card:hover { border-color: var(--case-accent, var(--ks-red)); transform: translateY(-2px); }
-.case-related__media { display: block; overflow: hidden; background: var(--bg-2); }
+.case-related__media { grid-area: media; display: block; overflow: hidden; background: var(--bg-2); }
 .case-related__media img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
-.case-related__body { display: block; min-width: 0; }
+.case-related__body { grid-area: body; display: block; min-width: 0; }
 .case-related__body small {
   display: block;
   margin-bottom: 6px;
@@ -410,13 +416,14 @@
 }
 .case-related__body strong { display: block; margin-bottom: 8px; font: 780 22px/1.15 var(--font-display); letter-spacing: -.02em; }
 .case-related__body span { display: block; color: var(--fg-3); font-size: 15px; line-height: 1.5; }
-.case-related__arrow { color: var(--case-accent, var(--ks-red)); font-size: 20px; }
-.case-related__card:hover .case-related__arrow { transform: translateX(3px); }
-
-@media (max-width: 600px) {
-  .case-related__card { grid-template-columns: minmax(0, 1fr) 24px; gap: 16px; }
-  .case-related__media { grid-column: 1 / -1; }
+.case-related__arrow {
+  grid-area: arrow;
+  align-self: end;
+  color: var(--case-accent, var(--ks-red));
+  font-size: 20px;
+  transition: transform .18s ease;
 }
+.case-related__card:hover .case-related__arrow { transform: translateX(3px); }
 
 .case-comparison-section {
   padding: 120px 0;
