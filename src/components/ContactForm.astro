@@ -72,6 +72,11 @@ const { data, telegramUrl, maxUrl } = Astro.props;
             <label class="lbl" for="f-message">{data.fields.message.label}</label>
           </div>
 
+          <div class="lead-honeypot" aria-hidden="true">
+            <label for="f-website">Ваш сайт</label>
+            <input type="text" id="f-website" data-lead-hp tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="legal-consent">
             <input type="checkbox" id="f-consent" data-consent-checkbox>
             <label for="f-consent">
@@ -167,6 +172,14 @@ const { data, telegramUrl, maxUrl } = Astro.props;
     text-underline-offset: 3px;
   }
   .consent-error { margin-top: -8px; }
+  .lead-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 
   /* Блок копирования для MAX-flow — одна компактная строка на красной панели.
      :not([hidden]) — чтобы атрибут hidden реально скрывал блок для Telegram-flow. */

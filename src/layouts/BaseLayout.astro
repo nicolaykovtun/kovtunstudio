@@ -188,6 +188,70 @@ import CookieConsent from '../components/CookieConsent.astro';
   <slot />
   <CookieConsent metrikaId={site.metrika.id} metrikaOptions={site.metrika.options} />
 
+  <script is:inline define:vars={{
+    LEAD_ENDPOINT: site.leadCapture?.endpoint || '',
+    LEAD_FORM_KEY: site.leadCapture?.formKey || '',
+  }}>
+    (function () {
+      'use strict';
+
+      function readAttribution() {
+        var params = new URLSearchParams(window.location.search);
+        var current = {
+          utmSource: params.get('utm_source') || '',
+          utmMedium: params.get('utm_medium') || '',
+          utmCampaign: params.get('utm_campaign') || '',
+          referrer: document.referrer || ''
+        };
+        try {
+          var stored = JSON.parse(sessionStorage.getItem('kovtun_attribution') || '{}');
+          var merged = {
+            utmSource: current.utmSource || stored.utmSource || '',
+            utmMedium: current.utmMedium || stored.utmMedium || '',
+            utmCampaign: current.utmCampaign || stored.utmCampaign || '',
+            referrer: stored.referrer || current.referrer || ''
+          };
+          sessionStorage.setItem('kovtun_attribution', JSON.stringify(merged));
+          return merged;
+        } catch (_) {
+          return current;
+        }
+      }
+
+      function makeLeadId() {
+        var bytes = new Uint8Array(6);
+        if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+        else for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+        return Array.prototype.map.call(bytes, function (value) {
+          return value.toString(16).padStart(2, '0');
+        }).join('').toUpperCase();
+      }
+
+      var attribution = readAttribution();
+      window.kovtunLeadEvent = function (options) {
+        var id = makeLeadId();
+        if (!LEAD_ENDPOINT || !LEAD_FORM_KEY) return id;
+        var params = new URLSearchParams({
+          kind: 'website_lead',
+          formKey: LEAD_FORM_KEY,
+          id: id,
+          messenger: options && options.messenger || 'Telegram',
+          page: window.location.pathname,
+          utmSource: attribution.utmSource,
+          utmMedium: attribution.utmMedium,
+          utmCampaign: attribution.utmCampaign,
+          referrer: attribution.referrer,
+          website: document.querySelector('[data-lead-hp]')?.value || ''
+        });
+        try {
+          if (navigator.sendBeacon && navigator.sendBeacon(LEAD_ENDPOINT, params)) return id;
+          fetch(LEAD_ENDPOINT, { method: 'POST', body: params, mode: 'no-cors', keepalive: true }).catch(function () {});
+        } catch (_) {}
+        return id;
+      };
+    })();
+  </script>
+
   <script is:inline>
     (function () {
       document.querySelectorAll('form[data-legal-consent]').forEach(function (form) {

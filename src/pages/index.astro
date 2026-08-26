@@ -343,6 +343,7 @@ const faqLd = {
         if (data.name) lines.push('Имя: ' + data.name);
         if (data.task) lines.push('Направление и задача: ' + data.task);
         if (data.materials) lines.push('\nДетали:\n' + data.materials);
+        if (data.leadId) lines.push('\nЗаявка ID: ' + data.leadId);
         lines.push('\n' + CONSENT_MARKER);
         return lines.join('\n');
       }
@@ -383,9 +384,12 @@ const faqLd = {
           if (!validate()) return;
 
           var target = (event.submitter && event.submitter.dataset.target) || 'telegram';
-          var text = buildMessage({ name: fName.value.trim(), task: fTask.value.trim(), materials: fMessage.value.trim() });
-          var url = target === 'max' ? MAX_URL : TELEGRAM_URL + '?text=' + encodeURIComponent(text);
           var label = target === 'max' ? 'MAX' : 'Telegram';
+          var leadId = typeof window.kovtunLeadEvent === 'function'
+            ? window.kovtunLeadEvent({ messenger: label })
+            : '';
+          var text = buildMessage({ name: fName.value.trim(), task: fTask.value.trim(), materials: fMessage.value.trim(), leadId: leadId });
+          var url = target === 'max' ? MAX_URL : TELEGRAM_URL + '?text=' + encodeURIComponent(text);
 
           if (target === 'max') {
             copyArea.value = text;

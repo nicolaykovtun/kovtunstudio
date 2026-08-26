@@ -90,6 +90,12 @@ metrika:
     accurateTrackBounce: true
     trackLinks: true
 
+# Анонимный учёт переходов из формы в мессенджер.
+# endpoint появится после публикации Apps Script как веб-приложения.
+leadCapture:
+  endpoint: "https://script.google.com/macros/s/AKfycbxk9c_lFzFQ2WKH13swr49Y5_pciWWAmVJ11JDWxFdPp3_OS2JG5rp8bBJc_Mz-eTlB/exec"
+  formKey: "kovtun-studio-109482416"
+
 # Подтверждение владения у поисковиков
 verification:
   yandex: 028df78e847fe0b7

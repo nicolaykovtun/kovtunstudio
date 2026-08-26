@@ -211,6 +211,7 @@ const ldPortfolioCases = {
         if (d.name) lines.push("Имя: " + d.name);
         if (d.car) lines.push("Авто: " + d.car);
         if (d.message) lines.push("\nЗадача:\n" + d.message);
+        if (d.leadId) lines.push("\nЗаявка ID: " + d.leadId);
         lines.push("\n" + CONSENT_MARKER);
         return lines.join("\n");
       }
@@ -260,13 +261,18 @@ const ldPortfolioCases = {
 
           // По нажатой кнопке определяем целевой мессенджер
           var target = (e.submitter && e.submitter.dataset.target) || "telegram";
+          var label = target === "max" ? "MAX" : "Telegram";
+          var leadId = typeof window.kovtunLeadEvent === "function"
+            ? window.kovtunLeadEvent({ messenger: label })
+            : "";
           var text = buildMessage({
             name: fName.value.trim(),
             car: fCar.value.trim(),
-            message: fMessage.value.trim()
+            message: fMessage.value.trim(),
+            leadId: leadId
           });
 
-          var url, label, goalName;
+          var url, goalName;
           if (target === "max") {
             url = buildMaxURL(text);
             label = "MAX";
