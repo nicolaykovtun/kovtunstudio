@@ -1,0 +1,841 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import WhatGrid from '../components/WhatGrid.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import FounderSection from '../components/FounderSection.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
+import '../styles/presentations.css';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+// Локальная навигация страницы — как у /presentations/ и /car-wrap/.
+const nav = [
+  { href: '#scenarios', label: 'Сценарии' },
+  { href: '#pricing', label: 'Цены' },
+  { href: '#cases', label: 'Работы' },
+  { href: '#faq', label: 'FAQ' },
+];
+
+const hero = {
+  headline: 'Упаковка, которая',
+  headlineAccent: 'продает на полке',
+  lede:
+    'Этикетки, коробки, банки и канистры для производств. Система линейки, ' +
+    'которая выдерживает рост до десятков SKU, обязательная маркировка ' +
+    'по техрегламентам и файлы, готовые к печати.',
+  ctaPrimary: 'Обсудить упаковку',
+  ctaSecondary: 'Стоимость работ',
+  meta: [
+    { num: '40', suffix: ' SKU', label: 'Три линейки Green Power в кейсах' },
+    { num: '75', label: 'Макетов отрисовано и подготовлено к печати' },
+    { num: '48', suffix: ' ч', label: 'Экспресс-аудит текущей упаковки' },
+    { num: 'VVO', numAccent: '.', label: 'Владивосток · работаю по РФ' },
+  ],
+};
+
+const marquee = {
+  ariaLabel: 'Что разрабатываю в направлении упаковки',
+  items: [
+    'Этикетки',
+    'Коробки',
+    'Банки',
+    'Канистры',
+    'Саше и стики',
+    'Линейки SKU',
+    'Редизайн упаковки',
+    'Полка ритейла',
+    'Карточка маркетплейса',
+    'Подготовка к печати',
+  ],
+};
+
+const scenarios = [
+  {
+    num: '01',
+    title: 'Продукт запускается',
+    text:
+      'Упаковки еще нет. Собираю дизайн с нуля: позиционирование на полке, ' +
+      'конструкция макета, обязательная маркировка. Так запускались этикетки ' +
+      'масла Green Power — сразу линейкой из 16 видов.',
+    price: 'от 120 000 ₽',
+  },
+  {
+    num: '02',
+    title: 'Упаковка устарела',
+    text:
+      'Продукт продается, но на полке теряется: дизайн не различает позиции ' +
+      'или отстал от сегмента. Редизайн с сохранением узнаваемости — покупатель ' +
+      'должен продолжать находить знакомый продукт.',
+    price: 'от 120 000 ₽',
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'Линейка растет',
+    text:
+      'Позиций стало больше, чем выдерживает старый дизайн. Строю систему: ' +
+      'сетка, зоны параметров, правила масштабирования — новые SKU добавляются ' +
+      'без разъезда стиля, а серии можно развести по ценовым сегментам.',
+    price: 'от 220 000 ₽',
+  },
+];
+
+const approach = {
+  title: 'Что делает<br>упаковку рабочей',
+  aside:
+    'Четыре требования, которые проверяю в каждом проекте — от одной этикетки до линейки на десятки SKU.',
+  cards: [
+    {
+      num: '01',
+      title: 'Попадание в ценовой сегмент',
+      text:
+        'Дизайн должен соответствовать цене и ожиданиям покупателя своего сегмента ' +
+        'и выигрывать у конкурентов той же полки. Эконом, средний и премиум ' +
+        'считываются по-разному — промах на одну ступень стоит продаж.',
+    },
+    {
+      num: '02',
+      title: 'Навигация за три секунды',
+      text:
+        'Серия, вкус и ключевые параметры должны считываться сразу — на полке, ' +
+        'в превью маркетплейса, на стеллаже СТО. Иерархию задаю до отрисовки: ' +
+        'что покупатель видит первым, вторым, третьим.',
+      featured: true,
+    },
+    {
+      num: '03',
+      title: 'Система вместо разовых макетов',
+      text:
+        'Линейка держится на правилах: сетка, цветовое кодирование, зоны текста. ' +
+        'Тогда 16 или 19 позиций выглядят одной семьей, а новый SKU добавляется ' +
+        'за 2–3 дня, без перерисовки линейки.',
+    },
+    {
+      num: '04',
+      title: 'Готовность к производству',
+      text:
+        'Обязательную маркировку по ТР ТС 022/2011 закладываю в сетку с первого ' +
+        'эскиза, контур реза отдаю плашечной краской, файлы собираю ' +
+        'по требованиям конкретной типографии. Без сюрпризов в печати.',
+    },
+  ],
+};
+
+const audit = {
+  badge: 'Экспресс-аудит',
+  title: 'Быстрый разбор упаковки за 48 часов',
+  text: 'Быстрый старт без риска: понять, что поправить и какой путь выбрать.',
+  items: [
+    'Разбор текущей упаковки: сегмент, сценарий выбора, читаемость, навигация SKU, конкуренты',
+    'Список правок на 10–15 пунктов',
+    'Быстрый концепт лицевой стороны',
+    'Рекомендации по техрискам: печать, мелкие элементы, контраст, штрихкод, маркировка',
+  ],
+  price: '15 000–25 000 ₽',
+  term: '48 часов · PDF с разбором + концепт',
+};
+
+const packages = [
+  {
+    num: '01',
+    title: 'Старт',
+    price: 'от 120 000 ₽',
+    detail: '1 SKU: новая упаковка или редизайн · 10–14 рабочих дней',
+    items: [
+      'Бриф: сегмент, аудитория, канал продаж',
+      'Анализ конкурентов на полке',
+      'Две концепции дизайна, выбор направления',
+      'Детализация и финальные макеты',
+      'Предпечатная подготовка',
+      'Финальные файлы + превью',
+    ],
+  },
+  {
+    num: '02',
+    title: 'Линейка',
+    price: 'от 220 000 ₽',
+    detail: '3–5 SKU и система линейки · 2–3 недели',
+    items: [
+      'Все из пакета «Старт»',
+      'Система линейки: сетка, зоны параметров, цветовая логика',
+      'Маяки выбора: что читается первым и как различаются SKU',
+      'Адаптация дизайна на 3–5 SKU',
+      'Разделение по ценовым сегментам внутри бренда',
+    ],
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'Система',
+    price: 'от 350 000 ₽',
+    detail: 'Линейка + 3D или новая форма тары · 3–5 недель',
+    items: [
+      'Все из пакета «Линейка»',
+      '3D-визуализация: рендеры для каталога и маркетплейса',
+      'Промышленная геометрия формы с учетом производства',
+      'Комплект визуалов для запуска: 5–10 рендеров и сцен',
+    ],
+  },
+];
+
+const process = {
+  title: 'Как идет<br>работа',
+  aside:
+    'Сначала согласуем направление на концепциях, потом раскладываю систему на линейку. Так правки остаются быстрыми и происходят до финальных макетов.',
+  steps: [
+    {
+      num: '01',
+      title: 'Бриф и цели',
+      text: 'Сегмент, канал продаж, линейка, конкуренты, требования типографии. Смету отдаю в день брифа.',
+    },
+    {
+      num: '02',
+      title: 'Анализ полки',
+      text: 'Смотрю конкурентов сегмента и сценарий выбора: как говорят, чем различаются, где пусто. Фиксирую, что покупатель должен считывать в первую очередь.',
+    },
+    {
+      num: '03',
+      title: 'Концепции',
+      text: 'Готовлю два варианта фронта, обсуждаем и выбираем направление.',
+    },
+    {
+      num: '04',
+      title: 'Детализация и масштабирование',
+      text: 'Довожу выбранное направление до макета и раскладываю систему на линейку: все SKU, форматы и объемы тары.',
+    },
+    {
+      num: '05',
+      title: 'Печать и исходники',
+      text: 'Маркировка по размерам техрегламента, контур реза плашечной краской, проверка техтребований типографии. Отдаю финальные файлы, превью и исходники. На связи до тиража.',
+    },
+  ],
+};
+
+const faqItems = [
+  {
+    q: 'Что нужно прислать для расчета?',
+    a: 'Список SKU и серий с ключевыми параметрами, тексты для этикетки (состав, изготовитель, сроки), существующие макеты и бренд-элементы, если они есть, и требования типографии, если уже выбрали ее. Смету отдаю в день брифа.',
+  },
+  {
+    q: 'Сколько занимает работа?',
+    a: 'Экспресс-аудит — 48 часов. Один продукт — 10–14 рабочих дней. Линейка — 2–3 недели, с 3D-визуализацией — до 5 недель. Если материалы нужно собирать и структурировать, добавьте неделю.',
+  },
+  {
+    q: 'Учитываете ли обязательную маркировку?',
+    a: 'Да. Для пищевой продукции действует ТР ТС 022/2011: одиннадцать обязательных сведений и минимальные размеры шрифта. Закладываю их в сетку с первого эскиза, чтобы дизайн не пришлось ломать перед печатью.',
+    aHtml:
+      'Да. Для пищевой продукции действует ТР ТС 022/2011: одиннадцать обязательных сведений и минимальные размеры шрифта. Закладываю их в сетку с первого эскиза, чтобы дизайн не пришлось ломать перед печатью. Подробный разбор — в статье <a href="/blog/chto-dolzhno-byt-na-etiketke/">«Что должно быть на этикетке»</a>.',
+  },
+  {
+    q: 'Чем дизайн-проект отличается от макета, который предлагает типография?',
+    a: 'Типография верстает макет под свою печать. Я проектирую упаковку под продажи: сегмент, полку, различимость позиций и рост линейки — и уже под готовое решение собираю печатные файлы для любой типографии.',
+  },
+  {
+    q: 'Готовите ли файлы для типографии?',
+    a: 'Да, отдаю макеты по требованиям конкретной типографии: вылеты, контур реза отдельной плашечной краской, цветовой профиль. Остаюсь на связи до подписания тиража.',
+  },
+  {
+    q: 'Можно заказать только этикетку, без ребрендинга?',
+    a: 'Да. Работаю в существующем фирменном стиле, если он есть. Если стиля нет, предложу минимальный набор правил, чтобы линейка держалась вместе при следующих SKU.',
+  },
+  {
+    q: 'Упаковка будет работать на маркетплейсе?',
+    a: 'Проверяю дизайн в размере превью карточки товара: название, серия и ключевой параметр должны читаться в миниатюре так же, как на полке.',
+  },
+  {
+    q: 'Вы во Владивостоке — а если производство в другом городе?',
+    a: 'Работаю по всей России удаленно: бриф и согласования — в Telegram или по видеосвязи, файлы — в облаке. Договор, ИП, ЭДО, NDA по запросу.',
+  },
+  {
+    q: 'Кому принадлежат исходники?',
+    a: 'Заказчику. После оплаты передаю печатные файлы, превью и исходники, права на использование — у вас.',
+  },
+];
+
+const packagingFounder = {
+  title: 'Проект ведет<br>один дизайнер',
+  aside:
+    'Без цепочки менеджеров: бриф, концепции, систему линейки и файлы для печати ведет один человек, который отвечает за итоговый макет.',
+  name: site.founderSection.name,
+  role: site.founderSection.role,
+  image: site.founderSection.image,
+  imageAlt: site.founderSection.imageAlt,
+  text:
+    'В дизайне с 2010 года, начинал с упаковки и фирменного стиля. Веду проект целиком: разбираюсь в продукте, строю систему линейки, довожу макеты до печати и остаюсь на связи до тиража.',
+  stats: [
+    { num: '2010', label: 'Год начала работы дизайнером' },
+    { num: '75', label: 'Макетов упаковки в трех кейсах' },
+  ],
+  points: [
+    {
+      num: '01',
+      title: 'Один контакт',
+      text: 'Общаетесь напрямую с дизайнером, без пересказа задачи через менеджера.',
+    },
+    {
+      num: '02',
+      title: 'Полный цикл',
+      text: 'От анализа полки и концепций до предпечатной подготовки и файлов для типографии.',
+    },
+    {
+      num: '03',
+      title: 'Система в основе',
+      text: 'Линейка собирается по правилам, поэтому новые SKU встают в дизайн без переделки.',
+    },
+    {
+      num: '04',
+      title: 'Файлы на руках',
+      text: 'Передаю печатные файлы, превью и исходники — права на использование у заказчика.',
+    },
+  ],
+};
+
+const contactData = {
+  title: 'Обсудим вашу упаковку',
+  intro: 'Пришлите текущие макеты и список SKU — вернусь со сметой в день брифа.',
+  telegramTitle: 'Написать в Telegram',
+  maxTitle: 'Написать в MAX',
+  formTitle: 'Расскажите о продукте',
+  fields: {
+    name: { label: 'Имя', placeholder: 'Как к вам обращаться' },
+    car: { label: 'Продукт и объем', placeholder: 'Например: линейка соусов, 5 SKU' },
+    message: { label: 'Что есть по материалам (необязательно)', placeholder: 'Текущая упаковка, тексты составов, требования типографии' },
+  },
+  privacy: 'Поля не отправляются на сервер сайта. Сообщение уйдет только после отправки в выбранном вами мессенджере.',
+  submit: 'Обсудить упаковку',
+  successTitle: 'Сообщение собрано',
+  successText: 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.',
+  reopen: 'Открыть Telegram еще раз',
+  resetText: 'Отправить еще одну заявку',
+};
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Страница',
+      links: [
+        { href: '#scenarios', label: 'Сценарии' },
+        { href: '#pricing', label: 'Цены' },
+        { href: '#cases', label: 'Кейсы' },
+        { href: '#process', label: 'Процесс' },
+        { href: '#faq', label: 'FAQ' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/presentations/', label: 'Презентации' },
+        { href: '/car-wrap/', label: 'Оклейка авто' },
+        { href: '/blog/', label: 'Мысли' },
+        { href: '#contact', label: 'Оставить заявку' },
+      ],
+    },
+  ],
+};
+
+// Кейсы направления «Упаковка» — из общей коллекции, в каноническом порядке.
+// Объем работ на карточке задан вручную: в шапке кейса этих цифр нет.
+const caseMetaBySlug: Record<string, string> = {
+  'labels-green-power-oil': '16 видов · 32 макета',
+  'labels-green-power-juice': '19 вкусов · 38 макетов',
+  'labels-green-power-paste': '5 паст · лента 100×40 мм',
+};
+
+const packagingCases = (await getCollection('cases', ({ data }) => !data.draft))
+  .filter((entry) => directionByCategory[entry.data.category] === 'packaging')
+  .filter((entry) => Boolean(entry.data.gallery))
+  .sort((a, b) => caseOrderIndex(a.id) - caseOrderIndex(b.id))
+  .map((entry) => {
+    const c = entry.data;
+    return {
+      slug: c.slug,
+      title: c.shortTitle || c.client,
+      meta: [caseMetaBySlug[c.slug], c.segmentLabel].filter(Boolean).join(' · '),
+      coverSrc: `${c.gallery.assetRoot}/${c.gallery.cover.src}`,
+      coverAlt: c.gallery.cover.alt,
+    };
+  });
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${site.url}/packaging/#service`,
+  name: 'Разработка упаковки и этикеток',
+  serviceType: 'Дизайн упаковки',
+  description:
+    'Дизайн этикеток, коробок, банок и канистр: система линейки, обязательная маркировка по ТР ТС, файлы для типографии.',
+  provider: { '@id': `${site.url}/#business` },
+  areaServed: { '@type': 'Country', name: 'Россия' },
+  offers: [
+    { '@type': 'Offer', name: 'Экспресс-аудит упаковки', price: '15000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Пакет «Старт»: один продукт', price: '120000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Пакет «Линейка»: 3–5 SKU', price: '220000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Пакет «Система»: линейка + 3D', price: '350000', priceCurrency: 'RUB' },
+  ],
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+const ldPortfolioCases = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${site.url}/packaging/#portfolio`,
+  name: 'Кейсы дизайна упаковки Kovtun.studio',
+  url: `${site.url}/packaging/`,
+  numberOfItems: packagingCases.length,
+  itemListElement: packagingCases.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'CreativeWork',
+      name: item.title,
+      url: `${site.url}/cases/${item.slug}/`,
+      image: `${site.url}${item.coverSrc}`,
+      creator: { '@id': `${site.url}/#business` },
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="Дизайн упаковки и этикеток — от концепции до файлов для печати · Kovtun.studio"
+  description="Дизайн этикеток, коробок, банок и канистр для производств: система линейки на десятки SKU, обязательная маркировка по ТР ТС, файлы для типографии. Экспресс-аудит за 48 часов."
+  keywords="дизайн упаковки, разработка упаковки, дизайн этикетки, упаковка линейки, редизайн упаковки, этикетка под печать, Владивосток"
+  canonicalPath="/packaging/"
+  ogTitle="Дизайн упаковки и этикеток — от концепции до печати"
+  ogDescription="Система линейки на десятки SKU, маркировка по ТР ТС, файлы для типографии. Экспресс-аудит упаковки за 48 часов."
+  structuredData={[serviceLd, faqLd, ldPortfolioCases]}
+>
+  <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+  <main id="main-content">
+    <div class="packaging-hero-wrap">
+      <Hero {...hero} />
+    </div>
+    <Marquee {...marquee} />
+
+    <section class="section" id="scenarios">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Три сценария —<br>смотря где сейчас продукт</h2>
+          </div>
+          <p class="aside">Процесс один: анализ полки, концепции, доводка, файлы для печати. Разница в стартовой точке — запускаетесь, обновляетесь или растете.</p>
+        </div>
+        <div class="scenario-grid">
+          {scenarios.map((scenario) => (
+            <article class:list={['scenario-card', { 'is-featured': scenario.featured }]}>
+              <div class="scenario-card__top">
+                <span class="scenario-num">{scenario.num}</span>
+                {scenario.featured && <span class="scenario-badge">Самый частый случай</span>}
+              </div>
+              <h3>{scenario.title}</h3>
+              <p>{scenario.text}</p>
+              <strong>{scenario.price}</strong>
+              <a href="#pricing">Смотреть, что входит <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="approach-wrap">
+      <WhatGrid {...approach} />
+    </div>
+
+    <section class="section presentations-pricing" id="pricing">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2>Четыре формата —<br>от аудита до системы с 3D</h2>
+          <p class="aside">Точную смету считаю после брифа: цена зависит от сложности, числа SKU и количества сторон тары. Вилки ниже показывают порядок.</p>
+        </div>
+
+        <article class="audit-card">
+          <div class="audit-card__badge">{audit.badge}</div>
+          <div class="audit-card__body">
+            <h3>{audit.title}</h3>
+            <p>{audit.text}</p>
+            <ul>
+              {audit.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="audit-card__offer">
+            <strong>{audit.price}</strong>
+            <span>{audit.term}</span>
+            <a class="btn btn-primary" href="#contact" data-package="Экспресс-аудит">
+              Заказать аудит <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+
+        <div class="package-grid">
+          {packages.map((item) => (
+            <article class:list={['package-card', { 'is-featured': item.featured }]}>
+              <div class="package-card__head">
+                <span>{item.num}</span>
+                {item.featured && <b>Для производств</b>}
+              </div>
+              <h3>{item.title}</h3>
+              <div class="package-price">{item.price}</div>
+              <p class="package-detail">{item.detail}</p>
+              <ul>
+                {item.items.map((entry) => <li>{entry}</li>)}
+              </ul>
+              <a class:list={['btn', item.featured ? 'btn-primary' : 'btn-dark']} href="#contact" data-package={item.title}>
+                Выбрать пакет <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <p class="rate-note">
+          Если материалы разрознены — соберу и структурирую, срок вырастет примерно на неделю.
+          Не уверены, какой формат ваш? Пришлите текущую упаковку и список SKU в
+          <a href={site.contact.telegram} target="_blank" rel="noopener">Telegram</a> —
+          скажу, какой пакет подходит, и назову вилку. Без обязательств.
+        </p>
+        <p class="rate-note">
+          К упаковке часто добавляются <a href="/presentations/">каталог или презентация для дилеров</a>
+          (от 40 000 ₽), лендинг продукта и POSM-материалы — считаю по той же смете.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="cases">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Кейсы<br>упаковки</h2>
+          </div>
+          <p class="aside">
+            Каждая линейка разобрана на отдельной странице: с чем пришел клиент,
+            как строилась система этикеток и что ушло в печать.
+          </p>
+        </div>
+
+        <div class="pcase-grid pcase-grid--three">
+          {packagingCases.map((item, i) => (
+            <a class="pcase" href={`/cases/${item.slug}/`}>
+              <span class="pcase__media">
+                <img
+                  src={item.coverSrc}
+                  alt={item.coverAlt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  decoding="async"
+                  width="1600"
+                  height="900"
+                />
+              </span>
+              <span class="pcase__body">
+                <strong>{item.title}</strong>
+                <span class="pcase__meta">{item.meta}</span>
+              </span>
+              <span class="pcase__arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+
+        <div class="gallery-more">
+          <a class="btn btn-dark btn-lg" href="/portfolio/?direction=packaging">
+            Смотреть все работы по упаковке <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <ProcessSteps {...process} />
+
+    <FounderSection data={packagingFounder} />
+
+    <FAQ
+      title="Частые<br>вопросы"
+      intro="Если короткого ответа недостаточно — напишите в Telegram. Посмотрю макеты и отвечу по вашей задаче."
+      ctaAsk="Задать вопрос"
+      telegramUrl={site.contact.telegram}
+      items={faqItems.map((item) => ({ q: item.q, a: item.aHtml ?? item.a }))}
+    />
+
+    <ContactForm
+      data={contactData}
+      telegramUrl={site.contact.telegram}
+      telegramHandle={site.contact.telegramHandle}
+      maxUrl={site.contact.max}
+      maxHandle={site.contact.maxHandle}
+    />
+  </main>
+
+  <Footer {...footer} />
+
+  <script is:inline define:vars={{
+    TELEGRAM_URL: site.contact.telegram,
+    MAX_URL: site.contact.max,
+    METRIKA_ID: site.metrika.id,
+    CONSENT_MARKER: `Согласие на обработку персональных данных: да · редакция ${site.legal.policyVersion} от ${site.legal.policyDate} · ${site.url}/consent/`,
+  }}>
+    (function () {
+      'use strict';
+
+      function goal(name, params) {
+        if (typeof window.ym === 'function') {
+          try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (e) {}
+        }
+      }
+
+      function buildMessage(data) {
+        var lines = ['Здравствуйте! Хочу обсудить дизайн упаковки.', ''];
+        if (data.name) lines.push('Имя: ' + data.name);
+        if (data.product) lines.push('Продукт и объем: ' + data.product);
+        if (data.materials) lines.push('\nМатериалы:\n' + data.materials);
+        lines.push('\n' + CONSENT_MARKER);
+        return lines.join('\n');
+      }
+
+      var form = document.getElementById('lead-form');
+      var fName = document.getElementById('f-name');
+      var fProduct = document.getElementById('f-car');
+      var fMessage = document.getElementById('f-message');
+      var errName = document.getElementById('err-name');
+      var errProduct = document.getElementById('err-car');
+      var fields = document.getElementById('form-fields');
+      var success = document.getElementById('form-success');
+      var successText = document.getElementById('success-text');
+      var reopen = document.getElementById('reopen-messenger');
+      var copyBlock = document.getElementById('copy-text-block');
+      var copyArea = document.getElementById('copy-text-area');
+      var copyBtn = document.getElementById('copy-text-btn');
+      var copyBtnLabel = document.getElementById('copy-text-btn-label');
+
+      function setError(node, message) {
+        if (!node) return;
+        node.textContent = message || '';
+        node.hidden = !message;
+      }
+
+      function validate() {
+        var ok = true;
+        if (!fName.value.trim()) { setError(errName, 'Как к вам обращаться?'); ok = false; }
+        else setError(errName, '');
+        if (!fProduct.value.trim()) { setError(errProduct, 'Продукт и примерное число SKU — чтобы прикинуть объем'); ok = false; }
+        else setError(errProduct, '');
+        return ok;
+      }
+
+      if (form) {
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (!validate()) return;
+
+          var target = event.submitter && event.submitter.dataset.target || 'telegram';
+          var text = buildMessage({ name: fName.value.trim(), product: fProduct.value.trim(), materials: fMessage.value.trim() });
+          var url = target === 'max' ? MAX_URL : TELEGRAM_URL + '?text=' + encodeURIComponent(text);
+          var label = target === 'max' ? 'MAX' : 'Telegram';
+
+          if (target === 'max') {
+            copyArea.value = text;
+            copyBlock.hidden = false;
+            successText.textContent = 'MAX откроется в новой вкладке. Скопируйте текст заявки кнопкой ниже и вставьте в чат.';
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function () {});
+          } else {
+            copyBlock.hidden = true;
+            successText.textContent = 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.';
+          }
+
+          window.open(url, '_blank', 'noopener,noreferrer');
+          reopen.href = url;
+          reopen.innerHTML = 'Открыть ' + label + ' еще раз <span class="arrow" aria-hidden="true">→</span>';
+          fields.hidden = true;
+          success.hidden = false;
+          form.classList.add('is-success');
+          goal(target === 'max' ? 'packaging_lead_max' : 'packaging_lead_submit');
+        });
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+          var done = function () {
+            copyBtnLabel.textContent = 'Скопировано ✓';
+            setTimeout(function () { copyBtnLabel.textContent = 'Скопировать текст'; }, 2000);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyArea.value).then(done).catch(function () { copyArea.select(); document.execCommand('copy'); done(); });
+          } else { copyArea.select(); document.execCommand('copy'); done(); }
+        });
+      }
+
+      var resetBtn = document.getElementById('form-reset');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          form.reset();
+          setError(errName, '');
+          setError(errProduct, '');
+          success.hidden = true;
+          fields.hidden = false;
+          form.classList.remove('is-success');
+        });
+      }
+
+      /* Кнопки пакетов: префилл формы + скролл + цель */
+      Array.prototype.forEach.call(document.querySelectorAll('[data-package]'), function (btn) {
+        btn.addEventListener('click', function () {
+          if (success && success.hidden === false) { success.hidden = true; fields.hidden = false; form.classList.remove('is-success'); }
+          if (fMessage) fMessage.value = 'Интересует формат: ' + btn.dataset.package + '.';
+          goal('packaging_package_pick', { pkg: btn.dataset.package });
+        });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
+        link.addEventListener('click', function () { goal('packaging_cta_main'); });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://t.me/"]'), function (link) {
+        link.addEventListener('click', function () { goal('telegram_direct'); });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (link) {
+        link.addEventListener('click', function () { goal('cta_phone'); });
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* Водяной знак hero: слово задается переменной, которую читает
+     .hero-red::after в global.css (по умолчанию там «АВТО» для главной). */
+  .packaging-hero-wrap :global(.hero-red) {
+    --hero-watermark: 'SKU';
+  }
+
+  /* У подхода 4 карточки: в базовой сетке 3 колонки четвертая повисала
+     одна в ряду, поэтому здесь сетка 2×2. На мобильных работает базовое
+     правило глобальных стилей — одна колонка. */
+  @media (min-width: 801px) {
+    .approach-wrap :global(.what-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Широкая карточка экспресс-аудита над пакетами. Собрана в стилистике
+     package-card, но лежит горизонтально: состав слева, цена и кнопка справа. */
+  .audit-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 32px;
+    align-items: start;
+    padding: 34px 32px;
+    margin-bottom: 16px;
+    background: var(--bg-2);
+    border-top: 3px solid var(--ks-red);
+  }
+
+  .audit-card__badge {
+    padding: 6px 12px;
+    background: var(--ks-red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .audit-card__body h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    line-height: 1.25;
+  }
+
+  .audit-card__body p {
+    margin: 0 0 16px;
+    color: var(--fg-3);
+  }
+
+  .audit-card__body ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 24px;
+  }
+
+  .audit-card__body li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .audit-card__body li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .55em;
+    width: 8px;
+    height: 2px;
+    background: var(--ks-red);
+  }
+
+  .audit-card__offer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+    text-align: left;
+    min-width: 220px;
+  }
+
+  .audit-card__offer strong {
+    font-size: 26px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .audit-card__offer span {
+    font-size: 13px;
+    color: var(--fg-3);
+  }
+
+  .audit-card__offer .btn {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .audit-card {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .audit-card__badge {
+      justify-self: start;
+    }
+
+    .audit-card__body ul {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

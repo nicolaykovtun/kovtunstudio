@@ -8,7 +8,7 @@ cover: /assets/blog/etiketki-masla-green-power/green-power-oil-linejka.webp
 coverAlt: Линейка сыродавленных масел Green Power, 16 видов в бутылках 100 и 250 мл
 pubDate: 2026-08-17
 section: Упаковка
-serviceLink: /portfolio/
+serviceLink: /packaging/
 serviceLabel: Дизайн упаковки и этикеток
 faq:
   - q: Что обязательно должно быть на этикетке продуктов?

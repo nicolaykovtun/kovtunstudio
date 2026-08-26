@@ -564,7 +564,7 @@ html.reveal-motion [data-reveal-group].is-revealed[data-reveal-item] {
 }
 .hero-red::after {
   /* huge faint wordmark behind */
-  content: "АВТО"; position: absolute;
+  content: var(--hero-watermark, "АВТО"); position: absolute;
   right: -4vw; bottom: -6vw; z-index: 1;
   font: 800 36vw/0.85 var(--font-display);
   letter-spacing: -0.05em;

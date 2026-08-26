@@ -107,15 +107,16 @@ nav:
   - href: "/"
     label: Услуги
     children:
-      - href: "/portfolio/?direction=packaging"
+      - href: "/packaging/"
         label: Упаковка
         desc: "Коробки, этикетки, упаковка под печать"
+        image: /assets/cases/labels-green-power-oil/thumb/green-power-oil-cover-thumbnail.webp
       - href: "/portfolio/?direction=identity"
         label: "Логотип и фирменный стиль"
         desc: "Знак, палитра, гайдлайны бренда"
         # Обложка гайдбука Green Power: ровно 16:9, как рамка превью, поэтому
         # заполняет ее без полей. Плашка «Скоро» показывается, только когда
-        # у направления нет картинки, — у упаковки кейсов еще нет.
+        # у направления нет картинки.
         image: /assets/cases/identity-green-power/thumb/green-power-guidebook-01-cover-thumbnail.webp
       - href: "/portfolio/?direction=web"
         label: Сайты
@@ -271,7 +272,7 @@ founderSection:
       text: "Вы общаетесь напрямую с дизайнером: меньше потерь в пересказе, быстрее решения и понятнее правки."
     - num: "02"
       title: Дизайн под дорогу
-      text: "Проверяю, что логотип, контакты и рекламный акцент считываются на расстоянии, а не только красиво выглядят на экране."
+      text: "Проверяю, что логотип, контакты и рекламный акцент считываются на расстоянии, не только на экране."
     - num: "03"
       title: Файл для производства
       text: "Готовлю макеты с учетом печати, сторон автомобиля, припусков и требований подрядчика по оклейке."
@@ -330,6 +331,7 @@ footer:
         - "Пн—Пт · 10:00—20:00 (UTC+10)"
     - title: Прочее
       links:
+        - { href: "/packaging/", label: "Упаковка" }
         - { href: "/car-wrap/", label: "Оклейка авто" }
         - { href: "/presentations/", label: "Презентации" }
         - { href: "/#contact", label: "Оставить заявку" }
