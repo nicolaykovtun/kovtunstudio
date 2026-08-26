@@ -116,7 +116,10 @@ nav:
       - href: "/packaging/"
         label: Упаковка
         desc: "Коробки, этикетки, упаковка под печать"
-        image: /assets/cases/labels-green-power-oil/thumb/green-power-oil-cover-thumbnail.webp
+        # Канистры MICKING. Исходник с прозрачным фоном кадрирован в 16:9
+        # и положен на белое скриптом docs/tools/label-measure/make-menu-cover.cjs:
+        # рамка плитки режет картинку по object-fit: cover.
+        image: /assets/menu/packaging-micking.webp
       - href: "/portfolio/?direction=identity"
         label: "Логотип и фирменный стиль"
         desc: "Знак, палитра, гайдлайны бренда"
