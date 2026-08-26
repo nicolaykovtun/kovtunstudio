@@ -9,7 +9,7 @@
 
 - slug: basic
   num: "01 / 03"
-  title: Базовый дизайн
+  title: Пакет S — Базовый дизайн
   offerShortName: Базовый
   price: 10000
   priceFormatted: "10 000"
@@ -32,7 +32,7 @@
 
 - slug: extended
   num: "02 / 03"
-  title: Расширенный дизайн
+  title: Пакет M — Расширенный дизайн
   offerShortName: Расширенный
   price: 15000
   priceFormatted: "15 000"
@@ -56,7 +56,7 @@
 
 - slug: image
   num: "03 / 03"
-  title: Имиджевая концепция
+  title: Пакет L — Имиджевая концепция
   offerShortName: Имиджевый
   price: 25000
   priceFormatted: "25 000"
