@@ -276,7 +276,7 @@ const ldPortfolioCases = {
           if (target === "max") {
             url = buildMaxURL(text);
             label = "MAX";
-            goalName = "lead_submit_max";
+            goalName = "car_wrap_lead_max";
             // MAX не поддерживает pre-filled text в URL — показываем
             // текст явно с кнопкой "Скопировать" + пробуем сразу положить в буфер.
             copyArea.value = text;
@@ -288,7 +288,7 @@ const ldPortfolioCases = {
           } else {
             url = buildTelegramURL(text);
             label = "Telegram";
-            goalName = "lead_submit";
+            goalName = "car_wrap_lead_submit";
             copyBlock.hidden = true;
             successText.textContent = "Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.";
           }
@@ -337,18 +337,13 @@ const ldPortfolioCases = {
       }
 
       /* ─── Tier "Выбрать пакет" → префилл формы + скролл + цель ─── */
-      var TIER_GOAL = {
-        "Пакет S — Базовый дизайн": "tier_basic",
-        "Пакет M — Расширенный дизайн": "tier_extended",
-        "Пакет L — Имиджевая концепция": "tier_image"
-      };
       Array.prototype.forEach.call(document.querySelectorAll(".tier-cta [data-tier]"), function (btn) {
         btn.addEventListener("click", function () {
           if (success && success.hidden === false) { success.hidden = true; fields.hidden = false; }
           if (fMessage) fMessage.value = "Интересует пакет: " + btn.dataset.tier + ".";
           var el = document.getElementById("contact");
           if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-          goal(TIER_GOAL[btn.dataset.tier] || "tier_unknown");
+          goal("car_wrap_package_pick", { pkg: btn.dataset.tier || "unknown" });
         });
       });
 
@@ -369,7 +364,7 @@ const ldPortfolioCases = {
 
       /* ─── Цель: клик по hero CTA "Обсудить проект" ─── */
       Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
-        link.addEventListener("click", function () { goal("cta_main"); });
+        link.addEventListener("click", function () { goal("car_wrap_cta_main"); });
       });
     })();
   </script>
