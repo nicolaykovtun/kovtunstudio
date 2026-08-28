@@ -1,6 +1,6 @@
 # Реестр кейсов Kovtun Studio
 
-**Актуально на:** 2026-08-03
+**Актуально на:** 2026-08-28
 
 Эта папка хранит тексты готовых кейсов и исходные материалы для будущих. После ревизии все исходники опубликованных работ находятся в `published/`, а в `unpublished/` остались только будущие кейсы.
 
@@ -39,6 +39,14 @@
 | Оклейка «Примгриль» | `published/CarWrap-Primgril` | `/cases/primgril/` |
 | Оклейка Japan Line | `published/CarWrap-Japan Line` | `/cases/japan-line/` |
 | Оклейка Sila Car | `published/CarWrap-Sila-Car` | `/cases/sila-car/` |
+
+### Опубликован, но еще не в общем счете — 1 кейс
+
+| Кейс | Папка | Адрес |
+|---|---|---|
+| Бренд MICKING | `Packaging-MICKING` | `/cases/brand-micking/` |
+
+Работа выполнена в найме, в команде отдела развития бренда МСМ ГРУПП. Николай — старший дизайнер проекта. Исходники остались в `unpublished/MICKING/`; статья о процессе — `src/content/blog/sozdanie-brenda-micking.md`.
 
 ## Предстоит создать — 7 кейсов
 

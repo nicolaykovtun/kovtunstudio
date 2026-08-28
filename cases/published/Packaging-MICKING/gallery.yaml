@@ -1,0 +1,223 @@
+# Раскладка изображений кейса. Пути строятся из имени файла:
+# full/<file>.webp и thumb/<file>-thumbnail.webp внутри assetRoot.
+# Исходники: cases/unpublished/MICKING/Oil. Банки серий вырезаны из сводных
+# рендеров по отдельности и приведены к одной высоте — иначе в сетке они стоят
+# в разном масштабе.
+assetRoot: /assets/cases/brand-micking
+
+cover:
+  src: micking-cover.webp
+  alt: Четыре серии моторных масел MICKING, металлические банки 4 литра и канистры 1 литр
+
+og: micking-cover.webp
+ogAlt: Линейка моторных масел MICKING после ребрендинга
+
+keywords: дизайн упаковки, брендинг моторного масла, дизайн этикетки, металлическая банка, линейка SKU, пробная печать, MICKING, МСМ ГРУПП, Владивосток, Николай Ковтун
+
+resultTitle: Что дал ребрендинг
+
+ctaTitle: Нужна упаковка, которая выдержит рост линейки?
+ctaText: >-
+  Расскажите, сколько видов и фасовок планируется и где печатаете тару. Соберу
+  систему так, чтобы новый продукт вставал на готовую сетку, а цвет на пробной
+  печати совпал с макетом.
+ctaButton: Обсудить дизайн упаковки
+
+compare:
+  title: Что было и что стало
+  intro: >-
+    Корейский дизайн MICKING не обновлялся 20 лет: диагональный логотип, черные
+    и цветные плашки, серый пластик. Для российского рынка бренд собрали заново
+    вокруг белого поля, черного логотипа и цветного штриха.
+  items:
+    - number: '01'
+      title: Этикетка четырехлитровой банки
+      text: >-
+        В старом дизайне работали плашки и наклонная надпись во всю высоту:
+        читать этикетку приходилось по частям. В новом порядок задает сетка,
+        логотип стоит горизонтально, а линейку и назначение продукта показывает
+        цвет штриха.
+      before: micking-old-01-etiketka
+      beforeAlt: Корейская этикетка MICKING Gold Top+ 5W-30 до ребрендинга
+      beforeCaption: Корейский дизайн, до 2022 года
+      after: micking-new-01-etiketka
+      afterAlt: Новая этикетка MICKING Diesel Oil 15W-40 с фирменным штрихом
+      afterCaption: Новый дизайн
+    - number: '02'
+      title: Канистра один литр
+      text: >-
+        Серый пластик и оранжевая наклейка уступили место белой канистре с тем
+        же набором элементов, что и на металлической банке. Банка и канистра
+        одного продукта теперь читаются как одна пара.
+      before: micking-old-02-kanistra
+      beforeAlt: Старая канистра MICKING Max Super+ из серого пластика
+      beforeCaption: Корейский дизайн, до 2022 года
+      after: micking-new-02-kanistra
+      afterAlt: Новая канистра MICKING Gasoline Oil 0W-20 один литр
+      afterCaption: Новый дизайн
+
+groups:
+  - id: series
+    # Макеты на белом фоне: секцию тоже делаем светлой.
+    theme: paper
+    title: Серии в двух фасовках
+    # slides дает 4 колонки: четыре серии встают одним рядом, а не 3 + 1.
+    layout: slides
+    ratio: 4 / 3
+    intro: >-
+      У каждой серии свой цвет штриха: красный у бензиновых масел, зеленый у
+      дизельных, малиновый у трансмиссионных, голубой у трансмиссионных для
+      мостов. Банка 4 литра и канистра 1 литр собраны по одной схеме, поэтому в
+      ряду на полке продукт узнается по цвету раньше, чем читается название.
+    items:
+      - file: micking-series-01-gasoline
+        label: Gasoline Oil, бензиновая серия MG1
+      - file: micking-series-02-diesel
+        label: Diesel Oil, дизельная серия PRO1
+      - file: micking-series-03-atf
+        label: ATF Ultra LV, трансмиссионная серия MATF
+      - file: micking-series-04-gear
+        label: Gear Oil, трансмиссионная серия MTR
+
+  - id: cans
+    # Макеты на белом фоне: секцию тоже делаем светлой.
+    theme: paper
+    title: Двадцать восемь видов масла
+    # slides — 4 колонки на десктопе, 2 на планшете и телефоне. Только slides,
+    # tall и screens сбрасывают базовое «grid-column: span 6»; с portrait каждая
+    # банка растягивается на всю строку, и страница вырастает до 40 000 пикселей.
+    layout: slides
+    ratio: 425 / 460
+    intro: >-
+      Вся линейка на одной сетке. Постоянными остаются логотип, разметка и
+      служебные блоки; меняются название линейки, вязкость, допуски и цвет
+      штриха. Отсюда и скорость масштабирования: новый вид собирается на готовом
+      эталоне за считанные часы.
+    items:
+      - file: micking-can-mg1-0
+        label: Gasoline Oil 0W-20, серия MG1
+      - file: micking-can-mg1-1
+        label: Gasoline Oil 5W-30, серия MG1
+      - file: micking-can-mg1-2
+        label: Gasoline Oil 5W-40, серия MG1
+      - file: micking-can-mg1-3
+        label: Gasoline Oil 5W-50 Racing, серия MG1
+      - file: micking-can-mg3-0
+        label: Gasoline Oil 5W-30, серия MG3
+      - file: micking-can-mg3-1
+        label: Gasoline Oil 10W-30, серия MG3
+      - file: micking-can-mg3-2
+        label: Gasoline Oil 20W-50, серия MG3
+      - file: micking-can-evo2-0
+        label: Motor Oil 5W-30, серия EVO2
+      - file: micking-can-evo2-1
+        label: Motor Oil 10W-40, серия EVO2
+      - file: micking-can-pro1-0
+        label: Diesel Oil 5W-40, серия PRO1
+      - file: micking-can-pro1-1
+        label: Diesel Oil 10W-40, серия PRO1
+      - file: micking-can-pro2-0
+        label: Diesel Oil 5W-30, серия PRO2
+      - file: micking-can-pro2-1
+        label: Diesel Oil 10W-40, серия PRO2
+      - file: micking-can-pro3-0
+        label: Turbo Diesel 5W-30, серия PRO3
+      - file: micking-can-pro3-1
+        label: Turbo Diesel 10W-30, серия PRO3
+      - file: micking-can-pro3-2
+        label: Turbo Diesel 15W-40, серия PRO3
+      - file: micking-can-mtr-0
+        label: Gear Oil 75W-90, серия MTR
+      - file: micking-can-mtr-1
+        label: Gear Oil LSD 75W-90, серия MTR
+      - file: micking-can-mtr-2
+        label: Gear Oil 80W-90, серия MTR
+      - file: micking-can-mcvt-0
+        label: CVTF Multi, серия MCVT
+      - file: micking-can-matf-0
+        label: ATF Ultra LV, серия MATF
+      - file: micking-can-matf-1
+        label: ATF Multi, серия MATF
+      - file: micking-can-matf2-0
+        label: SP-IV, серия MATF
+      - file: micking-can-matf2-1
+        label: T-IV, серия MATF
+      - file: micking-can-matf2-2
+        label: DW-1, серия MATF
+      - file: micking-can-matf2-3
+        label: WS, серия MATF
+      - file: micking-can-matf2-4
+        label: Dexron II, серия MATF
+      - file: micking-can-matf2-5
+        label: Dexron III, серия MATF
+
+  - id: flat
+    # Макеты на белом фоне: секцию тоже делаем светлой.
+    theme: paper
+    title: Плоские макеты под печать
+    # sheet — одна колонка во всю ширину. Развертка длинная, в сетке из трех
+    # колонок мелкий текст на этикетке не прочитать. ratio не задаем: sheet
+    # показывает картинку целиком, по ее собственной пропорции.
+    layout: sheet
+    intro: >-
+      Развертка банки: лицевая сторона, две боковые и оборот. Слева название
+      линейки и вязкость, справа состав и предупреждения на русском и
+      английском, снизу служебная полоса с данными изготовителя и импортера.
+      Штрих проходит по всей развертке и на готовой банке замыкается по кругу.
+    items:
+      - file: micking-flat-01-gasoline
+        label: Развертка банки Gasoline Oil 0W-16 с разметкой
+      - file: micking-flat-02-diesel
+        label: Развертка банки Diesel Oil 15W-40
+      - file: micking-flat-03-banki-4l
+        label: Готовые банки 4 литра, лицевая и боковые стороны
+
+  - id: shelf
+    # Макеты на белом фоне: секцию тоже делаем светлой.
+    theme: paper
+    title: Полка, на которой предстояло выделиться
+    # Один кадр во всю ширину: на мелкой плитке банки конкурентов не различить.
+    layout: sheet
+    intro: >-
+      Каждый вариант дизайна мы ставили в этот ряд и смотрели, как он держится
+      рядом с соседями по магазину. Сравнение вошло в презентацию руководству.
+      У большинства японских и корейских масел белый или светлый металл, крупная
+      типографика и один яркий акцент, поэтому выигрывает самый ясный дизайн.
+    items:
+      - file: micking-process-01-konkurenty
+        label: 'Полка конкурентов: ENEOS, Totachi, Idemitsu, Kixx, ZIC'
+
+  - id: process
+    # Макеты на белом фоне: секцию тоже делаем светлой.
+    theme: paper
+    title: Что поправило производство
+    # screens — ровно три колонки под три кадра, без висящего четвертого.
+    layout: screens
+    ratio: 3 / 2
+    intro: >-
+      Отвергнутый вариант с плашкой, схема крышек и бочка, которая не прошла по
+      технологии. Часть решений в упаковке принимает не дизайнер, а печатная
+      машина и объем партии.
+    items:
+      - file: micking-process-02-variant
+        label: 'Один из ранних вариантов: цветная плашка вместо штриха'
+      - file: micking-process-03-kryshki
+        label: 'Схема крышек для литровых банок: 12 цветов свели к трем'
+      - file: micking-process-04-bochka
+        label: Смелая версия бочки 200 литров, которую не потянула технология
+
+related:
+  title: Соседние работы по упаковке
+  intro: >-
+    Другие проекты, где линейка выходила сразу широкой и обязательная
+    маркировка делила площадь с дизайном.
+  items:
+    - slug: labels-green-power-oil
+      label: Этикетки масла Green Power
+      text: '32 этикетки на 16 видов масла: маркировка забирает фиксированную площадь на каждом макете.'
+    - slug: labels-green-power-juice
+      label: Этикетки соков Green Power
+      text: 19 вкусов в формате 42×76 мм, обязательные сведения целиком унесены на оборот.
+    - slug: identity-green-power
+      label: Фирменный стиль Green Power
+      text: Знак-дерево в пяти исполнениях, гайдбук на 8 страниц и знаки для этикетки.

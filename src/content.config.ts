@@ -122,7 +122,9 @@ const galleryGroup = z.object({
    * автоматика промахивается — например, у страниц гайдбука 16:9: в `tall`
    * они летербоксятся до половины плитки, а `slides` показывает их целиком.
    */
-  layout: z.enum(['screens', 'tall', 'slides', 'brochure', 'portrait']).optional(),
+  // 'sheet' — одна колонка во всю ширину, картинка целиком по своей пропорции.
+  // Стили для нее лежат в editorial-pages.css, в схему ее забыли внести.
+  layout: z.enum(['screens', 'tall', 'slides', 'brochure', 'portrait', 'sheet']).optional(),
   /**
    * Пропорция плитки под размер картинок группы, в виде CSS aspect-ratio:
    * «8 / 9», «1 / 1». Нужна там, где картинки не совпадают с пропорцией
@@ -134,6 +136,12 @@ const galleryGroup = z.object({
     .string()
     .regex(/^\d+\s*\/\s*\d+$/, 'ratio задается как «8 / 9» — два числа через дробь')
     .optional(),
+  /**
+   * Фон секции с макетами: 'dark' — темная плашка (по умолчанию, как у
+   * остальных кейсов), 'paper' — светлая. Светлую берут там, где сами макеты
+   * на белом фоне и темная плашка режет глаз.
+   */
+  theme: z.enum(['dark', 'paper']).optional(),
   items: z.array(galleryItem).min(1),
 });
 

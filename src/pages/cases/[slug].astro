@@ -76,7 +76,8 @@ function configFromGallery(c: any): EditorialCaseConfig {
     intro: group.intro,
     layout: group.layout ?? (group.items.some((item: any) => item.tall) ? 'tall' : 'screens'),
     ratio: group.ratio,
-    theme: 'dark',
+    // Тему берем из gallery.yaml; без нее остается прежняя темная плашка.
+    theme: group.theme ?? 'dark',
     interactive: true,
     items: group.items.map((item: any) => ({
       src: full(item.file),

@@ -540,6 +540,12 @@
   object-fit: contain;
 }
 .case-gallery figcaption { padding-top: 10px; color: rgba(255,255,255,.6); font-size: 13px; }
+
+/* Галерея макетов на светлой секции: белые подписи на бумаге не читаются,
+   а плитке нужна рамка, иначе макет на белом фоне сливается с секцией. */
+.case-section--paper .case-gallery figcaption { color: var(--fg-3); }
+.case-section--paper .case-gallery .case-gallery-trigger { background: #fff; border: 1px solid var(--line-1); }
+.case-section--paper .case-gallery-zoom { background: rgba(17,17,17,.9); }
 .case-gallery-trigger {
   position: relative;
   display: block;
