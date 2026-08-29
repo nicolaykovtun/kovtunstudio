@@ -227,16 +227,28 @@ import CookieConsent from '../components/CookieConsent.astro';
         }).join('').toUpperCase();
       }
 
+      // Значение поля формы: заявка уходит в CRM в тот же миг, что и в мессенджер,
+      // поэтому читаем прямо из формы — до того, как она очистится.
+      function fieldValue(id) {
+        var el = document.getElementById(id);
+        return el && el.value ? el.value.trim().slice(0, 2000) : '';
+      }
+
       var attribution = readAttribution();
       window.kovtunLeadEvent = function (options) {
         var id = makeLeadId();
         if (!LEAD_ENDPOINT || !LEAD_FORM_KEY) return id;
+        var name = (options && options.name) || fieldValue('f-name');
+        var task = (options && options.task) || fieldValue('f-car');
+        var note = (options && options.message) || fieldValue('f-message');
         var params = new URLSearchParams({
           kind: 'website_lead',
           formKey: LEAD_FORM_KEY,
           id: id,
           messenger: options && options.messenger || 'Telegram',
           page: window.location.pathname,
+          name: name,
+          task: [task, note].filter(Boolean).join(' — '),
           utmSource: attribution.utmSource,
           utmMedium: attribution.utmMedium,
           utmCampaign: attribution.utmCampaign,

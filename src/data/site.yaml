@@ -90,10 +90,11 @@ metrika:
     accurateTrackBounce: true
     trackLinks: true
 
-# Анонимный учёт переходов из формы в мессенджер.
-# endpoint появится после публикации Apps Script как веб-приложения.
+# Заявка уходит в свою CRM (crm.kovtun.studio, хостинг Beget, Россия)
+# одновременно с открытием мессенджера: имя, направление и текст задачи,
+# метки рекламы и страница входа. Приёмник — public_html/api/lead.php.
 leadCapture:
-  endpoint: "https://script.google.com/macros/s/AKfycbxk9c_lFzFQ2WKH13swr49Y5_pciWWAmVJ11JDWxFdPp3_OS2JG5rp8bBJc_Mz-eTlB/exec"
+  endpoint: "https://crm.kovtun.studio/api/lead.php"
   formKey: "kovtun-studio-109482416"
 
 # Подтверждение владения у поисковиков

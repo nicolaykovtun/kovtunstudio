@@ -646,7 +646,7 @@ const faqLd = {
       if (calcTelegram) {
         calcTelegram.addEventListener('click', function (event) {
           var leadId = typeof window.kovtunLeadEvent === 'function'
-            ? window.kovtunLeadEvent({ messenger: 'Telegram' })
+            ? window.kovtunLeadEvent({ messenger: 'Telegram', task: calculatorMessage })
             : '';
           if (leadId) calcTelegram.href = TELEGRAM_URL + '?text=' + encodeURIComponent(calculatorMessage + '\n\nЗаявка ID: ' + leadId);
           goal('presentation_calculator_submit', { slides: Number(number.value), scenario: currentScenario() });
