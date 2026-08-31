@@ -101,8 +101,9 @@ const { data, telegramUrl, maxUrl } = Astro.props;
             {data.maxTitle}
           </button>
 
-          <!-- Privacy текст под кнопками -->
-          <div class="privacy">{data.privacy}</div>
+          <!-- Privacy текст под кнопками. Внутри есть ссылка на /consent/,
+               поэтому строка выводится как разметка, а не как текст. -->
+          <div class="privacy" set:html={data.privacy}></div>
         </div>
 
         <!-- Успешная отправка -->
@@ -149,6 +150,10 @@ const { data, telegramUrl, maxUrl } = Astro.props;
     margin-top: 0;
     font: 400 12px/1.5 var(--font-body);
     color: var(--fg-3);
+  }
+  #form-fields .privacy a {
+    color: inherit;
+    text-underline-offset: 3px;
   }
 
   .legal-consent {
