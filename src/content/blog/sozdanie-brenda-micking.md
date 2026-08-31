@@ -11,7 +11,6 @@ pubDate: 2026-08-31
 section: Брендинг
 serviceLink: /packaging/
 serviceLabel: Дизайн упаковки и этикеток
-draft: true
 faq:
   - q: Сколько времени занимает создание бренда моторного масла?
     a: >-
