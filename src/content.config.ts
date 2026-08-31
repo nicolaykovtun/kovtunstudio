@@ -238,6 +238,10 @@ const cases = defineCollection({
           })
           .optional(),
         resultTitle: z.string().optional(),
+        // Вводка к блоку «Результат». Публичный текст, в отличие от
+        // internalNotes: лежит рядом с resultTitle, чтобы заголовок
+        // и подводка правились в одном месте.
+        resultIntro: z.string().optional(),
         ctaTitle: z.string().optional(),
         ctaText: z.string().optional(),
         ctaButton: z.string().optional(),
