@@ -10,6 +10,7 @@ import Marquee from '../components/Marquee.astro';
 import WhatGrid from '../components/WhatGrid.astro';
 import Pricing from '../components/Pricing.astro';
 import { caseOrderIndex } from '../data/case-catalog';
+import { servicePageNav } from '../lib/site-nav';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
@@ -24,12 +25,12 @@ const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 
 
 // Локальная навигация страницы (как у /presentations/) — этот лендинг
 // больше не главная, поэтому не использует общий site.nav.
-const nav = [
+const nav = servicePageNav(site, [
   { href: '#what', label: 'Что делаю' },
   { href: '#pricing', label: 'Цены' },
   { href: '#process', label: 'Процесс' },
   { href: '#faq', label: 'FAQ' },
-];
+]);
 
 const footer = {
   ...site.footer,

@@ -13,19 +13,20 @@ import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
 import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
+import { servicePageNav } from '../lib/site-nav';
 import { editorialCaseConfigs } from '../data/case-page-config';
 import '../styles/presentations.css';
 
 const dataDir = path.resolve('./src/data');
 const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
 
-const nav = [
+const nav = servicePageNav(site, [
   { href: '#scenarios', label: 'Сценарии' },
   { href: '#pricing', label: 'Цены' },
   { href: '#calculator', label: 'Калькулятор' },
   { href: '#portfolio', label: 'Работы' },
   { href: '#faq', label: 'FAQ' },
-];
+]);
 
 const marquee = {
   ariaLabel: 'Для каких задач разрабатываю презентации',
