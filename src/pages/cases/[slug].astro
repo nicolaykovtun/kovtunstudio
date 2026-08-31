@@ -257,11 +257,11 @@ const groups = baseConfig.groups.map((group) => ({
     lightboxIndex: group.interactive === false ? null : lightboxIndex++,
   })),
 }));
+// Вводка к блоку «Результат» берется только из конфигурации кейса. Раньше
+// здесь стоял запасной вариант на внутренние заметки из case.md, и служебная
+// сверка фактов попадала на страницу.
 const config = {
   ...baseConfig,
-  resultIntro:
-    baseConfig.resultIntro ??
-    (kind === 'editorial' ? c.publicationNotes : undefined),
   groups,
 };
 const lightboxItems = groups

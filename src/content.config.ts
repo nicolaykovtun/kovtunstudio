@@ -211,7 +211,7 @@ const cases = defineCollection({
     credits: z.array(z.object({ role: z.string(), name: z.string() })).default([]),
     agency: z.string().optional(),
     links: z.array(z.object({ label: z.string(), value: z.string() })),
-    publicationNotes: z.string().optional(),
+    internalNotes: z.string().optional(),
     sourceDir: z.string(),
 
     // gallery.yaml

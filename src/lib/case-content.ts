@@ -37,7 +37,7 @@ export interface ParsedCaseBody {
   credits: CaseCredit[];
   agency?: string;
   links: CaseLink[];
-  publicationNotes?: string;
+  internalNotes?: string;
 }
 
 /** Делит тело файла на секции по заголовкам второго уровня. */
@@ -203,6 +203,8 @@ export function parseCaseBody(body: string): ParsedCaseBody {
     credits,
     agency,
     links: parseLinks(sections.get('Ссылки и источники')),
-    publicationNotes: parseParagraphs(sections.get('Комментарии для публикации')).join(' ') || undefined,
+    // Служебная сверка фактов. На страницу не выводится ни при каких условиях,
+    // вводку к блоку «Результат» задает только resultIntro в case-page-config.ts.
+    internalNotes: parseParagraphs(sections.get('Внутренние заметки (не публикуется)')).join(' ') || undefined,
   };
 }
