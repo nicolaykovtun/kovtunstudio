@@ -114,7 +114,7 @@ footer a{color:var(--ink)}
 <fieldset><legend>Компания и продукт</legend>
   <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название и чем занимаетесь, одной строкой</span><input type="text" id="company" data-q="Компания"></div>
   <div class="q"><label class="t" for="product">Что за продукт</label><span class="hint">Например: сыродавленное масло, 500 мл, стеклянная бутылка</span><input type="text" id="product" data-q="Продукт"></div>
-  <div class="q"><label class="t" for="skus">Сколько позиций (SKU) в работе</label><span class="hint">Один вкус или вся линейка — от количества напрямую зависят срок и цена</span><input type="text" id="skus" data-q="Количество SKU"></div>
+  <div class="q"><label class="t" for="skus">Сколько позиций (SKU) в работе</label><span class="hint">Один вкус или вся линейка — от количества зависят срок и цена</span><input type="text" id="skus" data-q="Количество SKU"></div>
   <div class="q"><label class="t" for="growth">Будет ли линейка расти</label><span class="hint">Если через полгода добавятся новые вкусы или объёмы, дизайн сразу строится как система — новые позиции выйдут быстрее и дешевле</span><input type="text" id="growth" data-q="Планы по линейке"></div>
   <div class="q"><label class="t">Тип задачи</label>
     <div class="opts" data-q="Тип задачи">
@@ -138,7 +138,7 @@ footer a{color:var(--ink)}
       <label class="opt"><input type="checkbox" name="ch" value="HoReCa"><span>HoReCa</span></label>
     </div>
   </div>
-  <div class="q" data-when="ch:Маркетплейсы"><label class="t" for="mp">Какие маркетплейсы</label><span class="hint">Wildberries, Ozon, Яндекс Маркет. В каталоге упаковка видна размером с почтовую марку — фронт должен читаться и в таком масштабе</span><input type="text" id="mp" data-q="Маркетплейсы"></div>
+  <div class="q" data-when="ch:Маркетплейсы"><label class="t" for="mp">Какие маркетплейсы</label><span class="hint">Wildberries, Ozon, Яндекс Маркет. В каталоге упаковка видна размером с почтовую марку — лицевая сторона должна читаться даже в таком размере</span><input type="text" id="mp" data-q="Маркетплейсы"></div>
   <div class="q" data-when="ch:Полка розничной сети"><label class="t" for="retail">В какие сети идёте</label><span class="hint">У сетей бывают свои требования к упаковке и маркировке. Если требования на руках — приложите их к брифу</span><input type="text" id="retail" data-q="Сети и их требования"></div>
   <div class="q"><label class="t" for="price">Цена продукта на полке</label><span class="hint">И сегмент: эконом, средний, премиум. Упаковка должна попадать в свою цену — не выглядеть дороже или дешевле неё</span><input type="text" id="price" data-q="Цена и сегмент"></div>
   <div class="q"><label class="t" for="geo">География продаж</label><span class="hint">Город, регион или вся страна</span><input type="text" id="geo" data-q="География"></div>
@@ -147,7 +147,7 @@ footer a{color:var(--ink)}
 <fieldset><legend>Покупатель и конкуренты</legend>
   <div class="q"><label class="t" for="buyer">Кто покупает</label><span class="hint">Не «все», а конкретно: кто берёт чаще всего и по какому поводу</span><textarea id="buyer" data-q="Покупатель"></textarea></div>
   <div class="q"><label class="t" for="choice">По чему покупатель выбирает у полки</label><span class="hint">Цена, состав, объём, привычка, доверие к производителю — что решает за 2–3 секунды</span><textarea id="choice" data-q="Критерий выбора"></textarea></div>
-  <div class="q"><label class="t" for="comp">Конкуренты рядом на полке</label><span class="hint">2–3 названия или ссылки. Дизайнеру нужно понимать, от кого отстраиваться</span><textarea id="comp" data-q="Конкуренты"></textarea></div>
+  <div class="q"><label class="t" for="comp">Конкуренты рядом на полке</label><span class="hint">2–3 названия или ссылки. Дизайнеру нужно видеть, от кого вы хотите отличаться на полке</span><textarea id="comp" data-q="Конкуренты"></textarea></div>
   <div class="q"><label class="t" for="likes">Упаковка, которая вам нравится</label><span class="hint">Любая, даже из другой категории. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
   <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приёмы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
 </fieldset>
@@ -156,7 +156,7 @@ footer a{color:var(--ink)}
   <div class="q"><label class="t" for="volume">Тираж</label><span class="hint">Сколько штук печатаете за раз, хотя бы примерно. От тиража зависят способ печати и цена за штуку</span><input type="text" id="volume" data-q="Тираж"></div>
   <div class="q"><label class="t" for="print">Типография и способ печати</label><span class="hint">Если типография уже выбрана — назовите её. Способ печати меняет макет: у флексографии каждая краска печатается с отдельной формы и оплачивается до тиража, а мелкий текст и тонкие линии заплывают</span><input type="text" id="print" data-q="Печать"></div>
   <div class="q"><label class="t" for="material">Материал и форма</label><span class="hint">Плёнка, бумага, гофрокороб, стекло, канистра. И есть ли чертёж развёртки упаковки от типографии — его ещё называют дилайном</span><input type="text" id="material" data-q="Материал и форма"></div>
-  <div class="q"><label class="t">Что обязано попасть на упаковку</label><span class="hint">Отметьте, что применимо. Место под такие элементы закладывается на старте, а не дорисовывается потом</span>
+  <div class="q"><label class="t">Что обязано попасть на упаковку</label><span class="hint">Отметьте нужное. Место под такие элементы закладывается на старте, а не дорисовывается потом</span>
     <div class="opts" data-q="Обязательные элементы">
       <label class="opt"><input type="checkbox" name="req" value="Штрихкод"><span>Штрихкод</span></label>
       <label class="opt"><input type="checkbox" name="req" value="Знак ЕАС"><span>Знак ЕАС</span></label>
@@ -198,7 +198,7 @@ footer a{color:var(--ink)}
     <button type="button" id="copy">Скопировать текст</button>
     <button type="button" id="printBtn">Сохранить в PDF</button>
   </div>
-  <p class="after">Перед отправкой дизайнеру бриф можно показать мне: подскажу, где не хватает данных и какие есть риски по печати. Бесплатно и ни к чему не обязывает — <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+  <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и что уточнить у типографии. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
 </section>
 
 <footer>
@@ -305,7 +305,7 @@ footer a{color:var(--ink)}
     });
 
     if (gaps.length) {
-      html += '<div class="gaps"><p>Осталось незаполненным — подрядчик спросит про каждый пункт, быстрее подготовить ответы заранее:</p><ul>';
+      html += '<div class="gaps"><p>Пункты ниже остались пустыми. Подрядчик спросит про каждый, поэтому ответы лучше подготовить заранее:</p><ul>';
       lines.push('НУЖНО УТОЧНИТЬ', '');
       gaps.forEach(function(g){
         html += '<li>' + esc(g) + '</li>';

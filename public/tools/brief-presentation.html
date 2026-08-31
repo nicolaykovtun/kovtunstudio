@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бриф на презентацию — Kovtun.studio</title>
+<meta name="description" content="Заполните бриф на дизайн презентации за 10 минут и отправьте его любому подрядчику. Ничего не сохраняется и никуда не отправляется.">
+<style>
+:root{
+  --red:#D91620; --red-dark:#B31016;
+  --ink:#2B2B2B; --gray:#87888A; --line:#E6E6E6; --bg:#FFFFFF; --soft:#F7F7F7;
+  --font:"Geist","Geist Variable",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:32px 20px 140px}
+header{border-bottom:2px solid var(--red);padding-bottom:20px;margin-bottom:28px}
+.mark{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.mark span{color:var(--red)}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:18px 0 8px;font-weight:600}
+.lead{color:var(--gray);max-width:60ch;margin:0}
+.note{background:var(--soft);border-left:3px solid var(--red);padding:12px 16px;margin:24px 0;font-size:14px;color:var(--ink)}
+fieldset{border:0;border-top:1px solid var(--line);padding:24px 0 8px;margin:0}
+legend{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);padding:0 8px 0 0}
+.q{margin:0 0 22px}
+.q[hidden]{display:none}
+label.t{display:block;font-weight:600;margin-bottom:2px}
+.hint{display:block;color:var(--gray);font-size:13px;margin-bottom:8px}
+input[type=text],textarea,select{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:2px;padding:10px 12px;min-height:44px;transition:border-color .12s}
+textarea{min-height:76px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--red)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--line);border-radius:2px;padding:8px 14px;font-size:14px;cursor:pointer;user-select:none}
+.opt input:checked + span{border-color:var(--red);color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.opt input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
+.opt span:hover{border-color:var(--gray)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;z-index:5}
+.bar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.prog{flex:1 1 auto;min-width:0}
+.prog-t{font-size:13px;color:var(--gray);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-t b{color:var(--ink)}
+.track{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--red);transition:width .2s}
+button{font:inherit;font-size:15px;border-radius:2px;padding:11px 18px;min-height:44px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink)}
+button.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:600;flex-shrink:0}
+button.primary:hover{background:var(--red-dark);border-color:var(--red-dark)}
+button:hover{border-color:var(--red);color:var(--red)}
+button.primary:hover{color:#fff}
+#out{display:none;margin-top:36px;border-top:2px solid var(--red);padding-top:24px}
+#out h2{font-size:22px;margin:0 0 4px;font-weight:600}
+#out .sub{color:var(--gray);font-size:14px;margin:0 0 20px}
+.print-head{display:none}
+.brief{background:var(--soft);padding:24px;border-radius:2px}
+.brief h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin:22px 0 10px;font-weight:600}
+.brief h3:first-child{margin-top:0}
+.brief .bt{font-weight:600;font-size:17px;margin:0 0 2px}
+.brief .bd{color:var(--gray);font-size:13px;margin:0 0 14px}
+.brief .bi{margin:0 0 10px;font-size:15px}
+.brief .bi b{font-weight:600}
+.brief section{break-inside:avoid}
+.gaps{margin-top:22px;border-top:1px dashed var(--gray);padding-top:16px}
+.gaps p{margin:0 0 8px;font-size:14px;color:var(--gray)}
+.gaps ul{margin:0;padding-left:18px;font-size:15px}
+.gaps li{margin-bottom:4px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.after{margin-top:20px;padding:12px 16px;background:var(--soft);border-left:3px solid var(--line);font-size:14px;color:var(--gray)}
+.after a{color:var(--ink)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--gray);font-size:13px}
+footer a{color:var(--ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:2px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.on{opacity:1}
+@media print{
+  .bar,header,.note,form,footer,.row,.after,.toast,#out .sub{display:none!important}
+  body{font-size:12pt}
+  .wrap{padding:0;max-width:none}
+  #out{display:block!important;border-top:0;padding-top:0;margin-top:0}
+  #out h2{display:none}
+  .print-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--red);padding-bottom:10px;margin-bottom:18px}
+  .print-head .mark{font-size:16pt}
+  .print-head .pd{color:var(--gray);font-size:10pt}
+  .brief{background:none;padding:0}
+  .brief .bd{display:none}
+  .brief h3{break-after:avoid}
+  .brief .bi{break-inside:avoid;font-size:11pt}
+  .gaps{break-inside:avoid}
+}
+@media (max-width:520px){
+  h1{font-size:26px}
+  .wrap{padding-bottom:150px}
+  .bar{padding:10px 16px}
+  .bar-in{gap:12px}
+  .prog-t{font-size:12px;margin-bottom:5px}
+  .brief{padding:18px 16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="mark">K<span>.</span></div>
+  <h1>Бриф на презентацию</h1>
+  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру презентаций. Отвечать на всё не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем точнее оценка срока и цены.</p>
+</header>
+
+<div class="note">Всё считается прямо в браузере. Ответы никуда не отправляются и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф скопируйте или распечатайте в PDF.</div>
+
+<form id="f" autocomplete="off">
+
+<fieldset><legend>Компания и задача</legend>
+  <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название — как писать на слайдах</span><input type="text" id="company" data-q="Компания"></div>
+  <div class="q"><label class="t" for="about">Чем занимаетесь</label><span class="hint">Одно-два предложения простыми словами</span><input type="text" id="about" data-q="Чем занимается компания"></div>
+  <div class="q"><label class="t">Что презентуем</label>
+    <div class="opts" data-q="Что презентуем">
+      <label class="opt"><input type="radio" name="subject" value="Компанию в целом"><span>Компанию в целом</span></label>
+      <label class="opt"><input type="radio" name="subject" value="Продукт или услугу"><span>Продукт или услугу</span></label>
+      <label class="opt"><input type="radio" name="subject" value="Проект или идею, в том числе для инвестиций"><span>Проект или идею</span></label>
+      <label class="opt"><input type="radio" name="subject" value="Отчёт или результаты работы"><span>Отчёт, результаты</span></label>
+    </div>
+  </div>
+</fieldset>
+
+<fieldset><legend>Цель и аудитория</legend>
+  <div class="q"><label class="t" for="action">Главное действие зрителя после просмотра</label><span class="hint">Одно действие: назначить встречу, оставить заявку, согласовать бюджет, инвестировать. Под него строится вся презентация</span><input type="text" id="action" data-q="Действие зрителя"></div>
+  <div class="q"><label class="t" for="audience">Кто будет смотреть</label><span class="hint">Должность и роль в решении: инвестор, закупщик, директор завода, участники конференции</span><textarea id="audience" data-q="Аудитория"></textarea></div>
+  <div class="q"><label class="t" for="aware">Что аудитория уже знает о вас</label><span class="hint">От «ничего» до «работаем вместе десять лет» — от точки старта зависит, сколько объяснять</span><textarea id="aware" data-q="Что аудитория знает"></textarea></div>
+  <div class="q"><label class="t" for="doubts">Главные сомнения аудитории</label><span class="hint">Например: «дорого», «нет опыта в нашей отрасли», «чем вы лучше конкурента». Под каждое сомнение закладывается слайд с ответом</span><textarea id="doubts" data-q="Сомнения аудитории"></textarea></div>
+</fieldset>
+
+<fieldset><legend>Формат</legend>
+  <div class="q"><label class="t">Как будет использоваться</label><span class="hint">Можно отметить несколько. Слайды для выступления и слайды, которые читают без вас, верстаются по-разному</span>
+    <div class="opts" data-q="Как используется">
+      <label class="opt"><input type="checkbox" name="use" value="Выступление со спикером"><span>Выступление со спикером</span></label>
+      <label class="opt"><input type="checkbox" name="use" value="Читают без спикера: почта, мессенджер"><span>Читают без спикера</span></label>
+      <label class="opt"><input type="checkbox" name="use" value="Показ на встрече один на один"><span>Показ на встрече</span></label>
+      <label class="opt"><input type="checkbox" name="use" value="Печатная раздатка"><span>Печатная раздатка</span></label>
+      <label class="opt"><input type="checkbox" name="use" value="Экран на выставке или стенде"><span>Экран на выставке</span></label>
+    </div>
+  </div>
+  <div class="q" data-when="use:Выступление со спикером"><label class="t" for="minutes">Сколько минут длится выступление</label><span class="hint">Из времени считается предельное число слайдов</span><input type="text" id="minutes" data-q="Длительность выступления"></div>
+  <div class="q"><label class="t" for="slides">Сколько примерно слайдов</label><span class="hint">Цена считается за слайд, поэтому нужна хотя бы вилка. Если не знаете — напишите «на ваше усмотрение»</span><input type="text" id="slides" data-q="Число слайдов"></div>
+  <div class="q"><label class="t">Финальные форматы файлов</label>
+    <div class="opts" data-q="Форматы файлов">
+      <label class="opt"><input type="checkbox" name="fmt" value="PPTX, можно редактировать"><span>PPTX</span></label>
+      <label class="opt"><input type="checkbox" name="fmt" value="PDF"><span>PDF</span></label>
+      <label class="opt"><input type="checkbox" name="fmt" value="Figma"><span>Figma</span></label>
+      <label class="opt"><input type="checkbox" name="fmt" value="Версия для печати"><span>Версия для печати</span></label>
+    </div>
+  </div>
+</fieldset>
+
+<fieldset><legend>Текст и материалы</legend>
+  <div class="q"><label class="t">Что с текстом</label><span class="hint">Главный вопрос для цены. Готовый текст встраивается в дизайн, сплошной нужно структурировать по слайдам, а без текста добавляется работа копирайтера</span>
+    <div class="opts" data-q="Готовность текста">
+      <label class="opt"><input type="radio" name="text" value="Текст готов и разбит по слайдам"><span>Готов, разбит по слайдам</span></label>
+      <label class="opt"><input type="radio" name="text" value="Текст есть, но сплошной, без разбивки"><span>Есть, но сплошной</span></label>
+      <label class="opt"><input type="radio" name="text" value="Текста нет, есть идея и материалы"><span>Текста нет</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="materials">Исходные материалы</label><span class="hint">Цифры, старая презентация, кейсы, отзывы, фото, сайт — перечислите, что пришлёте</span><textarea id="materials" data-q="Исходные материалы"></textarea></div>
+  <div class="q"><label class="t" for="must">Что обязательно должно попасть в презентацию</label><textarea id="must" data-q="Обязательное содержание"></textarea></div>
+</fieldset>
+
+<fieldset><legend>Стиль и организация</legend>
+  <div class="q"><label class="t">Что есть из фирменного стиля</label>
+    <div class="opts" data-q="Фирменный стиль">
+      <label class="opt"><input type="checkbox" name="have" value="Логотип в векторе"><span>Логотип в векторе</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Брендбук или фирменные цвета"><span>Брендбук, цвета</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Шаблон презентации"><span>Шаблон презентации</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Фото и иллюстрации"><span>Фото и иллюстрации</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Ничего нет, стиль предложит дизайнер"><span>Ничего нет</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="likes">Презентации или сайты, которые нравятся</label><span class="hint">2–3 ссылки. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
+  <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приёмы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
+  <div class="q"><label class="t" for="deadline">К какой дате нужна презентация</label><span class="hint">И что к дате привязано: выступление, тендер, отправка инвестору</span><input type="text" id="deadline" data-q="Срок"></div>
+  <div class="q"><label class="t" for="who">Кто принимает решение</label><span class="hint">Один человек или несколько согласующих — от количества зависит число раундов правок</span><input type="text" id="who" data-q="Кто принимает решение"></div>
+  <div class="q"><label class="t" for="contact">Контакт для связи</label><input type="text" id="contact" data-q="Контакт"></div>
+</fieldset>
+
+</form>
+
+<section id="out">
+  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Бриф на презентацию — <span id="pdate"></span></div></div>
+  <h2>Готовый бриф</h2>
+  <p class="sub">Скопируйте текст или сохраните в PDF и отправьте вместе с материалами. Пустые пункты собраны внизу отдельным списком — подрядчик сразу увидит, что уточнить.</p>
+  <div class="brief" id="brief"></div>
+  <div class="row">
+    <button type="button" id="copy">Скопировать текст</button>
+    <button type="button" id="printBtn">Сохранить в PDF</button>
+  </div>
+  <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и какой сценарий работы с текстом вам подходит. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+</section>
+
+<footer>
+  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — дизайн презентаций и фирменного стиля.
+  Пользуйтесь свободно, в том числе с другими подрядчиками.
+</footer>
+</div>
+
+<div class="bar"><div class="bar-in">
+  <div class="prog">
+    <div class="prog-t">Заполнено <b><span id="done">0</span> из <span id="total">0</span></b></div>
+    <div class="track"><div class="fill" id="fill"></div></div>
+  </div>
+  <button type="button" class="primary" id="build">Собрать бриф</button>
+</div></div>
+
+<div class="toast" id="toast">Скопировано</div>
+<script>
+(function(){
+  var form = document.getElementById('f');
+  var blocks = [];
+
+  form.querySelectorAll('.q').forEach(function(q){
+    var single = q.querySelector('input[type=text], textarea');
+    var group  = q.querySelector('.opts');
+    var b = {q: q, when: q.getAttribute('data-when')};
+    if (single) { b.label = single.dataset.q; b.get = function(){ return single.value.trim(); }; }
+    else if (group) { b.label = group.dataset.q; b.get = function(){
+      var vals = [].slice.call(group.querySelectorAll('input:checked')).map(function(i){ return i.value; });
+      return vals.join(', ');
+    }; }
+    else return;
+    blocks.push(b);
+  });
+
+  function visible(b){
+    if (!b.when) return true;
+    var parts = b.when.split(':');           // "task:Редизайн...|Адаптация..."
+    var name = parts[0], wanted = parts[1].split('|');
+    var checked = [].slice.call(form.querySelectorAll('input[name=' + name + ']:checked'))
+      .map(function(i){ return i.value; });
+    return wanted.some(function(w){ return checked.indexOf(w) !== -1; });
+  }
+
+  function applyBranching(){
+    blocks.forEach(function(b){
+      if (b.when) b.q.hidden = !visible(b);
+    });
+  }
+
+  function count(){
+    applyBranching();
+    var shown = blocks.filter(function(b){ return !b.q.hidden; });
+    var n = 0;
+    shown.forEach(function(b){ if (b.get()) n++; });
+    document.getElementById('done').textContent = n;
+    document.getElementById('total').textContent = shown.length;
+    document.getElementById('fill').style.width = Math.round(n / shown.length * 100) + '%';
+    if (document.getElementById('out').style.display === 'block') build(false);
+  }
+  form.addEventListener('input', count);
+  form.addEventListener('change', count);
+  count();
+
+  function esc(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  var plainText = '';
+
+  function build(scroll){
+    var company = document.getElementById('company').value.trim();
+    var date = new Date().toLocaleDateString('ru-RU');
+    document.getElementById('pdate').textContent = date;
+
+    var html = '';
+    var lines = ['БРИФ НА ПРЕЗЕНТАЦИЮ', (company || 'Компания не указана'), date, '', '---', ''];
+    var gaps = [];
+
+    html += '<p class="bt">' + esc(company || 'Компания не указана') + '</p>';
+    html += '<p class="bd">Бриф на дизайн упаковки — ' + date + '</p>';
+
+    form.querySelectorAll('fieldset').forEach(function(fs){
+      var title = fs.querySelector('legend').textContent;
+      var secHtml = '', secLines = [];
+      fs.querySelectorAll('.q').forEach(function(q){
+        var b = blocks.filter(function(x){ return x.q === q; })[0];
+        if (!b || b.q.hidden) return;
+        var v = b.get();
+        if (v) {
+          secHtml += '<p class="bi"><b>' + esc(b.label) + ':</b> ' + esc(v) + '</p>';
+          secLines.push(b.label + ': ' + v);
+        } else {
+          gaps.push(b.label);
+        }
+      });
+      if (secHtml) {
+        html += '<section><h3>' + esc(title) + '</h3>' + secHtml + '</section>';
+        lines.push(title.toUpperCase(), '');
+        secLines.forEach(function(l){ lines.push(l); });
+        lines.push('');
+      }
+    });
+
+    if (gaps.length) {
+      html += '<div class="gaps"><p>Пункты ниже остались пустыми. Подрядчик спросит про каждый, поэтому ответы лучше подготовить заранее:</p><ul>';
+      lines.push('НУЖНО УТОЧНИТЬ', '');
+      gaps.forEach(function(g){
+        html += '<li>' + esc(g) + '</li>';
+        lines.push('— ' + g);
+      });
+      html += '</ul></div>';
+      lines.push('');
+    }
+
+    lines.push('---', 'Бриф собран в конструкторе design.kovtun.studio');
+    plainText = lines.join('\n');
+    document.getElementById('brief').innerHTML = html;
+
+    var out = document.getElementById('out');
+    out.style.display = 'block';
+    if (scroll !== false) out.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  document.getElementById('build').addEventListener('click', function(){ build(true); });
+
+  function toast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('on');
+    setTimeout(function(){ t.classList.remove('on'); }, 1600);
+  }
+
+  document.getElementById('copy').addEventListener('click', function(){
+    if (!plainText) build(false);
+    var txt = plainText;
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); toast('Скопировано'); }
+      catch(e){ toast('Скопируйте вручную'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){ toast('Скопировано'); }, fallback);
+    } else fallback();
+  });
+
+  document.getElementById('printBtn').addEventListener('click', function(){
+    if (!plainText) build(false);
+    window.print();
+  });
+})();
+</script>
+</body>
+</html>
