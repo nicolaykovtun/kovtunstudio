@@ -1,32 +1,35 @@
 name: Publish scheduled blog post
 
-# Отложенная публикация статьи блога. Работает на серверах GitHub,
+# Отложенная публикация статей блога. Работает на серверах GitHub,
 # компьютер Николая для этого не нужен и может быть выключен.
 #
-# Что делает в день публикации:
-#   1. снимает draft: true со статьи и дописывает строку в public/llms.txt
-#      (скрипт docs/tools/publish-blog-post.cjs, тот же, что запускается вручную)
-#   2. коммитит изменение от имени github-actions
-#   3. собирает сайт и выкатывает его на Pages
+# Расписание читает шапки статей, а не константу в этом файле. Раз в сутки
+# workflow берет все черновики из src/content/blog, у которых pubDate уже
+# наступила по UTC, снимает у них draft: true, дописывает строки в
+# public/llms.txt (скрипт docs/tools/publish-blog-post.cjs), коммитит,
+# собирает сайт и выкатывает его на Pages.
+#
+# Чтобы статья вышла в нужный день, достаточно поставить ей pubDate и
+# оставить draft: true. Править этот файл под каждую статью не нужно.
 #
 # Деплой сделан прямо здесь, а не через deploy.yml: пуш, сделанный
 # встроенным GITHUB_TOKEN, намеренно не запускает другие workflow,
 # иначе получилась бы рекурсия.
 #
-# Ручной запуск доступен в любой момент: вкладка Actions, кнопка Run workflow,
-# поле slug. Дату при ручном запуске не проверяем.
+# Ручной запуск доступен в любой момент: вкладка Actions, кнопка Run workflow.
+# Поле slug публикует конкретную статью, не глядя на дату. Пустое поле — тот же
+# разбор по датам, что и по расписанию.
 
 on:
   schedule:
-    # 00:00 UTC 17 августа = 10:00 во Владивостоке.
-    # Cron у GitHub повторяется каждый год, поэтому ниже стоит проверка даты.
-    - cron: '0 0 17 8 *'
+    # 00:00 UTC = 10:00 во Владивостоке. Каждый день.
+    - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
       slug:
-        description: 'Slug статьи в src/content/blog (без .md)'
-        required: true
-        default: 'chto-dolzhno-byt-na-etiketke'
+        description: 'Slug статьи в src/content/blog (без .md). Пусто — все статьи с наступившей pubDate'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -36,10 +39,6 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: false
-
-env:
-  POST_SLUG: ${{ github.event.inputs.slug || 'chto-dolzhno-byt-na-etiketke' }}
-  PUBLISH_DATE: '2026-08-17'
 
 jobs:
   publish:
@@ -52,46 +51,52 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Проверка даты (только для запуска по расписанию)
-        id: gate
-        run: |
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%F)" != "$PUBLISH_DATE" ]; then
-            echo "Сегодня $(date -u +%F), а публикация назначена на $PUBLISH_DATE. Выходим."
-            echo "run=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Setup Node
-        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
       - name: Снять черновик и дописать llms.txt
-        if: steps.gate.outputs.run == 'true'
-        run: node docs/tools/publish-blog-post.cjs "$POST_SLUG"
+        run: node docs/tools/publish-blog-post.cjs "${SLUG:---due}"
+        env:
+          SLUG: ${{ github.event.inputs.slug }}
+
+      # Ежедневный запуск не должен пересобирать и перевыкатывать сайт впустую:
+      # если снимать было нечего, по расписанию выходим. Ручной запуск собирает
+      # и выкатывает в любом случае — это кнопка «выложить сейчас».
+      - name: Есть ли что публиковать
+        id: gate
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            if [ "${{ github.event_name }}" = "schedule" ]; then
+              echo "Изменений нет, публиковать нечего. Выходим."
+              echo "deploy=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "Изменений нет, но запуск ручной. Пересоберем и выкатим как есть."
+              echo "deploy=true" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Коммит
-        if: steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.changed == 'true'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet; then
-            echo "Изменений нет, статья уже опубликована. Пересоберем и выкатим как есть."
-          else
-            git add -A
-            git commit -m "Публикация статьи блога: $POST_SLUG"
-            git push
-          fi
+          git add -A
+          git commit -m "Публикация статей блога по расписанию"
+          git push
 
       - name: Сборка
-        if: steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.deploy == 'true'
         uses: withastro/action@v3
         with:
           node-version: 22
 
       - name: Деплой на Pages
-        if: steps.gate.outputs.run == 'true'
+        if: steps.gate.outputs.deploy == 'true'
         id: deployment
         uses: actions/deploy-pages@v4

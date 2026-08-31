@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "node scripts/check-llms.mjs && astro build",
+    "build": "node scripts/check-llms.mjs && astro build && node scripts/check-llms-links.mjs",
     "check-llms": "node scripts/check-llms.mjs",
+    "check-llms-links": "node scripts/check-llms-links.mjs",
     "preview": "astro preview"
   },
   "devDependencies": {
