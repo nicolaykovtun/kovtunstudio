@@ -33,10 +33,13 @@ og:
   description: >-
     Макеты оклейки от 10 000 ₽: брендинг, реклама, имиджевая концепция.
     Под печать, без сюрпризов в продакшене. Заявка — в Telegram @nikolaikovtun.
-  image: og.jpg
+  # Дефолт для страниц, которые не задали свою картинку: портфолио, упаковка,
+  # список статей. Раньше здесь стоял og.jpg с машиной, и его получала
+  # в том числе страница упаковки. Он же уходит в JSON-LD как image бизнеса.
+  image: og-services.jpg
   imageWidth: 1200
   imageHeight: 630
-  imageAlt: BMW Z4 в рекламной оклейке — пример работы Kovtun.studio
+  imageAlt: Работы Kovtun.studio — упаковка, фирменный стиль, сайты и презентации
   type: website
   locale: ru_RU
   siteName: Kovtun.studio
