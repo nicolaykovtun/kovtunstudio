@@ -182,159 +182,24 @@ const ldPortfolioCases = {
     <ProcessSteps {...site.process} />
     <FounderSection data={site.founderSection} />
     <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={faq} />
-    <ContactForm data={site.cta} telegramUrl={site.contact.telegram} telegramHandle={site.contact.telegramHandle} maxUrl={site.contact.max} maxHandle={site.contact.maxHandle} />
+    <ContactForm data={site.cta} telegramUrl={site.contact.telegram} telegramHandle={site.contact.telegramHandle} maxUrl={site.contact.max} maxHandle={site.contact.maxHandle} briefUrl="/tools/brief-car-wrap.html" briefLabel="Заполнить бриф на оклейку" goalName="car_wrap_lead_submit" messageIntro="Здравствуйте! Хочу обсудить дизайн оклейки авто." />
   </main>
   <Footer {...footer} />
 
-  <script
-    is:inline
-    define:vars={{
-      METRIKA_ID: site.metrika.id,
-      TELEGRAM_URL: site.contact.telegram,
-      MAX_URL: site.contact.max,
-      CONSENT_MARKER: `Согласие на обработку персональных данных: да · редакция ${site.legal.policyVersion} от ${site.legal.policyDate} · ${site.url}/consent/`,
-    }}
-  >
+  <script is:inline>
     (function () {
       "use strict";
 
-      /* ─── Цели Метрики ─── */
+      /* Цели Метрики. Отправка формы живет в ContactForm.astro. */
       function goal(name, params) {
         if (typeof window.ksAnalyticsGoal === "function") window.ksAnalyticsGoal(name, params);
       }
 
-      /* ─── Сборка сообщения и ссылки на мессенджер ─── */
-      function buildMessage(d) {
-        var lines = ["Здравствуйте! Хочу обсудить дизайн оклейки авто.", ""];
-        if (d.name) lines.push("Имя: " + d.name);
-        if (d.car) lines.push("Авто: " + d.car);
-        if (d.message) lines.push("\nЗадача:\n" + d.message);
-        if (d.leadId) lines.push("\nЗаявка ID: " + d.leadId);
-        lines.push("\n" + CONSENT_MARKER);
-        return lines.join("\n");
-      }
-      function buildTelegramURL(text) {
-        return TELEGRAM_URL + "?text=" + encodeURIComponent(text);
-      }
-      function buildMaxURL(text) {
-        // MAX деep-link с текстом. На текущий момент max.ru не поддерживает
-        // ?text= параметр напрямую. Открываем чат, текст копируем в буфер.
-        return MAX_URL;
-      }
-
-      /* ─── Lead form ─── */
-      var form = document.getElementById("lead-form");
-      var fName = document.getElementById("f-name");
-      var fCar = document.getElementById("f-car");
-      var fMessage = document.getElementById("f-message");
-      var errName = document.getElementById("err-name");
-      var errCar = document.getElementById("err-car");
       var fields = document.getElementById("form-fields");
       var success = document.getElementById("form-success");
-      var successText = document.getElementById("success-text");
-      var reopen = document.getElementById("reopen-messenger");
-      var copyBlock = document.getElementById("copy-text-block");
-      var copyArea = document.getElementById("copy-text-area");
-      var copyBtn = document.getElementById("copy-text-btn");
-      var copyBtnLabel = document.getElementById("copy-text-btn-label");
+      var fMessage = document.getElementById("f-message");
 
-      function setError(node, msg) {
-        if (msg) { node.textContent = msg; node.hidden = false; }
-        else { node.textContent = ""; node.hidden = true; }
-      }
-
-      function validate() {
-        var ok = true;
-        if (!fName.value.trim()) { setError(errName, "Как к вам обращаться?"); ok = false; }
-        else setError(errName, "");
-        if (!fCar.value.trim()) { setError(errCar, "Марка и модель — чтобы прикинуть объем"); ok = false; }
-        else setError(errCar, "");
-        return ok;
-      }
-
-      if (form) {
-        form.addEventListener("submit", function (e) {
-          e.preventDefault();
-          if (!validate()) return;
-
-          // По нажатой кнопке определяем целевой мессенджер
-          var target = (e.submitter && e.submitter.dataset.target) || "telegram";
-          var label = target === "max" ? "MAX" : "Telegram";
-          var leadId = typeof window.kovtunLeadEvent === "function"
-            ? window.kovtunLeadEvent({ messenger: label })
-            : "";
-          var text = buildMessage({
-            name: fName.value.trim(),
-            car: fCar.value.trim(),
-            message: fMessage.value.trim(),
-            leadId: leadId
-          });
-
-          var url, goalName;
-          if (target === "max") {
-            url = buildMaxURL(text);
-            label = "MAX";
-            goalName = "car_wrap_lead_max";
-            // MAX не поддерживает pre-filled text в URL — показываем
-            // текст явно с кнопкой "Скопировать" + пробуем сразу положить в буфер.
-            copyArea.value = text;
-            copyBlock.hidden = false;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(text).catch(function () {});
-            }
-            successText.textContent = "MAX откроется в новой вкладке. Скопируй текст заявки кнопкой ниже и вставь в чат.";
-          } else {
-            url = buildTelegramURL(text);
-            label = "Telegram";
-            goalName = "car_wrap_lead_submit";
-            copyBlock.hidden = true;
-            successText.textContent = "Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.";
-          }
-
-          window.open(url, "_blank", "noopener,noreferrer");
-          reopen.href = url;
-          // Меняем текст у reopen — оставляем span со стрелкой
-          reopen.innerHTML = "Открыть " + label + " еще раз <span class=\"arrow\" aria-hidden=\"true\">→</span>";
-          fields.hidden = true;
-          success.hidden = false;
-          form.classList.add("is-success");
-          goal(goalName, { car: fCar.value.trim().slice(0, 40) });
-        });
-      }
-
-      /* ─── Копирование текста заявки кнопкой ─── */
-      if (copyBtn) {
-        copyBtn.addEventListener("click", function () {
-          var text = copyArea.value;
-          var done = function () {
-            copyBtnLabel.textContent = "Скопировано ✓";
-            setTimeout(function () { copyBtnLabel.textContent = "Скопировать текст"; }, 2000);
-          };
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(done).catch(function () {
-              // Fallback: выделить и execCommand
-              copyArea.select();
-              try { document.execCommand("copy"); done(); } catch (e) {}
-            });
-          } else {
-            copyArea.select();
-            try { document.execCommand("copy"); done(); } catch (e) {}
-          }
-        });
-      }
-
-      var resetBtn = document.getElementById("form-reset");
-      if (resetBtn) {
-        resetBtn.addEventListener("click", function () {
-          fName.value = ""; fCar.value = ""; fMessage.value = "";
-          setError(errName, ""); setError(errCar, "");
-          success.hidden = true;
-          fields.hidden = false;
-          form.classList.remove("is-success");
-        });
-      }
-
-      /* ─── Tier "Выбрать пакет" → префилл формы + скролл + цель ─── */
+      /* Tier "Выбрать пакет" -> префилл формы + скролл + цель */
       Array.prototype.forEach.call(document.querySelectorAll(".tier-cta [data-tier]"), function (btn) {
         btn.addEventListener("click", function () {
           if (success && success.hidden === false) { success.hidden = true; fields.hidden = false; }
@@ -345,22 +210,22 @@ const ldPortfolioCases = {
         });
       });
 
-      /* ─── Цель: телефонный CTA в шапке ─── */
+      /* Цель: телефонный CTA в шапке */
       Array.prototype.forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (link) {
         link.addEventListener("click", function () { goal("cta_phone"); });
       });
 
-      /* ─── Цель: прямые ссылки на Telegram ─── */
+      /* Цель: прямые ссылки на Telegram */
       Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://t.me/"]'), function (link) {
         link.addEventListener("click", function () { goal("telegram_direct"); });
       });
 
-      /* ─── Цель: прямые ссылки на MAX ─── */
+      /* Цель: прямые ссылки на MAX */
       Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://max.ru/"]'), function (link) {
         link.addEventListener("click", function () { goal("max_direct"); });
       });
 
-      /* ─── Цель: клик по hero CTA "Обсудить проект" ─── */
+      /* Цель: клик по hero CTA "Обсудить проект" */
       Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
         link.addEventListener("click", function () { goal("car_wrap_cta_main"); });
       });

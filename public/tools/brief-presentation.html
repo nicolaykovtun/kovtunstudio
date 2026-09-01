@@ -48,6 +48,12 @@ input:focus,textarea:focus,select:focus{outline:0;border-color:var(--red)}
 .fill{height:100%;width:0;background:var(--red);transition:width .2s}
 button{font:inherit;font-size:15px;border-radius:2px;padding:11px 18px;min-height:44px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink)}
 button.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:600;flex-shrink:0}
+.agree{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--gray);margin-top:14px;line-height:1.5;cursor:pointer}
+.agree input{margin-top:2px;width:18px;height:18px;flex-shrink:0}
+.agree a{color:inherit}
+.sendnote{margin-top:10px;font-size:14px;line-height:1.5}
+.sendnote.ok{color:#1a7f37}
+.sendnote.err{color:var(--red)}
 button.primary:hover{background:var(--red-dark);border-color:var(--red-dark)}
 button:hover{border-color:var(--red);color:var(--red)}
 button.primary:hover{color:#fff}
@@ -107,7 +113,7 @@ footer a{color:var(--ink)}
   <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру презентаций. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем точнее оценка срока и цены.</p>
 </header>
 
-<div class="note">Все считается прямо в браузере. Ответы никуда не отправляются и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф скопируйте или распечатайте в PDF.</div>
+<div class="note">Все считается прямо в браузере: пока вы не нажали «Отправить в студию», ответы никуда не уходят и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф можно скопировать, сохранить в PDF или отправить мне одной кнопкой.</div>
 
 <form id="f" autocomplete="off">
 
@@ -192,7 +198,10 @@ footer a{color:var(--ink)}
   <div class="row">
     <button type="button" id="copy">Скопировать текст</button>
     <button type="button" id="printBtn">Сохранить в PDF</button>
+    <button type="button" class="primary" id="sendBtn">Отправить в студию</button>
   </div>
+  <label class="agree"><input type="checkbox" id="agree"> Согласен на обработку персональных данных: <a href="https://design.kovtun.studio/privacy/" target="_blank" rel="noopener">политика</a> и <a href="https://design.kovtun.studio/consent/" target="_blank" rel="noopener">согласие</a>.</label>
+  <p class="sendnote" id="sendnote" hidden></p>
   <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и какой сценарий работы с текстом вам подходит. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
 </section>
 
@@ -262,6 +271,11 @@ footer a{color:var(--ink)}
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
+  /* Подпись под названием компании берем из заголовка страницы: раньше она была
+     вписана строкой и на трех брифах из четырех говорила про упаковку. */
+  var kindTitle = (document.querySelector('h1') || {}).textContent || 'Бриф';
+  kindTitle = kindTitle.trim();
+
   var plainText = '';
 
   function build(scroll){
@@ -274,7 +288,7 @@ footer a{color:var(--ink)}
     var gaps = [];
 
     html += '<p class="bt">' + esc(company || 'Компания не указана') + '</p>';
-    html += '<p class="bd">Бриф на дизайн упаковки — ' + date + '</p>';
+    html += '<p class="bd">' + esc(kindTitle) + ' — ' + date + '</p>';
 
     form.querySelectorAll('fieldset').forEach(function(fs){
       var title = fs.querySelector('legend').textContent;
@@ -311,6 +325,7 @@ footer a{color:var(--ink)}
 
     lines.push('---', 'Бриф собран в конструкторе design.kovtun.studio');
     plainText = lines.join('\n');
+    window.__briefText = plainText;
     document.getElementById('brief').innerHTML = html;
 
     var out = document.getElementById('out');
@@ -345,6 +360,83 @@ footer a{color:var(--ink)}
   document.getElementById('printBtn').addEventListener('click', function(){
     if (!plainText) build(false);
     window.print();
+  });
+})();
+</script>
+<script>
+/* Отправка брифа в CRM студии. Отдельным блоком, чтобы не трогать сборщик
+   выше: он только выкладывает готовый текст в window.__briefText. */
+(function(){
+  var ENDPOINT = 'https://crm.kovtun.studio/api/lead.php';
+  var btn = document.getElementById('sendBtn');
+  if (!btn) { return; }
+  var agree = document.getElementById('agree');
+  var note  = document.getElementById('sendnote');
+  var h1    = document.querySelector('h1');
+  var kind  = h1 ? h1.textContent.trim() : 'Бриф';
+  var sent  = false;
+
+  function say(text, cls){
+    note.textContent = text;
+    note.className = 'sendnote ' + (cls || '');
+    note.hidden = false;
+  }
+  function val(id){
+    var el = document.getElementById(id);
+    return el && el.value ? el.value.trim() : '';
+  }
+
+  btn.addEventListener('click', function(){
+    if (sent) { say('Бриф уже отправлен.', 'ok'); return; }
+
+    var contact = val('contact');
+    if (!contact) {
+      say('Заполните «Контакт для связи» — иначе ответить будет некуда.', 'err');
+      var c = document.getElementById('contact');
+      if (c) { c.scrollIntoView({behavior:'smooth', block:'center'}); c.focus(); }
+      return;
+    }
+    if (!agree.checked) {
+      say('Отметьте согласие на обработку данных.', 'err');
+      return;
+    }
+    var text = window.__briefText || '';
+    if (!text) { say('Сначала нажмите «Собрать бриф».', 'err'); return; }
+
+    var company = val('company');
+    var p = new URLSearchParams(location.search);
+    var body = new URLSearchParams({
+      name: company,
+      contact: contact,
+      message: kind + (company ? ' — ' + company : '') + '\n\n' + text,
+      page: location.pathname,
+      referrer: document.referrer || '',
+      utmSource: p.get('utm_source') || '',
+      utmMedium: p.get('utm_medium') || '',
+      utmCampaign: p.get('utm_campaign') || '',
+      yclid: p.get('yclid') || '',
+      formKey: 'kovtun-studio-109482416',
+      website: ''
+    });
+
+    btn.disabled = true;
+    say('Отправляю…', '');
+    fetch(ENDPOINT, {method:'POST', body: body})
+      .then(function(r){ return r.json().catch(function(){ return null; }); })
+      .then(function(j){
+        if (j && j.ok) {
+          sent = true;
+          btn.textContent = 'Отправлено';
+          say('Бриф ушел в студию, заявка №' + (j.lead || '—') + '. Отвечу в течение рабочего дня.', 'ok');
+        } else {
+          btn.disabled = false;
+          say('Не отправилось. Скопируйте текст и пришлите в Telegram: t.me/kovtundesign', 'err');
+        }
+      })
+      .catch(function(){
+        btn.disabled = false;
+        say('Не отправилось. Скопируйте текст и пришлите в Telegram: t.me/kovtundesign', 'err');
+      });
   });
 })();
 </script>
