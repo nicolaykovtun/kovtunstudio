@@ -186,7 +186,11 @@ import CookieConsent from '../components/CookieConsent.astro';
 <body class={bodyClass}>
   <a class="skip-link" href="#main-content">Перейти к содержанию</a>
   <slot />
-  <CookieConsent metrikaId={site.metrika.id} metrikaOptions={site.metrika.options} />
+  <CookieConsent
+    metrikaId={site.metrika.id}
+    metrikaOptions={site.metrika.options}
+    googleAnalyticsId={site.googleAnalytics.measurementId}
+  />
 
   <script is:inline define:vars={{
     LEAD_ENDPOINT: site.leadCapture?.endpoint || '',

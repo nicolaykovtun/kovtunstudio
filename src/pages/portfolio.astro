@@ -403,12 +403,10 @@ const seoDescription =
       }
 
       function reportFilterGoal() {
-        if (typeof window.ym === "function") {
-          try {
-            window.ym(METRIKA_ID, "reachGoal", "portfolio_filter", {
-              direction: state.direction, sphere: state.sphere
-            });
-          } catch (e) {}
+        if (typeof window.ksAnalyticsGoal === "function") {
+          window.ksAnalyticsGoal("portfolio_filter", {
+            direction: state.direction, sphere: state.sphere
+          });
         }
       }
 

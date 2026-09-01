@@ -2,9 +2,10 @@
 interface Props {
   metrikaId: number;
   metrikaOptions: Record<string, unknown>;
+  googleAnalyticsId: string;
 }
 
-const { metrikaId, metrikaOptions } = Astro.props;
+const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
 ---
 
 <aside class="cookie-consent" id="cookie-consent" aria-labelledby="cookie-consent-title" hidden>
@@ -12,7 +13,7 @@ const { metrikaId, metrikaOptions } = Astro.props;
     <strong id="cookie-consent-title">Можно включить полную аналитику?</strong>
     <p>
       Сейчас Яндекс Метрика считает просмотры обезличенно: без cookies и без записи действий.
-      С вашего разрешения добавятся cookies и Вебвизор — так видно, что на сайте работает плохо.
+      С вашего разрешения включатся Google Analytics, аналитические cookies и Вебвизор — так видно, что на сайте работает плохо.
       Откажетесь — сайт продолжит работать как обычно.
       <a href="/cookies/">Подробнее о cookies</a>
     </p>
@@ -38,12 +39,16 @@ const { metrikaId, metrikaOptions } = Astro.props;
   Cookies
 </button>
 
-<script is:inline define:vars={{ METRIKA_ID: metrikaId, METRIKA_OPTIONS: metrikaOptions }}>
+<script is:inline define:vars={{
+  METRIKA_ID: metrikaId,
+  METRIKA_OPTIONS: metrikaOptions,
+  GOOGLE_ANALYTICS_ID: googleAnalyticsId,
+}}>
   (function () {
     'use strict';
 
     var STORAGE_KEY = 'ks_analytics_consent';
-    var CONSENT_VERSION = '1';
+    var CONSENT_VERSION = '2';
     var banner = document.getElementById('cookie-consent');
     var settingsButton = document.getElementById('cookie-settings-button');
 
@@ -57,6 +62,7 @@ const { metrikaId, metrikaOptions } = Astro.props;
 
     var tagRequested = false;
     var initMode = null; // null | 'anon' | 'full'
+    var googleTagRequested = false;
 
     function readChoice() {
       try {
@@ -88,6 +94,13 @@ const { metrikaId, metrikaOptions } = Astro.props;
         '_ym_metrika_enabled',
         '_ym_fa'
       ].forEach(function (name) {
+        document.cookie = name + '=; Max-Age=0; path=/; SameSite=Lax';
+        document.cookie = name + '=; Max-Age=0; path=/; domain=.' + location.hostname + '; SameSite=Lax';
+      });
+    }
+
+    function deleteGoogleAnalyticsCookies() {
+      ['_ga', '_gid', '_gat', '_ga_' + GOOGLE_ANALYTICS_ID.replace(/^G-/, '')].forEach(function (name) {
         document.cookie = name + '=; Max-Age=0; path=/; SameSite=Lax';
         document.cookie = name + '=; Max-Age=0; path=/; domain=.' + location.hostname + '; SameSite=Lax';
       });
@@ -132,6 +145,48 @@ const { metrikaId, metrikaOptions } = Astro.props;
       deleteMetrikaCookies();
     }
 
+    function loadGoogleAnalytics() {
+      if (googleTagRequested || !GOOGLE_ANALYTICS_ID) return;
+      googleTagRequested = true;
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
+      window.gtag('js', new Date());
+      window.gtag('consent', 'update', { analytics_storage: 'granted' });
+      window.gtag('config', GOOGLE_ANALYTICS_ID, {
+        anonymize_ip: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false
+      });
+
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GOOGLE_ANALYTICS_ID);
+      document.head.appendChild(script);
+    }
+
+    function disableGoogleAnalytics() {
+      if (typeof window.gtag === 'function') {
+        window.gtag('consent', 'update', { analytics_storage: 'denied' });
+      }
+      deleteGoogleAnalyticsCookies();
+    }
+
+    window.ksAnalyticsGoal = function (name, params) {
+      if (typeof window.ym === 'function') {
+        try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
+      }
+      if (typeof window.gtag === 'function') {
+        try { window.gtag('event', name, params || {}); } catch (error) {}
+      }
+    };
+
     function showBanner() {
       if (!banner) return;
       banner.hidden = false;
@@ -145,8 +200,13 @@ const { metrikaId, metrikaOptions } = Astro.props;
 
     function applyChoice(choice) {
       saveChoice(choice);
-      if (choice === 'granted') loadMetrikaFull();
-      else disableMetrika();
+      if (choice === 'granted') {
+        loadMetrikaFull();
+        loadGoogleAnalytics();
+      } else {
+        disableMetrika();
+        disableGoogleAnalytics();
+      }
       hideBanner();
       document.dispatchEvent(new CustomEvent('ks:analytics-consent', { detail: { choice: choice } }));
     }
@@ -154,9 +214,11 @@ const { metrikaId, metrikaOptions } = Astro.props;
     var choice = readChoice();
     if (choice === 'granted') {
       loadMetrikaFull();
+      loadGoogleAnalytics();
       hideBanner();
     } else if (choice === 'denied') {
       disableMetrika();
+      disableGoogleAnalytics();
       hideBanner();
     } else {
       loadMetrikaAnonymous();

@@ -90,6 +90,9 @@ metrika:
     accurateTrackBounce: true
     trackLinks: true
 
+googleAnalytics:
+  measurementId: G-BYR2MY8W1S
+
 # Заявка уходит в свою CRM (crm.kovtun.studio, хостинг Beget, Россия)
 # одновременно с открытием мессенджера: имя, направление и текст задачи,
 # метки рекламы и страница входа. Приемник — public_html/api/lead.php.

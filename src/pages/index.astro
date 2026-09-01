@@ -333,9 +333,7 @@ const faqLd = {
       'use strict';
 
       function goal(name, params) {
-        if (typeof window.ym === 'function') {
-          try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (e) {}
-        }
+        if (typeof window.ksAnalyticsGoal === 'function') window.ksAnalyticsGoal(name, params);
       }
 
       function buildMessage(data) {
