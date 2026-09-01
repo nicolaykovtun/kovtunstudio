@@ -47,10 +47,10 @@
 - [Сайт Капиталъ Информ](https://design.kovtun.studio/cases/website-kapital-inform/): бухгалтерская компания, новая страница не требует нового дизайна
 - [Сайт B2B Cosmetics](https://design.kovtun.studio/cases/website-b2b-cosmetics/): оптовый поставщик китайской косметики, девять страниц по прототипам заказчика, пять брендов на одном шаблоне
 - [Сайт EON Phuket](https://design.kovtun.studio/cases/website-eon-phuket/): longevity-клуб на Пхукете, четыре формата доступа, восемь лаунж-мест и окна заявки
-- [Сайт Greatway](https://design.kovtun.studio/cases/website-greatway/): грузоперевозки и экспедирование во Владивостоке, 11 страниц, расчёт маршрута на каждой странице услуги
+- [Сайт Greatway](https://design.kovtun.studio/cases/website-greatway/): грузоперевозки и экспедирование во Владивостоке, 11 страниц, расчет маршрута на каждой странице услуги
 - [Лендинг «Кузница души»](https://design.kovtun.studio/cases/website-kuznitsa-dushi/): девятидневный мужской выезд в тайгу, программа по дням и цена по составу
 - [Лендинг «Эктострой»](https://design.kovtun.studio/cases/website-ektostroy/): монтаж умного дома ectoControl в Москве, цена и бригада на виду до заявки
-- [Лендинг EVG Group](https://design.kovtun.studio/cases/website-evg-group/): инвестиции в недвижимость на Пхукете, перелёт и проживание возвращают после сделки
+- [Лендинг EVG Group](https://design.kovtun.studio/cases/website-evg-group/): инвестиции в недвижимость на Пхукете, перелет и проживание возвращают после сделки
 
 ## Кейсы: презентации и брошюры
 

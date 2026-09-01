@@ -92,7 +92,7 @@ metrika:
 
 # Заявка уходит в свою CRM (crm.kovtun.studio, хостинг Beget, Россия)
 # одновременно с открытием мессенджера: имя, направление и текст задачи,
-# метки рекламы и страница входа. Приёмник — public_html/api/lead.php.
+# метки рекламы и страница входа. Приемник — public_html/api/lead.php.
 leadCapture:
   endpoint: "https://crm.kovtun.studio/api/lead.php"
   formKey: "kovtun-studio-109482416"
