@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Бриф на презентацию — Kovtun.studio</title>
-<meta name="description" content="Заполните бриф на дизайн презентации за 10 минут и отправьте его любому подрядчику. Ничего не сохраняется и никуда не отправляется.">
+<title>Бриф на логотип и фирменный стиль — Kovtun.studio</title>
+<meta name="description" content="Заполните бриф на логотип и фирменный стиль за 10 минут и отправьте его любому подрядчику. Ничего не сохраняется и никуда не отправляется.">
 <style>
 :root{
   --red:#D91620; --red-dark:#B31016;
@@ -103,81 +103,87 @@ footer a{color:var(--ink)}
 <div class="wrap">
 <header>
   <div class="mark">K<span>.</span></div>
-  <h1>Бриф на презентацию</h1>
-  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру презентаций. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем точнее оценка срока и цены.</p>
+  <h1>Бриф на логотип и фирменный стиль</h1>
+  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем точнее оценка срока и цены.</p>
 </header>
 
 <div class="note">Все считается прямо в браузере. Ответы никуда не отправляются и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф скопируйте или распечатайте в PDF.</div>
 
 <form id="f" autocomplete="off">
 
-<fieldset><legend>Компания и задача</legend>
-  <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название — как писать на слайдах</span><input type="text" id="company" data-q="Компания"></div>
-  <div class="q"><label class="t" for="about">Чем занимаетесь</label><span class="hint">Одно-два предложения простыми словами</span><input type="text" id="about" data-q="Чем занимается компания"></div>
-  <div class="q"><label class="t">Что презентуем</label>
-    <div class="opts" data-q="Что презентуем">
-      <label class="opt"><input type="radio" name="subject" value="Компанию в целом"><span>Компанию в целом</span></label>
-      <label class="opt"><input type="radio" name="subject" value="Продукт или услугу"><span>Продукт или услугу</span></label>
-      <label class="opt"><input type="radio" name="subject" value="Проект или идею, в том числе для инвестиций"><span>Проект или идею</span></label>
-      <label class="opt"><input type="radio" name="subject" value="Отчет или результаты работы"><span>Отчет, результаты</span></label>
+<fieldset><legend>Компания</legend>
+  <div class="q"><label class="t" for="company">Название бренда</label><span class="hint">Если юридическое название отличается — укажите оба</span><input type="text" id="company" data-q="Название бренда"></div>
+  <div class="q"><label class="t" for="about">Что продаете</label><span class="hint">Одно-два предложения простыми словами, без «команды профессионалов»</span><input type="text" id="about" data-q="Что продает компания"></div>
+  <div class="q"><label class="t" for="price">Средний чек</label><span class="hint">Хотя бы примерно. Стиль должен соответствовать цене — не выглядеть дороже или дешевле нее</span><input type="text" id="price" data-q="Средний чек"></div>
+  <div class="q"><label class="t" for="geo">География</label><span class="hint">Город, регион или вся страна</span><input type="text" id="geo" data-q="География"></div>
+  <div class="q"><label class="t">Этап бизнеса</label>
+    <div class="opts" data-q="Этап бизнеса">
+      <label class="opt"><input type="radio" name="stage" value="Старт, первые клиенты"><span>Старт</span></label>
+      <label class="opt"><input type="radio" name="stage" value="Рост, нужно масштабироваться"><span>Рост</span></label>
+      <label class="opt"><input type="radio" name="stage" value="Ребрендинг, меняем позиционирование"><span>Ребрендинг</span></label>
+      <label class="opt"><input type="radio" name="stage" value="Запуск нового направления"><span>Новое направление</span></label>
     </div>
   </div>
 </fieldset>
 
-<fieldset><legend>Цель и аудитория</legend>
-  <div class="q"><label class="t" for="action">Главное действие зрителя после просмотра</label><span class="hint">Одно действие: назначить встречу, оставить заявку, согласовать бюджет, инвестировать. Под него строится вся презентация</span><input type="text" id="action" data-q="Действие зрителя"></div>
-  <div class="q"><label class="t" for="audience">Кто будет смотреть</label><span class="hint">Должность и роль в решении: инвестор, закупщик, директор завода, участники конференции</span><textarea id="audience" data-q="Аудитория"></textarea></div>
-  <div class="q"><label class="t" for="aware">Что аудитория уже знает о вас</label><span class="hint">От «ничего» до «работаем вместе десять лет» — от точки старта зависит, сколько объяснять</span><textarea id="aware" data-q="Что аудитория знает"></textarea></div>
-  <div class="q"><label class="t" for="doubts">Главные сомнения аудитории</label><span class="hint">Например: «дорого», «нет опыта в нашей отрасли», «чем вы лучше конкурента». Под каждое сомнение дизайнер заложит слайд с ответом</span><textarea id="doubts" data-q="Сомнения аудитории"></textarea></div>
+<fieldset><legend>Задача</legend>
+  <div class="q"><label class="t">Что нужно сделать</label><span class="hint">От объема задачи зависит цена: знак, знак с правилами применения или полный стандарт бренда</span>
+    <div class="opts" data-q="Тип задачи">
+      <label class="opt"><input type="radio" name="task" value="Логотип с нуля"><span>Логотип с нуля</span></label>
+      <label class="opt"><input type="radio" name="task" value="Редизайн существующего логотипа"><span>Редизайн логотипа</span></label>
+      <label class="opt"><input type="radio" name="task" value="Логотип и гайдбук"><span>Логотип + гайдбук</span></label>
+      <label class="opt"><input type="radio" name="task" value="Гайдлайн к готовому логотипу"><span>Гайдлайн к готовому лого</span></label>
+      <label class="opt"><input type="radio" name="task" value="Брендбук под ключ"><span>Брендбук</span></label>
+      <label class="opt"><input type="radio" name="task" value="Пока не решили"><span>Пока не решили</span></label>
+    </div>
+  </div>
+  <div class="q" data-when="task:Редизайн существующего логотипа|Гайдлайн к готовому логотипу"><label class="t" for="current">Текущий логотип: что работает, что нет</label><span class="hint">И есть ли исходники в векторе (AI, EPS, SVG) — без них знак придется отрисовывать заново</span><textarea id="current" data-q="Текущий логотип"></textarea></div>
+  <div class="q"><label class="t">Что должен изменить новый стиль</label><span class="hint">Отметьте 1–3 главных пункта</span>
+    <div class="opts" data-q="Задача стиля">
+      <label class="opt"><input type="checkbox" name="goal" value="Выглядеть надежнее, вызывать доверие"><span>Надежность, доверие</span></label>
+      <label class="opt"><input type="checkbox" name="goal" value="Отличаться от конкурентов, узнаваемость"><span>Отличаться от конкурентов</span></label>
+      <label class="opt"><input type="checkbox" name="goal" value="Упростить выбор, сделать понятнее"><span>Сделать понятнее</span></label>
+      <label class="opt"><input type="checkbox" name="goal" value="Выйти в другой ценовой сегмент"><span>Другой ценовой сегмент</span></label>
+      <label class="opt"><input type="checkbox" name="goal" value="Подготовиться к масштабированию: филиалы, франшиза"><span>Масштабирование</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="success">Что будет успехом через 1–3 месяца</label><span class="hint">Например: больше заявок, стали узнавать, перестало быть стыдно показывать в переговорах</span><input type="text" id="success" data-q="Критерий успеха"></div>
 </fieldset>
 
-<fieldset><legend>Формат</legend>
-  <div class="q"><label class="t">Как будет использоваться</label><span class="hint">Можно отметить несколько. Слайды для выступления и слайды, которые читают без вас, верстаются по-разному</span>
-    <div class="opts" data-q="Как используется">
-      <label class="opt"><input type="checkbox" name="use" value="Выступление со спикером"><span>Выступление со спикером</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Читают без спикера: почта, мессенджер"><span>Читают без спикера</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Показ на встрече один на один"><span>Показ на встрече</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Печатная раздатка"><span>Печатная раздатка</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Экран на выставке или стенде"><span>Экран на выставке</span></label>
-    </div>
-  </div>
-  <div class="q" data-when="use:Выступление со спикером"><label class="t" for="minutes">Сколько минут длится выступление</label><span class="hint">Минута выступления — примерно один слайд, поэтому время сразу показывает, сколько слайдов влезет</span><input type="text" id="minutes" data-q="Длительность выступления"></div>
-  <div class="q"><label class="t" for="slides">Сколько примерно слайдов</label><span class="hint">Цена считается за слайд, поэтому нужна хотя бы вилка. Если не знаете — напишите «на ваше усмотрение»</span><input type="text" id="slides" data-q="Число слайдов"></div>
-  <div class="q"><label class="t">Финальные форматы файлов</label>
-    <div class="opts" data-q="Форматы файлов">
-      <label class="opt"><input type="checkbox" name="fmt" value="PPTX, можно редактировать"><span>PPTX</span></label>
-      <label class="opt"><input type="checkbox" name="fmt" value="PDF"><span>PDF</span></label>
-      <label class="opt"><input type="checkbox" name="fmt" value="Figma"><span>Figma</span></label>
-      <label class="opt"><input type="checkbox" name="fmt" value="Версия для печати"><span>Версия для печати</span></label>
-    </div>
-  </div>
-</fieldset>
-
-<fieldset><legend>Текст и материалы</legend>
-  <div class="q"><label class="t">Что с текстом</label><span class="hint">Главный вопрос для цены. Готовый текст встраивается в дизайн, сплошной нужно структурировать по слайдам, а без текста добавляется работа копирайтера</span>
-    <div class="opts" data-q="Готовность текста">
-      <label class="opt"><input type="radio" name="text" value="Текст готов и разбит по слайдам"><span>Готов, разбит по слайдам</span></label>
-      <label class="opt"><input type="radio" name="text" value="Текст есть, но сплошной, без разбивки"><span>Есть, но сплошной</span></label>
-      <label class="opt"><input type="radio" name="text" value="Текста нет, есть идея и материалы"><span>Текста нет</span></label>
-    </div>
-  </div>
-  <div class="q"><label class="t" for="materials">Исходные материалы</label><span class="hint">Цифры, старая презентация, кейсы, отзывы, фото, сайт — перечислите, что пришлете</span><textarea id="materials" data-q="Исходные материалы"></textarea></div>
-  <div class="q"><label class="t" for="must">Что обязательно должно попасть в презентацию</label><textarea id="must" data-q="Обязательное содержание"></textarea></div>
-</fieldset>
-
-<fieldset><legend>Стиль и организация</legend>
-  <div class="q"><label class="t">Что есть из фирменного стиля</label>
-    <div class="opts" data-q="Фирменный стиль">
-      <label class="opt"><input type="checkbox" name="have" value="Логотип в векторе"><span>Логотип в векторе</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Брендбук или фирменные цвета"><span>Брендбук, цвета</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Шаблон презентации"><span>Шаблон презентации</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Фото и иллюстрации"><span>Фото и иллюстрации</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Ничего нет, стиль предложит дизайнер"><span>Ничего нет</span></label>
-    </div>
-  </div>
-  <div class="q"><label class="t" for="likes">Презентации или сайты, которые нравятся</label><span class="hint">2–3 ссылки. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
+<fieldset><legend>Клиент и рынок</legend>
+  <div class="q"><label class="t" for="buyer">Кто ваш клиент</label><span class="hint">2–3 сегмента максимум, конкретно: кто, ниша, размер бизнеса или доход</span><textarea id="buyer" data-q="Клиент"></textarea></div>
+  <div class="q"><label class="t" for="comp">Конкуренты</label><span class="hint">2–3 ссылки на сайты или соцсети. Дизайнеру нужно видеть, от кого вы хотите отличаться</span><textarea id="comp" data-q="Конкуренты"></textarea></div>
+  <div class="q"><label class="t" for="likes">Стиль, который нравится</label><span class="hint">2–3 примера, даже из других сфер. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
   <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приемы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
-  <div class="q"><label class="t" for="deadline">К какой дате нужна презентация</label><span class="hint">И что к дате привязано: выступление, тендер, отправка инвестору</span><input type="text" id="deadline" data-q="Срок"></div>
+</fieldset>
+
+<fieldset><legend>Где будет жить стиль</legend>
+  <div class="q"><label class="t">Носители</label><span class="hint">Отметьте нужное. От списка носителей зависят объем гайдлайна и цена</span>
+    <div class="opts" data-q="Носители">
+      <label class="opt"><input type="checkbox" name="media" value="Сайт и соцсети"><span>Сайт и соцсети</span></label>
+      <label class="opt"><input type="checkbox" name="media" value="Упаковка и этикетки"><span>Упаковка, этикетки</span></label>
+      <label class="opt"><input type="checkbox" name="media" value="Вывеска и интерьер"><span>Вывеска, интерьер</span></label>
+      <label class="opt"><input type="checkbox" name="media" value="Транспорт"><span>Транспорт</span></label>
+      <label class="opt"><input type="checkbox" name="media" value="Документы и презентации"><span>Документы, презентации</span></label>
+      <label class="opt"><input type="checkbox" name="media" value="Форма и мерч"><span>Форма, мерч</span></label>
+      <label class="opt"><input type="checkbox" name="media" value="Наружная и digital-реклама"><span>Реклама</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="promise">Одно ключевое обещание бренда</label><span class="hint">Одной фразой. Например: «Упаковка, которая продает» или «Надежность без компромиссов»</span><input type="text" id="promise" data-q="Обещание бренда"></div>
+</fieldset>
+
+<fieldset><legend>Что уже есть</legend>
+  <div class="q"><label class="t">Материалы на руках</label>
+    <div class="opts" data-q="Материалы">
+      <label class="opt"><input type="checkbox" name="have" value="Название утверждено"><span>Название утверждено</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Слоган"><span>Слоган</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Текущий логотип с исходниками"><span>Логотип с исходниками</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Фото продукта или команды"><span>Фото</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Ничего нет"><span>Ничего нет</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="deadline">К какой дате нужен результат</label><span class="hint">И что к дате привязано: открытие, запуск, выставка, сезон</span><input type="text" id="deadline" data-q="Срок"></div>
+  <div class="q"><label class="t" for="budget">Бюджет</label><span class="hint">Хотя бы вилка. По бюджету подбирают объем работ, а не торгуются</span><input type="text" id="budget" data-q="Бюджет"></div>
   <div class="q"><label class="t" for="who">Кто принимает решение</label><span class="hint">Один человек или несколько согласующих — от количества зависит число раундов правок</span><input type="text" id="who" data-q="Кто принимает решение"></div>
   <div class="q"><label class="t" for="contact">Контакт для связи</label><input type="text" id="contact" data-q="Контакт"></div>
 </fieldset>
@@ -185,7 +191,7 @@ footer a{color:var(--ink)}
 </form>
 
 <section id="out">
-  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Бриф на презентацию — <span id="pdate"></span></div></div>
+  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Бриф на логотип и фирменный стиль — <span id="pdate"></span></div></div>
   <h2>Готовый бриф</h2>
   <p class="sub">Скопируйте текст или сохраните в PDF и отправьте вместе с материалами. Пустые пункты собраны внизу отдельным списком — подрядчик сразу увидит, что уточнить.</p>
   <div class="brief" id="brief"></div>
@@ -193,11 +199,11 @@ footer a{color:var(--ink)}
     <button type="button" id="copy">Скопировать текст</button>
     <button type="button" id="printBtn">Сохранить в PDF</button>
   </div>
-  <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и какой сценарий работы с текстом вам подходит. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+  <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и какой объем работ вам подходит. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
 </section>
 
 <footer>
-  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — дизайн презентаций и фирменного стиля.
+  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — логотипы, фирменный стиль и упаковка.
   Пользуйтесь свободно, в том числе с другими подрядчиками.
 </footer>
 </div>
@@ -270,7 +276,7 @@ footer a{color:var(--ink)}
     document.getElementById('pdate').textContent = date;
 
     var html = '';
-    var lines = ['БРИФ НА ПРЕЗЕНТАЦИЮ', (company || 'Компания не указана'), date, '', '---', ''];
+    var lines = ['БРИФ НА ЛОГОТИП И ФИРМЕННЫЙ СТИЛЬ', (company || 'Компания не указана'), date, '', '---', ''];
     var gaps = [];
 
     html += '<p class="bt">' + esc(company || 'Компания не указана') + '</p>';

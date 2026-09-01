@@ -104,10 +104,10 @@ footer a{color:var(--ink)}
 <header>
   <div class="mark">K<span>.</span></div>
   <h1>Бриф на упаковку</h1>
-  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру. Отвечать на всё не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем ровнее пойдёт работа.</p>
+  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем ровнее пойдет работа.</p>
 </header>
 
-<div class="note">Всё считается прямо в браузере. Ответы никуда не отправляются и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф скопируйте или распечатайте в PDF.</div>
+<div class="note">Все считается прямо в браузере. Ответы никуда не отправляются и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф скопируйте или распечатайте в PDF.</div>
 
 <form id="f" autocomplete="off">
 
@@ -115,7 +115,7 @@ footer a{color:var(--ink)}
   <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название и чем занимаетесь, одной строкой</span><input type="text" id="company" data-q="Компания"></div>
   <div class="q"><label class="t" for="product">Что за продукт</label><span class="hint">Например: сыродавленное масло, 500 мл, стеклянная бутылка</span><input type="text" id="product" data-q="Продукт"></div>
   <div class="q"><label class="t" for="skus">Сколько позиций (SKU) в работе</label><span class="hint">Один вкус или вся линейка — от количества зависят срок и цена</span><input type="text" id="skus" data-q="Количество SKU"></div>
-  <div class="q"><label class="t" for="growth">Будет ли линейка расти</label><span class="hint">Если через полгода добавятся новые вкусы или объёмы, дизайн сразу строится как система — новые позиции выйдут быстрее и дешевле</span><input type="text" id="growth" data-q="Планы по линейке"></div>
+  <div class="q"><label class="t" for="growth">Будет ли линейка расти</label><span class="hint">Если через полгода добавятся новые вкусы или объемы, дизайн сразу строится как система — новые позиции выйдут быстрее и дешевле</span><input type="text" id="growth" data-q="Планы по линейке"></div>
   <div class="q"><label class="t">Тип задачи</label>
     <div class="opts" data-q="Тип задачи">
       <label class="opt"><input type="radio" name="task" value="Новая упаковка с нуля"><span>Новая упаковка с нуля</span></label>
@@ -127,7 +127,7 @@ footer a{color:var(--ink)}
   <div class="q" data-when="task:Редизайн существующей|Адаптация на новые SKU"><label class="t" for="current">Текущая упаковка: что не так и что сохранить</label><span class="hint">Почему решили менять. И что должно остаться — узнаваемые элементы, по которым покупатель находит вас на полке</span><textarea id="current" data-q="Текущая упаковка"></textarea></div>
 </fieldset>
 
-<fieldset><legend>Где продаётся</legend>
+<fieldset><legend>Где продается</legend>
   <div class="q"><label class="t">Каналы продаж</label><span class="hint">Можно отметить несколько — упаковка для полки и для карточки на маркетплейсе решает разные задачи</span>
     <div class="opts" data-q="Каналы продаж">
       <label class="opt"><input type="checkbox" name="ch" value="Полка розничной сети"><span>Полка розничной сети</span></label>
@@ -139,23 +139,23 @@ footer a{color:var(--ink)}
     </div>
   </div>
   <div class="q" data-when="ch:Маркетплейсы"><label class="t" for="mp">Какие маркетплейсы</label><span class="hint">Wildberries, Ozon, Яндекс Маркет. В каталоге упаковка видна размером с почтовую марку — лицевая сторона должна читаться даже в таком размере</span><input type="text" id="mp" data-q="Маркетплейсы"></div>
-  <div class="q" data-when="ch:Полка розничной сети"><label class="t" for="retail">В какие сети идёте</label><span class="hint">У сетей бывают свои требования к упаковке и маркировке. Если требования на руках — приложите их к брифу</span><input type="text" id="retail" data-q="Сети и их требования"></div>
-  <div class="q"><label class="t" for="price">Цена продукта на полке</label><span class="hint">И сегмент: эконом, средний, премиум. Упаковка должна попадать в свою цену — не выглядеть дороже или дешевле неё</span><input type="text" id="price" data-q="Цена и сегмент"></div>
+  <div class="q" data-when="ch:Полка розничной сети"><label class="t" for="retail">В какие сети идете</label><span class="hint">У сетей бывают свои требования к упаковке и маркировке. Если требования на руках — приложите их к брифу</span><input type="text" id="retail" data-q="Сети и их требования"></div>
+  <div class="q"><label class="t" for="price">Цена продукта на полке</label><span class="hint">И сегмент: эконом, средний, премиум. Упаковка должна попадать в свою цену — не выглядеть дороже или дешевле нее</span><input type="text" id="price" data-q="Цена и сегмент"></div>
   <div class="q"><label class="t" for="geo">География продаж</label><span class="hint">Город, регион или вся страна</span><input type="text" id="geo" data-q="География"></div>
 </fieldset>
 
 <fieldset><legend>Покупатель и конкуренты</legend>
-  <div class="q"><label class="t" for="buyer">Кто покупает</label><span class="hint">Не «все», а конкретно: кто берёт чаще всего и по какому поводу</span><textarea id="buyer" data-q="Покупатель"></textarea></div>
-  <div class="q"><label class="t" for="choice">По чему покупатель выбирает у полки</label><span class="hint">Цена, состав, объём, привычка, доверие к производителю — что решает за 2–3 секунды</span><textarea id="choice" data-q="Критерий выбора"></textarea></div>
+  <div class="q"><label class="t" for="buyer">Кто покупает</label><span class="hint">Не «все», а конкретно: кто берет чаще всего и по какому поводу</span><textarea id="buyer" data-q="Покупатель"></textarea></div>
+  <div class="q"><label class="t" for="choice">По чему покупатель выбирает у полки</label><span class="hint">Цена, состав, объем, привычка, доверие к производителю — что решает за 2–3 секунды</span><textarea id="choice" data-q="Критерий выбора"></textarea></div>
   <div class="q"><label class="t" for="comp">Конкуренты рядом на полке</label><span class="hint">2–3 названия или ссылки. Дизайнеру нужно видеть, от кого вы хотите отличаться на полке</span><textarea id="comp" data-q="Конкуренты"></textarea></div>
   <div class="q"><label class="t" for="likes">Упаковка, которая вам нравится</label><span class="hint">Любая, даже из другой категории. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
-  <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приёмы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
+  <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приемы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
 </fieldset>
 
 <fieldset><legend>Техника и ограничения</legend>
   <div class="q"><label class="t" for="volume">Тираж</label><span class="hint">Сколько штук печатаете за раз, хотя бы примерно. От тиража зависят способ печати и цена за штуку</span><input type="text" id="volume" data-q="Тираж"></div>
-  <div class="q"><label class="t" for="print">Типография и способ печати</label><span class="hint">Если типография уже выбрана — назовите её. Способ печати меняет макет: у флексографии каждая краска печатается с отдельной формы и оплачивается до тиража, а мелкий текст и тонкие линии заплывают</span><input type="text" id="print" data-q="Печать"></div>
-  <div class="q"><label class="t" for="material">Материал и форма</label><span class="hint">Плёнка, бумага, гофрокороб, стекло, канистра. И есть ли чертёж развёртки упаковки от типографии — его ещё называют дилайном</span><input type="text" id="material" data-q="Материал и форма"></div>
+  <div class="q"><label class="t" for="print">Типография и способ печати</label><span class="hint">Если типография уже выбрана — назовите ее. Способ печати меняет макет: у флексографии каждая краска печатается с отдельной формы и оплачивается до тиража, а мелкий текст и тонкие линии заплывают</span><input type="text" id="print" data-q="Печать"></div>
+  <div class="q"><label class="t" for="material">Материал и форма</label><span class="hint">Пленка, бумага, гофрокороб, стекло, канистра. И есть ли чертеж развертки упаковки от типографии — его еще называют дилайном</span><input type="text" id="material" data-q="Материал и форма"></div>
   <div class="q"><label class="t">Что обязано попасть на упаковку</label><span class="hint">Отметьте нужное. Место под такие элементы закладывается на старте, а не дорисовывается потом</span>
     <div class="opts" data-q="Обязательные элементы">
       <label class="opt"><input type="checkbox" name="req" value="Штрихкод"><span>Штрихкод</span></label>
@@ -174,7 +174,7 @@ footer a{color:var(--ink)}
     <div class="opts" data-q="Материалы">
       <label class="opt"><input type="checkbox" name="have" value="Логотип в векторе"><span>Логотип в векторе</span></label>
       <label class="opt"><input type="checkbox" name="have" value="Гайдбук или фирстиль"><span>Гайдбук</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Чертёж развёртки от типографии"><span>Чертёж развёртки</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Чертеж развертки от типографии"><span>Чертеж развертки</span></label>
       <label class="opt"><input type="checkbox" name="have" value="Фото продукта"><span>Фото продукта</span></label>
       <label class="opt"><input type="checkbox" name="have" value="Тексты и состав"><span>Тексты и состав</span></label>
       <label class="opt"><input type="checkbox" name="have" value="Действующий макет"><span>Действующий макет</span></label>
@@ -182,7 +182,7 @@ footer a{color:var(--ink)}
     </div>
   </div>
   <div class="q"><label class="t" for="deadline">К какой дате нужен результат</label><span class="hint">И что к дате привязано: тендер, сезон, запуск линии, выставка</span><input type="text" id="deadline" data-q="Срок"></div>
-  <div class="q"><label class="t" for="budget">Бюджет</label><span class="hint">Хотя бы вилка. По бюджету подбирают объём работ, а не торгуются</span><input type="text" id="budget" data-q="Бюджет"></div>
+  <div class="q"><label class="t" for="budget">Бюджет</label><span class="hint">Хотя бы вилка. По бюджету подбирают объем работ, а не торгуются</span><input type="text" id="budget" data-q="Бюджет"></div>
   <div class="q"><label class="t" for="who">Кто принимает решение</label><span class="hint">Один человек или несколько согласующих — от количества зависит число раундов правок</span><input type="text" id="who" data-q="Кто принимает решение"></div>
   <div class="q"><label class="t" for="contact">Контакт для связи</label><input type="text" id="contact" data-q="Контакт"></div>
 </fieldset>

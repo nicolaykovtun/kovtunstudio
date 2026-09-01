@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Бриф на презентацию — Kovtun.studio</title>
-<meta name="description" content="Заполните бриф на дизайн презентации за 10 минут и отправьте его любому подрядчику. Ничего не сохраняется и никуда не отправляется.">
+<title>Бриф на сайт — Kovtun.studio</title>
+<meta name="description" content="Заполните бриф на разработку сайта за 10 минут и отправьте его любому подрядчику. Ничего не сохраняется и никуда не отправляется.">
 <style>
 :root{
   --red:#D91620; --red-dark:#B31016;
@@ -103,81 +103,74 @@ footer a{color:var(--ink)}
 <div class="wrap">
 <header>
   <div class="mark">K<span>.</span></div>
-  <h1>Бриф на презентацию</h1>
-  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру презентаций. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем точнее оценка срока и цены.</p>
+  <h1>Бриф на сайт</h1>
+  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому разработчику или студии. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем точнее оценка срока и цены.</p>
 </header>
 
 <div class="note">Все считается прямо в браузере. Ответы никуда не отправляются и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф скопируйте или распечатайте в PDF.</div>
 
 <form id="f" autocomplete="off">
 
-<fieldset><legend>Компания и задача</legend>
-  <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название — как писать на слайдах</span><input type="text" id="company" data-q="Компания"></div>
+<fieldset><legend>Компания</legend>
+  <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название — как писать на сайте</span><input type="text" id="company" data-q="Компания"></div>
   <div class="q"><label class="t" for="about">Чем занимаетесь</label><span class="hint">Одно-два предложения простыми словами</span><input type="text" id="about" data-q="Чем занимается компания"></div>
-  <div class="q"><label class="t">Что презентуем</label>
-    <div class="opts" data-q="Что презентуем">
-      <label class="opt"><input type="radio" name="subject" value="Компанию в целом"><span>Компанию в целом</span></label>
-      <label class="opt"><input type="radio" name="subject" value="Продукт или услугу"><span>Продукт или услугу</span></label>
-      <label class="opt"><input type="radio" name="subject" value="Проект или идею, в том числе для инвестиций"><span>Проект или идею</span></label>
-      <label class="opt"><input type="radio" name="subject" value="Отчет или результаты работы"><span>Отчет, результаты</span></label>
+  <div class="q"><label class="t" for="product">Главный продукт или услуга сейчас</label><input type="text" id="product" data-q="Главный продукт"></div>
+  <div class="q"><label class="t" for="geo">География</label><span class="hint">Город, регион, вся страна</span><input type="text" id="geo" data-q="География"></div>
+  <div class="q"><label class="t" for="oldsite">Есть ли сайт сейчас</label><span class="hint">Ссылка или «нет». Если есть — напишите, что в нем не устраивает</span><input type="text" id="oldsite" data-q="Текущий сайт"></div>
+</fieldset>
+
+<fieldset><legend>Задача сайта</legend>
+  <div class="q"><label class="t">Тип сайта</label><span class="hint">От типа зависит вилка цены и срока. Если не уверены — отметьте «пока не решили», тип подберет подрядчик под задачу</span>
+    <div class="opts" data-q="Тип сайта">
+      <label class="opt"><input type="radio" name="type" value="Лендинг, одна страница"><span>Лендинг</span></label>
+      <label class="opt"><input type="radio" name="type" value="Корпоративный сайт, 5–10 страниц"><span>Корпоративный сайт</span></label>
+      <label class="opt"><input type="radio" name="type" value="B2B-сайт с каталогом"><span>B2B-сайт с каталогом</span></label>
+      <label class="opt"><input type="radio" name="type" value="Пока не решили"><span>Пока не решили</span></label>
+    </div>
+  </div>
+  <div class="q" data-when="type:B2B-сайт с каталогом"><label class="t" for="catalog">Каталог: сколько примерно товаров</label><span class="hint">И нужна ли интеграция с 1С или выгрузка прайса. Интеграция меняет цену сильнее всего остального, о ней лучше сказать сразу</span><input type="text" id="catalog" data-q="Каталог и интеграции"></div>
+  <div class="q"><label class="t">Зачем нужен сайт</label><span class="hint">Отметьте нужное</span>
+    <div class="opts" data-q="Зачем сайт">
+      <label class="opt"><input type="checkbox" name="why" value="Привлекать заявки и клиентов"><span>Привлекать заявки</span></label>
+      <label class="opt"><input type="checkbox" name="why" value="Доверие для партнеров и клиентов"><span>Доверие партнеров</span></label>
+      <label class="opt"><input type="checkbox" name="why" value="Рассказать об услугах и компании"><span>Рассказать об услугах</span></label>
+      <label class="opt"><input type="checkbox" name="why" value="Показать ассортимент дилерам и оптовикам"><span>Каталог для опта</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="action">Главное действие посетителя — одно</label><span class="hint">Оставить заявку, позвонить, скачать прайс, записаться. Под него строится вся страница</span><input type="text" id="action" data-q="Действие посетителя"></div>
+  <div class="q"><label class="t" for="success">Что будет успехом через 3 месяца после запуска</label><span class="hint">Например: 10 заявок в месяц, дилеры сами находят каталог, перестали объяснять по телефону базовые вещи</span><input type="text" id="success" data-q="Критерий успеха"></div>
+</fieldset>
+
+<fieldset><legend>Аудитория и конкуренты</legend>
+  <div class="q"><label class="t" for="buyer">Кто главный посетитель сайта</label><span class="hint">Конкретно: кто, чем занимается, что ищет. 1–3 сегмента</span><textarea id="buyer" data-q="Аудитория"></textarea></div>
+  <div class="q"><label class="t" for="comp">Сайты конкурентов</label><span class="hint">2–3 ссылки</span><textarea id="comp" data-q="Конкуренты"></textarea></div>
+  <div class="q"><label class="t" for="likes">Сайты, которые нравятся</label><span class="hint">2–3 ссылки, даже не из вашей сферы. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
+  <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
+</fieldset>
+
+<fieldset><legend>Содержание</legend>
+  <div class="q"><label class="t" for="pages">Разделы или страницы</label><span class="hint">Например: главная, услуги, проекты, о компании, контакты. Если не знаете — пропустите, структуру предложит подрядчик</span><textarea id="pages" data-q="Разделы"></textarea></div>
+  <div class="q"><label class="t">Что с текстами</label><span class="hint">Тексты — первый этап работы над сайтом. От их готовности зависят цена и срок</span>
+    <div class="opts" data-q="Готовность текстов">
+      <label class="opt"><input type="radio" name="text" value="Тексты готовы"><span>Готовы</span></label>
+      <label class="opt"><input type="radio" name="text" value="Есть черновики и материалы"><span>Есть черновики</span></label>
+      <label class="opt"><input type="radio" name="text" value="Текстов нет, пишем с нуля"><span>Текстов нет</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t">Материалы на руках</label>
+    <div class="opts" data-q="Материалы">
+      <label class="opt"><input type="checkbox" name="have" value="Логотип и фирменный стиль"><span>Логотип и фирстиль</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Фото продукта, объектов, команды"><span>Фото</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Прайс или каталог"><span>Прайс, каталог</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Доступы к текущему сайту и домену"><span>Доступы к сайту</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Ничего нет"><span>Ничего нет</span></label>
     </div>
   </div>
 </fieldset>
 
-<fieldset><legend>Цель и аудитория</legend>
-  <div class="q"><label class="t" for="action">Главное действие зрителя после просмотра</label><span class="hint">Одно действие: назначить встречу, оставить заявку, согласовать бюджет, инвестировать. Под него строится вся презентация</span><input type="text" id="action" data-q="Действие зрителя"></div>
-  <div class="q"><label class="t" for="audience">Кто будет смотреть</label><span class="hint">Должность и роль в решении: инвестор, закупщик, директор завода, участники конференции</span><textarea id="audience" data-q="Аудитория"></textarea></div>
-  <div class="q"><label class="t" for="aware">Что аудитория уже знает о вас</label><span class="hint">От «ничего» до «работаем вместе десять лет» — от точки старта зависит, сколько объяснять</span><textarea id="aware" data-q="Что аудитория знает"></textarea></div>
-  <div class="q"><label class="t" for="doubts">Главные сомнения аудитории</label><span class="hint">Например: «дорого», «нет опыта в нашей отрасли», «чем вы лучше конкурента». Под каждое сомнение дизайнер заложит слайд с ответом</span><textarea id="doubts" data-q="Сомнения аудитории"></textarea></div>
-</fieldset>
-
-<fieldset><legend>Формат</legend>
-  <div class="q"><label class="t">Как будет использоваться</label><span class="hint">Можно отметить несколько. Слайды для выступления и слайды, которые читают без вас, верстаются по-разному</span>
-    <div class="opts" data-q="Как используется">
-      <label class="opt"><input type="checkbox" name="use" value="Выступление со спикером"><span>Выступление со спикером</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Читают без спикера: почта, мессенджер"><span>Читают без спикера</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Показ на встрече один на один"><span>Показ на встрече</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Печатная раздатка"><span>Печатная раздатка</span></label>
-      <label class="opt"><input type="checkbox" name="use" value="Экран на выставке или стенде"><span>Экран на выставке</span></label>
-    </div>
-  </div>
-  <div class="q" data-when="use:Выступление со спикером"><label class="t" for="minutes">Сколько минут длится выступление</label><span class="hint">Минута выступления — примерно один слайд, поэтому время сразу показывает, сколько слайдов влезет</span><input type="text" id="minutes" data-q="Длительность выступления"></div>
-  <div class="q"><label class="t" for="slides">Сколько примерно слайдов</label><span class="hint">Цена считается за слайд, поэтому нужна хотя бы вилка. Если не знаете — напишите «на ваше усмотрение»</span><input type="text" id="slides" data-q="Число слайдов"></div>
-  <div class="q"><label class="t">Финальные форматы файлов</label>
-    <div class="opts" data-q="Форматы файлов">
-      <label class="opt"><input type="checkbox" name="fmt" value="PPTX, можно редактировать"><span>PPTX</span></label>
-      <label class="opt"><input type="checkbox" name="fmt" value="PDF"><span>PDF</span></label>
-      <label class="opt"><input type="checkbox" name="fmt" value="Figma"><span>Figma</span></label>
-      <label class="opt"><input type="checkbox" name="fmt" value="Версия для печати"><span>Версия для печати</span></label>
-    </div>
-  </div>
-</fieldset>
-
-<fieldset><legend>Текст и материалы</legend>
-  <div class="q"><label class="t">Что с текстом</label><span class="hint">Главный вопрос для цены. Готовый текст встраивается в дизайн, сплошной нужно структурировать по слайдам, а без текста добавляется работа копирайтера</span>
-    <div class="opts" data-q="Готовность текста">
-      <label class="opt"><input type="radio" name="text" value="Текст готов и разбит по слайдам"><span>Готов, разбит по слайдам</span></label>
-      <label class="opt"><input type="radio" name="text" value="Текст есть, но сплошной, без разбивки"><span>Есть, но сплошной</span></label>
-      <label class="opt"><input type="radio" name="text" value="Текста нет, есть идея и материалы"><span>Текста нет</span></label>
-    </div>
-  </div>
-  <div class="q"><label class="t" for="materials">Исходные материалы</label><span class="hint">Цифры, старая презентация, кейсы, отзывы, фото, сайт — перечислите, что пришлете</span><textarea id="materials" data-q="Исходные материалы"></textarea></div>
-  <div class="q"><label class="t" for="must">Что обязательно должно попасть в презентацию</label><textarea id="must" data-q="Обязательное содержание"></textarea></div>
-</fieldset>
-
-<fieldset><legend>Стиль и организация</legend>
-  <div class="q"><label class="t">Что есть из фирменного стиля</label>
-    <div class="opts" data-q="Фирменный стиль">
-      <label class="opt"><input type="checkbox" name="have" value="Логотип в векторе"><span>Логотип в векторе</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Брендбук или фирменные цвета"><span>Брендбук, цвета</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Шаблон презентации"><span>Шаблон презентации</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Фото и иллюстрации"><span>Фото и иллюстрации</span></label>
-      <label class="opt"><input type="checkbox" name="have" value="Ничего нет, стиль предложит дизайнер"><span>Ничего нет</span></label>
-    </div>
-  </div>
-  <div class="q"><label class="t" for="likes">Презентации или сайты, которые нравятся</label><span class="hint">2–3 ссылки. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
-  <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приемы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
-  <div class="q"><label class="t" for="deadline">К какой дате нужна презентация</label><span class="hint">И что к дате привязано: выступление, тендер, отправка инвестору</span><input type="text" id="deadline" data-q="Срок"></div>
+<fieldset><legend>Организация</legend>
+  <div class="q"><label class="t" for="deadline">К какой дате нужен сайт</label><span class="hint">И что к дате привязано: запуск рекламы, сезон, выставка</span><input type="text" id="deadline" data-q="Срок"></div>
+  <div class="q"><label class="t" for="budget">Бюджет</label><span class="hint">Хотя бы вилка. По бюджету подбирают объем работ, а не торгуются</span><input type="text" id="budget" data-q="Бюджет"></div>
   <div class="q"><label class="t" for="who">Кто принимает решение</label><span class="hint">Один человек или несколько согласующих — от количества зависит число раундов правок</span><input type="text" id="who" data-q="Кто принимает решение"></div>
   <div class="q"><label class="t" for="contact">Контакт для связи</label><input type="text" id="contact" data-q="Контакт"></div>
 </fieldset>
@@ -185,7 +178,7 @@ footer a{color:var(--ink)}
 </form>
 
 <section id="out">
-  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Бриф на презентацию — <span id="pdate"></span></div></div>
+  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Бриф на сайт — <span id="pdate"></span></div></div>
   <h2>Готовый бриф</h2>
   <p class="sub">Скопируйте текст или сохраните в PDF и отправьте вместе с материалами. Пустые пункты собраны внизу отдельным списком — подрядчик сразу увидит, что уточнить.</p>
   <div class="brief" id="brief"></div>
@@ -193,11 +186,11 @@ footer a{color:var(--ink)}
     <button type="button" id="copy">Скопировать текст</button>
     <button type="button" id="printBtn">Сохранить в PDF</button>
   </div>
-  <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и какой сценарий работы с текстом вам подходит. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+  <p class="after">Перед отправкой подрядчику бриф можно прислать мне — отвечу, где слабые места и какой тип сайта подходит под задачу. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
 </section>
 
 <footer>
-  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — дизайн презентаций и фирменного стиля.
+  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — сайты, фирменный стиль и упаковка.
   Пользуйтесь свободно, в том числе с другими подрядчиками.
 </footer>
 </div>
@@ -270,7 +263,7 @@ footer a{color:var(--ink)}
     document.getElementById('pdate').textContent = date;
 
     var html = '';
-    var lines = ['БРИФ НА ПРЕЗЕНТАЦИЮ', (company || 'Компания не указана'), date, '', '---', ''];
+    var lines = ['БРИФ НА САЙТ', (company || 'Компания не указана'), date, '', '---', ''];
     var gaps = [];
 
     html += '<p class="bt">' + esc(company || 'Компания не указана') + '</p>';
