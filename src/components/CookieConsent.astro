@@ -183,7 +183,25 @@ const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
         try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (error) {}
       }
       if (typeof window.gtag === 'function') {
-        try { window.gtag('event', name, params || {}); } catch (error) {}
+        try {
+          window.gtag('event', name, params || {});
+
+          // Все подтвержденные отправки формы сводим к одному стандартному
+          // событию GA4. Исходное событие сохраняется для разбивки по странице
+          // и выбранному мессенджеру, а generate_lead считаем одной конверсией.
+          if ([
+            'services_lead_submit',
+            'services_lead_max',
+            'lead_submit',
+            'lead_submit_max',
+            'presentation_lead_submit',
+            'presentation_lead_max'
+          ].indexOf(name) !== -1) {
+            window.gtag('event', 'generate_lead', Object.assign({}, params || {}, {
+              lead_event: name
+            }));
+          }
+        } catch (error) {}
       }
     };
 
