@@ -302,20 +302,31 @@ const packagingFounder = {
 
 const contactData = {
   title: 'Обсудим вашу упаковку',
-  intro: 'Пришлите текущие макеты и список SKU — вернусь со сметой в день брифа.',
+  intro: 'Пришлите продукт и число SKU, вернусь со сметой в день брифа.',
   telegramTitle: 'Написать в Telegram',
   maxTitle: 'Написать в MAX',
   formTitle: 'Расскажите о продукте',
   fields: {
-    name: { label: 'Имя', placeholder: 'Как к вам обращаться' },
-    car: { label: 'Продукт и объем', placeholder: 'Например: линейка соусов, 5 SKU' },
+    name: { label: 'Имя', placeholder: 'Как к вам обращаться', error: 'Как к вам обращаться?' },
+    car: {
+      label: 'Продукт и объем',
+      placeholder: 'Например: линейка соусов, 5 SKU',
+      error: 'Продукт и примерное число SKU — чтобы прикинуть объем',
+      msgLabel: 'Продукт и объем',
+    },
+    contact: {
+      label: 'Куда ответить',
+      placeholder: 'Телефон, почта или ник в Telegram',
+      error: 'Куда вам ответить? Телефон, почта или ник.',
+    },
     message: { label: 'Что есть по материалам (необязательно)', placeholder: 'Текущая упаковка, тексты составов, требования типографии' },
   },
-  privacy: 'Заявка сохраняется у оператора сайта. Одновременно откроется мессенджер с готовым сообщением, его нужно отправить в чате. Состав данных перечислен в <a href="/consent/">согласии</a>.',
-  submit: 'Обсудить упаковку',
-  successTitle: 'Сообщение собрано',
-  successText: 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.',
-  reopen: 'Открыть Telegram еще раз',
+  privacy: 'Заявка попадает в мою CRM и больше никуда. Как я обращаюсь с данными, написано в политике обработки.',
+  submit: 'Отправить заявку',
+  successTitle: 'Заявка отправлена',
+  successText: 'Отвечу в течение пары часов на контакт из заявки. Если удобнее переписка, ниже готовый текст для Telegram или MAX.',
+  successNote: 'В Telegram сообщение подставится само. Для MAX текст скопируется в буфер, вставьте его в чат.',
+  errorText: 'Заявка не ушла: сервер не ответил. Напишите мне напрямую, текст заявки уже собран:',
   resetText: 'Отправить еще одну заявку',
 };
 
@@ -583,118 +594,28 @@ const ldPortfolioCases = {
       telegramHandle={site.contact.telegramHandle}
       maxUrl={site.contact.max}
       maxHandle={site.contact.maxHandle}
+      briefUrl="/tools/brief-packaging.html"
+      briefLabel="Заполнить бриф на упаковку"
+      goalName="packaging_lead_submit"
+      messageIntro="Здравствуйте! Хочу обсудить дизайн упаковки."
     />
   </main>
 
   <Footer {...footer} />
 
-  <script is:inline define:vars={{
-    TELEGRAM_URL: site.contact.telegram,
-    MAX_URL: site.contact.max,
-    METRIKA_ID: site.metrika.id,
-    CONSENT_MARKER: `Согласие на обработку персональных данных: да · редакция ${site.legal.policyVersion} от ${site.legal.policyDate} · ${site.url}/consent/`,
-  }}>
+  <script is:inline>
     (function () {
       'use strict';
 
+      /* Цели Метрики. Отправка формы живет в ContactForm.astro. */
       function goal(name, params) {
-        if (typeof window.ym === 'function') {
-          try { window.ym(METRIKA_ID, 'reachGoal', name, params || {}); } catch (e) {}
-        }
-      }
-
-      function buildMessage(data) {
-        var lines = ['Здравствуйте! Хочу обсудить дизайн упаковки.', ''];
-        if (data.name) lines.push('Имя: ' + data.name);
-        if (data.product) lines.push('Продукт и объем: ' + data.product);
-        if (data.materials) lines.push('\nМатериалы:\n' + data.materials);
-        lines.push('\n' + CONSENT_MARKER);
-        return lines.join('\n');
+        if (typeof window.ksAnalyticsGoal === 'function') window.ksAnalyticsGoal(name, params);
       }
 
       var form = document.getElementById('lead-form');
-      var fName = document.getElementById('f-name');
-      var fProduct = document.getElementById('f-car');
-      var fMessage = document.getElementById('f-message');
-      var errName = document.getElementById('err-name');
-      var errProduct = document.getElementById('err-car');
       var fields = document.getElementById('form-fields');
       var success = document.getElementById('form-success');
-      var successText = document.getElementById('success-text');
-      var reopen = document.getElementById('reopen-messenger');
-      var copyBlock = document.getElementById('copy-text-block');
-      var copyArea = document.getElementById('copy-text-area');
-      var copyBtn = document.getElementById('copy-text-btn');
-      var copyBtnLabel = document.getElementById('copy-text-btn-label');
-
-      function setError(node, message) {
-        if (!node) return;
-        node.textContent = message || '';
-        node.hidden = !message;
-      }
-
-      function validate() {
-        var ok = true;
-        if (!fName.value.trim()) { setError(errName, 'Как к вам обращаться?'); ok = false; }
-        else setError(errName, '');
-        if (!fProduct.value.trim()) { setError(errProduct, 'Продукт и примерное число SKU — чтобы прикинуть объем'); ok = false; }
-        else setError(errProduct, '');
-        return ok;
-      }
-
-      if (form) {
-        form.addEventListener('submit', function (event) {
-          event.preventDefault();
-          if (!validate()) return;
-
-          var target = event.submitter && event.submitter.dataset.target || 'telegram';
-          var text = buildMessage({ name: fName.value.trim(), product: fProduct.value.trim(), materials: fMessage.value.trim() });
-          var url = target === 'max' ? MAX_URL : TELEGRAM_URL + '?text=' + encodeURIComponent(text);
-          var label = target === 'max' ? 'MAX' : 'Telegram';
-
-          if (target === 'max') {
-            copyArea.value = text;
-            copyBlock.hidden = false;
-            successText.textContent = 'MAX откроется в новой вкладке. Скопируйте текст заявки кнопкой ниже и вставьте в чат.';
-            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).catch(function () {});
-          } else {
-            copyBlock.hidden = true;
-            successText.textContent = 'Открылся Telegram с заполненным сообщением. Нажмите «отправить» в чате — и я отвечу в течение пары часов.';
-          }
-
-          window.open(url, '_blank', 'noopener,noreferrer');
-          reopen.href = url;
-          reopen.innerHTML = 'Открыть ' + label + ' еще раз <span class="arrow" aria-hidden="true">→</span>';
-          fields.hidden = true;
-          success.hidden = false;
-          form.classList.add('is-success');
-          goal(target === 'max' ? 'packaging_lead_max' : 'packaging_lead_submit');
-        });
-      }
-
-      if (copyBtn) {
-        copyBtn.addEventListener('click', function () {
-          var done = function () {
-            copyBtnLabel.textContent = 'Скопировано ✓';
-            setTimeout(function () { copyBtnLabel.textContent = 'Скопировать текст'; }, 2000);
-          };
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(copyArea.value).then(done).catch(function () { copyArea.select(); document.execCommand('copy'); done(); });
-          } else { copyArea.select(); document.execCommand('copy'); done(); }
-        });
-      }
-
-      var resetBtn = document.getElementById('form-reset');
-      if (resetBtn) {
-        resetBtn.addEventListener('click', function () {
-          form.reset();
-          setError(errName, '');
-          setError(errProduct, '');
-          success.hidden = true;
-          fields.hidden = false;
-          form.classList.remove('is-success');
-        });
-      }
+      var fMessage = document.getElementById('f-message');
 
       /* Кнопки пакетов: префилл формы + скролл + цель */
       Array.prototype.forEach.call(document.querySelectorAll('[data-package]'), function (btn) {

@@ -186,11 +186,16 @@ import CookieConsent from '../components/CookieConsent.astro';
 <body class={bodyClass}>
   <a class="skip-link" href="#main-content">Перейти к содержанию</a>
   <slot />
-  <CookieConsent metrikaId={site.metrika.id} metrikaOptions={site.metrika.options} />
+  <CookieConsent
+    metrikaId={site.metrika.id}
+    metrikaOptions={site.metrika.options}
+    googleAnalyticsId={site.googleAnalytics.measurementId}
+  />
 
   <script is:inline define:vars={{
     LEAD_ENDPOINT: site.leadCapture?.endpoint || '',
     LEAD_FORM_KEY: site.leadCapture?.formKey || '',
+    METRIKA_ID: site.metrika.id,
   }}>
     (function () {
       'use strict';
@@ -201,6 +206,7 @@ import CookieConsent from '../components/CookieConsent.astro';
           utmSource: params.get('utm_source') || '',
           utmMedium: params.get('utm_medium') || '',
           utmCampaign: params.get('utm_campaign') || '',
+          yclid: params.get('yclid') || '',
           referrer: document.referrer || ''
         };
         try {
@@ -209,6 +215,7 @@ import CookieConsent from '../components/CookieConsent.astro';
             utmSource: current.utmSource || stored.utmSource || '',
             utmMedium: current.utmMedium || stored.utmMedium || '',
             utmCampaign: current.utmCampaign || stored.utmCampaign || '',
+            yclid: current.yclid || stored.yclid || '',
             referrer: stored.referrer || current.referrer || ''
           };
           sessionStorage.setItem('kovtun_attribution', JSON.stringify(merged));
@@ -218,48 +225,61 @@ import CookieConsent from '../components/CookieConsent.astro';
         }
       }
 
-      function makeLeadId() {
-        var bytes = new Uint8Array(6);
-        if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
-        else for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
-        return Array.prototype.map.call(bytes, function (value) {
-          return value.toString(16).padStart(2, '0');
-        }).join('').toUpperCase();
+      /* Дата первого визита: живет в браузере посетителя, уходит вместе с заявкой. */
+      function firstVisit() {
+        try {
+          var v = localStorage.getItem('kovtun_first_visit');
+          if (!v) { v = String(Date.now()); localStorage.setItem('kovtun_first_visit', v); }
+          return v;
+        } catch (_) { return ''; }
       }
 
-      // Значение поля формы: заявка уходит в CRM в тот же миг, что и в мессенджер,
-      // поэтому читаем прямо из формы — до того, как она очистится.
-      function fieldValue(id) {
-        var el = document.getElementById(id);
-        return el && el.value ? el.value.trim().slice(0, 2000) : '';
+      /* ClientID Метрики — только если посетитель разрешил аналитику и счетчик загрузился.
+         Ждем не дольше полсекунды, чтобы не задерживать отправку заявки. */
+      function ymClientId() {
+        return new Promise(function (resolve) {
+          var settled = false;
+          function finish(v) { if (!settled) { settled = true; resolve(v || ''); } }
+          try {
+            if (typeof window.ym === 'function' && METRIKA_ID) {
+              window.ym(METRIKA_ID, 'getClientID', finish);
+              setTimeout(function () { finish(''); }, 500);
+            } else { finish(''); }
+          } catch (_) { finish(''); }
+        });
       }
 
       var attribution = readAttribution();
-      window.kovtunLeadEvent = function (options) {
-        var id = makeLeadId();
-        if (!LEAD_ENDPOINT || !LEAD_FORM_KEY) return id;
-        var name = (options && options.name) || fieldValue('f-name');
-        var task = (options && options.task) || fieldValue('f-car');
-        var note = (options && options.message) || fieldValue('f-message');
-        var params = new URLSearchParams({
-          kind: 'website_lead',
-          formKey: LEAD_FORM_KEY,
-          id: id,
-          messenger: options && options.messenger || 'Telegram',
-          page: window.location.pathname,
-          name: name,
-          task: [task, note].filter(Boolean).join(' — '),
-          utmSource: attribution.utmSource,
-          utmMedium: attribution.utmMedium,
-          utmCampaign: attribution.utmCampaign,
-          referrer: attribution.referrer,
-          website: document.querySelector('[data-lead-hp]')?.value || ''
-        });
-        try {
-          if (navigator.sendBeacon && navigator.sendBeacon(LEAD_ENDPOINT, params)) return id;
-          fetch(LEAD_ENDPOINT, { method: 'POST', body: params, mode: 'no-cors', keepalive: true }).catch(function () {});
-        } catch (_) {}
-        return id;
+      var FIRST_VISIT = firstVisit();
+
+      /* Отправка заявки в CRM. Возвращает Promise с {ok, lead, deal} —
+         форма показывает подтверждение только после ответа сервера. */
+      window.kovtunLeadSubmit = function (lead) {
+        if (!LEAD_ENDPOINT) return Promise.resolve({ ok: false });
+        return ymClientId().then(function (cid) {
+          var params = new URLSearchParams({
+            kind: 'website_lead',
+            formKey: LEAD_FORM_KEY,
+            page: window.location.pathname,
+            name: (lead && lead.name) || '',
+            contact: (lead && lead.contact) || '',
+            message: (lead && lead.message) || '',
+            consent: (lead && lead.consent) || '',
+            utmSource: attribution.utmSource,
+            utmMedium: attribution.utmMedium,
+            utmCampaign: attribution.utmCampaign,
+            referrer: attribution.referrer,
+            yclid: attribution.yclid,
+            ym_client_id: cid,
+            first_visit: FIRST_VISIT,
+            website: document.querySelector('[data-lead-hp]')?.value || ''
+          });
+          return fetch(LEAD_ENDPOINT, { method: 'POST', body: params, keepalive: true })
+            .then(function (r) { return r.json(); })
+            .then(function (j) {
+              return (j && j.ok) ? { ok: true, lead: j.lead || 0, deal: j.deal || 0 } : { ok: false };
+            });
+        }).catch(function () { return { ok: false }; });
       };
     })();
   </script>

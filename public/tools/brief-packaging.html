@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бриф на упаковку — Kovtun.studio</title>
+<meta name="description" content="Заполните бриф на дизайн упаковки за 10 минут и отправьте его любому подрядчику. Ничего не сохраняется и никуда не отправляется.">
+<style>
+:root{
+  --red:#D91620; --red-dark:#B31016;
+  --ink:#2B2B2B; --gray:#87888A; --line:#E6E6E6; --bg:#FFFFFF; --soft:#F7F7F7;
+  --font:"Geist","Geist Variable",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:32px 20px 140px}
+header{border-bottom:2px solid var(--red);padding-bottom:20px;margin-bottom:28px}
+.mark{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.mark span{color:var(--red)}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:18px 0 8px;font-weight:600}
+.lead{color:var(--gray);max-width:60ch;margin:0}
+.note{background:var(--soft);border-left:3px solid var(--red);padding:12px 16px;margin:24px 0;font-size:14px;color:var(--ink)}
+fieldset{border:0;border-top:1px solid var(--line);padding:24px 0 8px;margin:0}
+legend{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);padding:0 8px 0 0}
+.q{margin:0 0 22px}
+.q[hidden]{display:none}
+label.t{display:block;font-weight:600;margin-bottom:2px}
+.hint{display:block;color:var(--gray);font-size:13px;margin-bottom:8px}
+input[type=text],textarea,select{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:2px;padding:10px 12px;min-height:44px;transition:border-color .12s}
+textarea{min-height:76px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--red)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--line);border-radius:2px;padding:8px 14px;font-size:14px;cursor:pointer;user-select:none}
+.opt input:checked + span{border-color:var(--red);color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.opt input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
+.opt span:hover{border-color:var(--gray)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;z-index:5}
+.bar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.prog{flex:1 1 auto;min-width:0}
+.prog-t{font-size:13px;color:var(--gray);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-t b{color:var(--ink)}
+.track{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--red);transition:width .2s}
+button{font:inherit;font-size:15px;border-radius:2px;padding:11px 18px;min-height:44px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink)}
+button.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:600;flex-shrink:0}
+.agree{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--gray);margin-top:14px;line-height:1.5;cursor:pointer}
+.agree input{margin-top:2px;width:18px;height:18px;flex-shrink:0}
+.agree a{color:inherit}
+.sendnote{margin-top:10px;font-size:14px;line-height:1.5}
+.sendnote.ok{color:#1a7f37}
+.sendnote.err{color:var(--red)}
+button.primary:hover{background:var(--red-dark);border-color:var(--red-dark)}
+button:hover{border-color:var(--red);color:var(--red)}
+button.primary:hover{color:#fff}
+#out{display:none;margin-top:36px;border-top:2px solid var(--red);padding-top:24px}
+#out h2{font-size:22px;margin:0 0 4px;font-weight:600}
+#out .sub{color:var(--gray);font-size:14px;margin:0 0 20px}
+.print-head{display:none}
+.brief{background:var(--soft);padding:24px;border-radius:2px}
+.brief h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin:22px 0 10px;font-weight:600}
+.brief h3:first-child{margin-top:0}
+.brief .bt{font-weight:600;font-size:17px;margin:0 0 2px}
+.brief .bd{color:var(--gray);font-size:13px;margin:0 0 14px}
+.brief .bi{margin:0 0 10px;font-size:15px}
+.brief .bi b{font-weight:600}
+.brief section{break-inside:avoid}
+.gaps{margin-top:22px;border-top:1px dashed var(--gray);padding-top:16px}
+.gaps p{margin:0 0 8px;font-size:14px;color:var(--gray)}
+.gaps ul{margin:0;padding-left:18px;font-size:15px}
+.gaps li{margin-bottom:4px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.after{margin-top:20px;padding:12px 16px;background:var(--soft);border-left:3px solid var(--line);font-size:14px;color:var(--gray)}
+.after a{color:var(--ink)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--gray);font-size:13px}
+footer a{color:var(--ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:2px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.on{opacity:1}
+@media print{
+  .bar,header,.note,form,footer,.row,.after,.toast,#out .sub{display:none!important}
+  body{font-size:12pt}
+  .wrap{padding:0;max-width:none}
+  #out{display:block!important;border-top:0;padding-top:0;margin-top:0}
+  #out h2{display:none}
+  .print-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--red);padding-bottom:10px;margin-bottom:18px}
+  .print-head .mark{font-size:16pt}
+  .print-head .pd{color:var(--gray);font-size:10pt}
+  .brief{background:none;padding:0}
+  .brief .bd{display:none}
+  .brief h3{break-after:avoid}
+  .brief .bi{break-inside:avoid;font-size:11pt}
+  .gaps{break-inside:avoid}
+}
+@media (max-width:520px){
+  h1{font-size:26px}
+  .wrap{padding-bottom:150px}
+  .bar{padding:10px 16px}
+  .bar-in{gap:12px}
+  .prog-t{font-size:12px;margin-bottom:5px}
+  .brief{padding:18px 16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="mark">K<span>.</span></div>
+  <h1>Бриф на упаковку</h1>
+  <p class="lead">Десять минут на заполнение — и у вас на руках документ, с которым можно идти к любому дизайнеру. Отвечать на все не обязательно, вопросы можно пропускать. Но чем полнее бриф, тем меньше вопросов вам зададут потом и тем ровнее пойдет работа.</p>
+</header>
+
+<div class="note">Все считается прямо в браузере: пока вы не нажали «Отправить в студию», ответы никуда не уходят и нигде не сохраняются — закроете вкладку, они исчезнут. Готовый бриф можно скопировать, сохранить в PDF или отправить мне одной кнопкой.</div>
+
+<form id="f" autocomplete="off">
+
+<fieldset><legend>Компания и продукт</legend>
+  <div class="q"><label class="t" for="company">Компания</label><span class="hint">Название и чем занимаетесь, одной строкой</span><input type="text" id="company" data-q="Компания"></div>
+  <div class="q"><label class="t" for="product">Что за продукт</label><span class="hint">Например: сыродавленное масло, 500 мл, стеклянная бутылка</span><input type="text" id="product" data-q="Продукт"></div>
+  <div class="q"><label class="t" for="skus">Сколько позиций (SKU) в работе</label><span class="hint">Один вкус или вся линейка — от количества зависят срок и цена</span><input type="text" id="skus" data-q="Количество SKU"></div>
+  <div class="q"><label class="t" for="growth">Будет ли линейка расти</label><span class="hint">Если через полгода добавятся новые вкусы или объемы, дизайн сразу строится как система — новые позиции выйдут быстрее и дешевле</span><input type="text" id="growth" data-q="Планы по линейке"></div>
+  <div class="q"><label class="t">Тип задачи</label>
+    <div class="opts" data-q="Тип задачи">
+      <label class="opt"><input type="radio" name="task" value="Новая упаковка с нуля"><span>Новая упаковка с нуля</span></label>
+      <label class="opt"><input type="radio" name="task" value="Редизайн существующей"><span>Редизайн существующей</span></label>
+      <label class="opt"><input type="radio" name="task" value="Адаптация на новые SKU"><span>Адаптация на новые SKU</span></label>
+      <label class="opt"><input type="radio" name="task" value="Пока не решили"><span>Пока не решили</span></label>
+    </div>
+  </div>
+  <div class="q" data-when="task:Редизайн существующей|Адаптация на новые SKU"><label class="t" for="current">Текущая упаковка: что не так и что сохранить</label><span class="hint">Почему решили менять. И что должно остаться — узнаваемые элементы, по которым покупатель находит вас на полке</span><textarea id="current" data-q="Текущая упаковка"></textarea></div>
+</fieldset>
+
+<fieldset><legend>Где продается</legend>
+  <div class="q"><label class="t">Каналы продаж</label><span class="hint">Можно отметить несколько — упаковка для полки и для карточки на маркетплейсе решает разные задачи</span>
+    <div class="opts" data-q="Каналы продаж">
+      <label class="opt"><input type="checkbox" name="ch" value="Полка розничной сети"><span>Полка розничной сети</span></label>
+      <label class="opt"><input type="checkbox" name="ch" value="Маркетплейсы"><span>Маркетплейсы</span></label>
+      <label class="opt"><input type="checkbox" name="ch" value="Опт и дистрибуция"><span>Опт и дистрибуция</span></label>
+      <label class="opt"><input type="checkbox" name="ch" value="Специализированные точки"><span>Специализированные точки</span></label>
+      <label class="opt"><input type="checkbox" name="ch" value="Свой магазин"><span>Свой магазин</span></label>
+      <label class="opt"><input type="checkbox" name="ch" value="HoReCa"><span>HoReCa</span></label>
+    </div>
+  </div>
+  <div class="q" data-when="ch:Маркетплейсы"><label class="t" for="mp">Какие маркетплейсы</label><span class="hint">Wildberries, Ozon, Яндекс Маркет. В каталоге упаковка видна размером с почтовую марку — лицевая сторона должна читаться даже в таком размере</span><input type="text" id="mp" data-q="Маркетплейсы"></div>
+  <div class="q" data-when="ch:Полка розничной сети"><label class="t" for="retail">В какие сети идете</label><span class="hint">У сетей бывают свои требования к упаковке и маркировке. Если требования на руках — приложите их к брифу</span><input type="text" id="retail" data-q="Сети и их требования"></div>
+  <div class="q"><label class="t" for="price">Цена продукта на полке</label><span class="hint">И сегмент: эконом, средний, премиум. Упаковка должна попадать в свою цену — не выглядеть дороже или дешевле нее</span><input type="text" id="price" data-q="Цена и сегмент"></div>
+  <div class="q"><label class="t" for="geo">География продаж</label><span class="hint">Город, регион или вся страна</span><input type="text" id="geo" data-q="География"></div>
+</fieldset>
+
+<fieldset><legend>Покупатель и конкуренты</legend>
+  <div class="q"><label class="t" for="buyer">Кто покупает</label><span class="hint">Не «все», а конкретно: кто берет чаще всего и по какому поводу</span><textarea id="buyer" data-q="Покупатель"></textarea></div>
+  <div class="q"><label class="t" for="choice">По чему покупатель выбирает у полки</label><span class="hint">Цена, состав, объем, привычка, доверие к производителю — что решает за 2–3 секунды</span><textarea id="choice" data-q="Критерий выбора"></textarea></div>
+  <div class="q"><label class="t" for="comp">Конкуренты рядом на полке</label><span class="hint">2–3 названия или ссылки. Дизайнеру нужно видеть, от кого вы хотите отличаться на полке</span><textarea id="comp" data-q="Конкуренты"></textarea></div>
+  <div class="q"><label class="t" for="likes">Упаковка, которая вам нравится</label><span class="hint">Любая, даже из другой категории. Напишите, что именно нравится</span><textarea id="likes" data-q="Нравится"></textarea></div>
+  <div class="q"><label class="t" for="dislikes">Чего точно не должно быть</label><span class="hint">Цвета, образы, приемы, которые вам не подходят</span><textarea id="dislikes" data-q="Не должно быть"></textarea></div>
+</fieldset>
+
+<fieldset><legend>Техника и ограничения</legend>
+  <div class="q"><label class="t" for="volume">Тираж</label><span class="hint">Сколько штук печатаете за раз, хотя бы примерно. От тиража зависят способ печати и цена за штуку</span><input type="text" id="volume" data-q="Тираж"></div>
+  <div class="q"><label class="t" for="print">Типография и способ печати</label><span class="hint">Если типография уже выбрана — назовите ее. Способ печати меняет макет: у флексографии каждая краска печатается с отдельной формы и оплачивается до тиража, а мелкий текст и тонкие линии заплывают</span><input type="text" id="print" data-q="Печать"></div>
+  <div class="q"><label class="t" for="material">Материал и форма</label><span class="hint">Пленка, бумага, гофрокороб, стекло, канистра. И есть ли чертеж развертки упаковки от типографии — его еще называют дилайном</span><input type="text" id="material" data-q="Материал и форма"></div>
+  <div class="q"><label class="t">Что обязано попасть на упаковку</label><span class="hint">Отметьте нужное. Место под такие элементы закладывается на старте, а не дорисовывается потом</span>
+    <div class="opts" data-q="Обязательные элементы">
+      <label class="opt"><input type="checkbox" name="req" value="Штрихкод"><span>Штрихкод</span></label>
+      <label class="opt"><input type="checkbox" name="req" value="Знак ЕАС"><span>Знак ЕАС</span></label>
+      <label class="opt"><input type="checkbox" name="req" value="Код маркировки Честный ЗНАК"><span>Честный ЗНАК</span></label>
+      <label class="opt"><input type="checkbox" name="req" value="Состав и пищевая ценность"><span>Состав, пищевая ценность</span></label>
+      <label class="opt"><input type="checkbox" name="req" value="Срок годности и дата"><span>Срок годности</span></label>
+      <label class="opt"><input type="checkbox" name="req" value="QR-код"><span>QR-код</span></label>
+      <label class="opt"><input type="checkbox" name="req" value="Знаки переработки"><span>Знаки переработки</span></label>
+    </div>
+  </div>
+</fieldset>
+
+<fieldset><legend>Что уже есть</legend>
+  <div class="q"><label class="t">Материалы на руках</label><span class="hint">Разрозненные материалы — самая частая причина, по которой срок уезжает на неделю</span>
+    <div class="opts" data-q="Материалы">
+      <label class="opt"><input type="checkbox" name="have" value="Логотип в векторе"><span>Логотип в векторе</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Гайдбук или фирстиль"><span>Гайдбук</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Чертеж развертки от типографии"><span>Чертеж развертки</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Фото продукта"><span>Фото продукта</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Тексты и состав"><span>Тексты и состав</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Действующий макет"><span>Действующий макет</span></label>
+      <label class="opt"><input type="checkbox" name="have" value="Ничего нет"><span>Ничего нет</span></label>
+    </div>
+  </div>
+  <div class="q"><label class="t" for="deadline">К какой дате нужен результат</label><span class="hint">И что к дате привязано: тендер, сезон, запуск линии, выставка</span><input type="text" id="deadline" data-q="Срок"></div>
+  <div class="q"><label class="t" for="budget">Бюджет</label><span class="hint">Хотя бы вилка. По бюджету подбирают объем работ, а не торгуются</span><input type="text" id="budget" data-q="Бюджет"></div>
+  <div class="q"><label class="t" for="who">Кто принимает решение</label><span class="hint">Один человек или несколько согласующих — от количества зависит число раундов правок</span><input type="text" id="who" data-q="Кто принимает решение"></div>
+  <div class="q"><label class="t" for="contact">Контакт для связи</label><input type="text" id="contact" data-q="Контакт"></div>
+</fieldset>
+
+</form>
+
+<section id="out">
+  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Бриф на дизайн упаковки — <span id="pdate"></span></div></div>
+  <h2>Готовый бриф</h2>
+  <p class="sub">Скопируйте текст или сохраните в PDF и отправьте вместе с материалами. Пустые пункты собраны внизу отдельным списком — подрядчик сразу увидит, что уточнить.</p>
+  <div class="brief" id="brief"></div>
+  <div class="row">
+    <button type="button" id="copy">Скопировать текст</button>
+    <button type="button" id="printBtn">Сохранить в PDF</button>
+    <button type="button" class="primary" id="sendBtn">Отправить в студию</button>
+  </div>
+  <label class="agree"><input type="checkbox" id="agree"> Согласен на обработку персональных данных: <a href="https://design.kovtun.studio/privacy/" target="_blank" rel="noopener">политика</a> и <a href="https://design.kovtun.studio/consent/" target="_blank" rel="noopener">согласие</a>.</label>
+  <p class="sendnote" id="sendnote" hidden></p>
+  <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и что уточнить у типографии. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+</section>
+
+<footer>
+  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — дизайн упаковки и фирменного стиля.
+  Пользуйтесь свободно, в том числе с другими подрядчиками.
+</footer>
+</div>
+
+<div class="bar"><div class="bar-in">
+  <div class="prog">
+    <div class="prog-t">Заполнено <b><span id="done">0</span> из <span id="total">0</span></b></div>
+    <div class="track"><div class="fill" id="fill"></div></div>
+  </div>
+  <button type="button" class="primary" id="build">Собрать бриф</button>
+</div></div>
+
+<div class="toast" id="toast">Скопировано</div>
+
+<script>
+(function(){
+  var form = document.getElementById('f');
+  var blocks = [];
+
+  form.querySelectorAll('.q').forEach(function(q){
+    var single = q.querySelector('input[type=text], textarea');
+    var group  = q.querySelector('.opts');
+    var b = {q: q, when: q.getAttribute('data-when')};
+    if (single) { b.label = single.dataset.q; b.get = function(){ return single.value.trim(); }; }
+    else if (group) { b.label = group.dataset.q; b.get = function(){
+      var vals = [].slice.call(group.querySelectorAll('input:checked')).map(function(i){ return i.value; });
+      return vals.join(', ');
+    }; }
+    else return;
+    blocks.push(b);
+  });
+
+  function visible(b){
+    if (!b.when) return true;
+    var parts = b.when.split(':');           // "task:Редизайн...|Адаптация..."
+    var name = parts[0], wanted = parts[1].split('|');
+    var checked = [].slice.call(form.querySelectorAll('input[name=' + name + ']:checked'))
+      .map(function(i){ return i.value; });
+    return wanted.some(function(w){ return checked.indexOf(w) !== -1; });
+  }
+
+  function applyBranching(){
+    blocks.forEach(function(b){
+      if (b.when) b.q.hidden = !visible(b);
+    });
+  }
+
+  function count(){
+    applyBranching();
+    var shown = blocks.filter(function(b){ return !b.q.hidden; });
+    var n = 0;
+    shown.forEach(function(b){ if (b.get()) n++; });
+    document.getElementById('done').textContent = n;
+    document.getElementById('total').textContent = shown.length;
+    document.getElementById('fill').style.width = Math.round(n / shown.length * 100) + '%';
+    if (document.getElementById('out').style.display === 'block') build(false);
+  }
+  form.addEventListener('input', count);
+  form.addEventListener('change', count);
+  count();
+
+  function esc(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  /* Подпись под названием компании берем из заголовка страницы: раньше она была
+     вписана строкой и на трех брифах из четырех говорила про упаковку. */
+  var kindTitle = (document.querySelector('h1') || {}).textContent || 'Бриф';
+  kindTitle = kindTitle.trim();
+
+  var plainText = '';
+
+  function build(scroll){
+    var company = document.getElementById('company').value.trim();
+    var date = new Date().toLocaleDateString('ru-RU');
+    document.getElementById('pdate').textContent = date;
+
+    var html = '';
+    var lines = ['БРИФ НА ДИЗАЙН УПАКОВКИ', (company || 'Компания не указана'), date, '', '---', ''];
+    var gaps = [];
+
+    html += '<p class="bt">' + esc(company || 'Компания не указана') + '</p>';
+    html += '<p class="bd">' + esc(kindTitle) + ' — ' + date + '</p>';
+
+    form.querySelectorAll('fieldset').forEach(function(fs){
+      var title = fs.querySelector('legend').textContent;
+      var secHtml = '', secLines = [];
+      fs.querySelectorAll('.q').forEach(function(q){
+        var b = blocks.filter(function(x){ return x.q === q; })[0];
+        if (!b || b.q.hidden) return;
+        var v = b.get();
+        if (v) {
+          secHtml += '<p class="bi"><b>' + esc(b.label) + ':</b> ' + esc(v) + '</p>';
+          secLines.push(b.label + ': ' + v);
+        } else {
+          gaps.push(b.label);
+        }
+      });
+      if (secHtml) {
+        html += '<section><h3>' + esc(title) + '</h3>' + secHtml + '</section>';
+        lines.push(title.toUpperCase(), '');
+        secLines.forEach(function(l){ lines.push(l); });
+        lines.push('');
+      }
+    });
+
+    if (gaps.length) {
+      html += '<div class="gaps"><p>Пункты ниже остались пустыми. Подрядчик спросит про каждый, поэтому ответы лучше подготовить заранее:</p><ul>';
+      lines.push('НУЖНО УТОЧНИТЬ', '');
+      gaps.forEach(function(g){
+        html += '<li>' + esc(g) + '</li>';
+        lines.push('— ' + g);
+      });
+      html += '</ul></div>';
+      lines.push('');
+    }
+
+    lines.push('---', 'Бриф собран в конструкторе design.kovtun.studio');
+    plainText = lines.join('\n');
+    window.__briefText = plainText;
+    document.getElementById('brief').innerHTML = html;
+
+    var out = document.getElementById('out');
+    out.style.display = 'block';
+    if (scroll !== false) out.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  document.getElementById('build').addEventListener('click', function(){ build(true); });
+
+  function toast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('on');
+    setTimeout(function(){ t.classList.remove('on'); }, 1600);
+  }
+
+  document.getElementById('copy').addEventListener('click', function(){
+    if (!plainText) build(false);
+    var txt = plainText;
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); toast('Скопировано'); }
+      catch(e){ toast('Скопируйте вручную'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){ toast('Скопировано'); }, fallback);
+    } else fallback();
+  });
+
+  document.getElementById('printBtn').addEventListener('click', function(){
+    if (!plainText) build(false);
+    window.print();
+  });
+})();
+</script>
+<script>
+/* Отправка брифа в CRM студии. Отдельным блоком, чтобы не трогать сборщик
+   выше: он только выкладывает готовый текст в window.__briefText. */
+(function(){
+  var ENDPOINT = 'https://crm.kovtun.studio/api/lead.php';
+  var btn = document.getElementById('sendBtn');
+  if (!btn) { return; }
+  var agree = document.getElementById('agree');
+  var note  = document.getElementById('sendnote');
+  var h1    = document.querySelector('h1');
+  var kind  = h1 ? h1.textContent.trim() : 'Бриф';
+  var sent  = false;
+
+  function say(text, cls){
+    note.textContent = text;
+    note.className = 'sendnote ' + (cls || '');
+    note.hidden = false;
+  }
+  function val(id){
+    var el = document.getElementById(id);
+    return el && el.value ? el.value.trim() : '';
+  }
+
+  btn.addEventListener('click', function(){
+    if (sent) { say('Бриф уже отправлен.', 'ok'); return; }
+
+    var contact = val('contact');
+    if (!contact) {
+      say('Заполните «Контакт для связи» — иначе ответить будет некуда.', 'err');
+      var c = document.getElementById('contact');
+      if (c) { c.scrollIntoView({behavior:'smooth', block:'center'}); c.focus(); }
+      return;
+    }
+    if (!agree.checked) {
+      say('Отметьте согласие на обработку данных.', 'err');
+      return;
+    }
+    var text = window.__briefText || '';
+    if (!text) { say('Сначала нажмите «Собрать бриф».', 'err'); return; }
+
+    var company = val('company');
+    var p = new URLSearchParams(location.search);
+    var body = new URLSearchParams({
+      name: company,
+      contact: contact,
+      message: kind + (company ? ' — ' + company : '') + '\n\n' + text,
+      page: location.pathname,
+      referrer: document.referrer || '',
+      utmSource: p.get('utm_source') || '',
+      utmMedium: p.get('utm_medium') || '',
+      utmCampaign: p.get('utm_campaign') || '',
+      yclid: p.get('yclid') || '',
+      formKey: 'kovtun-studio-109482416',
+      website: ''
+    });
+
+    btn.disabled = true;
+    say('Отправляю…', '');
+    fetch(ENDPOINT, {method:'POST', body: body})
+      .then(function(r){ return r.json().catch(function(){ return null; }); })
+      .then(function(j){
+        if (j && j.ok) {
+          sent = true;
+          btn.textContent = 'Отправлено';
+          say('Бриф ушел в студию, заявка №' + (j.lead || '—') + '. Отвечу в течение рабочего дня.', 'ok');
+        } else {
+          btn.disabled = false;
+          say('Не отправилось. Скопируйте текст и пришлите в Telegram: t.me/kovtundesign', 'err');
+        }
+      })
+      .catch(function(){
+        btn.disabled = false;
+        say('Не отправилось. Скопируйте текст и пришлите в Telegram: t.me/kovtundesign', 'err');
+      });
+  });
+})();
+</script>
+</body>
+</html>
