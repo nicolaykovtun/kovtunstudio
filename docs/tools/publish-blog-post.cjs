@@ -66,7 +66,7 @@ function publish(slug) {
   }
 
   // 2. строка в llms.txt
-  const url = 'https://design.kovtun.studio/blog/' + slug + '/';
+  const url = 'https://kovtun.studio/blog/' + slug + '/';
   let llms = fs.readFileSync(llmsFile, 'utf8');
   if (llms.includes('/blog/' + slug + '/')) {
     console.log(slug + ': в llms.txt строка уже есть');

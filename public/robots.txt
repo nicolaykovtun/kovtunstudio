@@ -1,4 +1,4 @@
-# robots.txt — design.kovtun.studio
+# robots.txt — kovtun.studio
 # Разрешена индексация всем поисковикам
 
 User-agent: *
@@ -11,5 +11,5 @@ Allow: /
 Disallow: /assets/portfolio/original/
 Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content
 
-Sitemap: https://design.kovtun.studio/sitemap-index.xml
-Host: design.kovtun.studio
+Sitemap: https://kovtun.studio/sitemap-index.xml
+Host: kovtun.studio

@@ -1,4 +1,4 @@
-# Как собирать кейс на design.kovtun.studio
+# Как собирать кейс на kovtun.studio
 
 Срез рабочего процесса по итогам кейсов «Капиталъ Информ» и «Трубоварня Еремеева»
 (июль 2026). Файл нужен, чтобы новый чат начинал не с разведки, а с дела.
@@ -307,8 +307,8 @@ npm run build
 node tmp/check-page.mjs "dist/cases/<slug>/index.html"
 ```
 
-Дев-сервер поднимается через preview-инструменты по имени `design.kovtun.studio (dev)`,
-порт 4321 (занят — подберется свободный). Есть и `design.kovtun.studio (preview)` —
+Дев-сервер поднимается через preview-инструменты по имени `kovtun.studio (dev)`,
+порт 4321 (занят — подберется свободный). Есть и `kovtun.studio (preview)` —
 он отдает собранный `dist/`, а не исходники.
 
 Имена берутся из `.claude/launch.json`, и инструмент читает тот файл, что лежит
@@ -343,7 +343,7 @@ node tmp/preview-strips.mjs "<папка>/page.png" "<папка>/strips" 1000 1
 
 Деплой = пуш в `main`. GitHub Actions (`.github/workflows/deploy.yml`) сам ставит
 зависимости, собирает и публикует на GitHub Pages. Живой адрес —
-https://design.kovtun.studio
+https://kovtun.studio
 
 Коммитить: `cases/published/<Папка>/case.md`, `cases/published/<Папка>/gallery.yaml`,
 `public/assets/cases/<slug>/`, правки в `src/`. Добавлять файлы по именам, а не

@@ -1,8 +1,8 @@
 # site.yaml — общие настройки сайта Kovtun.studio
 # Меняешь тут — меняется во всех мета-тегах, JSON-LD, footer и др.
 
-url: https://design.kovtun.studio
-domain: design.kovtun.studio
+url: https://kovtun.studio
+domain: kovtun.studio
 lang: ru
 
 title: Дизайн для бизнеса — упаковка, айдентика, сайты, презентации, оклейка авто · Kovtun.studio

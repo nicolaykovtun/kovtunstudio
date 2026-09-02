@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://design.kovtun.studio',
+  site: 'https://kovtun.studio',
   trailingSlash: 'ignore',
   redirects: {
     '/cases': '/portfolio/',

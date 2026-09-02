@@ -205,13 +205,13 @@ footer a{color:var(--ink)}
     <button type="button" id="printBtn">Сохранить в PDF</button>
     <button type="button" class="primary" id="sendBtn">Отправить в студию</button>
   </div>
-  <label class="agree"><input type="checkbox" id="agree"> Согласен на обработку персональных данных: <a href="https://design.kovtun.studio/privacy/" target="_blank" rel="noopener">политика</a> и <a href="https://design.kovtun.studio/consent/" target="_blank" rel="noopener">согласие</a>.</label>
+  <label class="agree"><input type="checkbox" id="agree"> Согласен на обработку персональных данных: <a href="https://kovtun.studio/privacy/" target="_blank" rel="noopener">политика</a> и <a href="https://kovtun.studio/consent/" target="_blank" rel="noopener">согласие</a>.</label>
   <p class="sendnote" id="sendnote" hidden></p>
   <p class="after">Перед отправкой дизайнеру бриф можно прислать мне — отвечу, где слабые места и что уточнить у типографии. Бесплатно и ни к чему не обязывает: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
 </section>
 
 <footer>
-  Инструмент студии <a href="https://design.kovtun.studio/">Kovtun.studio</a> — дизайн упаковки и фирменного стиля.
+  Инструмент студии <a href="https://kovtun.studio/">Kovtun.studio</a> — дизайн упаковки и фирменного стиля.
   Пользуйтесь свободно, в том числе с другими подрядчиками.
 </footer>
 </div>
@@ -329,7 +329,7 @@ footer a{color:var(--ink)}
       lines.push('');
     }
 
-    lines.push('---', 'Бриф собран в конструкторе design.kovtun.studio');
+    lines.push('---', 'Бриф собран в конструкторе kovtun.studio');
     plainText = lines.join('\n');
     window.__briefText = plainText;
     document.getElementById('brief').innerHTML = html;

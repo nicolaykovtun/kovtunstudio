@@ -20,7 +20,7 @@ if (!fs.existsSync(dist)) {
 }
 
 const llms = fs.readFileSync(llmsPath, 'utf8');
-const SITE = 'https://design.kovtun.studio';
+const SITE = 'https://kovtun.studio';
 
 // Собираем адреса из markdown-ссылок и из голого текста.
 const urls = new Set();

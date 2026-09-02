@@ -2,14 +2,14 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "design.kovtun.studio (dev)",
+      "name": "kovtun.studio (dev)",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 4321,
       "autoPort": true
     },
     {
-      "name": "design.kovtun.studio (preview)",
+      "name": "kovtun.studio (preview)",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "preview"],
       "port": 4321,
