@@ -139,6 +139,9 @@ import CookieConsent from '../components/CookieConsent.astro';
   <!-- Search engine verification -->
   <meta name="yandex-verification" content={site.verification.yandex} />
   <meta name="google-site-verification" content={site.verification.google} />
+  {site.verification.pinterest && (
+    <meta name="p:domain_verify" content={site.verification.pinterest} />
+  )}
 
   <!-- Open Graph -->
   <meta property="og:type" content={ogType}>
