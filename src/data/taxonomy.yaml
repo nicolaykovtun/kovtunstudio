@@ -21,32 +21,24 @@ directions:
   - key: wrap
     label: Оклейка авто
 
+# Сфер восемь: близкие отрасли объединены, чтобы фильтр и список на главной
+# не рассыпались на сферы по одному кейсу. Сегмент кейса (segment в шапке)
+# остается точным, а к сфере он привязан картой sphereBySegment в
+# src/data/case-catalog.ts.
 spheres:
   - key: food
-    label: Производство питания
-  - key: production
-    label: Производство
-  - key: industry
-    label: Промышленный завод
-  - key: metallurgy
-    label: Металлургия
+    label: Продукты питания и агро
   - key: auto
     label: Автобизнес
+  - key: production
+    label: Производство и промышленность
+  - key: engineering-systems
+    label: Инженерные системы и умный дом
   - key: logistics-and-port
     label: Логистика и порт
-  - key: agriculture
-    label: Сельское хозяйство
   - key: real-estate
     label: Недвижимость
-  - key: accounting
-    label: Бухгалтерские услуги
-  - key: engineering-systems
-    label: Инженерные системы
+  - key: b2b-services
+    label: Услуги для бизнеса и опт
   - key: wellness
-    label: Спа и велнес
-  - key: retreats
-    label: Выездные мужские программы
-  - key: smart-home
-    label: Умный дом
-  - key: cosmetics-wholesale
-    label: Оптовая торговля косметикой
+    label: Отдых и велнес

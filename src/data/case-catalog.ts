@@ -57,12 +57,25 @@ export const servicePageByDirection: Record<
   wrap: { href: '/car-wrap/', label: 'Оклейка авто', cta: 'Цены и процесс по оклейке' },
 };
 
+/**
+ * Сегмент кейса → сфера из taxonomy.yaml. Сегмент точный («бухгалтерские
+ * услуги»), сфера укрупненная («услуги для бизнеса и опт»): по сферам
+ * работает фильтр портфолио и список «С кем работаю» на главной.
+ */
 export const sphereBySegment: Record<string, string> = {
+  food: 'food',
+  agriculture: 'food',
   automotive: 'auto',
+  production: 'production',
+  b2b: 'production',
+  'engineering-systems': 'engineering-systems',
+  'smart-home': 'engineering-systems',
   'logistics-and-port': 'logistics-and-port',
-  agriculture: 'agriculture',
   'real-estate': 'real-estate',
-  b2b: 'metallurgy',
+  accounting: 'b2b-services',
+  'cosmetics-wholesale': 'b2b-services',
+  wellness: 'wellness',
+  retreats: 'wellness',
 };
 
 export function caseOrderIndex(slug: string): number {

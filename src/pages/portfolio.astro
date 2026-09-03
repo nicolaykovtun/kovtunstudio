@@ -597,20 +597,23 @@ const seoDescription =
   .dir-item {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: stretch;
+    align-items: center;
+    margin: 0 -20px;
+    padding-right: 20px;
     border-bottom: 1px solid var(--line-1);
+    transition: background var(--dur-base) var(--ease-out);
   }
+  .dir-item:hover { background: var(--bg-2); }
   .dr-service {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 0 4px 0 28px;
+    padding: 0 0 0 32px;
     font: 600 12px/1 var(--font-mono);
     letter-spacing: 0.05em;
     color: var(--fg-3);
     text-decoration: none;
     white-space: nowrap;
-    border-left: 1px solid var(--line-1);
     transition: color var(--dur-base);
   }
   .dr-service:hover { color: var(--ks-red); }
@@ -620,13 +623,10 @@ const seoDescription =
     align-items: center;
     gap: 28px;
     padding: 26px 20px;
-    margin: 0 -20px 0 -20px;
-    border-bottom: 0;
+    margin: 0;
+    border: 0;
     text-decoration: none;
-    border-left: 0; border-right: 0;
-    transition: background var(--dur-base) var(--ease-out);
   }
-  a.dir-row:hover { background: var(--bg-2); }
   .dr-num {
     font: 800 14px/1 var(--font-display);
     letter-spacing: 0.08em;
@@ -640,7 +640,7 @@ const seoDescription =
     color: var(--fg-1);
     transition: color var(--dur-base);
   }
-  a.dir-row:hover .dr-name { color: var(--ks-red); }
+  .dir-item:hover .dr-name { color: var(--ks-red); }
   .dir-row.is-soon .dr-name { color: var(--fg-4); }
   .dr-count {
     font: 600 12px/1 var(--font-mono);
@@ -662,12 +662,12 @@ const seoDescription =
     justify-self: end;
     transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
   }
-  a.dir-row:hover .dr-arrow { transform: translateY(4px); color: var(--ks-red); }
+  .dir-item:hover .dr-arrow { transform: translateY(4px); color: var(--ks-red); }
 
   @media (max-width: 700px) {
-    .dir-item { grid-template-columns: 1fr; }
-    .dr-service { border-left: 0; min-height: 44px; padding: 0 0 8px 58px; }
-    .dir-row { grid-template-columns: 44px 1fr auto; gap: 16px; padding: 20px 14px; margin: 0 -14px; }
+    .dir-item { grid-template-columns: 1fr; margin: 0 -14px; padding-right: 0; }
+    .dr-service { min-height: 44px; padding: 0 14px 8px 58px; }
+    .dir-row { grid-template-columns: 44px 1fr auto; gap: 16px; padding: 20px 14px; margin: 0; }
     .dr-arrow { display: none; }
     .dr-count { font-size: 11px; }
   }
