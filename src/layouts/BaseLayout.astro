@@ -59,7 +59,13 @@ const ldBusiness = {
   "telephone": site.contact.phoneTel,
   "priceRange": "₽₽",
   "description": site.business.description,
-  "sameAs": [site.contact.telegram, site.contact.max],
+  "sameAs": [
+    site.contact.telegram,
+    site.contact.max,
+    site.profiles.yandexMaps,
+    site.profiles.twogis,
+    site.profiles.pinterest,
+  ],
   "address": {
     "@type": "PostalAddress",
     "addressLocality": site.location.city,
@@ -80,7 +86,7 @@ const ldBusiness = {
     "jobTitle": site.author.jobTitle,
     "description": site.founderSection.personDescription,
     "knowsAbout": site.founderSection.knowsAbout,
-    "sameAs": [site.contact.telegram, site.contact.max, "https://www.pinterest.com/kovtunstudio/"]
+    "sameAs": [site.contact.telegram, site.contact.max, site.profiles.pinterest]
   },
   "contactPoint": {
     "@type": "ContactPoint",

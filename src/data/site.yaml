@@ -70,6 +70,15 @@ contact:
   phone: "+7 908 449-72-60"
   phoneTel: "+79084497260"
 
+# Внешние профили студии. Уходят в sameAs у LocalBusiness: так поисковики
+# и ИИ-поиск связывают сайт с карточками на картах и в соцсетях как одну
+# организацию. Ссылки канонические, а не короткие: короткая go.2gis.com
+# и yandex.ru/maps/-/ отдают редирект и живут отдельной жизнью.
+profiles:
+  yandexMaps: https://yandex.ru/maps/org/kovtun_studiya/54324830858/
+  twogis: https://2gis.ru/vladivostok/firm/70000001094151915
+  pinterest: https://www.pinterest.com/kovtunstudio/
+
 # Реквизиты владельца сайта и оператора персональных данных
 legal:
   owner: "Индивидуальный предприниматель Ковтун Николай Олегович"
