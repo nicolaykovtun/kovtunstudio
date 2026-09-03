@@ -19,7 +19,7 @@ const description =
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const dayMonth = (d: Date) => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}`;
-const yearShort = (d: Date) => String(d.getFullYear()).slice(2);
+const yearShort = (d: Date) => String(d.getFullYear());
 const isoDate = (d: Date) => d.toISOString().split('T')[0];
 
 const ldCollection = {
@@ -92,6 +92,12 @@ const ldCollection = {
           </article>
         ))}
       </div>
+
+      <p class="blog-services">
+        Пишу о том, что делаю сам: <a href="/packaging/">упаковка</a>,
+        <a href="/identity/">логотип и фирменный стиль</a>, <a href="/websites/">сайты</a>,
+        <a href="/presentations/">презентации</a> и <a href="/car-wrap/">оклейка авто</a>.
+      </p>
     </div>
   </main>
 
@@ -99,6 +105,17 @@ const ldCollection = {
 </BaseLayout>
 
 <style>
+  /* Из списка статей раньше не было пути к услугам, кроме футера. */
+  .blog-services {
+    margin: 40px 0 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-1);
+    font-size: 15px;
+    color: var(--fg-3);
+  }
+  .blog-services a { color: var(--fg-1); font-weight: 600; }
+  .blog-services a:hover { color: var(--ks-red); }
+
   .blog-hero {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);

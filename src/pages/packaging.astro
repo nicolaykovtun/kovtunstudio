@@ -10,12 +10,14 @@ import Hero from '../components/Hero.astro';
 import Marquee from '../components/Marquee.astro';
 import WhatGrid from '../components/WhatGrid.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
+import ReturningClients from '../components/ReturningClients.astro';
 import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
 import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
 import { servicePageNav } from '../lib/site-nav';
+import { coverSrcset, coverSizes } from '../lib/covers';
 import '../styles/presentations.css';
 
 const dataDir = path.resolve('./src/data');
@@ -24,6 +26,7 @@ const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8'))
 // Локальная навигация страницы — как у /presentations/ и /car-wrap/.
 const nav = servicePageNav(site, [
   { href: '#scenarios', label: 'Сценарии' },
+  { href: '#system', label: 'Система' },
   { href: '#pricing', label: 'Цены' },
   { href: '#cases', label: 'Работы' },
   { href: '#faq', label: 'FAQ' },
@@ -40,7 +43,7 @@ const hero = {
   ctaSecondary: 'Стоимость работ',
   meta: [
     { num: '40', suffix: ' SKU', label: 'Три линейки Green Power в кейсах' },
-    { num: '75', label: 'Макетов отрисовано и подготовлено к печати' },
+    { num: '365', label: 'Макетов в линейке MICKING на первом этапе' },
     { num: '48', suffix: ' ч', label: 'Экспресс-аудит текущей упаковки' },
     { num: 'VVO', numAccent: '.', label: 'Владивосток · работаю по РФ' },
   ],
@@ -188,6 +191,59 @@ const packages = [
   },
 ];
 
+// Архитектура линейки: что постоянно, что меняется и по какому правилу
+// добавляется следующая позиция. Карточка 03 в блоке «Что делает упаковку
+// рабочей» говорит, что система важнее разовых макетов, — этот блок
+// показывает, из чего система состоит, на опубликованных линейках.
+const lineSystem = {
+  title: 'Линейка собирается<br>из трех слоев',
+  aside:
+    'В линейке три решения: что одинаково на всех позициях, что их различает ' +
+    'и по какому правилу добавляется следующая. Ниже — как это устроено ' +
+    'в опубликованных линейках.',
+  layers: [
+    {
+      num: '01',
+      kicker: 'Постоянное ядро',
+      title: 'Что одинаково на всех позициях',
+      text:
+        'У Green Power ядро — бронзовый знак на стыке фотографии и белого поля, ' +
+        'тонкая бронзовая рамка по контуру, строки «ПИТАНИЕ ДЛЯ ЖИЗНИ» и «Высший сорт», ' +
+        'печати «Произведено в Приморье» и «без ГМО». Этот набор перешел с масла ' +
+        'на соки и ореховую пасту без изменений: три линейки держатся на одних деталях.',
+      links: [{ slug: 'labels-green-power-oil', label: 'Масло Green Power' }],
+    },
+    {
+      num: '02',
+      kicker: 'Переменные',
+      title: 'Что различает позиции внутри линейки',
+      text:
+        'Меняется ровно то, по чему покупатель ищет. У соков это цвет: заливка ' +
+        'этикетки взята от самого сока, и в ряду девятнадцать бутылок читаются ' +
+        'как градиент. У MICKING переменная — цвет фирменного штриха: красный ' +
+        'у бензиновых масел, зеленый у дизельных, малиновый у трансмиссионных.',
+      links: [
+        { slug: 'labels-green-power-juice', label: 'Соки Green Power' },
+        { slug: 'brand-micking', label: 'Бренд MICKING' },
+      ],
+    },
+    {
+      num: '03',
+      kicker: 'Масштабирование',
+      title: 'Как добавляется следующая позиция',
+      text:
+        'Для каждого вида собирается эталонный макет, дальше система разворачивается ' +
+        'на фасовки. У MICKING постоянными остаются логотип, сетка и служебные блоки, ' +
+        'меняются название линейки, вязкость, допуски и цвет штриха — так 28 видов ' +
+        'превратились в 365 макетов на фасовки от 1 до 200 литров и гофротару.',
+      links: [{ slug: 'brand-micking', label: 'Бренд MICKING' }],
+    },
+  ],
+  note:
+    'Поэтому новая позиция добавляется как новое значение переменной в готовой сетке: ' +
+    'линейку не приходится пересобирать.',
+};
+
 const process = {
   title: 'Как идет<br>работа',
   aside:
@@ -246,7 +302,9 @@ const faqItems = [
   },
   {
     q: 'Можно заказать только этикетку, без ребрендинга?',
-    a: 'Да. Работаю в существующем фирменном стиле, если он есть. Если стиля нет, предложу минимальный набор правил, чтобы линейка держалась вместе при следующих SKU.',
+    a: 'Да. Работаю в существующем фирменном стиле, если он есть. Если стиля нет, предложу минимальный набор правил, чтобы линейка держалась вместе при следующих SKU. Полноценный фирменный стиль с гайдбуком — отдельный проект, 60 000 ₽.',
+    aHtml:
+      'Да. Работаю в существующем фирменном стиле, если он есть. Если стиля нет, предложу минимальный набор правил, чтобы линейка держалась вместе при следующих SKU. Полноценный <a href="/identity/">фирменный стиль с гайдбуком</a> — отдельный проект, 60 000 ₽.',
   },
   {
     q: 'Упаковка будет работать на маркетплейсе?',
@@ -337,6 +395,7 @@ const footer = {
       title: 'Страница',
       links: [
         { href: '#scenarios', label: 'Сценарии' },
+        { href: '#system', label: 'Система линейки' },
         { href: '#pricing', label: 'Цены' },
         { href: '#cases', label: 'Кейсы' },
         { href: '#process', label: 'Процесс' },
@@ -349,6 +408,8 @@ const footer = {
       links: [
         { href: '/', label: 'Главная' },
         { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/identity/', label: 'Фирменный стиль' },
+        { href: '/websites/', label: 'Сайты' },
         { href: '/presentations/', label: 'Презентации' },
         { href: '/car-wrap/', label: 'Оклейка авто' },
         { href: '/blog/', label: 'Мысли' },
@@ -366,6 +427,7 @@ const caseMetaBySlug: Record<string, string> = {
   'labels-green-power-paste': '5 паст · лента 100×40 мм',
 };
 
+const featuredPackagingSlugs = ['labels-green-power-oil', 'labels-green-power-juice', 'brand-micking'];
 const packagingCases = (await getCollection('cases', ({ data }) => !data.draft))
   .filter((entry) => directionByCategory[entry.data.category] === 'packaging')
   .filter((entry) => Boolean(entry.data.gallery))
@@ -380,6 +442,11 @@ const packagingCases = (await getCollection('cases', ({ data }) => !data.draft))
       coverAlt: c.gallery.cover.alt,
     };
   });
+
+// На странице три кейса — как и на других услугах; в схему уходят все.
+const packagingFeatured = featuredPackagingSlugs
+  .map((slug) => packagingCases.find((item) => item.slug === slug))
+  .filter((item): item is (typeof packagingCases)[number] => Boolean(item));
 
 const serviceLd = {
   '@context': 'https://schema.org',
@@ -431,10 +498,12 @@ const ldPortfolioCases = {
 ---
 
 <BaseLayout
-  title="Дизайн упаковки и этикеток — от концепции до файлов для печати · Kovtun.studio"
-  description="Дизайн этикеток, коробок, банок и канистр для производств: система линейки на десятки SKU, обязательная маркировка по ТР ТС, файлы для типографии. Экспресс-аудит за 48 часов."
+  title="Дизайн упаковки и этикеток · Kovtun.studio"
+  description="Этикетки, коробки, банки и канистры: система линейки на десятки SKU, маркировка по ТР ТС, файлы для типографии. Экспресс-аудит за 48 часов от 15 000 ₽."
   keywords="дизайн упаковки, разработка упаковки, дизайн этикетки, упаковка линейки, редизайн упаковки, этикетка под печать, Владивосток"
   canonicalPath="/packaging/"
+  ogImage="/og-packaging.jpg"
+  ogImageAlt="Линейка соков Green Power: девятнадцать бутылок с этикетками в цвет сока"
   ogTitle="Дизайн упаковки и этикеток — от концепции до печати"
   ogDescription="Система линейки на десятки SKU, маркировка по ТР ТС, файлы для типографии. Экспресс-аудит упаковки за 48 часов."
   structuredData={[serviceLd, faqLd, ldPortfolioCases]}
@@ -474,6 +543,37 @@ const ldPortfolioCases = {
     <div class="approach-wrap">
       <WhatGrid {...approach} />
     </div>
+
+    <section class="section section-tight" id="system">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2 set:html={lineSystem.title}></h2>
+          </div>
+          <p class="aside">{lineSystem.aside}</p>
+        </div>
+
+        <div class="layer-grid">
+          {lineSystem.layers.map((layer) => (
+            <article class="layer-card">
+              <div class="layer-card__top">
+                <span class="layer-num">{layer.num}</span>
+                <span class="layer-kicker">{layer.kicker}</span>
+              </div>
+              <h3>{layer.title}</h3>
+              <p>{layer.text}</p>
+              <div class="layer-card__links">
+                {layer.links.map((link) => (
+                  <a href={`/cases/${link.slug}/`}>{link.label} <span aria-hidden="true">→</span></a>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <p class="layer-note">{lineSystem.note}</p>
+      </div>
+    </section>
 
     <section class="section presentations-pricing" id="pricing">
       <div class="container-wide">
@@ -528,7 +628,7 @@ const ldPortfolioCases = {
         </p>
         <p class="rate-note">
           К упаковке часто добавляются <a href="/presentations/">каталог или презентация для дилеров</a>
-          (от 40 000 ₽), лендинг продукта и POSM-материалы — включаю их в общую смету проекта.
+          (от 40 000 ₽), <a href="/websites/">лендинг продукта</a> и POSM-материалы — включаю их в общую смету проекта.
         </p>
       </div>
     </section>
@@ -546,11 +646,13 @@ const ldPortfolioCases = {
         </div>
 
         <div class="pcase-grid pcase-grid--three">
-          {packagingCases.map((item, i) => (
+          {packagingFeatured.map((item, i) => (
             <a class="pcase" href={`/cases/${item.slug}/`}>
               <span class="pcase__media">
                 <img
                   src={item.coverSrc}
+                  srcset={coverSrcset(item.coverSrc)}
+                  sizes={coverSizes}
                   alt={item.coverAlt}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchpriority={i === 0 ? 'high' : undefined}
@@ -575,6 +677,8 @@ const ldPortfolioCases = {
         </div>
       </div>
     </section>
+
+    <ReturningClients variant="compact" />
 
     <ProcessSteps {...process} />
 
@@ -664,104 +768,85 @@ const ldPortfolioCases = {
     }
   }
 
-  /* Широкая карточка экспресс-аудита над пакетами. Собрана в стилистике
-     package-card, но лежит горизонтально: состав слева, цена и кнопка справа. */
-  .audit-card {
+  /* Три слоя линейки: постоянное ядро, переменные, масштабирование.
+     Карточки несут ссылку на кейс — утверждение о системе должно быть
+     проверяемым, как и в блоке правил на /identity/. */
+  .layer-grid {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 32px;
-    align-items: start;
-    padding: 34px 32px;
-    margin-bottom: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .layer-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px 26px;
     background: var(--bg-2);
     border-top: 3px solid var(--ks-red);
   }
 
-  .audit-card__badge {
-    padding: 6px 12px;
-    background: var(--ks-red);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    white-space: nowrap;
+  .layer-card__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
-  .audit-card__body h3 {
-    margin: 0 0 8px;
-    font-size: 22px;
+  .layer-num {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--ks-red);
+  }
+
+  .layer-kicker {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .layer-card h3 {
+    margin: 0;
+    font-size: 20px;
     line-height: 1.25;
   }
 
-  .audit-card__body p {
-    margin: 0 0 16px;
-    color: var(--fg-3);
-  }
-
-  .audit-card__body ul {
+  .layer-card p {
     margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 24px;
-  }
-
-  .audit-card__body li {
-    position: relative;
-    padding-left: 18px;
-    font-size: 14px;
-    line-height: 1.45;
-  }
-
-  .audit-card__body li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: .55em;
-    width: 8px;
-    height: 2px;
-    background: var(--ks-red);
-  }
-
-  .audit-card__offer {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-start;
-    text-align: left;
-    min-width: 220px;
-  }
-
-  .audit-card__offer strong {
-    font-size: 26px;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-
-  /* Только подпись под ценой: без «>» правило красило и стрелку
-     внутри кнопки — она сливалась с красным фоном. */
-  .audit-card__offer > span {
-    font-size: 13px;
     color: var(--fg-3);
+    font-size: 15px;
+    line-height: 1.55;
   }
 
-  .audit-card__offer .btn {
-    margin-top: 12px;
+  .layer-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .layer-card__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .layer-note {
+    margin: 20px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-1);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg-3);
   }
 
   @media (max-width: 900px) {
-    .audit-card {
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    .audit-card__badge {
-      justify-self: start;
-    }
-
-    .audit-card__body ul {
+    .layer-grid {
       grid-template-columns: 1fr;
     }
   }

@@ -1008,7 +1008,7 @@ body.lightbox-locked { overflow: hidden; }
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #fff;
-  font: 700 10px/1 var(--font-display);
+  font: 700 11px/1 var(--font-display);
   letter-spacing: 0.16em; text-transform: uppercase;
   padding: 8px 12px; border-radius: var(--r-pill);
 }
@@ -1044,7 +1044,7 @@ body.lightbox-locked { overflow: hidden; }
   color: var(--fg-3);
 }
 .tier .tier-badge {
-  font: 700 10px/1 var(--font-display);
+  font: 700 11px/1 var(--font-display);
   letter-spacing: 0.16em; text-transform: uppercase;
   background: var(--ks-red); color: #fff;
   padding: 6px 10px; border-radius: var(--r-pill);
@@ -1142,6 +1142,9 @@ body.lightbox-locked { overflow: hidden; }
 }
 @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .steps { grid-template-columns: 1fr; } }
+/* Пять шагов: в четырехколоночной сетке пятый висел один во втором ряду. */
+@media (min-width: 1000px) { .steps--five { grid-template-columns: repeat(5, 1fr); gap: 24px; } }
+@media (min-width: 601px) and (max-width: 999px) { .steps--five { grid-template-columns: 1fr; } }
 .step {
   padding-top: 28px;
   border-top: 2px solid var(--ks-red);
@@ -1429,7 +1432,7 @@ body.theme-dark .k-form { background: #1c1c1b; color: #fff; }
   position: absolute; top: -7px; left: 12px;
   background: var(--ks-white);
   padding: 0 7px;
-  font: 700 10px/1 var(--font-display);
+  font: 700 11px/1 var(--font-display);
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--fg-3);
   pointer-events: none;
@@ -1444,6 +1447,10 @@ body.theme-dark .k-form .field > .lbl { background: #1c1c1b; }
   font: 500 12px/1.3 var(--font-body); color: var(--ks-red);
   margin-top: 6px;
 }
+
+/* Чекбокс согласия: 24px и вся строка подписи как зона нажатия. */
+.legal-consent input[type="checkbox"] { width: 24px; height: 24px; flex-shrink: 0; accent-color: var(--ks-red); cursor: pointer; }
+.legal-consent label { cursor: pointer; }
 
 /* Имя + марка авто в одну строку — форма короче, порядок заполнения нагляднее */
 .k-form .field-row {

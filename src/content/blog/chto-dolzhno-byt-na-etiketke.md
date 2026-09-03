@@ -10,6 +10,8 @@ pubDate: 2026-08-17
 section: Упаковка
 serviceLink: /packaging/
 serviceLabel: Дизайн упаковки и этикеток
+caseLink: /cases/labels-green-power-oil/
+caseLabel: "Кейс: этикетки масла Green Power"
 faq:
   - q: Что обязательно должно быть на этикетке продуктов?
     a: >-

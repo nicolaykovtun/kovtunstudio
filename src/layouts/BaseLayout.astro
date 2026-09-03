@@ -74,11 +74,13 @@ const ldBusiness = {
   "areaServed": { "@type": "Country", "name": "Россия" },
   "founder": {
     "@type": "Person",
+    "@id": `${site.url}/#person`,
+    "url": `${site.url}/`,
     "name": site.author.name,
     "jobTitle": site.author.jobTitle,
     "description": site.founderSection.personDescription,
     "knowsAbout": site.founderSection.knowsAbout,
-    "sameAs": [site.contact.telegram, site.contact.max]
+    "sameAs": [site.contact.telegram, site.contact.max, "https://www.pinterest.com/kovtunstudio/"]
   },
   "contactPoint": {
     "@type": "ContactPoint",

@@ -15,7 +15,7 @@ import {
   type CaseStory,
   type EditorialCaseConfig,
 } from '../../data/case-page-config';
-import { caseOrderIndex } from '../../data/case-catalog';
+import { caseOrderIndex, directionByCategory, servicePageByDirection } from '../../data/case-catalog';
 
 export async function getStaticPaths() {
   const legacyCases = yaml.load(
@@ -246,6 +246,16 @@ const normalized =
 
 const c = normalized.content;
 const baseConfig = normalized.config;
+
+// Страница услуги этого кейса — для крошек, схемы и CTA.
+const directionKey =
+  kind === 'legacy'
+    ? rawCase.direction ?? directionByCategory[rawCase.category]
+    : directionByCategory[rawCase.category];
+const service = servicePageByDirection[directionKey];
+if (!service) {
+  throw new Error(`Кейс ${c.slug}: направление «${directionKey}» не привязано к странице услуги`);
+}
 if (!baseConfig) {
   throw new Error(`Кейс ${c.slug}: нет конфигурации единого шаблона`);
 }
@@ -371,7 +381,11 @@ const footer = {
       links: [
         { href: '/', label: 'Главная' },
         { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/packaging/', label: 'Упаковка' },
+        { href: '/identity/', label: 'Фирменный стиль' },
+        { href: '/websites/', label: 'Сайты' },
         { href: '/presentations/', label: 'Презентации' },
+        { href: '/car-wrap/', label: 'Оклейка авто' },
         { href: '/blog/', label: 'Мысли' },
       ],
     },
@@ -391,6 +405,8 @@ const structuredData = [
     inLanguage: 'ru-RU',
     image: lightboxItems.map((item) => `${site.url}${item.src}`),
     creator: { '@type': 'Person', name: 'Николай Ковтун', url: site.url },
+    genre: c.categoryLabel,
+    isPartOf: { '@type': 'WebPage', '@id': `${site.url}${service.href}`, name: service.label },
     about: {
       '@type': 'Organization',
       name: c.client,
@@ -405,10 +421,23 @@ const structuredData = [
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Главная', item: `${site.url}/` },
       { '@type': 'ListItem', position: 2, name: 'Портфолио', item: `${site.url}/portfolio/` },
-      { '@type': 'ListItem', position: 3, name: c.shortTitle, item: `${site.url}${casePath}` },
+      { '@type': 'ListItem', position: 3, name: service.label, item: `${site.url}${service.href}` },
+      { '@type': 'ListItem', position: 4, name: c.shortTitle, item: `${site.url}${casePath}` },
     ],
   },
 ];
+
+// Короткий title для выдачи: заголовок-тезис остается в H1, в title идет
+// название кейса. Описание режем до размера сниппета по границе предложения.
+const seoTitle = `Кейс: ${c.shortTitle} · Kovtun.studio`;
+const trimDescription = (text: string, max = 158) => {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const sentenceEnd = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '));
+  if (sentenceEnd >= 100) return cut.slice(0, sentenceEnd + 1);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:]$/, '') + '…';
+};
+const seoDescription = trimDescription(c.seoDescription);
 
 const cta = config.cta ?? {
   title: 'Нужен такой же проект?',
@@ -418,12 +447,12 @@ const cta = config.cta ?? {
 ---
 
 <BaseLayout
-  title={`${c.title} · Kovtun.studio`}
-  description={c.seoDescription}
+  title={seoTitle}
+  description={seoDescription}
   keywords={config.keywords ?? `${c.categoryLabel}, ${c.client}, дизайн, Николай Ковтун`}
   canonicalPath={casePath}
   ogTitle={c.title}
-  ogDescription={c.seoDescription}
+  ogDescription={seoDescription}
   ogImage={config.cover.src}
   ogImageAlt={config.cover.alt}
   ogType="article"
@@ -445,6 +474,7 @@ const cta = config.cta ?? {
           <ol>
             <li><a href="/">Главная</a></li>
             <li><a href="/portfolio/">Портфолио</a></li>
+            <li><a href={service.href}>{service.label}</a></li>
             <li aria-current="page">{c.shortTitle}</li>
           </ol>
         </div>
@@ -481,6 +511,7 @@ const cta = config.cta ?? {
       {sectionRecords.map((section) => (
         <>
           {section.id === 'task' && (
+            <>
             <section class="case-section" id="task">
               <div class="container-wide">
                 <div class="case-section__head">
@@ -503,6 +534,18 @@ const cta = config.cta ?? {
                 </div>
               </div>
             </section>
+            <div class="case-midcta">
+              <div class="container-wide case-midcta__inner">
+                <p>Похожая задача? Напишите в Telegram, отвечу за пару часов.</p>
+                <div class="case-midcta__links">
+                  <a class="btn btn-dark" href={site.contact.telegram} target="_blank" rel="noopener">
+                    Написать в Telegram <span class="arrow" aria-hidden="true">→</span>
+                  </a>
+                  <a class="case-midcta__service" href={service.href}>{service.cta} →</a>
+                </div>
+              </div>
+            </div>
+            </>
           )}
 
           {section.story && (
@@ -689,9 +732,12 @@ const cta = config.cta ?? {
           <div class="portfolio-cta">
             <h2>{cta.title}</h2>
             <p>{cta.text}</p>
-            <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">
-              {cta.button} <span class="arrow" aria-hidden="true">→</span>
-            </a>
+            <div class="portfolio-cta__actions">
+              <a class="btn btn-primary btn-lg" href={site.contact.telegram} target="_blank" rel="noopener">
+                {cta.button} <span class="arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="btn btn-ghost btn-lg" href={service.href}>{service.cta}</a>
+            </div>
           </div>
         </div>
       </section>

@@ -1,0 +1,236 @@
+---
+/**
+ * Клиенты, которые вернулись за следующим проектом.
+ *
+ * Вместо отзывов, которых у студии нет, показываем цепочки заказов одного
+ * клиента: стиль → этикетки → сайт → оклейка. Все считается из кейсов —
+ * редакционных (cases/) и архивных (cases.yaml) — по имени клиента, поэтому
+ * после публикации нового кейса цепочка достраивается сама. Никаких цифр
+ * руками: заголовок, подпись и порядок шагов выводятся из данных.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
+import { caseOrderIndex } from '../data/case-catalog';
+import { editorialCaseConfigs } from '../data/case-page-config';
+
+interface Props {
+  /** full — блок с заголовком-тезисом для главной; compact — полоса под ценами на странице услуги. */
+  variant?: 'full' | 'compact';
+}
+const { variant = 'full' } = Astro.props;
+
+// Подпись шага в цепочке. Короткое название кейса включает имя клиента
+// («Этикетки масла Green Power»), в цепочке имя лишнее — оно в заголовке.
+const stepLabelBySlug: Record<string, string> = {
+  'identity-green-power': 'Фирменный стиль',
+  'labels-green-power-oil': 'Этикетки масла',
+  'labels-green-power-juice': 'Этикетки соков',
+  'labels-green-power-paste': 'Этикетки пасты',
+  'website-green-power': 'Сайт',
+  'green-power': 'Оклейка автопарка',
+  'identity-trubovarnya': 'Фирменный стиль',
+  'website-trubovarnya': 'Сайт',
+  'identity-sila-car': 'Фирменный стиль',
+  'sila-car': 'Оклейка авто',
+};
+
+type Step = { slug: string; label: string; year?: number; order: number };
+
+const normalize = (name: string) => name.replace(/[«»"]/g, '').trim().toLowerCase();
+
+const dataDir = path.resolve('./src/data');
+const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 'utf8')) as any[];
+const editorialEntries = (await getCollection('cases', ({ data }) => !data.draft))
+  .filter((entry) => Boolean(entry.data.gallery) || Boolean(editorialCaseConfigs[entry.id]));
+
+const byClient = new Map<string, { client: string; steps: Step[] }>();
+const push = (client: string, step: Step) => {
+  const key = normalize(client);
+  if (!byClient.has(key)) byClient.set(key, { client, steps: [] });
+  byClient.get(key)!.steps.push(step);
+};
+
+for (const entry of editorialEntries) {
+  const c = entry.data;
+  push(c.client, {
+    slug: c.slug,
+    label: stepLabelBySlug[c.slug] ?? c.categoryLabel,
+    year: c.year ? Number(c.year) : undefined,
+    order: caseOrderIndex(c.slug),
+  });
+}
+for (const c of legacyCases) {
+  push(c.name, {
+    slug: c.slug,
+    label: stepLabelBySlug[c.slug] ?? 'Оклейка авто',
+    year: c.year ? Number(c.year) : undefined,
+    order: caseOrderIndex(c.slug),
+  });
+}
+
+const totalCases = editorialEntries.length + legacyCases.length;
+
+const chains = [...byClient.values()]
+  .filter((chain) => chain.steps.length >= 2)
+  .map((chain) => ({
+    ...chain,
+    steps: chain.steps.sort((a, b) => (a.year ?? 9999) - (b.year ?? 9999) || a.order - b.order),
+  }))
+  .sort((a, b) => b.steps.length - a.steps.length);
+
+const returningCases = chains.reduce((sum, chain) => sum + chain.steps.length, 0);
+
+const plural = (n: number, one: string, few: string, many: string) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
+const numeral = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять', 'десять'];
+const ordinal = ['', '', 'второй', 'третий', 'четвертый', 'пятый', 'шестой'];
+
+const top = chains[0];
+const topCount = top?.steps.length ?? 0;
+const topWord = numeral[topCount] ?? String(topCount);
+const title = top
+  ? `${topWord[0].toUpperCase()}${topWord.slice(1)} ${plural(topCount, 'проект', 'проекта', 'проектов')}<br>для одного клиента`
+  : '';
+
+const ratio = returningCases ? Math.round(totalCases / returningCases) : 0;
+const aside =
+  ratio >= 2 && ratio <= 6
+    ? `Каждый ${ordinal[ratio]} кейс в портфолио — следующий проект для прежнего клиента. Логотип заказали первым, потом доверили этикетки, сайт и машины.`
+    : `${returningCases} из ${totalCases} кейсов в портфолио — следующие проекты для прежних клиентов.`;
+
+const yearsOf = (steps: Step[]) => {
+  const years = steps.map((s) => s.year).filter((y): y is number => Boolean(y));
+  if (!years.length) return '';
+  const min = Math.min(...years);
+  const max = Math.max(...years);
+  return min === max ? String(min) : `${min}–${max}`;
+};
+---
+{chains.length > 0 && (
+  <section class:list={['section', 'returning', { 'returning--compact': variant === 'compact' }]} id="returning">
+    <div class="container-wide">
+      <div class="section-head">
+        <div>
+          <h2 set:html={title}></h2>
+        </div>
+        <p class="aside">{aside}</p>
+      </div>
+
+      <div class="chains">
+        {chains.map((chain, index) => (
+          <article class:list={['chain', { 'chain--lead': index === 0 }]}>
+            <header class="chain__head">
+              <strong>{chain.client}</strong>
+              <span>{`${chain.steps.length} ${plural(chain.steps.length, 'проект', 'проекта', 'проектов')}${yearsOf(chain.steps) ? ` · ${yearsOf(chain.steps)}` : ''}`}</span>
+            </header>
+            <ol class="chain__steps">
+              {chain.steps.map((step) => (
+                <li>
+                  <a href={`/cases/${step.slug}/`}>
+                    <span class="chain__label">{step.label}</span>
+                    {step.year && <small>{step.year}</small>}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .chains {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .chain {
+    padding: 26px 26px 22px;
+    background: var(--bg-2);
+    border-top: 3px solid var(--line-2);
+  }
+  .chain--lead {
+    grid-column: 1 / -1;
+    border-top-color: var(--ks-red);
+  }
+  .chain__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+    margin-bottom: 18px;
+  }
+  .chain__head strong {
+    font: 700 22px/1.2 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--fg-1);
+  }
+  .chain--lead .chain__head strong { font-size: 26px; }
+  .chain__head span {
+    font: 600 12px/1.4 var(--font-mono);
+    letter-spacing: .05em;
+    color: var(--fg-3);
+    white-space: nowrap;
+  }
+
+  /* Шаги цепочки: стрелка между пунктами — сама история заказов. */
+  .chain__steps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 8px 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+  .chain__steps li { display: flex; align-items: center; }
+  .chain__steps li + li::before {
+    content: '→';
+    margin: 0 12px;
+    color: var(--ks-red);
+    font: 400 20px/1 var(--font-display);
+  }
+  .chain__steps a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 2px;
+    text-decoration: none;
+    color: var(--fg-1);
+    font: 600 15px/1.3 var(--font-display);
+    border-bottom: 1px solid var(--line-2);
+    transition: color var(--dur-base), border-color var(--dur-base);
+  }
+  .chain__steps a:hover { color: var(--ks-red); border-color: var(--ks-red); }
+  .chain__steps small {
+    font: 500 12px/1 var(--font-mono);
+    color: var(--fg-3);
+  }
+
+  /* Компактный вариант на странице услуги: та же раскладка, меньше воздуха.
+     Ведущая цепочка из шести шагов в узкой колонке ломалась на три строки,
+     поэтому и здесь она во всю ширину. */
+  .returning--compact .chain { padding: 22px 22px 18px; }
+  .returning--compact .chain__head strong,
+  .returning--compact .chain--lead .chain__head strong { font-size: 20px; }
+  .returning--compact .chain__steps a { font-size: 14px; }
+
+  @media (max-width: 900px) {
+    .chains,
+    .returning--compact .chains { grid-template-columns: 1fr; }
+    .chain__steps li + li::before { margin: 0 10px; }
+  }
+</style>

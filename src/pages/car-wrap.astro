@@ -11,7 +11,9 @@ import WhatGrid from '../components/WhatGrid.astro';
 import Pricing from '../components/Pricing.astro';
 import { caseOrderIndex } from '../data/case-catalog';
 import { servicePageNav } from '../lib/site-nav';
+import { coverSrcset, coverSizes } from '../lib/covers';
 import ProcessSteps from '../components/ProcessSteps.astro';
+import ReturningClients from '../components/ReturningClients.astro';
 import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
@@ -26,8 +28,8 @@ const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 
 // Локальная навигация страницы (как у /presentations/) — этот лендинг
 // больше не главная, поэтому не использует общий site.nav.
 const nav = servicePageNav(site, [
-  { href: '#what', label: 'Что делаю' },
   { href: '#pricing', label: 'Цены' },
+  { href: '#handoff', label: 'Файлы' },
   { href: '#process', label: 'Процесс' },
   { href: '#faq', label: 'FAQ' },
 ]);
@@ -38,8 +40,8 @@ const footer = {
     {
       title: 'Страница',
       links: [
-        { href: '#what', label: 'Что делаю' },
         { href: '#pricing', label: 'Цены' },
+        { href: '#handoff', label: 'Передача файлов' },
         { href: '#process', label: 'Процесс' },
         { href: '#faq', label: 'FAQ' },
       ],
@@ -50,6 +52,8 @@ const footer = {
       links: [
         { href: '/', label: 'Главная' },
         { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/identity/', label: 'Фирменный стиль' },
+        { href: '/websites/', label: 'Сайты' },
         { href: '/presentations/', label: 'Презентации' },
         { href: '/packaging/', label: 'Упаковка' },
         { href: '/blog/', label: 'Мысли' },
@@ -73,6 +77,92 @@ const wrapCases = legacyCases
     coverAlt:
       c.images.find((image: any) => image.id === c.cover)?.caption ?? c.title,
   }));
+
+// Граница дизайна и производства. В FAQ ответ «делаю только дизайн» есть,
+// но его легко пропустить, а поисковый запрос «оклейка авто» смешивает
+// дизайн, печать и монтаж. Схема делает ограничение видимым и превращает
+// его в преимущество: макет не привязан к одному подрядчику.
+const handoff = {
+  title: 'Где заканчивается дизайн<br>и начинается производство',
+  aside:
+    'Я делаю макет. Печатает и клеит подрядчик, которого выбираете вы. ' +
+    'Ниже — как работа переходит из рук в руки и что именно получает печатник.',
+  chain: [
+    {
+      num: '01',
+      title: 'Данные и замеры',
+      text: 'От вас или от подрядчика: марка и модель, развертка кузова или габариты, требования конкретного производства к файлам.',
+      who: 'Вы или подрядчик',
+    },
+    {
+      num: '02',
+      title: 'Дизайн и согласование',
+      text: 'Концепция, компоновка по сторонам кузова, правки внутри выбранного направления.',
+      who: 'Я',
+    },
+    {
+      num: '03',
+      title: 'Производственные файлы',
+      text: 'Сборка макета под печать: развертка по сторонам авто, масштаб, разрешение под плоттер, припуски и отбивки.',
+      who: 'Я',
+    },
+    {
+      num: '04',
+      title: 'Проверка требований печати',
+      text: 'Сверяю формат и техтребования с вашим печатником до тиража. Если работаю на стороне агентства или студии оклейки — заранее согласуем ответственного за финальную проверку.',
+      who: 'Я и печатник',
+    },
+    {
+      num: '05',
+      title: 'Печать и монтаж',
+      text: 'Делает выбранный вами подрядчик. Подсказать проверенных мастеров во Владивостоке могу, но за качество чужого монтажа не отвечаю.',
+      who: 'Подрядчик',
+    },
+  ],
+  kit: {
+    title: 'Что получает печатник',
+    items: [
+      { k: 'Стороны', v: 'Развертка по сторонам автомобиля' },
+      { k: 'Форматы', v: 'AI, PDF или TIFF — как нужно производству' },
+      { k: 'Цвет', v: 'CMYK' },
+      { k: 'Размер', v: 'Масштаб и разрешение под плоттер' },
+      { k: 'Поля', v: 'Припуски и отбивки' },
+      { k: 'Отдаю', v: 'Исходник и печатные файлы' },
+    ],
+    note:
+      'Универсального файла «на любую машину» не бывает: без развертки или ' +
+      'требований конкретного производства макет придется пересобирать. ' +
+      'Поэтому замеры и требования печатника нужны до дизайна.',
+  },
+};
+
+// Вторая цифра в блоке о дизайнере считается по кейсам, а не пишется руками.
+// В site.yaml стояло «28 работ» — это число ракурсов в галерее, а не работ:
+// одна машина снята с нескольких сторон.
+const plural = (n: number, one: string, few: string, many: string) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
+const wrapFounder = {
+  ...site.founderSection,
+  stats: [
+    site.founderSection.stats[0],
+    {
+      num: String(wrapCases.length),
+      label: `${plural(wrapCases.length, 'Кейс', 'Кейса', 'Кейсов')} оклейки в портфолио`,
+    },
+  ],
+};
+
+// На странице три кейса, как на остальных услугах; в схему — все пять.
+const featuredWrapSlugs = ['green-power', 'japanhouse', 'primgril'];
+const wrapFeatured = featuredWrapSlugs
+  .map((slug) => wrapCases.find((item) => item.slug === slug))
+  .filter((item): item is (typeof wrapCases)[number] => Boolean(item));
 
 // JSON-LD этой услуги — раньше жил в BaseLayout и подключался только на
 // главной; теперь страница сама отвечает за свою разметку (см. правку
@@ -127,8 +217,8 @@ const ldPortfolioCases = {
 };
 ---
 <BaseLayout
-  title="Дизайн оклейки авто во Владивостоке — макеты для коммерческого транспорта · Kovtun.studio"
-  description="Разрабатываю макеты оклейки для легковых, фургонов и коммерческого транспорта. От 10 000 ₽ — простой брендинг до 25 000 ₽ — имиджевой рекламной концепции. Файлы готовы под печать. Заявка в Telegram."
+  title="Дизайн оклейки авто от 10 000 ₽ · Kovtun.studio"
+  description="Макеты оклейки коммерческого транспорта от 10 000 ₽: брендинг, реклама, имиджевая концепция. Файлы под печать AI, PDF, TIFF. Владивосток, работа по России."
   keywords="дизайн оклейки авто, макет оклейки, брендинг авто, реклама на автомобиле, оклейка коммерческого транспорта, дизайн под пленку, Владивосток, Kovtun.studio"
   canonicalPath="/car-wrap/"
   ogTitle="Дизайн оклейки авто — макеты для коммерческого транспорта"
@@ -141,8 +231,42 @@ const ldPortfolioCases = {
   <main id="main-content">
     <Hero {...site.hero} />
     <Marquee {...site.marquee} />
-    <WhatGrid {...site.whatDo} />
     <Pricing {...site.pricing} tiers={tiers} />
+    <section class="section section-tight" id="handoff">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2 set:html={handoff.title}></h2>
+          </div>
+          <p class="aside">{handoff.aside}</p>
+        </div>
+
+        <ol class="chain">
+          {handoff.chain.map((step) => (
+            <li class="chain-step">
+              <span class="chain-num">{step.num}</span>
+              <span class="chain-who">{step.who}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))}
+        </ol>
+
+        <article class="kit-card">
+          <h3>{handoff.kit.title}</h3>
+          <dl class="kit-list">
+            {handoff.kit.items.map((item) => (
+              <div class="kit-row">
+                <dt>{item.k}</dt>
+                <dd>{item.v}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="kit-note">{handoff.kit.note}</p>
+        </article>
+      </div>
+    </section>
+
     <section class="section section-tight" id="cases">
       <div class="container-wide">
         <div class="section-head">
@@ -153,11 +277,13 @@ const ldPortfolioCases = {
         </div>
 
         <div class="pcase-grid pcase-grid--three">
-          {wrapCases.map((item, i) => (
+          {wrapFeatured.map((item, i) => (
             <a class="pcase" href={`/cases/${item.slug}/`}>
               <span class="pcase__media">
                 <img
                   src={item.coverSrc}
+                  srcset={coverSrcset(item.coverSrc)}
+                  sizes={coverSizes}
                   alt={item.coverAlt}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchpriority={i === 0 ? 'high' : undefined}
@@ -182,9 +308,10 @@ const ldPortfolioCases = {
         </div>
       </div>
     </section>
+    <ReturningClients variant="compact" />
     <ProcessSteps {...site.process} />
-    <FounderSection data={site.founderSection} />
-    <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={faq} />
+    <FounderSection data={wrapFounder} />
+    <FAQ {...site.faqSection} telegramUrl={site.contact.telegram} items={faq.map((item: any) => ({ q: item.q, a: item.aHtml ?? item.a }))} />
     <ContactForm data={site.cta} telegramUrl={site.contact.telegram} telegramHandle={site.contact.telegramHandle} maxUrl={site.contact.max} maxHandle={site.contact.maxHandle} briefUrl="/tools/brief-car-wrap.html" briefLabel="Заполнить бриф на оклейку" goalName="car_wrap_lead_submit" messageIntro="Здравствуйте! Хочу обсудить дизайн оклейки авто." />
   </main>
   <Footer {...footer} />
@@ -235,3 +362,115 @@ const ldPortfolioCases = {
     })();
   </script>
 </BaseLayout>
+
+<style>
+  /* Цепочка передачи работы: пять шагов с пометкой, чья это зона.
+     Список, а не карточки — важен порядок, а не сравнение. */
+  .chain {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .chain-step {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 24px 20px;
+    background: var(--bg-2);
+    border-top: 3px solid var(--ks-red);
+  }
+
+  .chain-num {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--ks-red);
+  }
+
+  .chain-who {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .chain-step h3 {
+    margin: 4px 0 0;
+    font-size: 17px;
+    line-height: 1.25;
+  }
+
+  .chain-step p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-3);
+  }
+
+  /* Комплект сдачи: пары «параметр — значение» в две колонки. */
+  .kit-card {
+    padding: 30px 28px;
+    background: var(--bg-2);
+    border-top: 3px solid var(--line-1);
+  }
+
+  .kit-card h3 {
+    margin: 0 0 16px;
+    font-size: 22px;
+    line-height: 1.25;
+  }
+
+  .kit-list {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 32px;
+  }
+
+  .kit-row {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-1);
+  }
+
+  .kit-row dt {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .kit-row dd {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .kit-note {
+    margin: 18px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--fg-3);
+  }
+
+  @media (max-width: 1100px) {
+    .chain {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .chain,
+    .kit-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -18,8 +18,10 @@ import { editorialCaseConfigs } from '../data/case-page-config';
 import {
   caseOrderIndex,
   directionByCategory,
+  servicePageByDirection,
   sphereBySegment,
 } from '../data/case-catalog';
+import { coverSrcset, coverSizes } from '../lib/covers';
 
 // пути относительно корня проекта (CWD при сборке)
 const site = yaml.load(fs.readFileSync('./src/data/site.yaml', 'utf8')) as any;
@@ -139,7 +141,7 @@ const lbItems = gallery.map(g => ({
   label: g.alt,
 }));
 
-const seoTitle = `Портфолио — графический дизайн: оклейка авто, айдентика, упаковка · Kovtun.studio`;
+const seoTitle = 'Портфолио: кейсы дизайна для бизнеса · Kovtun.studio';
 const seoDescription =
   `Портфолио Kovtun.studio: ${cases.length} подробных кейсов по сайтам, презентациям, брошюрам ` +
   `и оклейке авто. Задачи, решения, макеты и ${gallery.length} работ крупным планом.`;
@@ -183,7 +185,7 @@ const seoDescription =
         </div>
         <ol class="dir-list">
           {directions.map((d: any, i: number) => d.caseCount > 0 ? (
-            <li class="reveal" style={`--reveal-delay: ${i * 50}ms`}>
+            <li class="dir-item reveal" style={`--reveal-delay: ${i * 50}ms`}>
               <a class="dir-row" href="#cases" data-goto-direction={d.key}>
                 <span class="dr-num" aria-hidden="true">{d.num}</span>
                 <span class="dr-name">{d.label}</span>
@@ -192,6 +194,11 @@ const seoDescription =
                 </span>
                 <span class="dr-arrow" aria-hidden="true">↓</span>
               </a>
+              {servicePageByDirection[d.key] && (
+                <a class="dr-service" href={servicePageByDirection[d.key].href}>
+                  Цены и процесс <span aria-hidden="true">→</span>
+                </a>
+              )}
             </li>
           ) : (
             <li class="reveal" style={`--reveal-delay: ${i * 50}ms`}>
@@ -265,7 +272,7 @@ const seoDescription =
             >
               <span class="cr-num" aria-hidden="true">{pad(i + 1)}</span>
               <span class="cr-thumb">
-                <img src={c.coverSrc} alt="" loading={i < 3 ? 'eager' : 'lazy'} width="800" height="447" />
+                <img src={c.coverSrc} srcset={coverSrcset(c.coverSrc)} sizes={coverSizes} alt={c.name} loading={i < 3 ? 'eager' : 'lazy'} width="800" height="447" />
               </span>
               <span class="cr-body">
                 <span class="cr-name">{c.name}</span>
@@ -294,7 +301,7 @@ const seoDescription =
           </p>
         </div>
 
-        <div class="works-grid" id="works-grid">
+        <div class="works-grid is-collapsed" id="works-grid">
           {works.map((g, i) => (
             <button
               type="button"
@@ -325,6 +332,9 @@ const seoDescription =
           ))}
         </div>
         <p class="works-empty" id="works-empty" hidden>По этому фильтру работ пока нет.</p>
+        <div class="gallery-more" id="works-more-wrap">
+          <button type="button" class="btn btn-dark btn-lg" id="works-more">Показать все ракурсы <span class="arrow" aria-hidden="true">→</span></button>
+        </div>
       </div>
     </section>
 
@@ -363,6 +373,13 @@ const seoDescription =
       var tiles = document.querySelectorAll("#works-grid .work-tile");
       var casesEmpty = document.getElementById("cases-empty");
       var worksEmpty = document.getElementById("works-empty");
+      var worksMore = document.getElementById("works-more");
+      if (worksMore) {
+        worksMore.addEventListener("click", function () {
+          document.getElementById("works-grid").classList.remove("is-collapsed");
+          document.getElementById("works-more-wrap").hidden = true;
+        });
+      }
 
       function matches(el) {
         return (state.direction === "all" || el.dataset.direction === state.direction)
@@ -574,14 +591,37 @@ const seoDescription =
     border-top: 1px solid var(--line-1);
     counter-reset: none;
   }
+  /* Строка направления: слева фильтр по кейсам, справа ссылка на страницу
+     услуги. Две ссылки — два разных действия, поэтому они не вложены
+     друг в друга, а стоят рядом внутри одного пункта списка. */
+  .dir-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    border-bottom: 1px solid var(--line-1);
+  }
+  .dr-service {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 4px 0 28px;
+    font: 600 12px/1 var(--font-mono);
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+    text-decoration: none;
+    white-space: nowrap;
+    border-left: 1px solid var(--line-1);
+    transition: color var(--dur-base);
+  }
+  .dr-service:hover { color: var(--ks-red); }
   .dir-row {
     display: grid;
     grid-template-columns: 72px 1fr auto 40px;
     align-items: center;
     gap: 28px;
     padding: 26px 20px;
-    margin: 0 -20px;
-    border-bottom: 1px solid var(--line-1);
+    margin: 0 -20px 0 -20px;
+    border-bottom: 0;
     text-decoration: none;
     border-left: 0; border-right: 0;
     transition: background var(--dur-base) var(--ease-out);
@@ -625,6 +665,8 @@ const seoDescription =
   a.dir-row:hover .dr-arrow { transform: translateY(4px); color: var(--ks-red); }
 
   @media (max-width: 700px) {
+    .dir-item { grid-template-columns: 1fr; }
+    .dr-service { border-left: 0; min-height: 44px; padding: 0 0 8px 58px; }
     .dir-row { grid-template-columns: 44px 1fr auto; gap: 16px; padding: 20px 14px; margin: 0 -14px; }
     .dr-arrow { display: none; }
     .dr-count { font-size: 11px; }
@@ -770,6 +812,10 @@ const seoDescription =
     .filter-group--sphere { margin-left: 0; }
     .fg-select-wrap { min-width: 0; width: 100%; }
   }
+
+  /* Сетка ракурсов оклейки после списка кейсов повторяла те же пять машин
+     и удлиняла страницу вдвое; по умолчанию показываем восемь. */
+  .works-grid.is-collapsed .work-tile:nth-child(n + 9) { display: none; }
 
   /* ── Индекс кейсов ──────────────────────────────────────────────── */
   .case-index { border-top: 1px solid var(--line-1); }
@@ -931,5 +977,52 @@ const seoDescription =
     .p-hero { padding: 64px 0 56px; }
     .p-lede { margin-bottom: 44px; }
     .p-meta { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  }
+  /* Кейсы карточками, а не реестром: обложка во всю ширину, как на страницах
+     услуг. Список с миниатюрой 132px отдавал работам десятую часть строки. */
+  .case-index {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    border-top: 0;
+    padding-top: 8px;
+  }
+  .case-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 0 18px;
+    margin: 0;
+    border: 1px solid var(--line-1);
+    background: var(--bg-1);
+    transition: border-color var(--dur-base) var(--ease-out);
+  }
+  .case-row:hover { background: var(--bg-1); border-color: var(--case-row-accent, var(--ks-red)); }
+  .case-row.is-hidden { display: none; }
+  .cr-num {
+    position: absolute; top: 12px; left: 12px; z-index: 1;
+    padding: 6px 8px;
+    font-size: 11px;
+    color: #fff;
+    background: rgba(0, 0, 0, .5);
+  }
+  .case-row:hover .cr-num { color: #fff; }
+  .cr-thumb { width: 100%; aspect-ratio: 16 / 9; }
+  .cr-body { padding: 16px 18px 0; }
+  .cr-name { font-size: 20px; margin-bottom: 4px; }
+  .cr-tags {
+    flex-direction: row; align-items: center; justify-content: flex-start;
+    gap: 10px; padding: 12px 18px 0; white-space: normal;
+  }
+  .cr-arrow { display: none; }
+  @media (max-width: 900px) {
+    .case-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .case-row { grid-template-columns: none; gap: 0; padding: 0 0 16px; margin: 0; }
+    .cr-num, .cr-tags { display: flex; }
+    .cr-thumb { aspect-ratio: 16 / 9; }
+  }
+  @media (max-width: 560px) {
+    .case-index { grid-template-columns: 1fr; }
   }
 </style>

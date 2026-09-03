@@ -283,6 +283,21 @@
 .portfolio-cta { margin-top: 112px; padding: 56px; background: var(--ks-charcoal); color: #fff; }
 .portfolio-cta h2 { max-width: 15ch; margin: 0 0 24px; color: #fff; font: 780 clamp(34px, 5vw, 64px)/.98 var(--font-display); letter-spacing: -.04em; }
 .portfolio-cta p { max-width: 56ch; margin-bottom: 32px; color: rgba(255,255,255,.7); font-size: 18px; }
+/* Две кнопки в CTA кейса: заявка и страница услуги этого направления. */
+.portfolio-cta__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.portfolio-cta__actions .btn { white-space: normal; text-align: left; }
+/* Промежуточный призыв после блока решений: раньше единственный CTA стоял
+   в конце страницы на 1000–1500 слов и 25–45 картинок. */
+.case-midcta { padding: 0 0 48px; }
+.case-midcta__inner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 16px 24px; padding: 22px 24px;
+  background: var(--bg-2); border-left: 3px solid var(--ks-red);
+}
+.case-midcta p { margin: 0; font-size: 16px; font-weight: 600; color: var(--fg-1); }
+.case-midcta__links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
+.case-midcta__service { font-size: 14px; font-weight: 600; color: var(--fg-1); }
+.case-midcta__service:hover { color: var(--ks-red); }
 
 .case-hero { padding: 56px 0 80px; }
 .case-hero__top { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 64px; align-items: end; }
@@ -699,6 +714,8 @@
   .portfolio-card:nth-child(5n + 2) { grid-column: 1 / -1; }
   .portfolio-card__placeholder strong { font-size: 48px; }
   .portfolio-cta { margin-top: 72px; padding: 32px 24px; }
+  .portfolio-cta__actions { flex-direction: column; align-items: stretch; }
+  .portfolio-cta__actions .btn { width: 100%; justify-content: center; text-align: center; }
   .case-hero { padding: 40px 0 56px; }
   .case-facts { grid-template-columns: 1fr; gap: 18px; margin-top: 48px; }
   .case-fact { display: flex; align-items: baseline; gap: 12px; }

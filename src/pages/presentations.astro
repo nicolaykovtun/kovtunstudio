@@ -8,12 +8,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Marquee from '../components/Marquee.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
+import ReturningClients from '../components/ReturningClients.astro';
 import FounderSection from '../components/FounderSection.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
 import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
 import { servicePageNav } from '../lib/site-nav';
+import { coverSrcset, coverSizes } from '../lib/covers';
 import { editorialCaseConfigs } from '../data/case-page-config';
 import '../styles/presentations.css';
 
@@ -22,6 +24,7 @@ const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8'))
 
 const nav = servicePageNav(site, [
   { href: '#scenarios', label: 'Сценарии' },
+  { href: '#slide', label: 'Разбор слайда' },
   { href: '#pricing', label: 'Цены' },
   { href: '#calculator', label: 'Калькулятор' },
   { href: '#portfolio', label: 'Работы' },
@@ -104,6 +107,8 @@ const faqItems = [
   {
     q: 'Что прислать для расчета?',
     a: 'Примерное количество слайдов, цель и аудиторию презентации, исходный текст и данные, логотип и фирменный стиль, если они есть. Чем полнее материалы, тем точнее расчет.',
+    aHtml:
+      'Примерное количество слайдов, цель и аудиторию презентации, исходный текст и данные, <a href="/identity/">логотип и фирменный стиль</a>, если они есть. Чем полнее материалы, тем точнее расчет.',
   },
   {
     q: 'Почему слайды после 30-го стоят дороже?',
@@ -168,6 +173,7 @@ const footer = {
       title: 'Страница',
       links: [
         { href: '#scenarios', label: 'Сценарии работы' },
+        { href: '#slide', label: 'Разбор слайда' },
         { href: '#pricing', label: 'Цены' },
         { href: '#calculator', label: 'Калькулятор' },
         { href: '#portfolio', label: 'Примеры работ' },
@@ -181,6 +187,8 @@ const footer = {
       links: [
         { href: '/', label: 'Главная' },
         { href: '/portfolio/', label: 'Общее портфолио' },
+        { href: '/identity/', label: 'Фирменный стиль' },
+        { href: '/websites/', label: 'Сайты' },
         { href: '/packaging/', label: 'Упаковка' },
         { href: '/blog/', label: 'Мысли' },
         { href: '#contact', label: 'Оставить заявку' },
@@ -188,6 +196,119 @@ const footer = {
     },
   ],
 };
+
+// Разбор слайдов: исходник заказчика и результат рядом, между ними решения.
+// Три состояния текста выше объясняют, за что клиент платит; этот блок
+// показывает сам механизм на реальном материале. Два примера: пара
+// «ТЗ → слайд» из ВМТП и тройка «ТЗ → вайрфрейм → дизайн» из «Тернейского
+// фермера» — вторая показывает, что структура решается до картинок.
+const vmtp = '/assets/cases/presentation-vmtp';
+const terney = '/assets/cases/presentation-terney-farmer';
+
+const slideSection = {
+  title: 'Из чего был<br>собран слайд',
+  aside:
+    'Два примера. Слева — материал, который прислал заказчик, справа — слайд, ' +
+    'который из него получился. Между ними решения, в которых и состоит работа.',
+};
+
+const slideBreakdowns = [
+  {
+    kicker: 'ВМТП · слайд «Терминалы»',
+    title: 'Таблица и два списка превратились в схему порта',
+    shots: [
+      {
+        src: `${vmtp}/before/vmtp-presentation-brief-slide-06.webp`,
+        alt: 'Страница текстового ТЗ ВМТП: параметры порта списком и таблица причалов',
+        caption: 'Исходник · страница 6 текстового ТЗ',
+      },
+      {
+        src: `${vmtp}/full/vmtp-presentation-slide-06.webp`,
+        alt: 'Готовый слайд ВМТП: схема порта с причалами, осадками и показателями',
+        caption: 'Результат · слайд 05 презентации',
+        after: true,
+      },
+    ],
+    decisions: [
+      {
+        num: '01',
+        title: 'Цифры собрали в одну строку',
+        text:
+          'В ТЗ шесть параметров разбросаны по двум спискам: длина путей, причалы, ' +
+          'пункты пропуска, склады. На слайде они стоят в ряд крупными цифрами ' +
+          'над схемой, а строка про выход на Транссиб стала отдельным заголовком.',
+      },
+      {
+        num: '02',
+        title: 'Таблица легла на схему',
+        text:
+          'Причалы 03–13 и 14–16 из таблицы показаны на схеме порта номерами, ' +
+          'у каждого подписана осадка. Сама таблица осталась внизу как справка, ' +
+          'но читать ее для понимания слайда уже не нужно.',
+      },
+      {
+        num: '03',
+        title: 'Одна страница ТЗ — один слайд',
+        text:
+          'Все со страницы ТЗ уместилось без потерь: списки, таблица, зона погрузки ' +
+          'двух поездов. Ничего не пришлось выносить на второй слайд и ничего ' +
+          'не пришлось сокращать.',
+      },
+    ],
+    caseSlug: 'presentation-vmtp',
+    caseNote: 'В кейсе ВМТП четыре такие пары: показатели, схема терминалов, склад и диаграмма контейнерооборота.',
+  },
+  {
+    kicker: 'Тернейский фермер · слайд «Пчеловодство»',
+    title: 'Сплошной текст прошел через вайрфрейм',
+    shots: [
+      {
+        src: `${terney}/brief/terneysky-fermer-client-brief-slide-09.webp`,
+        alt: 'Исходный слайд заказчика о пчеловодстве: два абзаца текста и фотографии пасеки',
+        caption: 'Исходник · слайд 9 из PowerPoint-ТЗ заказчика',
+      },
+      {
+        src: `${terney}/wireframe/terneysky-fermer-presentation-wireframe-slide-10.webp`,
+        alt: 'Черно-белый вайрфрейм слайда о пчеловодстве с группами фактов',
+        caption: 'Структура · вайрфрейм слайда 10',
+      },
+      {
+        src: `${terney}/full/terneysky-fermer-presentation-slide-10.webp`,
+        alt: 'Готовый слайд о пчеловодстве с видами меда, показателями по годам и картой Приморья',
+        caption: 'Результат · слайд 10 презентации',
+        after: true,
+      },
+    ],
+    decisions: [
+      {
+        num: '01',
+        title: 'Первый абзац не попал на слайд',
+        text:
+          'В ТЗ два абзаца. Первый о том, что пчеловодство одно из древнейших занятий ' +
+          'человека, — он про отрасль, а не про предприятие, и на слайд не пошел. ' +
+          'Второй, про тайгу Чугуевского и Тернейского районов, остался.',
+      },
+      {
+        num: '02',
+        title: 'Факты разложили на вайрфрейме',
+        text:
+          'Виды меда, продукты пасеки, показатели по годам, география и статус ' +
+          'предприятия — пять групп на черно-белой схеме. На ней согласовали состав ' +
+          'и порядок. Пропуск «???? тонн» из ТЗ здесь уже заполнен: 5 и 10 тонн по годам.',
+      },
+      {
+        num: '03',
+        title: 'Дизайн повторил вайрфрейм',
+        text:
+          'Раскладка финального слайда совпадает со схемой. Серые плашки стали ' +
+          'каплями меда, подпись «с. Чугуевка» — картой Приморья с выделенными ' +
+          'районами, цвет и шрифт взяты из гайдбука «Тернейского фермера».',
+      },
+    ],
+    caseSlug: 'presentation-terney-farmer',
+    caseNote: 'В кейсе «Тернейского фермера» четыре такие тройки: направления, показатели, пчеловодство и земледелие.',
+  },
+];
 
 const process = {
   title: 'От брифа<br>до готовых файлов',
@@ -279,6 +400,32 @@ const presentationCases = (await getCollection('cases', ({ data }) => !data.draf
     };
   });
 
+// На странице три кейса, как на остальных услугах; в схему — все четыре.
+const featuredPresentationSlugs = ['presentation-vmtp', 'presentation-terney-farmer', 'presentation-edelweiss'];
+const presentationFeatured = featuredPresentationSlugs
+  .map((slug) => presentationCases.find((item) => item.slug === slug))
+  .filter((item): item is (typeof presentationCases)[number] => Boolean(item));
+
+const ldPortfolioCases = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${site.url}/presentations/#portfolio`,
+  name: 'Кейсы презентаций и брошюр Kovtun.studio',
+  url: `${site.url}/presentations/`,
+  numberOfItems: presentationCases.length,
+  itemListElement: presentationCases.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'CreativeWork',
+      name: item.title,
+      url: `${site.url}/cases/${item.slug}/`,
+      image: `${site.url}${item.coverSrc}`,
+      creator: { '@id': `${site.url}/#business` },
+    },
+  })),
+};
+
 const serviceLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
@@ -308,13 +455,13 @@ const faqLd = {
 ---
 
 <BaseLayout
-  title="Разработка презентаций под ключ — структура, текст, дизайн · Kovtun.studio"
+  title="Разработка презентаций под ключ · Kovtun.studio"
   description="Презентации для инвесторов, продаж и отчетов: структура, текст, дизайн и инфографика. От 14 000 ₽, PDF и PPTX, работа по всей России."
   keywords="разработка презентаций, дизайн презентации, презентация для инвесторов, питч-дек, презентация под ключ, оформление презентации, Владивосток"
   canonicalPath="/presentations/"
   ogImage="/assets/cases/presentation-vmtp/vmtp-presentation-case-study-og.webp"
   ogImageAlt="Титульный слайд презентации ВМТП: крупнейший универсальный порт на Дальнем Востоке"
-  structuredData={[serviceLd, faqLd]}
+  structuredData={[serviceLd, faqLd, ldPortfolioCases]}
   bodyClass="page-presentations"
 >
   <Header
@@ -388,6 +535,57 @@ const faqLd = {
       </div>
     </section>
 
+    <section class="section section-tight" id="slide">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2 set:html={slideSection.title}></h2>
+          </div>
+          <p class="aside">{slideSection.aside}</p>
+        </div>
+
+        {slideBreakdowns.map((item) => (
+          <article class="ba-example">
+            <div class="ba-example__head">
+              <span class="ba-kicker">{item.kicker}</span>
+              <h3>{item.title}</h3>
+            </div>
+
+            <div class:list={['ba-pair', { 'ba-pair--three': item.shots.length === 3 }]}>
+              {item.shots.map((shot) => (
+                <figure class:list={['ba-shot', { 'ba-shot--after': shot.after }]}>
+                  <img
+                    src={shot.src}
+                    alt={shot.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width="1600"
+                    height="900"
+                  />
+                  <figcaption>{shot.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+
+            <div class="ba-decisions">
+              {item.decisions.map((d) => (
+                <div class="ba-decision">
+                  <span class="ba-num">{d.num}</span>
+                  <h4>{d.title}</h4>
+                  <p>{d.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <p class="rate-note">
+              {item.caseNote}{' '}
+              <a href={`/cases/${item.caseSlug}/`}>Смотреть разбор целиком</a>.
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="section presentations-pricing" id="pricing">
       <div class="container-wide">
         <div class="section-head">
@@ -415,6 +613,8 @@ const faqLd = {
           ))}
         </div>
 
+        <details class="rate-details">
+          <summary>Как считается цена: ставки за слайд</summary>
         <div class="rate-grid" aria-label="Ставки за слайд">
           <div class="rate-card">
             <div class="rate-card__title"><h3>Дизайн</h3></div>
@@ -434,6 +634,7 @@ const faqLd = {
           </div>
         </div>
         <p class="rate-note">Ставка считается прогрессивно: первые 10 слайдов по первой цене, следующие 20 — по второй. В больших презентациях чаще появляются сложные таблицы и диаграммы, поэтому ставка с 31-го слайда выше.</p>
+        </details>
       </div>
     </section>
 
@@ -489,12 +690,14 @@ const faqLd = {
           </p>
         </div>
 
-        <div class="pcase-grid">
-          {presentationCases.map((item, i) => (
+        <div class="pcase-grid pcase-grid--three">
+          {presentationFeatured.map((item, i) => (
             <a class="pcase" href={`/cases/${item.slug}/`}>
               <span class="pcase__media">
                 <img
                   src={item.coverSrc}
+                  srcset={coverSrcset(item.coverSrc)}
+                  sizes={coverSizes}
                   alt={item.coverAlt}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchpriority={i === 0 ? 'high' : undefined}
@@ -520,6 +723,8 @@ const faqLd = {
       </div>
     </section>
 
+    <ReturningClients variant="compact" />
+
     <ProcessSteps {...process} />
 
     <FounderSection data={presentationFounder} />
@@ -529,7 +734,7 @@ const faqLd = {
       intro="Если короткого ответа недостаточно — напишите в Telegram. Посмотрю материалы и отвечу по вашей задаче."
       ctaAsk="Задать вопрос"
       telegramUrl={site.contact.telegram}
-      items={faqItems}
+      items={faqItems.map((item) => ({ q: item.q, a: item.aHtml ?? item.a }))}
     />
 
     <ContactForm
@@ -669,3 +874,113 @@ const faqLd = {
     })();
   </script>
 </BaseLayout>
+
+<style>
+  /* Разбор слайдов: два примера подряд. В каждом — снимки в ряд (два или
+     три), под ними принятые решения. Пропорция 16:9 задана явно, чтобы
+     страница не прыгала до загрузки. */
+  .ba-example + .ba-example {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line-1);
+  }
+
+  .ba-example__head {
+    margin-bottom: 18px;
+  }
+
+  .ba-kicker {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .ba-example__head h3 {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .ba-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .ba-pair--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .ba-shot {
+    margin: 0;
+    background: var(--bg-2);
+    border-top: 3px solid var(--line-1);
+  }
+
+  .ba-shot--after {
+    border-top-color: var(--ks-red);
+  }
+
+  .ba-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+  }
+
+  .ba-shot figcaption {
+    padding: 12px 16px 16px;
+    font-size: 13px;
+    letter-spacing: .04em;
+    color: var(--fg-3);
+  }
+
+  .ba-decisions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .ba-decision {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ba-num {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--ks-red);
+  }
+
+  .ba-decision h4 {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.25;
+  }
+
+  .ba-decision p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg-3);
+  }
+
+  .ba-example .rate-note {
+    margin-top: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .ba-pair,
+    .ba-pair--three,
+    .ba-decisions {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

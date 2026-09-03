@@ -1,0 +1,1009 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import WhatGrid from '../components/WhatGrid.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ReturningClients from '../components/ReturningClients.astro';
+import FounderSection from '../components/FounderSection.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
+import { servicePageNav } from '../lib/site-nav';
+import { coverSrcset, coverSizes } from '../lib/covers';
+import '../styles/presentations.css';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+const nav = servicePageNav(site, [
+  { href: '#scope', label: 'Границы' },
+  { href: '#pricing', label: 'Цены' },
+  { href: '#tasks', label: 'Задачи' },
+  { href: '#cases', label: 'Работы' },
+  { href: '#faq', label: 'FAQ' },
+]);
+
+// Кейсы направления «Сайты» — из общей коллекции, в каноническом порядке.
+// Объем на карточке взят из ключевых фактов кейса и записан здесь: в шапке
+// кейса этих строк нет.
+const caseMetaBySlug: Record<string, string> = {
+  'website-green-power': '12 блоков · заказ в Телеграм-бот',
+  'website-trubovarnya': '6 страниц · 6 вайрфреймов',
+  'website-ptksk': '9 блоков · 2 сценария заявки',
+  'website-eon-phuket': '11 вайрфреймов · 4 формата доступа',
+  'website-greatway': '11 страниц · расчет на 8 из них',
+  'website-japan-shina': '3 формы подбора',
+  'website-kapital-inform': '8 страниц · 6 услуг на одном шаблоне',
+  'website-b2b-cosmetics': '9 страниц · 5 брендов на шаблоне',
+  'website-kuznitsa-dushi': 'Программа по дням · цена по составу',
+  'website-ektostroy': 'Цена и бригада до заявки',
+  'website-evg-group': 'Лендинг для инвесторов',
+};
+
+const webCases = (await getCollection('cases', ({ data }) => !data.draft))
+  .filter((entry) => directionByCategory[entry.data.category] === 'web')
+  .filter((entry) => Boolean(entry.data.gallery))
+  .sort((a, b) => caseOrderIndex(a.id) - caseOrderIndex(b.id))
+  .map((entry) => {
+    const c = entry.data;
+    return {
+      slug: c.slug,
+      title: c.shortTitle || c.client,
+      meta: [caseMetaBySlug[c.slug], c.segmentLabel].filter(Boolean).join(' · '),
+      coverSrc: `${c.gallery.assetRoot}/${c.gallery.cover.src}`,
+      coverAlt: c.gallery.cover.alt,
+    };
+  });
+
+// На странице показываем три кейса, по одному на тип сайта: лендинг,
+// корпоративный, B2B-каталог. Остальные — по кнопке в портфолио. В схему
+// ItemList уходят все кейсы направления.
+const featuredWebSlugs = ['website-ptksk', 'website-kapital-inform', 'website-b2b-cosmetics'];
+const webFeatured = featuredWebSlugs
+  .map((slug) => webCases.find((item) => item.slug === slug))
+  .filter((item): item is (typeof webCases)[number] => Boolean(item));
+
+// Счетчик в hero считается по кейсам, а не пишется руками.
+const plural = (n: number, one: string, few: string, many: string) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
+
+const hero = {
+  headline: 'Сайт, который',
+  headlineAccent: 'объясняет сложную услугу',
+  lede:
+    'Структура, тексты, дизайн и сборка на WordPress — от первой строки до запущенной ' +
+    'страницы. Делаю сайты, которые доводят посетителя до заявки. Личный кабинет ' +
+    'или программный сервис — это другой класс проекта, и я говорю об этом сразу.',
+  ctaPrimary: 'Обсудить сайт',
+  ctaSecondary: 'Стоимость работ',
+  meta: [
+    { num: '120', numAccent: 'k', suffix: ' ₽', label: 'Лендинг под ключ — от' },
+    {
+      num: String(webCases.length),
+      label: `${plural(webCases.length, 'Кейс', 'Кейса', 'Кейсов')} сайтов в портфолио`,
+    },
+    { num: '4', label: 'Этапа, каждый утверждается отдельно' },
+    { num: 'VVO', numAccent: '.', label: 'Владивосток · работаю по РФ' },
+  ],
+};
+
+const marquee = {
+  ariaLabel: 'Что делаю в направлении сайтов',
+  items: [
+    'Лендинг',
+    'Корпоративный сайт',
+    'B2B-каталог',
+    'Структура и вайрфрейм',
+    'Тексты страниц',
+    'Дизайн',
+    'Верстка на WordPress',
+    'Адаптив',
+    'Формы заявок',
+    'Базовое SEO',
+  ],
+};
+
+// Границы продукта. Этот блок стоит первым сознательно: он избавляет
+// от разговоров, в которых сайт сравнивают с шаблоном за 10 000 ₽
+// или с разработкой информационной системы.
+const boundary = {
+  title: 'Где мой сайт,<br>а где уже не мой',
+  aside:
+    'Какой класс задач я беру целиком, а на какой нужна техническая команда. Это стоит знать до того, как сравнивать цены.',
+  take: {
+    kicker: 'Беру целиком',
+    title: 'Сайт, который объясняет услугу и ведет к заявке',
+    items: [
+      'Структура: какие страницы нужны и в каком порядке идут блоки',
+      'Тексты: заголовки, описание услуги, ответы на возражения',
+      'Вайрфреймы до дизайна — правки на этом этапе стоят дешево',
+      'Дизайн всех страниц и состояний',
+      'Верстка на WordPress, адаптив, формы заявок, базовое SEO',
+      'Домен, хостинг и запуск',
+    ],
+  },
+  skip: {
+    kicker: 'Не беру в одиночку',
+    title: 'Программный продукт, а не сайт',
+    items: [
+      'Личный кабинет с ролями и правами доступа',
+      'Маркетплейс, биржа, расчетный сервис, калькулятор с базой данных',
+      'Интеграция с 1С и внутренними системами — считается отдельно',
+      'Нагруженный интернет-магазин с оплатой и складом',
+      'Поисковое продвижение как отдельная услуга',
+    ],
+    note:
+      'Такие задачи решаются, но технической командой. Если ваша задача из этого ' +
+      'списка, я скажу об этом на первом созвоне.',
+  },
+};
+
+const types = [
+  {
+    num: '01',
+    title: 'Лендинг',
+    text:
+      'Одна услуга или один продукт, одна страница. Все, что нужно посетителю ' +
+      'для решения, лежит в одной последовательности блоков. Так собраны ' +
+      'ПТК «Стройконструкция», Green Power и «Кузница души».',
+  },
+  {
+    num: '02',
+    title: 'Корпоративный сайт',
+    text:
+      'Пять-десять страниц: услуги, объекты, команда, блог или новости. ' +
+      'Нужен, когда услуг несколько и каждая требует своего разговора ' +
+      'с клиентом. Так сделаны Трубоварня Еремеева и «Капиталъ Информ».',
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'B2B-сайт с каталогом',
+    text:
+      'Десять-двадцать страниц: каталог с фильтрами, прайс-лист, форма ' +
+      'оптового заказа. Покупает не человек с улицы, а закупщик, ' +
+      'которому нужны параметры и условия. Пример — B2B Cosmetics.',
+  },
+];
+
+const approach = {
+  title: 'Что делает<br>сайт рабочим',
+  aside:
+    'Четыре решения, которые повторяются во всех проектах независимо от объема.',
+  cards: [
+    {
+      num: '01',
+      title: 'Текст раньше дизайна',
+      text:
+        'Первый этап — текст, второй — структура и вайрфрейм, и только третий — ' +
+        'дизайн. У EON Phuket до дизайна было 11 вайрфреймов, у Трубоварни — шесть. ' +
+        'Правка порядка блоков на вайрфрейме занимает час, на готовом макете — день.',
+    },
+    {
+      num: '02',
+      title: 'Форма под готовность посетителя',
+      text:
+        'Одной кнопки «Оставить заявку» мало. У ПТКСК два сценария: короткий попап ' +
+        'с обещанием ответа за 15 минут и форма расчета с загрузкой документации, ' +
+        'где заранее назван срок — 1–2 рабочих дня.',
+      featured: true,
+    },
+    {
+      num: '03',
+      title: 'Один шаблон вместо новой отрисовки',
+      text:
+        'Если услуг шесть, они собираются по одной последовательности блоков. ' +
+        'У «Капиталъ Информ» так работают шесть страниц услуг, у B2B Cosmetics — ' +
+        'пять брендов. Новая страница потом не требует нового дизайна.',
+    },
+    {
+      num: '04',
+      title: 'Сборка, которую можно вести дальше',
+      text:
+        'Верстаю на WordPress: тексты, картинки и новости редактируются без меня. ' +
+        'Отдельная страница по прежнему шаблону стоит 15 000 ₽ и занимает три дня.',
+    },
+  ],
+};
+
+// Широкая карточка над пакетами: этапы 1–3 можно заказать отдельно.
+const stage = {
+  badge: 'Отдельный этап',
+  title: 'Взять не весь сайт, а один этап',
+  text: 'Работа идет четырьмя этапами, и каждый утверждается отдельно. Первые три можно заказать сами по себе.',
+  items: [
+    'Текст: заголовки, описание услуги, ответы на возражения',
+    'Структура и вайрфрейм: какие страницы и в каком порядке блоки',
+    'Дизайн: макеты всех страниц по утвержденной структуре',
+    'Верстку отдельно не делаю — только в связке с предыдущими этапами',
+  ],
+  price: 'Считается по объему',
+  term: 'Смету на этап отдаю в день брифа',
+};
+
+const packages = [
+  {
+    num: '01',
+    title: 'Лендинг под ключ',
+    price: 'от 120 000 ₽',
+    detail: 'Одна страница · 4–6 недель',
+    items: [
+      'Структура и тексты',
+      'Уникальный дизайн, без шаблонов',
+      'Верстка на WordPress и адаптив',
+      'Базовое SEO: заголовки, мета-теги, скорость',
+      'Формы заявок',
+      'Домен и хостинг, запуск',
+    ],
+  },
+  {
+    num: '02',
+    title: 'Корпоративный сайт под ключ',
+    price: 'от 220 000 ₽',
+    detail: '5–10 страниц · 6–8 недель',
+    items: [
+      'Все из лендинга',
+      'Структура на 5–10 страниц',
+      'Шаблон страницы услуги',
+      'Блог или новости',
+      'Карта и отзывы',
+    ],
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'B2B-сайт и каталог',
+    price: 'от 350 000 ₽',
+    detail: '10–20 страниц · 10–12 недель',
+    items: [
+      'Все из корпоративного сайта',
+      'Каталог с фильтрами',
+      'Прайс-лист',
+      'Форма оптового заказа',
+      'Интеграция с 1С — по отдельной оценке',
+    ],
+  },
+];
+
+// Кейсы, разложенные по задаче, а не по отрасли: клиент ищет не «сайт
+// для логистики», а решение своей ситуации.
+const tasks = [
+  {
+    num: '01',
+    task: 'Клиент приходит с комплектом документов',
+    solution:
+      'ПТК «Стройконструкция»: рядом с быстрым звонком стоит форма расчета с загрузкой файла. ' +
+      'Инженер получает исходные данные, заказчик заранее видит срок ответа — 1–2 рабочих дня.',
+    slug: 'website-ptksk',
+    label: 'ПТКСК',
+  },
+  {
+    num: '02',
+    task: 'Цену невозможно назвать без параметров',
+    solution:
+      'Greatway: вместо прайса — форма расчета маршрута из восьми полей, и она стоит ' +
+      'на восьми страницах из одиннадцати. Стоимость узнают с той страницы, на которую пришли.',
+    slug: 'website-greatway',
+    label: 'Greatway',
+  },
+  {
+    num: '03',
+    task: 'Посетители приходят с разной готовностью',
+    solution:
+      '«Капиталъ Информ»: три формы под разную степень готовности — от обратного звонка ' +
+      'до короткой формы в плашке. Компания продает доверие, поэтому вопрос надежности ' +
+      'закрывается раньше формы.',
+    slug: 'website-kapital-inform',
+    label: 'Капиталъ Информ',
+  },
+  {
+    num: '04',
+    task: 'Продажа идет не через корзину',
+    solution:
+      'Green Power: заказ уходит в Телеграм-бот, и в блоке заказа он показан скриншотами — ' +
+      'каталог, карточка, история заказов. Покупатель видит, что будет после кнопки.',
+    slug: 'website-green-power',
+    label: 'Green Power',
+  },
+  {
+    num: '05',
+    task: 'Услуга состоит из нескольких форматов доступа',
+    solution:
+      'EON Phuket: четыре формата доступа в клуб и восемь форматов лаунж-мест. ' +
+      'Порядок и логика проверены на 11 вайрфреймах до того, как начался дизайн.',
+    slug: 'website-eon-phuket',
+    label: 'EON Phuket',
+  },
+];
+
+const process = {
+  title: 'Четыре этапа,<br>каждый утверждается',
+  aside:
+    'Порядок обратный привычному: сначала текст и структура, потом дизайн. Так правки приходятся на дешевый этап, а дизайн собирается по уже согласованному содержанию.',
+  steps: [
+    {
+      num: '01',
+      title: 'Текст',
+      text: 'Что за услуга, кому и чем отличается. Заголовки, описания, ответы на возражения. Пишу сам, на основе брифа и разговора с вами.',
+    },
+    {
+      num: '02',
+      title: 'Структура и вайрфрейм',
+      text: 'Какие страницы нужны, в каком порядке идут блоки, где стоят формы. Проверяем на черно-белых схемах, без обсуждения цвета и картинок.',
+    },
+    {
+      num: '03',
+      title: 'Дизайн',
+      text: 'Макеты всех страниц по утвержденной структуре. Здесь уже не спорим о содержании — оно согласовано на предыдущем этапе.',
+    },
+    {
+      num: '04',
+      title: 'Верстка и запуск',
+      text: 'Сборка на WordPress, адаптив под телефон и планшет, формы заявок, базовое SEO, подключение домена и хостинга.',
+    },
+    {
+      num: '05',
+      title: 'После запуска',
+      text: 'Тексты и картинки вы правите сами. Новая страница по прежнему шаблону — 15 000 ₽ и три дня. Регулярные правки — поддержка от 25 000 ₽ в месяц.',
+    },
+  ],
+};
+
+const faqItems = [
+  {
+    q: 'Что входит в «под ключ»?',
+    a: 'Структура, тексты, уникальный дизайн, верстка на WordPress, адаптив, базовое SEO, формы заявок, подключение домена и хостинга. После сдачи сайт открывается по вашему адресу и принимает заявки.',
+  },
+  {
+    q: 'Чем лендинг отличается от корпоративного сайта и каталога?',
+    a: 'Лендинг — одна страница про одну услугу или продукт, от 120 000 ₽ и 4–6 недель. Корпоративный сайт — 5–10 страниц, когда услуг несколько и каждой нужен свой разговор с клиентом: от 220 000 ₽ и 6–8 недель. B2B-сайт с каталогом — 10–20 страниц с фильтрами, прайсом и формой оптового заказа: от 350 000 ₽ и 10–12 недель.',
+  },
+  {
+    q: 'Можно заказать только тексты или только дизайн?',
+    a: 'Да. Первые три этапа — текст, структура с вайрфреймом и дизайн — заказываются отдельно, стоимость считается по объему. Верстку отдельно не делаю: она имеет смысл только в связке с предыдущими этапами, иначе я отвечаю за результат, на который не влиял.',
+  },
+  {
+    q: 'На чем вы собираете сайт?',
+    a: 'На WordPress. После запуска тексты, картинки и новости вы правите сами, без разработчика и без абонентской платы за конструктор.',
+  },
+  {
+    q: 'Сделаете ли личный кабинет или интеграцию с 1С?',
+    a: 'Интеграция с 1С возможна и считается отдельно. Личный кабинет с ролями, маркетплейс, расчетный сервис или нагруженный магазин с оплатой и складом — другой класс проекта, для него нужна техническая команда. Если ваша задача такая, я скажу об этом на первом созвоне.',
+  },
+  {
+    q: 'Занимаетесь ли продвижением?',
+    a: 'Базовое SEO входит в запуск: заголовки, мета-теги, скорость, корректная структура. Поисковое продвижение и контекстную рекламу как отдельную услугу не веду.',
+  },
+  {
+    q: 'Сможем ли мы потом добавлять страницы?',
+    a: 'Да. Страницы услуг собираются по одному шаблону, поэтому новая встает в готовую сетку: 15 000 ₽ и три дня. Если правок много и они постоянные — поддержка от 25 000 ₽ в месяц.',
+  },
+  {
+    q: 'Почему сначала текст, а не дизайн?',
+    a: 'Дизайн раскладывает уже готовое содержание. У EON Phuket до дизайна было 11 вайрфреймов, у Трубоварни Еремеевой — шесть. Переставить блок на вайрфрейме — час работы, на готовом макете — день, после верстки — неделя.',
+  },
+  {
+    q: 'Что нужно для расчета?',
+    a: 'Примеры сайтов, которые вам нравятся и не нравятся, описание задачи, список разделов, логотип и фирменный стиль, если они есть, и контакты. Смету отдаю в день брифа.',
+  },
+  {
+    q: 'Вы во Владивостоке — а если мы в другом городе?',
+    a: 'Работаю по всей России и за ее пределами удаленно: EON Phuket и EVG Group — это Пхукет, «Эктострой» — Москва, Трубоварня Еремеева — Руза. Согласования в Telegram или по видеосвязи, файлы в облаке. Договор, ИП, ЭДО по запросу, NDA при необходимости.',
+  },
+  {
+    q: 'У нас нет фирменного стиля. Это проблема?',
+    a: 'Нет. Если стиля нет, его можно сделать до сайта — тогда знак, палитра и шрифты будут одни и те же на сайте, в упаковке и в презентации.',
+    aHtml:
+      'Нет. Если стиля нет, его можно <a href="/identity/">сделать до сайта</a> — тогда знак, палитра и шрифты будут одни и те же на сайте, в <a href="/packaging/">упаковке</a> и в <a href="/presentations/">презентации</a>.',
+  },
+];
+
+const webFounder = {
+  title: 'Проект ведет<br>один дизайнер',
+  aside:
+    'Текст, структуру, дизайн и сборку делает один человек. Поэтому на четвертой неделе не выясняется, что задумка не верстается, а текст не помещается в блок.',
+  name: site.founderSection.name,
+  role: site.founderSection.role,
+  image: site.founderSection.image,
+  imageAlt: site.founderSection.imageAlt,
+  text:
+    'В дизайне с 2010 года. Сайты веду полным циклом: сам пишу тексты, собираю структуру, рисую макеты и верстаю на WordPress. Если задача больше сайта, говорю об этом на брифе.',
+  stats: [
+    { num: '2010', label: 'Год начала работы дизайнером' },
+    { num: '4', label: 'Этапа, каждый утверждается отдельно' },
+  ],
+  points: [
+    {
+      num: '01',
+      title: 'Один контакт',
+      text: 'Общаетесь напрямую с дизайнером, без пересказа задачи через менеджера.',
+    },
+    {
+      num: '02',
+      title: 'Тексты мои',
+      text: 'Не жду от вас готовых текстов: заголовки и описания пишу сам и согласовываю до дизайна.',
+    },
+    {
+      num: '03',
+      title: 'Честная граница',
+      text: 'Если задаче нужна техническая команда, вы узнаете это до старта.',
+    },
+    {
+      num: '04',
+      title: 'Сайт остается вашим',
+      text: 'WordPress, домен и хостинг оформлены на вас — вести сайт дальше можно с кем угодно.',
+    },
+  ],
+};
+
+const contactData = {
+  title: 'Обсудим ваш сайт',
+  intro: 'Пришлите задачу и список разделов, вернусь со сметой в день брифа.',
+  telegramTitle: 'Написать в Telegram',
+  maxTitle: 'Написать в MAX',
+  formTitle: 'Расскажите о задаче',
+  fields: {
+    name: { label: 'Имя', placeholder: 'Как к вам обращаться', error: 'Как к вам обращаться?' },
+    car: {
+      label: 'Компания и тип сайта',
+      placeholder: 'Например: монтаж отопления, нужен сайт на 6 страниц',
+      error: 'Сфера и примерный объем — чтобы прикинуть тип сайта',
+      msgLabel: 'Компания и тип сайта',
+    },
+    contact: {
+      label: 'Куда ответить',
+      placeholder: 'Телефон, почта или ник в Telegram',
+      error: 'Куда вам ответить? Телефон, почта или ник.',
+    },
+    message: {
+      label: 'Разделы и материалы (необязательно)',
+      placeholder: 'Список разделов, текущий сайт, примеры, которые нравятся',
+    },
+  },
+  privacy: 'Заявка попадает в мою CRM и больше никуда. Как я обращаюсь с данными, написано в политике обработки.',
+  submit: 'Отправить заявку',
+  successTitle: 'Заявка отправлена',
+  successText: 'Отвечу в течение пары часов на контакт из заявки. Если удобнее переписка, ниже готовый текст для Telegram или MAX.',
+  successNote: 'В Telegram сообщение подставится само. Для MAX текст скопируется в буфер, вставьте его в чат.',
+  errorText: 'Заявка не ушла: сервер не ответил. Напишите мне напрямую, текст заявки уже собран:',
+  resetText: 'Отправить еще одну заявку',
+};
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Страница',
+      links: [
+        { href: '#scope', label: 'Границы' },
+        { href: '#types', label: 'Типы сайтов' },
+        { href: '#pricing', label: 'Цены' },
+        { href: '#tasks', label: 'Задачи' },
+        { href: '#cases', label: 'Кейсы' },
+        { href: '#faq', label: 'FAQ' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/identity/', label: 'Фирменный стиль' },
+        { href: '/packaging/', label: 'Упаковка' },
+        { href: '/presentations/', label: 'Презентации' },
+        { href: '/car-wrap/', label: 'Оклейка авто' },
+        { href: '/blog/', label: 'Мысли' },
+        { href: '#contact', label: 'Оставить заявку' },
+      ],
+    },
+  ],
+};
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${site.url}/websites/#service`,
+  name: 'Разработка сайтов под ключ',
+  serviceType: 'Разработка и дизайн сайтов',
+  description:
+    'Лендинги, корпоративные сайты и B2B-каталоги под ключ: текст, структура и вайрфрейм, дизайн, верстка на WordPress, адаптив, базовое SEO, формы заявок, домен и хостинг.',
+  provider: { '@id': `${site.url}/#business` },
+  areaServed: { '@type': 'Country', name: 'Россия' },
+  audience: { '@type': 'BusinessAudience', audienceType: site.business.serviceAudience },
+  offers: [
+    { '@type': 'Offer', name: 'Лендинг под ключ', price: '120000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Корпоративный сайт под ключ', price: '220000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'B2B-сайт и каталог под ключ', price: '350000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Дополнительная страница сайта', price: '15000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Поддержка и правки сайта, в месяц', price: '25000', priceCurrency: 'RUB' },
+  ],
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+const ldPortfolioCases = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${site.url}/websites/#portfolio`,
+  name: 'Кейсы разработки сайтов Kovtun.studio',
+  url: `${site.url}/websites/`,
+  numberOfItems: webCases.length,
+  itemListElement: webCases.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'CreativeWork',
+      name: item.title,
+      url: `${site.url}/cases/${item.slug}/`,
+      image: `${site.url}${item.coverSrc}`,
+      creator: { '@id': `${site.url}/#business` },
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="Разработка сайтов под ключ на WordPress · Kovtun.studio"
+  description="Лендинг от 120 000 ₽, корпоративный сайт от 220 000 ₽, B2B-каталог от 350 000 ₽. Текст, структура, дизайн и сборка. Четыре этапа, каждый утверждается."
+  keywords="разработка сайта, заказать сайт, лендинг под ключ, корпоративный сайт, B2B сайт, каталог, сайт на WordPress, Владивосток"
+  canonicalPath="/websites/"
+  ogImage="/og-websites.jpg"
+  ogImageAlt="Главный экран сайта ПТК «Стройконструкция»"
+  ogTitle="Разработка сайтов под ключ — от текста до запуска"
+  ogDescription="Лендинг от 120 000 ₽, корпоративный сайт от 220 000 ₽, B2B-каталог от 350 000 ₽. Текст и структура согласуются до дизайна."
+  structuredData={[serviceLd, faqLd, ldPortfolioCases]}
+>
+  <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+  <main id="main-content">
+    <div class="websites-hero-wrap">
+      <Hero {...hero} />
+    </div>
+    <Marquee {...marquee} />
+
+    <section class="section" id="scope">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2 set:html={boundary.title}></h2>
+          </div>
+          <p class="aside">{boundary.aside}</p>
+        </div>
+
+        <div class="boundary-grid">
+          <article class="boundary-card boundary-card--take">
+            <span class="boundary-kicker">{boundary.take.kicker}</span>
+            <h3>{boundary.take.title}</h3>
+            <ul>
+              {boundary.take.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </article>
+
+          <article class="boundary-card boundary-card--skip">
+            <span class="boundary-kicker">{boundary.skip.kicker}</span>
+            <h3>{boundary.skip.title}</h3>
+            <ul>
+              {boundary.skip.items.map((item) => <li>{item}</li>)}
+            </ul>
+            <p class="boundary-note">{boundary.skip.note}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="types">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Три типа задачи —<br>три разных объема</h2>
+          </div>
+          <p class="aside">Тип выбирается не по размеру компании, а по тому, сколько разных разговоров нужно вести с клиентом и сколько у него сценариев выбора.</p>
+        </div>
+        <div class="scenario-grid">
+          {types.map((item) => (
+            <article class:list={['scenario-card', { 'is-featured': item.featured }]}>
+              <div class="scenario-card__top">
+                <span class="scenario-num">{item.num}</span>
+                {item.featured && <span class="scenario-badge">Самый частый случай</span>}
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+              <a href={`#package-${item.num}`}>Смотреть, что входит <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="approach-wrap">
+      <WhatGrid {...approach} />
+    </div>
+
+    <section class="section presentations-pricing" id="pricing">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2>Три формата под ключ —<br>и отдельные этапы</h2>
+          <p class="aside">Цена зависит от количества страниц, нестандартных блоков, объема контента и интеграций. Точную смету считаю после брифа.</p>
+        </div>
+
+        <article class="audit-card">
+          <div class="audit-card__badge">{stage.badge}</div>
+          <div class="audit-card__body">
+            <h3>{stage.title}</h3>
+            <p>{stage.text}</p>
+            <ul>
+              {stage.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="audit-card__offer">
+            <strong>{stage.price}</strong>
+            <span>{stage.term}</span>
+            <a class="btn btn-primary" href="#contact" data-package="Отдельный этап">
+              Обсудить этап <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+
+        <div class="package-grid">
+          {packages.map((item) => (
+            <article class:list={['package-card', { 'is-featured': item.featured }]} id={`package-${item.num}`}>
+              <div class="package-card__head">
+                <span>{item.num}</span>
+                {item.featured && <b>Чаще всего</b>}
+              </div>
+              <h3>{item.title}</h3>
+              <div class="package-price">{item.price}</div>
+              <p class="package-detail">{item.detail}</p>
+              <ul>
+                {item.items.map((entry) => <li>{entry}</li>)}
+              </ul>
+              <a class:list={['btn', item.featured ? 'btn-primary' : 'btn-dark']} href="#contact" data-package={item.title}>
+                Выбрать формат <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <p class="rate-note">
+          После запуска: дополнительная страница по готовому шаблону — 15 000 ₽ и три дня,
+          регулярные правки и обновления — поддержка от 25 000 ₽ в месяц. Оба пункта
+          по желанию: тексты и картинки вы правите сами.
+        </p>
+        <p class="rate-note">
+          Не уверены, какой тип ваш? Пришлите список разделов в
+          <a href={site.contact.telegram} target="_blank" rel="noopener">Telegram</a> —
+          скажу, лендинг это или уже корпоративный сайт, и назову вилку. Без обязательств.
+          Если стиля еще нет, его можно <a href="/identity/">сделать до сайта</a>.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="tasks">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Пять задач,<br>а не пять отраслей</h2>
+          </div>
+          <p class="aside">
+            Клиент приходит с ситуацией, а не с отраслью. Вот пять ситуаций
+            из кейсов и то, чем каждая закрыта на сайте.
+          </p>
+        </div>
+
+        <div class="task-list">
+          {tasks.map((item) => (
+            <article class="task-row">
+              <span class="task-num">{item.num}</span>
+              <div class="task-body">
+                <h3>{item.task}</h3>
+                <p>{item.solution}</p>
+              </div>
+              <a class="task-link" href={`/cases/${item.slug}/`}>
+                {item.label} <span aria-hidden="true">→</span>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="cases">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Кейсы<br>сайтов</h2>
+          </div>
+          <p class="aside">
+            Каждый проект разобран на отдельной странице: с какой задачей пришел
+            клиент, как собиралась структура и что получилось на выходе.
+          </p>
+        </div>
+
+        <div class="pcase-grid pcase-grid--three">
+          {webFeatured.map((item, i) => (
+            <a class="pcase" href={`/cases/${item.slug}/`}>
+              <span class="pcase__media">
+                <img
+                  src={item.coverSrc}
+                  srcset={coverSrcset(item.coverSrc)}
+                  sizes={coverSizes}
+                  alt={item.coverAlt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  decoding="async"
+                  width="1600"
+                  height="900"
+                />
+              </span>
+              <span class="pcase__body">
+                <strong>{item.title}</strong>
+                <span class="pcase__meta">{item.meta}</span>
+              </span>
+              <span class="pcase__arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+
+        <div class="gallery-more">
+          <a class="btn btn-dark btn-lg" href="/portfolio/?direction=web">
+            Смотреть все работы по сайтам <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <ReturningClients variant="compact" />
+
+    <ProcessSteps {...process} />
+
+    <FounderSection data={webFounder} />
+
+    <FAQ
+      title="Частые<br>вопросы"
+      intro="Если короткого ответа недостаточно — напишите в Telegram. Посмотрю текущий сайт и отвечу по вашей задаче."
+      ctaAsk="Задать вопрос"
+      telegramUrl={site.contact.telegram}
+      items={faqItems.map((item) => ({ q: item.q, a: item.aHtml ?? item.a }))}
+    />
+
+    <ContactForm
+      data={contactData}
+      telegramUrl={site.contact.telegram}
+      telegramHandle={site.contact.telegramHandle}
+      maxUrl={site.contact.max}
+      maxHandle={site.contact.maxHandle}
+      briefUrl="/tools/brief-website.html"
+      briefLabel="Заполнить бриф на сайт"
+      goalName="website_lead_submit"
+      messageIntro="Здравствуйте! Хочу обсудить разработку сайта."
+    />
+  </main>
+
+  <Footer {...footer} />
+
+  <script is:inline>
+    (function () {
+      'use strict';
+
+      /* Цели Метрики. Отправка формы живет в ContactForm.astro. */
+      function goal(name, params) {
+        if (typeof window.ksAnalyticsGoal === 'function') window.ksAnalyticsGoal(name, params);
+      }
+
+      var form = document.getElementById('lead-form');
+      var fields = document.getElementById('form-fields');
+      var success = document.getElementById('form-success');
+      var fMessage = document.getElementById('f-message');
+
+      /* Кнопки форматов: префилл формы + скролл + цель */
+      Array.prototype.forEach.call(document.querySelectorAll('[data-package]'), function (btn) {
+        btn.addEventListener('click', function () {
+          if (success && success.hidden === false) { success.hidden = true; fields.hidden = false; form.classList.remove('is-success'); }
+          if (fMessage) fMessage.value = 'Интересует формат: ' + btn.dataset.package + '.';
+          goal('website_package_pick', { pkg: btn.dataset.package });
+        });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
+        link.addEventListener('click', function () { goal('website_cta_main'); });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://t.me/"]'), function (link) {
+        link.addEventListener('click', function () { goal('telegram_direct'); });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (link) {
+        link.addEventListener('click', function () { goal('cta_phone'); });
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* В карточках типов сайта нет строки с ценой, поэтому к нижнему краю
+     прижимается сама ссылка (как на /packaging/ и /identity/). */
+  .scenario-card a {
+    margin-top: auto;
+  }
+
+  /* Водяной знак hero: слово читает .hero-red::after в global.css. */
+  .websites-hero-wrap :global(.hero-red) {
+    --hero-watermark: 'WEB';
+  }
+
+  /* В блоке «Что делает сайт рабочим» четыре карточки: в базовой сетке
+     из трех колонок четвертая повисала одна в ряду, поэтому здесь 2×2. */
+  @media (min-width: 801px) {
+    .approach-wrap :global(.what-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Границы продукта: две карточки, левая — что беру, правая — что нет.
+     Красная линия только у левой: правая не должна читаться как оффер. */
+  .boundary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .boundary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px 30px;
+    background: var(--bg-2);
+    border-top: 3px solid var(--ks-red);
+  }
+
+  .boundary-card--skip {
+    border-top-color: var(--fg-3);
+  }
+
+  .boundary-kicker {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ks-red);
+  }
+
+  .boundary-card--skip .boundary-kicker {
+    color: var(--fg-3);
+  }
+
+  .boundary-card h3 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.25;
+  }
+
+  .boundary-card ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+
+  .boundary-card li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .boundary-card li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: .6em;
+    width: 8px;
+    height: 2px;
+    background: var(--ks-red);
+  }
+
+  .boundary-card--skip li::before {
+    background: var(--fg-3);
+  }
+
+  .boundary-note {
+    margin: 4px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-1);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-3);
+  }
+
+  /* Задачи: строка «номер — задача и решение — ссылка на кейс».
+     Список, а не карточки: важен порядок чтения, а не сравнение. */
+  .task-list {
+    display: grid;
+    gap: 2px;
+    background: var(--line-1);
+    border-top: 1px solid var(--line-1);
+    border-bottom: 1px solid var(--line-1);
+  }
+
+  .task-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: start;
+    padding: 26px 4px;
+    background: var(--bg-1);
+  }
+
+  .task-num {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--ks-red);
+    padding-top: 4px;
+  }
+
+  .task-body h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .task-body p {
+    margin: 0;
+    color: var(--fg-3);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .task-link {
+    display: inline-flex;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .boundary-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .task-row {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px 16px;
+    }
+
+    .task-link {
+      grid-column: 2;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding-top: 0;
+    }
+  }
+</style>

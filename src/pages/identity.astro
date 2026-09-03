@@ -1,0 +1,876 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import WhatGrid from '../components/WhatGrid.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ReturningClients from '../components/ReturningClients.astro';
+import FounderSection from '../components/FounderSection.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
+import { servicePageNav } from '../lib/site-nav';
+import '../styles/presentations.css';
+
+const dataDir = path.resolve('./src/data');
+const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
+
+// Локальная навигация страницы — как у /packaging/, /presentations/ и /car-wrap/.
+const nav = servicePageNav(site, [
+  { href: '#scope', label: 'Объем' },
+  { href: '#pricing', label: 'Цены' },
+  { href: '#rules', label: 'Правила' },
+  { href: '#cases', label: 'Работы' },
+  { href: '#faq', label: 'FAQ' },
+]);
+
+// Кейсы направления «Логотип и фирменный стиль» — из общей коллекции,
+// в каноническом порядке каталога. Строка объема на карточке задана
+// вручную: в шапке кейса этих цифр нет.
+const caseMetaBySlug: Record<string, string> = {
+  'identity-green-power': '5 исполнений · гайдбук 8 страниц',
+  'identity-trubovarnya': '5 исполнений · 9 запретов в правилах',
+  'identity-sila-car': '5 исполнений · баннер 3000×1500 мм',
+};
+
+const identityCases = (await getCollection('cases', ({ data }) => !data.draft))
+  .filter((entry) => directionByCategory[entry.data.category] === 'identity')
+  .filter((entry) => Boolean(entry.data.gallery))
+  .sort((a, b) => caseOrderIndex(a.id) - caseOrderIndex(b.id))
+  .map((entry) => {
+    const c = entry.data;
+    return {
+      slug: c.slug,
+      title: c.shortTitle || c.client,
+      meta: [caseMetaBySlug[c.slug], c.segmentLabel].filter(Boolean).join(' · '),
+      coverSrc: `${c.gallery.assetRoot}/${c.gallery.cover.src}`,
+      coverAlt: c.gallery.cover.alt,
+    };
+  });
+
+// Счетчик в hero считается по кейсам, а не пишется руками: после публикации
+// нового кейса цифра меняется сама.
+const plural = (n: number, one: string, few: string, many: string) => {
+  const mod100 = n % 100;
+  const mod10 = n % 10;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+};
+
+const hero = {
+  headline: 'Фирменный стиль,',
+  headlineAccent: 'который применят без дизайнера',
+  lede:
+    'Логотип, палитра, шрифты и правила их применения. Объем зависит от того, ' +
+    'кто будет пользоваться стилем после сдачи: типография, оклейщик, ' +
+    'разработчик сайта или сам владелец.',
+  ctaPrimary: 'Обсудить фирменный стиль',
+  ctaSecondary: 'Стоимость работ',
+  meta: [
+    { num: '35', numAccent: 'k', suffix: ' ₽', label: 'Логотип — от' },
+    {
+      num: String(identityCases.length),
+      label: `${plural(identityCases.length, 'Кейс', 'Кейса', 'Кейсов')} фирменного стиля в портфолио`,
+    },
+    { num: '5', label: 'Исполнений знака в каждом гайдбуке' },
+    { num: 'VVO', numAccent: '.', label: 'Владивосток · работаю по РФ' },
+  ],
+};
+
+const marquee = {
+  ariaLabel: 'Что разрабатываю в направлении фирменного стиля',
+  items: [
+    'Логотип',
+    'Редизайн знака',
+    'Гайдбук',
+    'Брендбук',
+    'Палитра Pantone',
+    'Шрифтовая пара',
+    'Охранное поле',
+    'Визитка и бланк',
+    'Знаки для этикетки',
+    'Правила для подрядчиков',
+  ],
+};
+
+// Три сценария — по объему, а не по размеру бизнеса. Главный вопрос
+// страницы: сколько документации нужно, чтобы стилем пользовались без меня.
+const scenarios = [
+  {
+    num: '01',
+    title: 'Нужен только знак',
+    text:
+      'Компания запускается или меняет логотип, а носителей пока немного и все ' +
+      'делает один подрядчик. Хватает знака во всех исполнениях и файлов ' +
+      'в векторе — правила можно объяснить на словах.',
+  },
+  {
+    num: '02',
+    title: 'Стиль применяют подрядчики',
+    text:
+      'Знак ставят разные исполнители: типография этикетки, оклейщики автопарка, ' +
+      'разработчик сайта. Каждому нужен свой файл знака и свои значения цветов. Здесь нужен ' +
+      'гайдбук — так собран стиль Green Power.',
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'Стилем пользуется команда',
+    text:
+      'Носителей много, за них отвечают разные люди, а решения приходится ' +
+      'повторять. Тогда нужен брендбук: полная документация на 8–12 носителей, ' +
+      'по которой работают без согласований со мной.',
+  },
+];
+
+const approach = {
+  title: 'Четыре вопроса,<br>которые задают объем',
+  aside:
+    'Ответы на них определяют, что вы получите на выходе: набор файлов, гайдбук или полный регламент. Разбираю их на брифе до первой концепции.',
+  cards: [
+    {
+      num: '01',
+      title: 'Кто будет применять стиль',
+      text:
+        'Дизайнер в штате поймет и короткие правила. Если визитку в типографию ' +
+        'заказывает сам владелец, правила надо писать без профессионального ' +
+        'языка. В гайдбуке Трубоварни для этого сделана отдельная страница ' +
+        'с девятью запретами.',
+    },
+    {
+      num: '02',
+      title: 'Сколько носителей',
+      text:
+        'Визитка и фирменный бланк входят в гайдбук. 8–12 носителей — ' +
+        'это уже брендбук с отдельными макетами и правилами на каждый. ' +
+        'Список носителей нужен до старта: от него считается объем.',
+      featured: true,
+    },
+    {
+      num: '03',
+      title: 'Как это будут печатать',
+      text:
+        'Этикетка идет смесевыми красками, кузов — печатью по пленке, экран ' +
+        'работает в RGB, спецовка и гравировка — в один цвет. Под каждую ' +
+        'технологию нужен свой файл знака и свой набор цветов. Поэтому в каждом ' +
+        'гайдбуке пять исполнений знака.',
+    },
+    {
+      num: '04',
+      title: 'Что останется на руках',
+      text:
+        'Файлы в AI, EPS, PDF, PNG и SVG, цвета в CMYK, RGB и HEX — в любом ' +
+        'объеме. Разница в документе: правила на нескольких страницах, ' +
+        'гайдбук или PDF на 40–80 страниц.',
+    },
+  ],
+};
+
+// Широкая карточка над пакетами: частый вход в проект — не новый знак,
+// а обновление существующего.
+const redesign = {
+  badge: 'Редизайн',
+  title: 'Обновить логотип, не потеряв узнаваемость',
+  text: 'Когда знак есть и клиенты его знают, но он отстал от рынка или плохо работает на носителях.',
+  items: [
+    'Разбор текущего знака: что в нем работает, что мешает',
+    'Два направления обновления на выбор',
+    'Сохранение узнаваемости — клиент должен узнать компанию',
+    'Финал во всех исполнениях и форматах',
+  ],
+  price: 'от 45 000 ₽',
+  term: '10–14 рабочих дней',
+};
+
+const packages = [
+  {
+    num: '01',
+    title: 'Логотип',
+    price: 'от 35 000 ₽',
+    detail: 'Знак и фирменный блок · 7–10 рабочих дней',
+    items: [
+      'Бриф и анализ конкурентов',
+      'Две-три концепции, выбор направления',
+      'Детализация выбранной концепции',
+      'Все варианты: горизонтальный, вертикальный, знак, монохром',
+      'Файлы AI, EPS, PDF, PNG, SVG',
+      'Цвета в CMYK, RGB и HEX',
+    ],
+  },
+  {
+    num: '02',
+    title: 'Фирменный стиль с гайдбуком',
+    price: '60 000 ₽',
+    detail: 'Логотип и правила применения · 14–21 рабочий день',
+    items: [
+      'Все из пакета «Логотип»',
+      'Гайдбук в PDF: охранное поле, допустимые и недопустимые варианты',
+      'Палитра в Pantone, CMYK, RGB и HEX',
+      'Шрифтовая пара и правила набора',
+      'Правила применения на носителях',
+      'Макеты визитной карточки и фирменного бланка',
+    ],
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'Брендбук под ключ',
+    price: 'от 120 000 ₽',
+    detail: 'Полная документация · 3–5 недель',
+    items: [
+      'Все из пакета с гайдбуком',
+      'Паттерны и дополнительная графика',
+      'Правила на 8–12 носителях с макетами',
+      'PDF на 40–80 страниц',
+      'Регламент для подрядчиков и команды',
+    ],
+  },
+];
+
+// Доказательный блок: страница из каждого гайдбука и правило, записанное
+// на ней. Этими правилами клиент пользуется уже без дизайнера, поэтому
+// показываем конкретный лист документа и что он решает, а не картинку ради
+// картинки. Файлы — из галерей кейсов (full/ и thumb/).
+const rules = [
+  {
+    num: '01',
+    kicker: 'Трубоварня Еремеева',
+    title: 'Как нельзя использовать знак: страница запретов',
+    text:
+      'Визитку в типографию и надпись на технику заказывает сам владелец компании. ' +
+      'Поэтому в гайдбуке есть страница, где девять недопустимых вариантов показаны ' +
+      'картинками: растянуть, перекрасить, положить на пестрый фон, обвести контуром. ' +
+      'С картинкой не спорят, ее исполняют.',
+    root: '/assets/cases/identity-trubovarnya',
+    file: 'trubovarnya-guidebook-04-misuse',
+    alt: 'Страница гайдбука Трубоварни Еремеевой: девять недопустимых вариантов знака',
+    slug: 'identity-trubovarnya',
+  },
+  {
+    num: '02',
+    kicker: 'Green Power',
+    title: 'Какой файл знака брать под какой фон: пять исполнений',
+    text:
+      'Знак живет на бутылке, на борту фургона и в шапке сайта: печать смесевыми ' +
+      'красками, печать по пленке и RGB. В гайдбуке под каждый случай лежит готовый ' +
+      'файл: основной, на светлом цветном фоне, на темном и два монохромных. ' +
+      'Типография и оклейщик не подгоняют знак под фон сами.',
+    root: '/assets/cases/identity-green-power',
+    file: 'green-power-guidebook-03-versions',
+    alt: 'Страница гайдбука Green Power: цветные и монохромные исполнения знака',
+    slug: 'identity-green-power',
+  },
+  {
+    num: '03',
+    kicker: 'Sila Car',
+    title: 'Сколько места оставлять вокруг знака: охранное поле',
+    text:
+      'Вокруг фирменного блока задан минимальный отступ, в который нельзя ставить ' +
+      'текст, другие знаки и край носителя. Он записан в гайдбуке одной схемой, ' +
+      'поэтому печатник или оклейщик ставит знак на визитку, баннер 3000×1500 мм ' +
+      'или борт машины, не спрашивая, сколько отступить.',
+    root: '/assets/cases/identity-sila-car',
+    file: 'sila-car-guidebook-02-safe-area',
+    alt: 'Страница гайдбука Sila Car: фирменный блок, знак, логотип и охранное поле',
+    slug: 'identity-sila-car',
+  },
+];
+
+const process = {
+  title: 'Как идет<br>работа',
+  aside:
+    'Направление выбираем на концепциях: правки приходятся на этап, где они дешевы. Дальше знак разворачивается в исполнения, а решения записываются в документ.',
+  steps: [
+    {
+      num: '01',
+      title: 'Бриф и список носителей',
+      text: 'Сфера, аудитория, примеры «нравится — не нравится», список носителей и кто их будет заказывать. От этого считается объем и смета.',
+    },
+    {
+      num: '02',
+      title: 'Анализ конкурентов',
+      text: 'Смотрю знаки в вашем сегменте: чем они похожи, где повторяются приемы и за счет чего можно отличаться, не выпадая из отрасли.',
+    },
+    {
+      num: '03',
+      title: 'Две-три концепции',
+      text: 'Показываю варианты знака на носителях: на визитке, вывеске, в шапке сайта. Выбираем направление.',
+    },
+    {
+      num: '04',
+      title: 'Детализация и исполнения',
+      text: 'Довожу выбранный знак до финала и раскладываю на исполнения: горизонтальное, вертикальное, знак отдельно, на темном фоне, монохром.',
+    },
+    {
+      num: '05',
+      title: 'Гайдбук и передача файлов',
+      text: 'Собираю правила в документ: охранное поле, палитра, шрифты, применение на носителях. Отдаю исходники в AI и EPS — права на использование у заказчика.',
+    },
+  ],
+};
+
+const faqItems = [
+  {
+    q: 'Чем логотип отличается от фирменного стиля и брендбука?',
+    a: 'Логотип — это сам знак во всех исполнениях и форматах. Фирменный стиль с гайдбуком добавляет правила: охранное поле, палитру, шрифты, применение на носителях, визитку и фирменный бланк. Брендбук — полная документация на 8–12 носителей, PDF на 40–80 страниц, по которому работают команда и подрядчики. Объем выбирается по тому, сколько людей будет применять стиль без вас.',
+  },
+  {
+    q: 'У нас уже есть логотип — можно заказать только гайдбук?',
+    a: 'Да, стоимость та же — 60 000 ₽, срок 10–14 рабочих дней. Нужен исходник логотипа в AI или EPS и список носителей, на которых стиль будет применяться.',
+  },
+  {
+    q: 'Сколько занимает работа?',
+    a: 'Логотип — 7–10 рабочих дней. Фирменный стиль с гайдбуком — 14–21 рабочий день, только гайдбук к готовому знаку — 10–14 дней. Брендбук — 3–5 недель. Редизайн логотипа — 10–14 рабочих дней.',
+  },
+  {
+    q: 'Сколько вариантов знака вы показываете?',
+    a: 'Две-три концепции, разные по идее. Выбираем направление, дальше довожу до финала выбранное. При редизайне показываю два направления обновления.',
+  },
+  {
+    q: 'От чего зависит цена?',
+    a: 'От количества носителей, объема документации и сложности графики. Размер компании на цену не влияет. Чтобы посчитать точно, нужны сфера и аудитория, примеры «нравится — не нравится», список носителей и текущий логотип, если это редизайн.',
+  },
+  {
+    q: 'В каких форматах вы отдаете файлы?',
+    a: 'AI, EPS, PDF, PNG и SVG. Цвета — в CMYK для печати, RGB для экрана и HEX для верстки, в гайдбуке дополнительно в Pantone. Исходники в AI и EPS передаются заказчику, права на использование — у вас.',
+  },
+  {
+    q: 'Знак нужно печатать в одну краску и на спецовке. Это учитывается?',
+    a: 'Да, это закладывается в рисунок с самого начала. У Трубоварни Еремеевой силуэт держится в один цвет, поэтому знак переживает печать на спецовке и гравировку. У Green Power весь рисунок построен на контуре одной толщины — он одинаково работает и в одну краску, и увеличенным до размера борта фургона.',
+  },
+  {
+    q: 'Нужны ли отдельные знаки для упаковки?',
+    a: 'Иногда да. Маркировки вроде происхождения или «без ГМО» — это отдельная информация, внутрь фирменного знака она не помещается. Для Green Power такие знаки нарисованы отдельным набором в той же графике, что и логотип.',
+  },
+  {
+    q: 'Вы во Владивостоке — а если мы в другом городе?',
+    a: 'Работаю по всей России удаленно: бриф и согласования в Telegram или по видеосвязи, файлы в облаке. Трубоварня Еремеева — это Руза, Московская область. Договор, ИП, закрывающие документы, ЭДО по запросу, NDA при необходимости.',
+  },
+  {
+    q: 'Что дальше делают с готовым стилем?',
+    a: 'По нему собираются остальные носители: этикетка, сайт, презентация, оклейка автопарка. У Green Power один и тот же знак стоит на бутылках, на сайте компании и на бортах фургонов — этим я тоже занимаюсь, так что стиль не приходится передавать другому исполнителю.',
+    aHtml:
+      'По нему собираются остальные носители: <a href="/packaging/">этикетка</a>, <a href="/websites/">сайт</a>, <a href="/presentations/">презентация</a>, <a href="/car-wrap/">оклейка автопарка</a>. У Green Power один и тот же знак стоит на бутылках, на сайте компании и на бортах фургонов — этим я тоже занимаюсь, так что стиль не приходится передавать другому исполнителю.',
+  },
+];
+
+const identityFounder = {
+  title: 'Проект ведет<br>один дизайнер',
+  aside:
+    'Без цепочки менеджеров: бриф, концепции, исполнения знака и текст правил делает один человек — тот же, кто потом соберет по этому стилю упаковку, сайт или презентацию.',
+  name: site.founderSection.name,
+  role: site.founderSection.role,
+  image: site.founderSection.image,
+  imageAlt: site.founderSection.imageAlt,
+  text:
+    'В дизайне с 2010 года, начинал с упаковки и фирменного стиля. Правила пишу так, чтобы их исполнил не дизайнер, а типография, оклейщик или сам владелец компании. Иначе правила остаются в PDF, а на визитке появляется растянутый знак.',
+  stats: [
+    { num: '2010', label: 'Год начала работы дизайнером' },
+    { num: '5', label: 'Исполнений знака в каждом гайдбуке' },
+  ],
+  points: [
+    {
+      num: '01',
+      title: 'Один контакт',
+      text: 'Общаетесь напрямую с дизайнером, без пересказа задачи через менеджера.',
+    },
+    {
+      num: '02',
+      title: 'Правила без жаргона',
+      text: 'Гайдбук пишется для того, кто будет им пользоваться: типографии, оклейщика, владельца.',
+    },
+    {
+      num: '03',
+      title: 'Проверка на носителях',
+      text: 'Знак проверяется в печати, в одну краску и в мелком размере до того, как стал финалом.',
+    },
+    {
+      num: '04',
+      title: 'Исходники на руках',
+      text: 'Передаю AI и EPS вместе с превью — права на использование у заказчика.',
+    },
+  ],
+};
+
+const contactData = {
+  title: 'Обсудим ваш фирменный стиль',
+  intro: 'Пришлите сферу и список носителей, вернусь со сметой в день брифа.',
+  telegramTitle: 'Написать в Telegram',
+  maxTitle: 'Написать в MAX',
+  formTitle: 'Расскажите о компании',
+  fields: {
+    name: { label: 'Имя', placeholder: 'Как к вам обращаться', error: 'Как к вам обращаться?' },
+    car: {
+      label: 'Компания и задача',
+      placeholder: 'Например: монтаж отопления, нужен логотип и гайдбук',
+      error: 'Сфера и задача — чтобы прикинуть объем',
+      msgLabel: 'Компания и задача',
+    },
+    contact: {
+      label: 'Куда ответить',
+      placeholder: 'Телефон, почта или ник в Telegram',
+      error: 'Куда вам ответить? Телефон, почта или ник.',
+    },
+    message: {
+      label: 'Носители и материалы (необязательно)',
+      placeholder: 'Где будет применяться стиль, есть ли текущий логотип и в каком формате',
+    },
+  },
+  privacy: 'Заявка попадает в мою CRM и больше никуда. Как я обращаюсь с данными, написано в политике обработки.',
+  submit: 'Отправить заявку',
+  successTitle: 'Заявка отправлена',
+  successText: 'Отвечу в течение пары часов на контакт из заявки. Если удобнее переписка, ниже готовый текст для Telegram или MAX.',
+  successNote: 'В Telegram сообщение подставится само. Для MAX текст скопируется в буфер, вставьте его в чат.',
+  errorText: 'Заявка не ушла: сервер не ответил. Напишите мне напрямую, текст заявки уже собран:',
+  resetText: 'Отправить еще одну заявку',
+};
+
+const footer = {
+  ...site.footer,
+  columns: [
+    {
+      title: 'Страница',
+      links: [
+        { href: '#scope', label: 'Объем' },
+        { href: '#pricing', label: 'Цены' },
+        { href: '#rules', label: 'Правила' },
+        { href: '#cases', label: 'Кейсы' },
+        { href: '#process', label: 'Процесс' },
+        { href: '#faq', label: 'FAQ' },
+      ],
+    },
+    site.footer.columns[1],
+    {
+      title: 'Прочее',
+      links: [
+        { href: '/', label: 'Главная' },
+        { href: '/portfolio/', label: 'Портфолио' },
+        { href: '/websites/', label: 'Сайты' },
+        { href: '/packaging/', label: 'Упаковка' },
+        { href: '/presentations/', label: 'Презентации' },
+        { href: '/car-wrap/', label: 'Оклейка авто' },
+        { href: '/blog/', label: 'Мысли' },
+        { href: '#contact', label: 'Оставить заявку' },
+      ],
+    },
+  ],
+};
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${site.url}/identity/#service`,
+  name: 'Разработка логотипа и фирменного стиля',
+  serviceType: 'Фирменный стиль и брендинг',
+  description:
+    'Логотип во всех исполнениях, гайдбук с охранным полем, палитрой и шрифтами, брендбук на 8–12 носителей. Правила пишутся под тех, кто будет применять стиль: типографию, оклейщика, разработчика сайта.',
+  provider: { '@id': `${site.url}/#business` },
+  areaServed: { '@type': 'Country', name: 'Россия' },
+  audience: { '@type': 'BusinessAudience', audienceType: site.business.serviceAudience },
+  offers: [
+    { '@type': 'Offer', name: 'Логотип', price: '35000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Редизайн логотипа', price: '45000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Фирменный стиль с гайдбуком', price: '60000', priceCurrency: 'RUB' },
+    { '@type': 'Offer', name: 'Брендбук под ключ', price: '120000', priceCurrency: 'RUB' },
+  ],
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+const ldPortfolioCases = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${site.url}/identity/#portfolio`,
+  name: 'Кейсы фирменного стиля Kovtun.studio',
+  url: `${site.url}/identity/`,
+  numberOfItems: identityCases.length,
+  itemListElement: identityCases.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'CreativeWork',
+      name: item.title,
+      url: `${site.url}/cases/${item.slug}/`,
+      image: `${site.url}${item.coverSrc}`,
+      creator: { '@id': `${site.url}/#business` },
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="Логотип и фирменный стиль от 35 000 ₽ · Kovtun.studio"
+  description="Логотип от 35 000 ₽, фирменный стиль с гайдбуком 60 000 ₽, брендбук от 120 000 ₽. Правила пишутся под тех, кто применяет стиль без дизайнера."
+  keywords="разработка логотипа, фирменный стиль, гайдбук, брендбук, редизайн логотипа, айдентика, брендинг, Владивосток"
+  canonicalPath="/identity/"
+  ogImage="/og-identity.jpg"
+  ogImageAlt="Гайдбук Green Power: знак-дерево на листьях базилика"
+  ogTitle="Логотип и фирменный стиль — от знака до брендбука"
+  ogDescription="Логотип от 35 000 ₽, гайдбук 60 000 ₽, брендбук от 120 000 ₽. Пять исполнений знака и правила, которые применяют без дизайнера."
+  structuredData={[serviceLd, faqLd, ldPortfolioCases]}
+>
+  <Header nav={nav} phone={site.contact.phone} phoneTel={site.contact.phoneTel} telegramUrl={site.contact.telegram} maxUrl={site.contact.max} />
+
+  <main id="main-content">
+    <div class="identity-hero-wrap">
+      <Hero {...hero} />
+    </div>
+    <Marquee {...marquee} />
+
+    <section class="section" id="scope">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Три объема —<br>смотря кто применяет стиль</h2>
+          </div>
+          <p class="aside">Процесс один: бриф, анализ конкурентов, концепции, детализация. Разница в том, сколько правил нужно записать, чтобы стилем пользовались без дизайнера.</p>
+        </div>
+        <div class="scenario-grid">
+          {scenarios.map((scenario) => (
+            <article class:list={['scenario-card', { 'is-featured': scenario.featured }]}>
+              <div class="scenario-card__top">
+                <span class="scenario-num">{scenario.num}</span>
+                {scenario.featured && <span class="scenario-badge">Самый частый случай</span>}
+              </div>
+              <h3>{scenario.title}</h3>
+              <p>{scenario.text}</p>
+              <a href={`#package-${scenario.num}`}>Смотреть, что входит <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="approach-wrap">
+      <WhatGrid {...approach} />
+    </div>
+
+    <section class="section presentations-pricing" id="pricing">
+      <div class="container-wide">
+        <div class="section-head">
+          <h2>Четыре формата —<br>от знака до полного регламента</h2>
+          <p class="aside">Цена зависит не от размера компании, а от объема задачи: чем больше носителей, правил и документации — тем выше стоимость. Точную смету считаю после брифа.</p>
+        </div>
+
+        <article class="audit-card">
+          <div class="audit-card__badge">{redesign.badge}</div>
+          <div class="audit-card__body">
+            <h3>{redesign.title}</h3>
+            <p>{redesign.text}</p>
+            <ul>
+              {redesign.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="audit-card__offer">
+            <strong>{redesign.price}</strong>
+            <span>{redesign.term}</span>
+            <a class="btn btn-primary" href="#contact" data-package="Редизайн логотипа">
+              Обсудить редизайн <span class="arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+
+        <div class="package-grid">
+          {packages.map((item) => (
+            <article class:list={['package-card', { 'is-featured': item.featured }]} id={`package-${item.num}`}>
+              <div class="package-card__head">
+                <span>{item.num}</span>
+                {item.featured && <b>Чаще всего</b>}
+              </div>
+              <h3>{item.title}</h3>
+              <div class="package-price">{item.price}</div>
+              <p class="package-detail">{item.detail}</p>
+              <ul>
+                {item.items.map((entry) => <li>{entry}</li>)}
+              </ul>
+              <a class:list={['btn', item.featured ? 'btn-primary' : 'btn-dark']} href="#contact" data-package={item.title}>
+                Выбрать формат <span class="arrow" aria-hidden="true">→</span>
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <p class="rate-note">
+          Логотип уже есть? Гайдбук к нему делается отдельно за те же 60 000 ₽ и 10–14 дней —
+          нужен исходник в AI или EPS и список носителей.
+          Не уверены, какой объем ваш? Пришлите список носителей в
+          <a href={site.contact.telegram} target="_blank" rel="noopener">Telegram</a> —
+          скажу, что достаточно, и назову вилку. Без обязательств.
+        </p>
+        <p class="rate-note">
+          По готовому стилю дальше собираются <a href="/packaging/">упаковка</a>,
+          <a href="/presentations/">презентации</a> и <a href="/car-wrap/">оклейка автопарка</a> —
+          включаю их в общую смету проекта, чтобы стиль не пришлось передавать другому исполнителю.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="rules">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Что клиент делает<br>по гайдбуку сам</h2>
+          </div>
+          <p class="aside">
+            Три страницы из трех гайдбуков. На каждой одно правило, которое
+            исполняют без дизайнера: типография, оклейщик или сам владелец.
+          </p>
+        </div>
+
+        <div class="rule-grid">
+          {rules.map((rule) => (
+            <article class="rule-card">
+              <figure class="rule-card__media">
+                <img
+                  src={`${rule.root}/full/${rule.file}.webp`}
+                  srcset={`${rule.root}/thumb/${rule.file}-thumbnail.webp 800w, ${rule.root}/full/${rule.file}.webp 1600w`}
+                  sizes="(max-width: 900px) 100vw, 33vw"
+                  alt={rule.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width="1600"
+                  height="900"
+                />
+              </figure>
+              <div class="rule-card__top">
+                <span class="rule-num">{rule.num}</span>
+                <span class="rule-kicker">{rule.kicker}</span>
+              </div>
+              <h3>{rule.title}</h3>
+              <p>{rule.text}</p>
+              <a href={`/cases/${rule.slug}/`}>Смотреть гайдбук в кейсе <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="cases">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2>Кейсы фирменного<br>стиля</h2>
+          </div>
+          <p class="aside">
+            Каждый проект разобран на отдельной странице: с какими носителями
+            пришел клиент, как собран знак и что вошло в гайдбук.
+          </p>
+        </div>
+
+        <div class="pcase-grid pcase-grid--three">
+          {identityCases.map((item, i) => (
+            <a class="pcase" href={`/cases/${item.slug}/`}>
+              <span class="pcase__media">
+                <img
+                  src={item.coverSrc}
+                  alt={item.coverAlt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : undefined}
+                  decoding="async"
+                  width="1600"
+                  height="900"
+                />
+              </span>
+              <span class="pcase__body">
+                <strong>{item.title}</strong>
+                <span class="pcase__meta">{item.meta}</span>
+              </span>
+              <span class="pcase__arrow" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+
+        <div class="gallery-more">
+          <a class="btn btn-dark btn-lg" href="/portfolio/?direction=identity">
+            Смотреть все работы по фирменному стилю <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <ReturningClients variant="compact" />
+
+    <ProcessSteps {...process} />
+
+    <FounderSection data={identityFounder} />
+
+    <FAQ
+      title="Частые<br>вопросы"
+      intro="Если короткого ответа недостаточно — напишите в Telegram. Посмотрю текущий знак и отвечу по вашей задаче."
+      ctaAsk="Задать вопрос"
+      telegramUrl={site.contact.telegram}
+      items={faqItems.map((item) => ({ q: item.q, a: item.aHtml ?? item.a }))}
+    />
+
+    <ContactForm
+      data={contactData}
+      telegramUrl={site.contact.telegram}
+      telegramHandle={site.contact.telegramHandle}
+      maxUrl={site.contact.max}
+      maxHandle={site.contact.maxHandle}
+      briefUrl="/tools/brief-identity.html"
+      briefLabel="Заполнить бриф на фирменный стиль"
+      goalName="identity_lead_submit"
+      messageIntro="Здравствуйте! Хочу обсудить логотип и фирменный стиль."
+    />
+  </main>
+
+  <Footer {...footer} />
+
+  <script is:inline>
+    (function () {
+      'use strict';
+
+      /* Цели Метрики. Отправка формы живет в ContactForm.astro. */
+      function goal(name, params) {
+        if (typeof window.ksAnalyticsGoal === 'function') window.ksAnalyticsGoal(name, params);
+      }
+
+      var form = document.getElementById('lead-form');
+      var fields = document.getElementById('form-fields');
+      var success = document.getElementById('form-success');
+      var fMessage = document.getElementById('f-message');
+
+      /* Кнопки форматов: префилл формы + скролл + цель */
+      Array.prototype.forEach.call(document.querySelectorAll('[data-package]'), function (btn) {
+        btn.addEventListener('click', function () {
+          if (success && success.hidden === false) { success.hidden = true; fields.hidden = false; form.classList.remove('is-success'); }
+          if (fMessage) fMessage.value = 'Интересует формат: ' + btn.dataset.package + '.';
+          goal('identity_package_pick', { pkg: btn.dataset.package });
+        });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href="#contact"]'), function (link) {
+        link.addEventListener('click', function () { goal('identity_cta_main'); });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="https://t.me/"]'), function (link) {
+        link.addEventListener('click', function () { goal('telegram_direct'); });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (link) {
+        link.addEventListener('click', function () { goal('cta_phone'); });
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* В сценариях этой страницы нет строки с ценой, поэтому к нижнему краю
+     карточки прижимается сама ссылка (как на /packaging/). */
+  .scenario-card a {
+    margin-top: auto;
+  }
+
+  /* Водяной знак hero: слово читает .hero-red::after в global.css. */
+  .identity-hero-wrap :global(.hero-red) {
+    --hero-watermark: 'ЗНАК';
+  }
+
+  /* В блоке «Четыре вопроса» карточек четыре: в базовой сетке из трех колонок
+     четвертая повисала одна в ряду, поэтому здесь 2×2. */
+  @media (min-width: 801px) {
+    .approach-wrap :global(.what-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Карточки правил. От scenario-card отличаются тем, что несут ссылку
+     на конкретный кейс: правило должно быть проверяемым. */
+  .rule-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .rule-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px 26px;
+    background: var(--bg-2);
+    border-top: 3px solid var(--ks-red);
+  }
+
+  /* Страница гайдбука во всю ширину карточки, встык к красной линии сверху. */
+  .rule-card__media {
+    margin: -28px -26px 16px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-3, var(--bg-2));
+  }
+
+  .rule-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rule-card__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rule-num {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    color: var(--ks-red);
+  }
+
+  .rule-kicker {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .rule-card h3 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .rule-card p {
+    margin: 0;
+    color: var(--fg-3);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .rule-card a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .rule-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

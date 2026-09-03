@@ -7,6 +7,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
+import ReturningClients from '../components/ReturningClients.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
@@ -17,6 +18,13 @@ import { editorialCaseConfigs } from '../data/case-page-config';
 const dataDir = path.resolve('./src/data');
 const site = yaml.load(fs.readFileSync(path.join(dataDir, 'site.yaml'), 'utf8')) as any;
 const taxonomy = yaml.load(fs.readFileSync(path.join(dataDir, 'taxonomy.yaml'), 'utf8')) as any;
+
+// Обложки карточек направлений берем из меню «Услуги» в site.yaml — там они
+// уже подобраны под каждое направление, второй раз выбирать не нужно.
+const servicesNav = (site.nav as any[]).find((item) => item.children?.length);
+const coverByHref: Record<string, string> = Object.fromEntries(
+  (servicesNav?.children ?? []).map((child: any) => [child.href, child.image]),
+);
 
 // Тексты и переходы по направлениям — ключ соответствует taxonomy.yaml.
 // Числа в плашках НЕ прописываются руками: они считаются ниже по кейсам,
@@ -31,18 +39,18 @@ const directionContent: Record<
 > = {
   packaging: {
     text: 'Дизайн упаковки для розницы и HoReCa. Отдаю макет, готовый к печати.',
-    href: '/portfolio/?direction=packaging',
-    status: (cases) => `${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
+    href: '/packaging/',
+    status: (cases) => `Аудит от 15 000 ₽ · ${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')}`,
   },
   identity: {
     text: 'Логотип, палитра, шрифты и правила их применения. По ним дальше собираются упаковка, сайт и презентации.',
-    href: '/portfolio/?direction=identity',
-    status: (cases) => `${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
+    href: '/identity/',
+    status: (cases) => `От 35 000 ₽ · ${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')}`,
   },
   web: {
     text: 'Сайты и одностраничники для бизнеса: структура, тексты и готовые страницы.',
-    href: '/portfolio/?direction=web',
-    status: (cases) => `${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')} в портфолио`,
+    href: '/websites/',
+    status: (cases) => `От 120 000 ₽ · ${cases} ${plural(cases, 'кейс', 'кейса', 'кейсов')}`,
   },
   presentations: {
     text: 'Структура, текст, слайды и инфографика: питчи, отчеты, маркетинг-киты.',
@@ -96,6 +104,7 @@ const directions = taxonomy.directions.map((d: any, i: number) => {
     label: d.label,
     text: content.text,
     href: content.href,
+    image: coverByHref[content.href],
     soon: cases === 0,
     status: cases === 0 ? 'Работы пока не опубликованы' : content.status(cases),
     ctaLabel: cases === 1 ? 'Смотреть кейс' : 'Смотреть направление',
@@ -146,8 +155,8 @@ const process = {
 const faqItems = [
   { q: 'Не знаю, какое направление мне нужно — что делать?', a: 'Опишите задачу в сообщении. Подскажу направление и примерную цену в переписке или на созвоне.' },
   { q: 'Можно заказать сразу два направления, например логотип и упаковку?', a: 'Да. Такие задачи веду вместе — так проще сохранить единый стиль между материалами.' },
-  { q: 'Сколько это стоит?', a: 'Цена зависит от объема и сложности задачи, размер компании на нее не влияет. Оклейка — от 10 000 ₽, упаковка — аудит от 15 000 ₽ и проект от 120 000 ₽, по презентациям на их странице есть калькулятор. Айдентику и сайты считаю индивидуально после брифа.' },
-  { q: 'Можно заказать только часть работы?', a: 'Да. Для сайта можно отдельно заказать только текст и структуру, без дизайна и верстки. Для айдентики — только гайдлайн, если логотип уже есть.' },
+  { q: 'Сколько это стоит?', a: 'Цена зависит от объема и сложности задачи, размер компании на нее не влияет. Оклейка — от 10 000 ₽, логотип — от 35 000 ₽, упаковка — аудит от 15 000 ₽ и проект от 120 000 ₽, лендинг под ключ — от 120 000 ₽. По презентациям на их странице есть калькулятор. Точную смету отдаю в день брифа.' },
+  { q: 'Можно заказать только часть работы?', a: 'Да. Для сайта — только текст, структуру или дизайн, без верстки. Для фирменного стиля — только гайдбук, если логотип уже есть.' },
   { q: 'Работаете один или с командой?', a: 'Все пять направлений веду сам: от брифа до готового файла.' },
   { q: 'Как оформляется работа?', a: 'Официально, как ИП, с договором. ЭДО и NDA — по запросу. Все исходники передаю вам.' },
   { q: 'Как быстро посчитаете стоимость?', a: 'Смету отправляю в тот же день, как получаю бриф.' },
@@ -213,8 +222,8 @@ const faqLd = {
 ---
 
 <BaseLayout
-  title="Дизайн для бизнеса — упаковка, айдентика, сайты, презентации, оклейка авто · Kovtun.studio"
-  description="Упаковка, логотип и фирменный стиль, сайты, презентации и оклейка транспорта. Все пять направлений ведет один дизайнер: бриф, концепция, правки, готовый файл. Смета в день брифа."
+  title="Дизайн для бизнеса во Владивостоке · Kovtun.studio"
+  description="Упаковка, логотип и фирменный стиль, сайты, презентации, оклейка авто. Все пять направлений ведет один дизайнер от брифа до готового файла. Смета в день брифа."
   keywords="услуги дизайнера, упаковка, фирменный стиль, дизайн сайта, презентации, оклейка авто, Владивосток, Kovtun.studio"
   canonicalPath="/"
   ogImage="/og-services.jpg"
@@ -234,8 +243,8 @@ const faqLd = {
     <section class="services-hero">
       <div class="container-wide">
         <h1 class="reveal" style="--reveal-delay: 60ms">
-          Упаковка, логотип, сайт,<br>
-          презентация, оклейка.<br>
+          <span class="h1-long">Упаковка, логотип, сайт,<br>презентация, оклейка.<br></span>
+          <span class="h1-short">Пять направлений дизайна.<br></span>
           <em class="accent">Один дизайнер, один счет</em>
         </h1>
         <p class="s-lede reveal" style="--reveal-delay: 120ms">
@@ -276,6 +285,11 @@ const faqLd = {
         <div class="dir-grid">
           {directions.map((d: any, i: number) => (
             <a class="dir-card reveal" href={d.href} style={`--reveal-delay: ${i * 50}ms`} data-direction={d.key}>
+              {d.image && (
+                <span class="dc-media">
+                  <img src={d.image} alt="" loading="lazy" decoding="async" width="800" height="450" />
+                </span>
+              )}
               <span class="dc-num">{d.num}</span>
               <h3>{d.label}</h3>
               <p>{d.text}</p>
@@ -289,17 +303,19 @@ const faqLd = {
 
     <ProcessSteps {...process} />
 
+    <ReturningClients />
+
     <section class="section-tight services-proof" id="proof">
       <div class="container-wide">
         <div class="proof-row reveal">
           <div class="proof-copy">
             <h2>Клиенты из разных сфер</h2>
             <p class="proof-names">
-              <b>«Green Power»</b>, <b>«Металл Инвест»</b>, <b>«Тернейский фермер»</b>,
-              <b>ВМТП</b>, <b>«Japan Шина»</b>, <b>Sila Car</b>, <b>«Капиталъ Информ»</b>,
-              <b>«Трубоварня Еремеева»</b>, <b>ПТК «Стройконструкция»</b>,
-              <b>EON Phuket</b>, <b>«Кузница души»</b>, <b>«Эктострой»</b>,
-              <b>Greatway</b>, <b>EVG Group</b>, <b>B2B Cosmetics</b>.
+              <a href="/cases/identity-green-power/">«Green Power»</a>, <a href="/cases/brochure-metall-invest/">«Металл Инвест»</a>, <a href="/cases/presentation-terney-farmer/">«Тернейский фермер»</a>,
+              <a href="/cases/presentation-vmtp/">ВМТП</a>, <a href="/cases/website-japan-shina/">«Japan Шина»</a>, <a href="/cases/identity-sila-car/">Sila Car</a>, <a href="/cases/website-kapital-inform/">«Капиталъ Информ»</a>,
+              <a href="/cases/identity-trubovarnya/">«Трубоварня Еремеева»</a>, <a href="/cases/website-ptksk/">ПТК «Стройконструкция»</a>,
+              <a href="/cases/website-eon-phuket/">EON Phuket</a>, <a href="/cases/website-kuznitsa-dushi/">«Кузница души»</a>, <a href="/cases/website-ektostroy/">«Эктострой»</a>,
+              <a href="/cases/website-greatway/">Greatway</a>, <a href="/cases/website-evg-group/">EVG Group</a>, <a href="/cases/website-b2b-cosmetics/">B2B Cosmetics</a>.
               Производство питания, металлургия, агробизнес, логистика и порт,
               автобизнес, бухгалтерские услуги, инженерные системы, производство
               металлоконструкций, спа и велнес, выездные мужские программы,
@@ -424,9 +440,24 @@ const faqLd = {
     display: flex; flex-direction: column;
     text-decoration: none;
     border: 0;
+    overflow: hidden;
     transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
   }
   .dir-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+  /* Обложка кейса во всю ширину карточки: главная студии дизайна раньше
+     не показывала ни одной работы. */
+  .dc-media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin: -32px -28px 22px;
+    background: var(--ks-charcoal);
+  }
+  .dc-media img {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  .dir-card:hover .dc-media img { transform: scale(1.04); }
   .dc-num {
     font: 800 13px/1 var(--font-display);
     letter-spacing: 0.16em;
@@ -447,7 +478,7 @@ const faqLd = {
   }
   .dc-status {
     align-self: flex-start;
-    font: 700 10px/1 var(--font-display);
+    font: 700 11px/1 var(--font-display);
     letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--fg-3);
     border: 1px solid var(--line-2);
@@ -464,6 +495,14 @@ const faqLd = {
     transition: color var(--dur-base);
   }
   .dir-card:hover .dc-cta { color: var(--ks-red); }
+
+  /* На телефоне длинный перечень направлений в заголовке занимал шесть
+     строк и уводил кнопки под сгиб; короткая версия — только там. */
+  .h1-short { display: none; }
+  @media (max-width: 600px) {
+    .h1-long { display: none; }
+    .h1-short { display: inline; }
+  }
 
   /* ── Proof strip ────────────────────────────────────────────────────── */
   .proof-row {
@@ -485,7 +524,8 @@ const faqLd = {
     margin: 0;
     max-width: 56ch;
   }
-  .proof-names b { color: var(--fg-1); font-weight: 700; }
+  .proof-names a { color: var(--fg-1); font-weight: 700; text-decoration-color: var(--line-2); text-underline-offset: 3px; }
+  .proof-names a:hover { color: var(--ks-red); text-decoration-color: var(--ks-red); }
   .proof-nums {
     font: 700 15px/1.5 var(--font-display);
     color: var(--fg-1);

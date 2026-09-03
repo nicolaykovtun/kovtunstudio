@@ -41,6 +41,22 @@ export const directionByCategory: Record<string, string> = {
   'car-wrap': 'wrap',
 };
 
+/**
+ * Страница услуги для каждого направления. Кейсы ссылаются на нее из крошек
+ * и CTA, портфолио — из списка направлений. Раньше кейсы вели только
+ * в /portfolio/, и у страниц услуг не было входящих ссылок с 27 кейсов.
+ */
+export const servicePageByDirection: Record<
+  string,
+  { href: string; label: string; cta: string }
+> = {
+  packaging: { href: '/packaging/', label: 'Упаковка', cta: 'Цены и процесс по упаковке' },
+  identity: { href: '/identity/', label: 'Логотип и фирменный стиль', cta: 'Цены и процесс по фирменному стилю' },
+  web: { href: '/websites/', label: 'Сайты', cta: 'Цены и процесс по сайтам' },
+  presentations: { href: '/presentations/', label: 'Презентации', cta: 'Цены и процесс по презентациям' },
+  wrap: { href: '/car-wrap/', label: 'Оклейка авто', cta: 'Цены и процесс по оклейке' },
+};
+
 export const sphereBySegment: Record<string, string> = {
   automotive: 'auto',
   'logistics-and-port': 'logistics-and-port',

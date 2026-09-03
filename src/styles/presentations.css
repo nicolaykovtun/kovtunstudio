@@ -140,7 +140,7 @@
 .stage-slide--front small {
   display: block;
   margin-bottom: 42px;
-  font: 700 10px/1 var(--font-display);
+  font: 700 11px/1 var(--font-display);
   letter-spacing: .18em;
   color: rgba(255,255,255,.52);
 }
@@ -225,7 +225,7 @@
 .package-card__head b {
   padding: 7px 9px;
   background: var(--ks-red);
-  font: 700 10px/1 var(--font-display);
+  font: 700 11px/1 var(--font-display);
   letter-spacing: .1em;
   text-transform: uppercase;
   color: #fff;
@@ -874,3 +874,131 @@
     transition: none;
   }
 }
+
+/* Широкая карточка над пакетами: экспресс-аудит на /packaging/, редизайн
+   на /identity/, отдельный этап на /websites/. Собрана в стилистике
+   package-card, но лежит горизонтально: бейдж, состав, справа цена и кнопка.
+   Раньше жила в scoped-стилях packaging.astro и на другие страницы не
+   попадала — бейдж, цена и кнопка сваливались в одну строку. */
+.audit-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: start;
+  padding: 34px 32px;
+  margin-bottom: 16px;
+  background: var(--bg-2);
+  border-top: 3px solid var(--ks-red);
+}
+
+.audit-card__badge {
+  padding: 6px 12px;
+  background: var(--ks-red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.audit-card__body h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.audit-card__body p {
+  margin: 0 0 16px;
+  color: var(--fg-3);
+}
+
+/* Две колонки через columns, а не grid: в grid строки выравнивались по
+   самому высокому пункту, и под коротким оставалась дыра. */
+.audit-card__body ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 2;
+  column-gap: 24px;
+}
+
+.audit-card__body li {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+.audit-card__body li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.audit-card__body li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 8px;
+  height: 2px;
+  background: var(--ks-red);
+}
+
+.audit-card__offer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  text-align: left;
+  min-width: 220px;
+}
+
+.audit-card__offer strong {
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Только подпись под ценой: без «>» правило красило и стрелку
+   внутри кнопки — она сливалась с красным фоном. */
+.audit-card__offer > span {
+  font-size: 13px;
+  color: var(--fg-3);
+}
+
+.audit-card__offer .btn {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .audit-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .audit-card__badge {
+    justify-self: start;
+  }
+
+  .audit-card__body ul {
+    columns: 1;
+  }
+}
+
+/* Ставки за слайд спрятаны в раскрывающийся блок: до этого на странице шли
+   четыре блока о цене подряд. */
+.rate-details { margin-top: 24px; }
+.rate-details summary {
+  cursor: pointer;
+  font: 700 15px/1.3 var(--font-display);
+  padding: 14px 0;
+  border-top: 1px solid var(--line-1);
+  border-bottom: 1px solid var(--line-1);
+  list-style: none;
+}
+.rate-details summary::-webkit-details-marker { display: none; }
+.rate-details summary::after { content: '+'; float: right; color: var(--ks-red); font-weight: 700; }
+.rate-details[open] summary::after { content: '−'; }
+.rate-details[open] summary { border-bottom: 0; }
+.rate-details .rate-grid { margin-top: 16px; }

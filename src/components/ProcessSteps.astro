@@ -19,7 +19,7 @@ const { title, aside, steps } = Astro.props;
       </div>
       <p class="aside">{aside}</p>
     </div>
-    <div class="steps">
+    <div class:list={['steps', { 'steps--five': steps.length === 5 }]}>
       {steps.map(step => (
         <div class="step">
           <div class="step-num">{step.num}</div>
