@@ -9,6 +9,8 @@ export const caseCatalogOrder = [
   'labels-green-power-juice',
   'labels-green-power-paste',
   'brand-micking',
+  'identity-alaska',
+  'packaging-alaska',
   'identity-trubovarnya',
   'website-trubovarnya',
   'identity-sila-car',

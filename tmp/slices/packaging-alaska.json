@@ -1,0 +1,36 @@
+{
+  "outDir": "public/assets/cases/packaging-alaska",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "cases/published/Alaska - Packaging/Raw/Упаковка/2(2).png",
+    "top": 25,
+    "height": 3564,
+    "name": "alaska-packaging-cover",
+    "background": "#dfe6ee"
+  },
+  "sources": [
+    { "file": "tmp/derived/alaska/compare-before.png", "prefix": "alaska-compare", "blocks": [{ "name": "before", "order": 1 }] },
+    { "file": "tmp/derived/alaska/compare-after.png",  "prefix": "alaska-compare", "blocks": [{ "name": "after",  "order": 2 }] },
+
+    { "file": "cases/published/Alaska - Packaging/Raw/Упаковка/Аляска Новый дизайн 3.jpg", "prefix": "alaska-system", "blocks": [{ "name": "anatomy", "order": 1 }] },
+    { "file": "cases/published/Alaska - Packaging/Raw/Упаковка/Аляска Новый дизайн 2.jpg", "prefix": "alaska-system", "blocks": [{ "name": "series",  "order": 2 }] },
+
+    { "file": "tmp/derived/alaska/label-cmf.png",       "prefix": "alaska-label", "blocks": [{ "name": "cmf",       "order": 1 }] },
+    { "file": "tmp/derived/alaska/label-efb.png",       "prefix": "alaska-label", "blocks": [{ "name": "efb",       "order": 2 }] },
+    { "file": "tmp/derived/alaska/label-agm.png",       "prefix": "alaska-label", "blocks": [{ "name": "agm",       "order": 3 }] },
+    { "file": "tmp/derived/alaska/label-cmf-big.png",   "prefix": "alaska-label", "blocks": [{ "name": "cmf-big",   "order": 4 }] },
+    { "file": "tmp/derived/alaska/label-efb-small.png", "prefix": "alaska-label", "blocks": [{ "name": "efb-small", "order": 5 }] },
+    { "file": "tmp/derived/alaska/label-agm-small.png", "prefix": "alaska-label", "blocks": [{ "name": "agm-small", "order": 6 }] },
+    { "file": "tmp/derived/alaska/label-top-cmf.png",  "prefix": "alaska-label", "blocks": [{ "name": "top-cmf",   "order": 7 }] },
+    { "file": "tmp/derived/alaska/label-top-agm.png",  "prefix": "alaska-label", "blocks": [{ "name": "top-agm",   "order": 8 }] },
+
+    { "file": "tmp/derived/alaska/box-cmf-40.png", "prefix": "alaska-box", "blocks": [{ "name": "cmf-40", "order": 1 }] },
+    { "file": "tmp/derived/alaska/logo-on-box.png","prefix": "alaska-box", "blocks": [{ "name": "cmf-50", "order": 2 }] },
+    { "file": "tmp/derived/alaska/box-cmf-65.png", "prefix": "alaska-box", "blocks": [{ "name": "cmf-65", "order": 3 }] },
+    { "file": "tmp/derived/alaska/box-cmf-95.png", "prefix": "alaska-box", "blocks": [{ "name": "cmf-95", "order": 4 }] },
+
+    { "file": "cases/published/Alaska - Packaging/Raw/Упаковка/2(2).png",       "prefix": "alaska-ad", "blocks": [{ "name": "photo",  "order": 1 }] },
+    { "file": "cases/published/Alaska - Packaging/Raw/Реклама/1800х950 превью 1.png", "prefix": "alaska-ad", "blocks": [{ "name": "banner", "order": 2 }] }
+  ]
+}

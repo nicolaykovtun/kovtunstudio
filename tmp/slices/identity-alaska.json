@@ -1,0 +1,27 @@
+{
+  "outDir": "public/assets/cases/identity-alaska",
+  "fullWidth": 1440,
+  "thumbWidth": 640,
+  "cover": {
+    "file": "tmp/derived/alaska/logo-cover.png",
+    "top": 0,
+    "height": 1080,
+    "name": "alaska-identity-cover",
+    "background": "#3C4965"
+  },
+  "sources": [
+    { "file": "tmp/derived/alaska/logo-original.png", "prefix": "alaska-logo", "blocks": [{ "name": "original", "order": 1 }] },
+    { "file": "tmp/derived/alaska/logo-guides.png",   "prefix": "alaska-logo", "blocks": [{ "name": "guides",   "order": 2 }] },
+    { "file": "tmp/derived/alaska/logo-step1.png",    "prefix": "alaska-logo", "blocks": [{ "name": "step1",    "order": 3 }] },
+    { "file": "tmp/derived/alaska/logo-step2.png",    "prefix": "alaska-logo", "blocks": [{ "name": "step2",    "order": 4 }] },
+    { "file": "tmp/derived/alaska/logo-step3.png",    "prefix": "alaska-logo", "blocks": [{ "name": "step3",    "order": 5 }] },
+    { "file": "tmp/derived/alaska/logo-step4.png",    "prefix": "alaska-logo", "blocks": [{ "name": "step4",    "order": 6 }] },
+    { "file": "tmp/derived/alaska/logo-step5.png",    "prefix": "alaska-logo", "blocks": [{ "name": "step5",    "order": 7 }] },
+    { "file": "tmp/derived/alaska/logo-rules.png",    "prefix": "alaska-logo", "blocks": [{ "name": "rules",    "order": 8 }] },
+
+    { "file": "tmp/derived/alaska/logo-on-label.png",  "prefix": "alaska-carrier", "blocks": [{ "name": "label",  "order": 1 }] },
+    { "file": "tmp/derived/alaska/logo-on-box.png",    "prefix": "alaska-carrier", "blocks": [{ "name": "box",    "order": 2 }] },
+    { "file": "tmp/derived/alaska/logo-on-banner.png", "prefix": "alaska-carrier", "blocks": [{ "name": "banner", "order": 3 }] },
+    { "file": "tmp/derived/alaska/logo-on-top.png",    "prefix": "alaska-carrier", "blocks": [{ "name": "top",    "order": 4 }] }
+  ]
+}

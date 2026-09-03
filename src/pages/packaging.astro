@@ -425,9 +425,10 @@ const caseMetaBySlug: Record<string, string> = {
   'labels-green-power-oil': '16 видов · 32 макета',
   'labels-green-power-juice': '19 вкусов · 38 макетов',
   'labels-green-power-paste': '5 паст · лента 100×40 мм',
+  'packaging-alaska': '37 позиций · 3 серии',
 };
 
-const featuredPackagingSlugs = ['labels-green-power-oil', 'labels-green-power-juice', 'brand-micking'];
+const featuredPackagingSlugs = ['labels-green-power-oil', 'packaging-alaska', 'brand-micking'];
 const packagingCases = (await getCollection('cases', ({ data }) => !data.draft))
   .filter((entry) => directionByCategory[entry.data.category] === 'packaging')
   .filter((entry) => Boolean(entry.data.gallery))
