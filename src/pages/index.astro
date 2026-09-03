@@ -12,7 +12,7 @@ import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
 import RevealScript from '../components/RevealScript.astro';
-import { directionByCategory } from '../data/case-catalog';
+import { directionByCategory, sphereBySegment } from '../data/case-catalog';
 import { editorialCaseConfigs } from '../data/case-page-config';
 
 const dataDir = path.resolve('./src/data');
@@ -112,6 +112,27 @@ const directions = taxonomy.directions.map((d: any, i: number) => {
 });
 
 const totalCases = Object.keys(directionOfCase).length;
+
+// Сферы бизнеса клиентов: сколько кейсов в каждой и кто заказчики. Считается
+// из тех же кейсов, ссылка ведет в портфолио с фильтром по сфере. Раньше
+// здесь был сплошной список из 15 имен без ответа на вопрос «а с моей
+// отраслью он работал?».
+const sphereLabel: Record<string, string> = Object.fromEntries(
+  taxonomy.spheres.map((s: any) => [s.key, s.label]),
+);
+const sphereMap = new Map<string, { key: string; label: string; count: number; clients: string[] }>();
+const addToSphere = (key: string | undefined, client: string) => {
+  if (!key || !sphereLabel[key]) return;
+  if (!sphereMap.has(key)) sphereMap.set(key, { key, label: sphereLabel[key], count: 0, clients: [] });
+  const s = sphereMap.get(key)!;
+  s.count += 1;
+  if (!s.clients.includes(client)) s.clients.push(client);
+};
+for (const c of legacyCases) addToSphere(c.sphereKey, c.name);
+for (const entry of editorialEntries) {
+  addToSphere(sphereBySegment[entry.data.segment] ?? entry.data.segment, entry.data.client);
+}
+const spheres = [...sphereMap.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'));
 const proofNums =
   `${totalCases} ${plural(totalCases, 'разобранный кейс', 'разобранных кейса', 'разобранных кейсов')} в портфолио.`;
 
@@ -307,22 +328,27 @@ const faqLd = {
 
     <section class="section-tight services-proof" id="proof">
       <div class="container-wide">
-        <div class="proof-row reveal">
-          <div class="proof-copy">
-            <h2>Клиенты из разных сфер</h2>
-            <p class="proof-names">
-              <a href="/cases/identity-green-power/">«Green Power»</a>, <a href="/cases/brochure-metall-invest/">«Металл Инвест»</a>, <a href="/cases/presentation-terney-farmer/">«Тернейский фермер»</a>,
-              <a href="/cases/presentation-vmtp/">ВМТП</a>, <a href="/cases/website-japan-shina/">«Japan Шина»</a>, <a href="/cases/identity-sila-car/">Sila Car</a>, <a href="/cases/website-kapital-inform/">«Капиталъ Информ»</a>,
-              <a href="/cases/identity-trubovarnya/">«Трубоварня Еремеева»</a>, <a href="/cases/website-ptksk/">ПТК «Стройконструкция»</a>,
-              <a href="/cases/website-eon-phuket/">EON Phuket</a>, <a href="/cases/website-kuznitsa-dushi/">«Кузница души»</a>, <a href="/cases/website-ektostroy/">«Эктострой»</a>,
-              <a href="/cases/website-greatway/">Greatway</a>, <a href="/cases/website-evg-group/">EVG Group</a>, <a href="/cases/website-b2b-cosmetics/">B2B Cosmetics</a>.
-              Производство питания, металлургия, агробизнес, логистика и порт,
-              автобизнес, бухгалтерские услуги, инженерные системы, производство
-              металлоконструкций, спа и велнес, выездные мужские программы,
-              умный дом, недвижимость, оптовая торговля косметикой.
-            </p>
-            <p class="proof-nums">{proofNums}</p>
+        <div class="section-head">
+          <div>
+            <h2>С кем работаю</h2>
           </div>
+          <p class="aside">
+            {spheres.length} {plural(spheres.length, 'сфера', 'сферы', 'сфер')} бизнеса, {proofNums}
+            Нажмите на сферу, откроется портфолио с фильтром по ней.
+          </p>
+        </div>
+        <ul class="sphere-grid">
+          {spheres.map((s) => (
+            <li>
+              <a class="sphere" href={`/portfolio/?sphere=${s.key}`}>
+                <span class="sphere__count">{s.count} {plural(s.count, 'кейс', 'кейса', 'кейсов')}</span>
+                <strong>{s.label}</strong>
+                <span class="sphere__clients">{s.clients.join(', ')}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="gallery-more">
           <a class="btn btn-dark" href="/portfolio/">
             Смотреть портфолио <span class="arrow" aria-hidden="true">→</span>
           </a>
@@ -419,20 +445,17 @@ const faqLd = {
   @media (max-width: 560px) { .benefits-grid { grid-template-columns: 1fr; } }
 
   /* ── Directions grid ────────────────────────────────────────────────── */
-  /* 6 колонок вместо auto-fit — при 5 карточках auto-fit то помещал 4 в ряд,
-     то 5, оставляя последний ряд наполовину пустым. Здесь ряд всегда занят
-     целиком: первые три карточки по 2/6 (треть), последние две — по 3/6
-     (половина), поэтому оба ряда всегда идут край в край без зазора. */
+  /* 6 колонок: все пять карточек одной ширины (по 2/6), вторая строка
+     из двух центрирована через явный старт колонки. Раньше последние две
+     были в полтора раза шире первых, и обложки в них разъезжались. */
   .dir-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 16px;
   }
-  .dir-card:nth-child(1),
-  .dir-card:nth-child(2),
-  .dir-card:nth-child(3) { grid-column: span 2; }
-  .dir-card:nth-child(4),
-  .dir-card:nth-child(5) { grid-column: span 3; }
+  .dir-card { grid-column: span 2; }
+  .dir-card:nth-child(4) { grid-column: 2 / span 2; }
+  .dir-card:nth-child(5) { grid-column: 4 / span 2; }
   .dir-card {
     background: var(--bg-2);
     border-radius: var(--r-2);
@@ -503,6 +526,46 @@ const faqLd = {
     .h1-long { display: none; }
     .h1-short { display: inline; }
   }
+
+  /* ── Сферы бизнеса ─────────────────────────────────────────────────── */
+  .sphere-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sphere {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 18px 18px 16px;
+    background: var(--bg-2);
+    border-top: 2px solid var(--line-2);
+    text-decoration: none;
+    transition: border-color var(--dur-base), transform var(--dur-base) var(--ease-out);
+  }
+  .sphere:hover { border-top-color: var(--ks-red); transform: translateY(-2px); }
+  .sphere__count {
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.06em;
+    color: var(--ks-red);
+  }
+  .sphere strong {
+    font: 700 17px/1.25 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--fg-1);
+  }
+  .sphere__clients {
+    font: 400 13px/1.45 var(--font-body);
+    color: var(--fg-3);
+  }
+  .services-proof .gallery-more { margin-top: 28px; }
+  @media (max-width: 1000px) { .sphere-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { .sphere-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 460px) { .sphere-grid { grid-template-columns: 1fr; } }
 
   /* ── Proof strip ────────────────────────────────────────────────────── */
   .proof-row {
