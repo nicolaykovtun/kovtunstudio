@@ -136,6 +136,7 @@ nav:
         # и положен на белое скриптом docs/tools/label-measure/make-menu-cover.cjs:
         # рамка плитки режет картинку по object-fit: cover.
         image: /assets/menu/packaging-micking.webp
+        imageAlt: Канистры и банки моторного масла MICKING после ребрендинга упаковки
       - href: "/identity/"
         label: "Логотип и фирменный стиль"
         desc: "Знак, палитра, гайдбук с правилами"
@@ -143,18 +144,22 @@ nav:
         # заполняет ее без полей. Плашка «Скоро» показывается, только когда
         # у направления нет картинки.
         image: /assets/cases/identity-green-power/thumb/green-power-guidebook-01-cover-thumbnail.webp
+        imageAlt: Обложка гайдбука по фирменному стилю Green Power со знаком-деревом
       - href: "/websites/"
         label: Сайты
         desc: "Лендинги и сайты для бизнеса"
         image: /assets/cases/website-japan-shina/thumb/japan-shina-home-01-hero-thumbnail.webp
+        imageAlt: Первый экран сайта Japan Шина с подбором шин по автомобилю
       - href: "/presentations/"
         label: Презентации
         desc: "Слайды и брошюры, которые продают идею"
         image: /assets/cases/presentation-vmtp/thumb/vmtp-presentation-cover-thumbnail.webp
+        imageAlt: Титульный слайд презентации Владивостокского морского торгового порта
       - href: "/car-wrap/"
         label: "Оклейка авто"
         desc: "Макеты оклейки коммерческого транспорта"
         image: /assets/portfolio/thumb/01.webp
+        imageAlt: Фургон с рекламной оклейкой в фирменных цветах заказчика
   - href: "/blog/"
     label: Мысли
   - href: "/#contact"

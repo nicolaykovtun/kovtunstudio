@@ -393,6 +393,9 @@ const tgChannel = 'https://t.me/kovtundesign';
     height: 72px;
     object-fit: cover;
   }
+  /* Без min-width: 0 тело блока диктует ширину колонки статьи: внутри лежит
+     кнопка, а у .btn в global.css стоит white-space: nowrap. */
+  .post-subscribe-body { min-width: 0; }
   .post-subscribe-name { margin: 0 0 8px; font-weight: 700; font-size: 18px; }
   .post-subscribe-text { margin: 0 0 16px; font: var(--t-body); line-height: 1.6; }
 
@@ -504,10 +507,27 @@ const tgChannel = 'https://t.me/kovtundesign';
   .post-related-desc { margin: 0; font: var(--t-body-s); line-height: 1.55; }
 
   @media (max-width: 1000px) {
-    .post-layout { grid-template-columns: 1fr; }
+    .post-layout { grid-template-columns: minmax(0, 1fr); }
     .post-side { order: 2; }
     .post-side-sticky { position: static; max-height: none; }
     .post-toc { display: none; }
     .post-related-grid { grid-template-columns: 1fr; }
+  }
+
+  /* На 375 блок подписки требовал 384px и давал горизонтальный скролл всей
+     статье: 56px полей, 72px аватара, 20px зазора и неразрывная кнопка.
+     Тот же прием, что у .portfolio-cta__actions .btn в editorial-pages.css. */
+  @media (max-width: 560px) {
+    .post-subscribe,
+    .post-content :global(.post-subscribe) {
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 20px;
+    }
+    .post-subscribe :global(.btn),
+    .post-content :global(.post-subscribe .btn) {
+      white-space: normal;
+      text-align: left;
+    }
   }
 </style>

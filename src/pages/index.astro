@@ -25,6 +25,11 @@ const servicesNav = (site.nav as any[]).find((item) => item.children?.length);
 const coverByHref: Record<string, string> = Object.fromEntries(
   (servicesNav?.children ?? []).map((child: any) => [child.href, child.image]),
 );
+// Описания к тем же картинкам. Пустой alt тут не годится: карточка направления
+// показывает реальную работу, и по ней приходят из поиска по картинкам.
+const coverAltByHref: Record<string, string> = Object.fromEntries(
+  (servicesNav?.children ?? []).map((child: any) => [child.href, child.imageAlt ?? '']),
+);
 
 // Тексты и переходы по направлениям — ключ соответствует taxonomy.yaml.
 // Числа в плашках НЕ прописываются руками: они считаются ниже по кейсам,
@@ -105,6 +110,7 @@ const directions = taxonomy.directions.map((d: any, i: number) => {
     text: content.text,
     href: content.href,
     image: coverByHref[content.href],
+    imageAlt: coverAltByHref[content.href],
     soon: cases === 0,
     status: cases === 0 ? 'Работы пока не опубликованы' : content.status(cases),
     ctaLabel: cases === 1 ? 'Смотреть кейс' : 'Смотреть направление',
@@ -308,7 +314,7 @@ const faqLd = {
             <a class="dir-card reveal" href={d.href} style={`--reveal-delay: ${i * 50}ms`} data-direction={d.key}>
               {d.image && (
                 <span class="dc-media">
-                  <img src={d.image} alt="" loading="lazy" decoding="async" width="800" height="450" />
+                  <img src={d.image} alt={d.imageAlt} loading="lazy" decoding="async" width="800" height="450" />
                 </span>
               )}
               <span class="dc-num">{d.num}</span>

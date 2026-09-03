@@ -4,6 +4,7 @@ interface NavChild {
   label: string;
   desc?: string;
   image?: string;
+  imageAlt?: string;
 }
 interface NavItem { href: string; label: string; children?: NavChild[] }
 interface Props {
@@ -105,7 +106,7 @@ const megaItems = nav
                 <a class="mega-card" href={child.href} aria-current={isPageMatch(child.href) ? 'page' : undefined}>
                   <span class="mega-card__frame">
                     {child.image ? (
-                      <img src={child.image} alt="" loading="lazy" width="480" height="270" />
+                      <img src={child.image} alt={child.imageAlt ?? ''} loading="lazy" width="480" height="270" />
                     ) : (
                       <span class="mega-card__soon">
                         <span class="mega-card__soon-label">Скоро</span>
