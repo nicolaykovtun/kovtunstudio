@@ -22,6 +22,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>101</categoryId>
         <url>https://kovtun.studio/packaging/</url>
+        <picture>https://kovtun.studio/assets/services/01-packaging-micking.jpg</picture>
         <description>Разработка новой упаковки или редизайн одного SKU: бриф, анализ конкурентов на полке, две концепции, детализация выбранного направления, предпечатная подготовка и финальные файлы. Срок 10–14 рабочих дней.</description>
       </offer>
       <offer id="packagingM">
@@ -31,6 +32,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>101</categoryId>
         <url>https://kovtun.studio/packaging/</url>
+        <picture>https://kovtun.studio/assets/services/02-packaging-green-power.jpg</picture>
         <description>Система дизайна для продуктовой линейки из 3–5 SKU: сетка, зоны параметров, цветовая логика, навигация по позициям, адаптация макетов и предпечатная подготовка. Срок 2–3 недели.</description>
       </offer>
       <offer id="packagingL">
@@ -40,6 +42,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>101</categoryId>
         <url>https://kovtun.studio/packaging/</url>
+        <picture>https://kovtun.studio/assets/services/01-packaging-micking.jpg</picture>
         <description>Система упаковки для линейки с 3D-визуализацией или промышленным дизайном формы: макеты SKU, рендеры для каталога и маркетплейса и подготовка к производству. Срок 3–5 недель.</description>
       </offer>
       <offer id="identityLogo">
@@ -49,6 +52,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>102</categoryId>
         <url>https://kovtun.studio/identity/</url>
+        <picture>https://kovtun.studio/assets/services/03-identity-trubovarnya.jpg</picture>
         <description>Бриф, анализ конкурентов, 2–3 концепции, детализация выбранного направления и полный комплект файлов AI, EPS, PDF, PNG и SVG. Срок 7–10 рабочих дней.</description>
       </offer>
       <offer id="identityRedesign">
@@ -58,6 +62,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>102</categoryId>
         <url>https://kovtun.studio/identity/</url>
+        <picture>https://kovtun.studio/assets/services/03-identity-trubovarnya.jpg</picture>
         <description>Разбор существующего знака, обновление с сохранением узнаваемости, два направления, выбор и финализация. Передаются рабочие исходники и версии для печати и цифровых носителей. Срок 10–14 рабочих дней.</description>
       </offer>
       <offer id="identityGuide">
@@ -67,6 +72,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>102</categoryId>
         <url>https://kovtun.studio/identity/</url>
+        <picture>https://kovtun.studio/assets/services/03-identity-trubovarnya.jpg</picture>
         <description>Логотип и гайдбук: охранные зоны, цвета, шрифты, правила применения, визитная карта и фирменный бланк. Срок 14–21 рабочий день.</description>
       </offer>
       <offer id="identityBrandbook">
@@ -76,6 +82,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>102</categoryId>
         <url>https://kovtun.studio/identity/</url>
+        <picture>https://kovtun.studio/assets/services/03-identity-trubovarnya.jpg</picture>
         <description>Расширенная система фирменного стиля: логотип, цвета, шрифты, паттерны, правила применения на 8–12 носителях и брендбук объемом 40–80 страниц. Срок 3–5 недель.</description>
       </offer>
       <offer id="websiteLanding">
@@ -85,6 +92,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>103</categoryId>
         <url>https://kovtun.studio/websites/</url>
+        <picture>https://kovtun.studio/assets/services/05-website-greatway.jpg</picture>
         <description>Одностраничный сайт под ключ: исследование задачи, текст, структура, прототип, уникальный дизайн, адаптивная верстка, базовое SEO и формы заявок. Срок 4–6 недель.</description>
       </offer>
       <offer id="websiteCorporate">
@@ -94,6 +102,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>103</categoryId>
         <url>https://kovtun.studio/websites/</url>
+        <picture>https://kovtun.studio/assets/services/06-website-kapital-inform.jpg</picture>
         <description>Корпоративный сайт на 5–10 страниц: тексты, структура, прототипы, уникальный дизайн, адаптивная верстка, базовое SEO, формы, блог или новости, карта и отзывы. Срок 6–8 недель.</description>
       </offer>
       <offer id="websiteB2B">
@@ -103,6 +112,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>103</categoryId>
         <url>https://kovtun.studio/websites/</url>
+        <picture>https://kovtun.studio/assets/services/05-website-greatway.jpg</picture>
         <description>B2B-сайт на 10–20 страниц с каталогом и фильтрами, прайс-листом, формой оптовой заявки, текстами, прототипами, дизайном и адаптивной версткой. Интеграции оцениваются отдельно. Срок 10–12 недель.</description>
       </offer>
       <offer id="presentationReady">
@@ -112,6 +122,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>104</categoryId>
         <url>https://kovtun.studio/presentations/</url>
+        <picture>https://kovtun.studio/assets/services/07-presentation-vmtp.jpg</picture>
         <description>Проверка логики готового текста, уникальный дизайн в стиле бренда, инфографика и диаграммы, файлы PDF и PPTX, один раунд правок. Расчет для презентации объемом 10 слайдов. Срок 3 рабочих дня.</description>
       </offer>
       <offer id="presentationDraft">
@@ -121,6 +132,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>104</categoryId>
         <url>https://kovtun.studio/presentations/</url>
+        <picture>https://kovtun.studio/assets/services/08-presentation-edelweiss.jpg</picture>
         <description>Вычитка черновика, расстановка приоритетов, структура и раскладка по слайдам, уникальный дизайн, инфографика и диаграммы, PDF и PPTX, один раунд правок. Расчет для 10 слайдов. Срок 3 рабочих дня.</description>
       </offer>
       <offer id="presentationZero">
@@ -130,6 +142,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>104</categoryId>
         <url>https://kovtun.studio/presentations/</url>
+        <picture>https://kovtun.studio/assets/services/07-presentation-vmtp.jpg</picture>
         <description>Бриф, формулировка сообщений, текст и история с нуля, структура, уникальный дизайн, инфографика и диаграммы, файлы PDF и PPTX, один раунд правок. Расчет для 10 слайдов.</description>
       </offer>
       <offer id="carwrapS">
@@ -139,6 +152,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>105</categoryId>
         <url>https://kovtun.studio/car-wrap/</url>
+        <picture>https://kovtun.studio/assets/services/09-car-wrap-sila-car.jpg</picture>
         <description>Логотип, контакты, сайт или QR-код, компоновка по кузову, фирменные цвета и подготовка макета под печать. Печать и монтаж выполняет выбранный клиентом подрядчик. Срок 3 рабочих дня.</description>
       </offer>
       <offer id="carwrapM">
@@ -148,6 +162,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>105</categoryId>
         <url>https://kovtun.studio/car-wrap/</url>
+        <picture>https://kovtun.studio/assets/services/10-car-wrap-japan-line.jpg</picture>
         <description>Рекламная композиция по кузову, несколько информационных блоков, акценты на продукте или услуге, детальная адаптация под автомобиль и подготовка макета под печать. Срок 5 рабочих дней.</description>
       </offer>
       <offer id="carwrapL">
@@ -157,6 +172,7 @@
         <currencyId>RUB</currencyId>
         <categoryId>105</categoryId>
         <url>https://kovtun.studio/car-wrap/</url>
+        <picture>https://kovtun.studio/assets/services/09-car-wrap-sila-car.jpg</picture>
         <description>Визуальная концепция, сложная композиция по всем сторонам автомобиля, иллюстрации, текстуры, коллажи или фотографии, рекламные акценты и подготовка макета под печать. Срок 7 рабочих дней.</description>
       </offer>
     </offers>
