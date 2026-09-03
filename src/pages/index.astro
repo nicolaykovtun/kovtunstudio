@@ -337,17 +337,21 @@ const faqLd = {
             Нажмите на сферу, откроется портфолио с фильтром по ней.
           </p>
         </div>
-        <ul class="sphere-grid">
-          {spheres.map((s) => (
+        <ol class="sphere-list">
+          {spheres.map((s, i) => (
             <li>
-              <a class="sphere" href={`/portfolio/?sphere=${s.key}`}>
-                <span class="sphere__count">{s.count} {plural(s.count, 'кейс', 'кейса', 'кейсов')}</span>
-                <strong>{s.label}</strong>
-                <span class="sphere__clients">{s.clients.join(', ')}</span>
+              <a class="sphere-row" href={`/portfolio/?sphere=${s.key}`}>
+                <span class="sr-num" aria-hidden="true">{pad(i + 1)}</span>
+                <span class="sr-body">
+                  <span class="sr-name">{s.label}</span>
+                  <span class="sr-clients">{s.clients.join(', ')}</span>
+                </span>
+                <span class="sr-count">{s.count} {plural(s.count, 'кейс', 'кейса', 'кейсов')}</span>
+                <span class="sr-arrow" aria-hidden="true">→</span>
               </a>
             </li>
           ))}
-        </ul>
+        </ol>
         <div class="gallery-more">
           <a class="btn btn-dark" href="/portfolio/">
             Смотреть портфолио <span class="arrow" aria-hidden="true">→</span>
@@ -528,44 +532,66 @@ const faqLd = {
   }
 
   /* ── Сферы бизнеса ─────────────────────────────────────────────────── */
-  .sphere-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
+  /* Тот же список строк, что «Направления каталога» в портфолио: номер,
+     крупное название, заказчики серым, число кейсов, стрелка. Строки не
+     оставляют висячего элемента при любом числе сфер. */
+  .sphere-list {
+    list-style: none;
     margin: 0;
     padding: 0;
-    list-style: none;
+    border-top: 1px solid var(--line-1);
+    counter-reset: none;
   }
-  .sphere {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    height: 100%;
-    padding: 18px 18px 16px;
-    background: var(--bg-2);
-    border-top: 2px solid var(--line-2);
+  .sphere-row {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto 40px;
+    align-items: center;
+    gap: 24px;
+    padding: 18px 20px;
+    margin: 0 -20px;
+    border-bottom: 1px solid var(--line-1);
     text-decoration: none;
-    transition: border-color var(--dur-base), transform var(--dur-base) var(--ease-out);
+    transition: background var(--dur-base) var(--ease-out);
   }
-  .sphere:hover { border-top-color: var(--ks-red); transform: translateY(-2px); }
-  .sphere__count {
-    font: 600 11px/1 var(--font-mono);
-    letter-spacing: 0.06em;
+  .sphere-row:hover { background: var(--bg-2); }
+  .sr-num {
+    font: 800 13px/1 var(--font-display);
+    letter-spacing: 0.08em;
     color: var(--ks-red);
+    padding-left: 4px;
   }
-  .sphere strong {
-    font: 700 17px/1.25 var(--font-display);
-    letter-spacing: -0.01em;
+  .sr-body { min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+  .sr-name {
+    font: 700 clamp(19px, 1.9vw, 24px)/1.15 var(--font-display);
+    letter-spacing: -0.015em;
     color: var(--fg-1);
+    transition: color var(--dur-base);
   }
-  .sphere__clients {
-    font: 400 13px/1.45 var(--font-body);
+  .sphere-row:hover .sr-name { color: var(--ks-red); }
+  .sr-clients {
+    font: 400 14px/1.4 var(--font-body);
     color: var(--fg-3);
   }
+  .sr-count {
+    font: 600 12px/1 var(--font-mono);
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+    white-space: nowrap;
+  }
+  .sr-arrow {
+    font: 400 24px/1 var(--font-display);
+    color: var(--fg-1);
+    justify-self: end;
+    transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
+  }
+  .sphere-row:hover .sr-arrow { transform: translateX(6px); color: var(--ks-red); }
   .services-proof .gallery-more { margin-top: 28px; }
-  @media (max-width: 1000px) { .sphere-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (max-width: 700px) { .sphere-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 460px) { .sphere-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) {
+    .sphere-row { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; padding: 14px 14px; margin: 0 -14px; }
+    .sr-arrow { display: none; }
+    .sr-body { flex-direction: column; gap: 2px; }
+    .sr-count { font-size: 11px; }
+  }
 
   /* ── Proof strip ────────────────────────────────────────────────────── */
   .proof-row {
