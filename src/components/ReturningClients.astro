@@ -21,8 +21,12 @@ interface Props {
 }
 const { variant = 'full' } = Astro.props;
 
-// Подпись шага в цепочке. Короткое название кейса включает имя клиента
-// («Этикетки масла Green Power»), в цепочке имя лишнее — оно в заголовке.
+// Подпись шага в цепочке. Базово это короткое название кейса без имени клиента:
+// оно уже стоит в заголовке цепочки. Карта ниже — только ручные сокращения там,
+// где так читается лучше; для нового кейса заполнять ее не обязательно.
+//
+// Голый categoryLabel в подписи не годится: у МСМ ГРУПП три кейса, из них два
+// по упаковке, и цепочка читалась «Упаковка → Фирменный стиль → Упаковка».
 const stepLabelBySlug: Record<string, string> = {
   'identity-green-power': 'Фирменный стиль',
   'labels-green-power-oil': 'Этикетки масла',
@@ -36,9 +40,27 @@ const stepLabelBySlug: Record<string, string> = {
   'sila-car': 'Оклейка авто',
 };
 
-type Step = { slug: string; label: string; year?: number; order: number };
+type Step = { slug: string; label: string; title: string; year?: number; order: number };
 
 const normalize = (name: string) => name.replace(/[«»"]/g, '').trim().toLowerCase();
+
+/**
+ * «Этикетки масла Green Power» + клиент «Green Power» → «Этикетки масла».
+ * Имя клиента вырезается поиском по подстроке, без конструирования регулярки:
+ * в именах встречаются кавычки и точки, и экранировать их незачем.
+ * Если имени в названии нет (у МСМ ГРУПП кейсы называются по брендам —
+ * MICKING и Alaska), название остается как есть.
+ */
+const stripClient = (title: string, client: string) => {
+  const name = client.replace(/[«»"]/g, '').trim();
+  if (!name) return title;
+  const at = title.toLowerCase().indexOf(name.toLowerCase());
+  if (at < 0) return title;
+  const stripped = `${title.slice(0, at)} ${title.slice(at + name.length)}`
+    .replace(/\s+/g, ' ')
+    .trim();
+  return stripped.length >= 3 ? stripped : title;
+};
 
 const dataDir = path.resolve('./src/data');
 const legacyCases = yaml.load(fs.readFileSync(path.join(dataDir, 'cases.yaml'), 'utf8')) as any[];
@@ -54,9 +76,11 @@ const push = (client: string, step: Step) => {
 
 for (const entry of editorialEntries) {
   const c = entry.data;
+  const title = c.shortTitle || c.client;
   push(c.client, {
     slug: c.slug,
-    label: stepLabelBySlug[c.slug] ?? c.categoryLabel,
+    label: stepLabelBySlug[c.slug] ?? stripClient(title, c.client),
+    title,
     year: c.year ? Number(c.year) : undefined,
     order: caseOrderIndex(c.slug),
   });
@@ -64,7 +88,8 @@ for (const entry of editorialEntries) {
 for (const c of legacyCases) {
   push(c.name, {
     slug: c.slug,
-    label: stepLabelBySlug[c.slug] ?? 'Оклейка авто',
+    label: stepLabelBySlug[c.slug] ?? stripClient(c.title || c.name, c.name),
+    title: c.title || c.name,
     year: c.year ? Number(c.year) : undefined,
     order: caseOrderIndex(c.slug),
   });
@@ -79,6 +104,17 @@ const chains = [...byClient.values()]
     steps: chain.steps.sort((a, b) => (a.year ?? 9999) - (b.year ?? 9999) || a.order - b.order),
   }))
   .sort((a, b) => b.steps.length - a.steps.length);
+
+// Страховка от одинаковых подписей внутри одной цепочки: если два шага назвались
+// так же, оба показываются полным названием кейса. Без нее новый кейс молча
+// ломает читаемость блока, а заметить это можно только глазами на главной.
+for (const chain of chains) {
+  const seen = new Map<string, number>();
+  for (const step of chain.steps) seen.set(step.label, (seen.get(step.label) ?? 0) + 1);
+  for (const step of chain.steps) {
+    if ((seen.get(step.label) ?? 0) > 1) step.label = step.title;
+  }
+}
 
 const returningCases = chains.reduce((sum, chain) => sum + chain.steps.length, 0);
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "node scripts/check-llms.mjs && astro build && node scripts/check-llms-links.mjs",
+    "build": "node scripts/check-llms.mjs && astro build && node scripts/check-llms-links.mjs && node scripts/check-content.mjs",
     "check-llms": "node scripts/check-llms.mjs",
     "check-llms-links": "node scripts/check-llms-links.mjs",
     "preview": "astro preview"
