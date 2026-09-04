@@ -11,11 +11,15 @@ import path from 'node:path';
  * thumb того же имени.
  */
 export function coverSrcset(src: string): string | undefined {
+  const file = path.join('public', src);
   if (src.startsWith('/assets/portfolio/full/')) {
-    return `${src.replace('/full/', '/thumb/')} 800w, ${src} 2400w`;
+    const wide = webpWidth(file) ?? 2400;
+    // Часть архивных обложек оклейки живет в родном размере исходника — он
+    // местами меньше превью на 800 px. Тогда второй кандидат браузеру не нужен.
+    if (wide <= 800) return undefined;
+    return `${src.replace('/full/', '/thumb/')} 800w, ${src} ${wide}w`;
   }
   const small = src.replace(/\.webp$/, '-800.webp');
-  const file = path.join('public', src);
   if (small !== src && fs.existsSync(path.join('public', small))) {
     return `${small} 800w, ${src} ${webpWidth(file) ?? 1600}w`;
   }
