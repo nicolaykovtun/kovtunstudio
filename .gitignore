@@ -58,3 +58,6 @@ tmp/**
 !tmp/*.mjs
 !tmp/slices/
 !tmp/slices/*.json
+
+# отладочные дампы GEO-монитора
+docs/ai-seo/geo-log/raw-*.txt
