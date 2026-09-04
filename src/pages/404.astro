@@ -1,0 +1,613 @@
+---
+// 404.astro — страница «такой страницы нет».
+// Astro кладет ее в dist/404.html, GitHub Pages отдает этот файл на любой
+// неизвестный адрес. Полоса с цифрами — WebGL-шейдер под белой маской:
+// сквозь вырезанные цифры видно живую заливку в фирменном красном.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import site from '../lib/site';
+
+// Названия и описания направлений берем из site.yaml, чтобы список разделов
+// не разъехался с мега-меню. Слова для поиска и для подсказки по битому
+// адресу лежат отдельно: латиница нужна, чтобы поймать опечатку в URL.
+const KEYS: Record<string, string> = {
+  '/portfolio/':     'портфолио работы кейсы проекты portfolio raboty keysy',
+  '/packaging/':     'упаковка этикетка коробка канистра packaging upakovka etiketka',
+  '/identity/':      'логотип фирменный стиль бренд гайдбук identity logotip brending',
+  '/websites/':      'сайт лендинг веб разработка websites sayt landing web',
+  '/presentations/': 'презентация слайды брошюра presentations prezentacii slides',
+  '/car-wrap/':      'оклейка авто машина фургон транспорт car wrap okleyka avto',
+  '/blog/':          'блог статьи мысли blog stati',
+  '/tools/':         'брифы инструменты калькулятор tools brif kalkulyator',
+  '/#contact':       'заявка контакты связаться телефон contact kontakty zayavka',
+  '/#faq':           'вопросы сроки оплата правки faq voprosy',
+};
+
+const services = (site.nav ?? []).find((item: any) => item.children?.length)?.children ?? [];
+
+const routes = [
+  { path: '/portfolio/', name: 'Портфолио', desc: 'Все работы: упаковка, фирменный стиль, сайты, презентации' },
+  ...services.map((child: any) => ({ path: child.href, name: child.label, desc: child.desc })),
+  { path: '/blog/', name: 'Мысли', desc: 'Статьи о дизайне и работе над проектами' },
+  { path: '/tools/', name: 'Брифы и инструменты', desc: 'Брифы и калькуляторы для расчета работ' },
+  { path: '/#contact', name: 'Оставить заявку', desc: 'Форма и контакты, отвечаю в рабочие часы' },
+  { path: '/#faq', name: 'Частые вопросы', desc: 'Сроки, правки, оплата, передача исходников' },
+].map((route) => ({ ...route, keys: KEYS[route.path] ?? '' }));
+---
+
+<BaseLayout
+  title="Страница не найдена · Kovtun.studio"
+  description="Такой страницы на сайте нет. Разделы: портфолио, упаковка, фирменный стиль, сайты, презентации, оклейка авто."
+  canonicalPath="/404"
+  bodyClass="page-404"
+>
+  <Header
+    nav={site.nav}
+    phone={site.contact.phone}
+    phoneTel={site.contact.phoneTel}
+    telegramUrl={site.contact.telegram}
+    maxUrl={site.contact.max}
+  />
+
+  <main id="main-content">
+    <section class="band" id="band" aria-labelledby="page-title">
+      <canvas id="shader" aria-hidden="true"></canvas>
+      <svg class="knockout" id="cutsvg" viewBox="0 0 1200 400" aria-hidden="true">
+        <defs>
+          <mask id="cut">
+            <rect id="cutbase" x="0" y="0" width="1200" height="400" fill="#fff"></rect>
+            <text id="cuttext" x="600" y="200" fill="#000"
+                  text-anchor="middle" dominant-baseline="central"
+                  font-family="Geist, system-ui, sans-serif" font-weight="800"
+                  font-size="360" letter-spacing="-18">404</text>
+          </mask>
+        </defs>
+        <rect id="cutfill" x="0" y="0" width="1200" height="400" fill="#FFFFFF" mask="url(#cut)"></rect>
+      </svg>
+      <span class="band-edge"></span>
+    </section>
+
+    <section class="lead">
+      <div class="container grid">
+        <div>
+          <h1 id="page-title">Такой страницы <em>нет</em></h1>
+          <p class="lede">
+            Либо в адресе опечатка, либо ссылка устарела.
+            Работы и услуги на месте, ниже список разделов.
+          </p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="/">На главную <span class="arrow">→</span></a>
+            <a class="btn btn-ghost-dark" href={site.contact.telegram} target="_blank" rel="noopener">Написать в Telegram</a>
+          </div>
+        </div>
+
+        <div class="diag">
+          <div class="diag-head">
+            <span class="status">HTTP 404 · NOT FOUND</span>
+            <span>{site.domain}</span>
+          </div>
+          <dl>
+            <div class="diag-row" id="path-row" hidden>
+              <dt>Что вы открывали</dt>
+              <dd id="req-path"></dd>
+            </div>
+            <div class="diag-row diag-guess" id="guess-row" hidden>
+              <dt>Похоже, вы искали</dt>
+              <dd>
+                <a id="guess-link" href="/">
+                  <span class="name" id="guess-name"></span>
+                  <span class="path" id="guess-path"></span>
+                </a>
+              </dd>
+            </div>
+            <div class="diag-row" id="path-fallback">
+              <dt>Что дальше</dt>
+              <dd class="plain">Выберите раздел ниже или напишите в Telegram.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="routes">
+      <div class="container">
+        <div class="routes-head">
+          <h2>Куда идти дальше</h2>
+          <div class="finder">
+            <label class="visually-hidden" for="route-filter">Поиск по разделам сайта</label>
+            <input id="route-filter" type="search" autocomplete="off"
+                   placeholder="Упаковка, логотип, презентация…"
+                   aria-describedby="filter-hint">
+            <kbd aria-hidden="true">/</kbd>
+          </div>
+        </div>
+        <p id="filter-hint" class="visually-hidden">Список разделов фильтруется по мере ввода</p>
+
+        <div class="route-list" id="routes">
+          {routes.map((route, index) => (
+            <a class="route" href={route.path} data-keys={`${route.name} ${route.keys} ${route.path}`.toLowerCase()}>
+              <span class="idx">{String(index + 1).padStart(2, '0')}</span>
+              <span>
+                <span class="name">{route.name}</span>
+                <span class="desc">{route.desc}</span>
+              </span>
+              <span class="go" aria-hidden="true">→</span>
+            </a>
+          ))}
+        </div>
+        <p class="routes-empty" id="routes-empty" hidden>
+          Ничего не нашлось. Напишите в Telegram, подскажу нужную страницу.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer {...site.footer} />
+
+  <script is:inline define:vars={{ ROUTES: routes }}>
+    /* ─── Фильтр по разделам ────────────────────────────────────────── */
+    (function () {
+      var list = document.getElementById('routes');
+      var input = document.getElementById('route-filter');
+      var empty = document.getElementById('routes-empty');
+      if (!list || !input || !empty) return;
+
+      input.addEventListener('input', function () {
+        var q = input.value.trim().toLowerCase();
+        var shown = 0;
+        Array.prototype.forEach.call(list.querySelectorAll('.route'), function (el) {
+          var hit = !q || el.dataset.keys.indexOf(q) !== -1;
+          el.hidden = !hit;
+          if (hit) shown++;
+        });
+        empty.hidden = shown > 0;
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === '/' && document.activeElement !== input) {
+          e.preventDefault();
+          input.focus();
+        }
+      });
+    })();
+
+    /* ─── Что не открылось и на что это похоже ──────────────────────── */
+    (function () {
+      var raw = location.pathname;
+      var path = (raw === '/' || raw === '/404' || raw === '/404.html') ? '' : raw;
+      if (!path) return;
+
+      var pathRow = document.getElementById('path-row');
+      document.getElementById('req-path').textContent = path;
+      pathRow.hidden = false;
+
+      /* расстояние Левенштейна: ловит опечатку в адресе */
+      function distance(a, b) {
+        var prev = [], cur, i, j;
+        for (j = 0; j <= b.length; j++) prev[j] = j;
+        for (i = 1; i <= a.length; i++) {
+          cur = [i];
+          for (j = 1; j <= b.length; j++) {
+            cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+          }
+          prev = cur;
+        }
+        return prev[b.length];
+      }
+
+      var parts = path.toLowerCase().replace(/[^a-zа-я0-9]+/gi, ' ').trim().split(' ');
+      var best = null;
+      ROUTES.forEach(function (route) {
+        var words = (route.keys + ' ' + route.path.replace(/[^a-z]+/g, ' ')).split(/\s+/);
+        words.forEach(function (word) {
+          if (word.length < 4) return;
+          parts.forEach(function (part) {
+            if (part.length < 4) return;
+            var d = distance(part, word) / Math.max(part.length, word.length);
+            if (d < 0.45 && (!best || d < best.d)) best = { d: d, route: route };
+          });
+        });
+      });
+      if (!best) return;
+
+      document.getElementById('guess-name').textContent = best.route.name;
+      document.getElementById('guess-path').textContent = best.route.path;
+      document.getElementById('guess-link').href = best.route.path;
+      document.getElementById('guess-row').hidden = false;
+      document.getElementById('path-fallback').hidden = true;
+    })();
+
+    /* ─── Вырубка «404» ─────────────────────────────────────────────────
+       viewBox повторяет реальный размер полосы: тогда цифры не режутся
+       на узком экране и не тонут на широком. */
+    (function () {
+      var band = document.getElementById('band');
+      var svg = document.getElementById('cutsvg');
+      var base = document.getElementById('cutbase');
+      var fill = document.getElementById('cutfill');
+      var txt = document.getElementById('cuttext');
+      if (!band || !svg) return;
+
+      function fit() {
+        var r = band.getBoundingClientRect();
+        var W = Math.max(1, Math.round(r.width));
+        var H = Math.max(1, Math.round(r.height));
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        [base, fill].forEach(function (el) {
+          el.setAttribute('width', W);
+          el.setAttribute('height', H);
+        });
+        var size = Math.min(W * 0.48, H * 0.92);
+        txt.setAttribute('font-size', size.toFixed(1));
+        txt.setAttribute('letter-spacing', (-size * 0.05).toFixed(1));
+        txt.setAttribute('x', (W / 2).toFixed(1));
+        txt.setAttribute('y', (H / 2).toFixed(1));
+      }
+      fit();
+      if (window.ResizeObserver) new ResizeObserver(fit).observe(band);
+      else addEventListener('resize', fit);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    })();
+
+    /* ─── Шейдер под маской ─────────────────────────────────────────── */
+    (function () {
+      var band = document.getElementById('band');
+      var canvas = document.getElementById('shader');
+      if (!band || !canvas) return;
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' })
+            || canvas.getContext('experimental-webgl');
+      if (!gl) { band.classList.add('is-fallback'); return; }
+
+      var VERT = 'attribute vec2 p; void main(){ gl_Position = vec4(p,0.,1.); }';
+      var FRAG = [
+        'precision highp float;',
+        'uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_energy;',
+        'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }',
+        'float noise(vec2 p){',
+        '  vec2 i = floor(p), f = fract(p);',
+        '  vec2 u = f*f*(3.0-2.0*f);',
+        '  return mix(mix(hash(i), hash(i+vec2(1.,0.)), u.x),',
+        '             mix(hash(i+vec2(0.,1.)), hash(i+vec2(1.,1.)), u.x), u.y);',
+        '}',
+        'float fbm(vec2 p){',
+        '  float v = 0.0, a = 0.5;',
+        '  mat2 m = mat2(1.6,1.2,-1.2,1.6);',
+        '  for (int i = 0; i < 5; i++){ v += a * noise(p); p = m*p; a *= 0.5; }',
+        '  return v;',
+        '}',
+        'void main(){',
+        '  vec2 uv = gl_FragCoord.xy / u_res;',
+        '  vec2 p = uv; p.x *= u_res.x / u_res.y;',
+        '  float t = u_time * 0.055;',
+        /* доменное искажение: поле само себя тянет, поэтому течет, а не мигает */
+        '  vec2 q = vec2(fbm(p*1.5 + t), fbm(p*1.5 + vec2(3.2,1.7) - t));',
+        '  vec2 r = vec2(fbm(p*2.0 + 2.8*q + vec2(1.7,9.2) + t*1.3),',
+        '                fbm(p*2.0 + 2.8*q + vec2(8.3,2.8) - t*1.05));',
+        '  float f = fbm(p*1.35 + 2.1*r);',
+        '  vec2 m = u_mouse; m.x *= u_res.x / u_res.y;',
+        '  float d = distance(p, m);',
+        '  float swell = exp(-d*d*3.2) * u_energy;',
+        '  f += swell * 0.32;',
+        '  vec3 deep   = vec3(0.086,0.047,0.055);',
+        '  vec3 red700 = vec3(0.702,0.063,0.086);',
+        '  vec3 red    = vec3(0.851,0.086,0.125);',
+        '  vec3 hot    = vec3(1.000,0.404,0.427);',
+        '  vec3 col = mix(deep, red700, smoothstep(0.24,0.60,f));',
+        '  col = mix(col, red,  smoothstep(0.44,0.84,f));',
+        '  col = mix(col, hot,  smoothstep(0.70,1.02,f + swell*0.45));',
+        '  col += 0.06 * length(r) * vec3(1.0,0.32,0.28);',
+        '  float g = hash(gl_FragCoord.xy + fract(u_time) * 13.0);',
+        '  col += (g - 0.5) * 0.032;',
+        '  gl_FragColor = vec4(col, 1.0);',
+        '}'
+      ].join('\n');
+
+      function compile(type, src) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+        return s;
+      }
+
+      var prog;
+      try {
+        prog = gl.createProgram();
+        gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+        gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+      } catch (err) {
+        band.classList.add('is-fallback');
+        return;
+      }
+      gl.useProgram(prog);
+
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      var loc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+      var uRes = gl.getUniformLocation(prog, 'u_res');
+      var uTime = gl.getUniformLocation(prog, 'u_time');
+      var uMouse = gl.getUniformLocation(prog, 'u_mouse');
+      var uEnergy = gl.getUniformLocation(prog, 'u_energy');
+
+      var w = 0, h = 0;
+      function resize() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var rect = band.getBoundingClientRect();
+        w = Math.max(1, Math.round(rect.width * dpr));
+        h = Math.max(1, Math.round(rect.height * dpr));
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+          gl.viewport(0, 0, w, h);
+        }
+      }
+      resize();
+      if (window.ResizeObserver) new ResizeObserver(resize).observe(band);
+      else addEventListener('resize', resize);
+
+      /* курсор тянет за собой теплое пятно, палец на телефоне тоже */
+      var mx = 0.5, my = 0.5, tx = 0.5, ty = 0.5, energy = 0, target = 0;
+      band.addEventListener('pointermove', function (e) {
+        var rect = band.getBoundingClientRect();
+        tx = (e.clientX - rect.left) / rect.width;
+        ty = 1 - (e.clientY - rect.top) / rect.height;
+        target = 1;
+      });
+      band.addEventListener('pointerleave', function () { target = 0; });
+
+      function frame(now) {
+        mx += (tx - mx) * 0.06;
+        my += (ty - my) * 0.06;
+        energy += (target - energy) * 0.05;
+        gl.uniform2f(uRes, w, h);
+        gl.uniform1f(uTime, now / 1000);
+        gl.uniform2f(uMouse, mx, my);
+        gl.uniform1f(uEnergy, energy);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
+      if (reduce) { frame(6200); return; }
+
+      var running = false, raf = 0;
+      function loop(now) { frame(now); raf = requestAnimationFrame(loop); }
+      function start() { if (!running) { running = true; raf = requestAnimationFrame(loop); } }
+      function stop() { running = false; cancelAnimationFrame(raf); }
+
+      /* кадры не крутятся зря: вкладка в фоне или полоса вне экрана */
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) stop(); else start();
+      });
+      if (window.IntersectionObserver) {
+        new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting && !document.hidden) start(); else stop();
+        }, { threshold: 0 }).observe(band);
+      } else {
+        start();
+      }
+      frame(0);
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* ─── Полоса с цифрами ──────────────────────────────────────────── */
+  .band {
+    position: relative;
+    height: clamp(260px, 42vh, 470px);
+    overflow: hidden;
+    background: #1a0d0f; /* видно, пока шейдер не запустился */
+    isolation: isolate;
+  }
+  .band canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  /* WebGL недоступен — тот же настрой градиентом */
+  .band.is-fallback canvas { display: none; }
+  .band.is-fallback {
+    background:
+      radial-gradient(120% 90% at 22% 30%, #FF5A60 0%, rgba(255,90,96,0) 55%),
+      radial-gradient(110% 100% at 78% 70%, #D91620 0%, rgba(217,22,32,0) 60%),
+      linear-gradient(140deg, #2B2B2B 0%, #8d0d15 55%, #D91620 100%);
+  }
+  /* белая плашка с вырезанными цифрами: сквозь них видно шейдер */
+  .knockout {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .band-edge {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1px;
+    background: var(--line-1);
+  }
+
+  /* ─── Заголовок и карточка ──────────────────────────────────────── */
+  .lead { padding: 56px 0 72px; }
+  .lead .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .lead h1 {
+    font: 800 clamp(34px, 5vw, 64px)/1.02 var(--font-display);
+    letter-spacing: -0.025em;
+    color: var(--ks-charcoal-700);
+    text-wrap: balance;
+    margin: 0;
+  }
+  .lead h1 em { font-style: normal; color: var(--ks-red); }
+  .lead .lede {
+    font: 400 19px/1.55 var(--font-body);
+    color: var(--fg-2);
+    max-width: 56ch;
+    margin: 20px 0 0;
+  }
+  .lead .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .lead .ctas .btn { border-bottom: 0; }
+
+  .diag { border: 1px solid var(--line-1); background: var(--bg-2); }
+  .diag-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line-1);
+    font: 500 12px/1.4 var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--fg-3);
+  }
+  .diag-head .status { color: var(--ks-red); }
+  .diag dl { margin: 0; padding: 20px; }
+  .diag dt {
+    font: 700 11px/1 var(--font-display);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+  .diag dd {
+    margin: 8px 0 0;
+    font: 500 14px/1.5 var(--font-mono);
+    color: var(--ks-charcoal-700);
+    word-break: break-all;
+  }
+  .diag dd.plain {
+    font: 400 15px/1.5 var(--font-body);
+    color: var(--fg-2);
+    word-break: normal;
+  }
+  .diag-row + .diag-row {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-1);
+  }
+  .diag-row[hidden] { display: none; }
+  .diag-guess dd { margin-top: 10px; }
+  .diag-guess a {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    color: inherit;
+  }
+  .diag-guess a:hover { color: var(--ks-red); border-bottom-color: var(--ks-red); }
+  .diag-guess .name { font: 700 18px/1.2 var(--font-display); letter-spacing: -0.01em; }
+  .diag-guess .path { font: 500 12px/1.4 var(--font-mono); color: var(--fg-3); }
+
+  /* ─── Разделы ───────────────────────────────────────────────────── */
+  .routes { border-top: 1px solid var(--line-1); padding: 64px 0 88px; }
+  .routes-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .routes h2 {
+    font: 700 clamp(24px, 3vw, 40px)/1.1 var(--font-display);
+    letter-spacing: -0.015em;
+    color: var(--ks-charcoal-700);
+  }
+  .finder { position: relative; flex: 0 1 380px; min-width: 260px; }
+  .finder input {
+    width: 100%;
+    padding: 15px 46px 15px 16px;
+    font: 400 15px/1 var(--font-body);
+    color: var(--fg-1);
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: 0;
+    transition: border-color var(--dur-fast);
+  }
+  .finder input:focus { outline: none; border-color: var(--ks-red); }
+  .finder input::placeholder { color: var(--ks-grey-300); }
+  .finder kbd {
+    position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%);
+    font: 500 11px/1 var(--font-mono);
+    color: var(--fg-3);
+    border: 1px solid var(--line-1);
+    padding: 5px 7px;
+    background: var(--bg-2);
+    pointer-events: none;
+  }
+  .finder input:focus + kbd { opacity: 0; }
+
+  .route-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+  .route {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 16px;
+    padding: 20px 0;
+    border: 0;
+    border-top: 1px solid var(--line-1);
+    color: inherit;
+    text-decoration: none;
+    transition: padding-left var(--dur-base) var(--ease-out), color var(--dur-fast);
+  }
+  .route:hover { padding-left: 10px; color: var(--ks-red); }
+  .route .idx { font: 500 12px/1.4 var(--font-mono); color: var(--ks-grey-300); }
+  .route .name { font: 700 19px/1.25 var(--font-display); letter-spacing: -0.01em; }
+  .route .desc {
+    display: block;
+    font: 400 14px/1.5 var(--font-body);
+    color: var(--fg-3);
+    margin-top: 4px;
+  }
+  .route .go {
+    font-size: 18px;
+    color: var(--ks-red);
+    opacity: 0;
+    transition: opacity var(--dur-fast), transform var(--dur-fast);
+  }
+  .route:hover .go { opacity: 1; transform: translateX(3px); }
+  .route[hidden] { display: none; }
+  .routes-empty {
+    padding: 28px 0;
+    margin: 0;
+    color: var(--fg-3);
+    border-top: 1px solid var(--line-1);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* На тач-устройствах ховера нет: стрелка должна быть видна сразу */
+  @media (hover: none) {
+    .route .go { opacity: 1; }
+    .route:hover { padding-left: 0; }
+  }
+
+  @media (max-width: 900px) {
+    .lead .grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  @media (max-width: 760px) {
+    .route-list { grid-template-columns: 1fr; gap: 0; }
+  }
+  @media (max-width: 768px) {
+    .lead { padding: 40px 0 56px; }
+    .lead .lede { font-size: 17px; }
+    .routes { padding: 48px 0 64px; }
+  }
+</style>
