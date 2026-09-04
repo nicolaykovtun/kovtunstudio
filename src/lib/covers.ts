@@ -15,10 +15,44 @@ export function coverSrcset(src: string): string | undefined {
     return `${src.replace('/full/', '/thumb/')} 800w, ${src} 2400w`;
   }
   const small = src.replace(/\.webp$/, '-800.webp');
+  const file = path.join('public', src);
   if (small !== src && fs.existsSync(path.join('public', small))) {
-    return `${small} 800w, ${src} 1600w`;
+    return `${small} 800w, ${src} ${webpWidth(file) ?? 1600}w`;
   }
   return undefined;
+}
+
+/**
+ * Ширина webp из заголовка файла.
+ *
+ * Раньше здесь стояло 1600 числом, а обложки лежат разные: 1600, 1920, 2400.
+ * Браузер верил числу и на широком экране мог взять картинку меньше нужной.
+ * Читаем настоящий размер: три вида чанка webp хранят его по-разному.
+ * Не разобрали — возвращаем undefined, и вызов подставит прежние 1600.
+ */
+function webpWidth(file: string): number | undefined {
+  let head: Buffer;
+  try {
+    const fd = fs.openSync(file, 'r');
+    head = Buffer.alloc(30);
+    fs.readSync(fd, head, 0, 30, 0);
+    fs.closeSync(fd);
+  } catch {
+    return undefined;
+  }
+  if (head.toString('ascii', 0, 4) !== 'RIFF' || head.toString('ascii', 8, 12) !== 'WEBP') {
+    return undefined;
+  }
+  switch (head.toString('ascii', 12, 16)) {
+    case 'VP8 ': // с потерями: ширина в заголовке кадра, старшие два бита служебные
+      return head.readUInt16LE(26) & 0x3fff;
+    case 'VP8L': // без потерь: ширина минус один в первых 14 битах после сигнатуры
+      return (head.readUInt32LE(21) & 0x3fff) + 1;
+    case 'VP8X': // расширенный (альфа, анимация): размер холста тремя байтами
+      return (head.readUIntLE(24, 3) & 0xffffff) + 1;
+    default:
+      return undefined;
+  }
 }
 
 /** Карточка кейса: одна колонка на телефоне, две на планшете, треть экрана на десктопе. */
