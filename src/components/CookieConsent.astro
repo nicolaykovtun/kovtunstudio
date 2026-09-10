@@ -293,7 +293,8 @@ const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
     color: rgba(255,255,255,.76);
     font: 400 14px/1.5 var(--font-body);
   }
-  .cookie-consent__copy a { color: #fff; text-underline-offset: 3px; }
+  .cookie-consent__copy a { color: #fff; font-weight: 600; }
+  .cookie-consent__copy a:hover { color: var(--ks-red-300); }
   .cookie-consent__actions { display: flex; gap: 10px; }
   .cookie-consent__button {
     min-height: 48px;

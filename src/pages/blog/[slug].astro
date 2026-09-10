@@ -334,6 +334,9 @@ const tgChannel = 'https://t.me/kovtundesign';
   .post-content :global(ul),
   .post-content :global(ol) { padding-left: 22px; margin: 0 0 16px; }
   .post-content :global(li) { margin-bottom: 8px; }
+  /* Подчеркивания в тексте нет — ссылку в статье выделяет цвет. */
+  .post-content :global(a:not(.btn)) { color: var(--ks-red-700); font-weight: 500; }
+  .post-content :global(a:not(.btn):hover) { color: var(--ks-red); }
   /* Только контентные картинки маркдауна (p > img), не аватар блока подписки. */
   .post-content :global(p > img) {
     display: block;

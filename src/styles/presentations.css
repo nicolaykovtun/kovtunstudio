@@ -262,7 +262,6 @@
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--line-2);
-  border-bottom: 0;
   font: 600 14px/1 var(--font-body);
 }
 
@@ -399,6 +398,9 @@
   margin: 24px 0 0;
   color: var(--fg-3);
 }
+/* Перелинковка внутри примечания: подчеркивания нет, ссылку держит цвет. */
+.rate-note a:not(.btn) { color: var(--ks-red-700); font-weight: 500; }
+.rate-note a:not(.btn):hover { color: var(--ks-red); }
 
 /* Calculator */
 .calculator-section {

@@ -460,7 +460,6 @@ const routes = [
     margin: 20px 0 0;
   }
   .lead .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-  .lead .ctas .btn { border-bottom: 0; }
 
   .diag { border: 1px solid var(--line-1); background: var(--bg-2); }
   .diag-head {
@@ -501,11 +500,9 @@ const routes = [
   .diag-guess a {
     display: flex; align-items: baseline; justify-content: space-between;
     gap: 12px;
-    border-bottom: 2px solid transparent;
-    text-decoration: none;
     color: inherit;
   }
-  .diag-guess a:hover { color: var(--ks-red); border-bottom-color: var(--ks-red); }
+  .diag-guess a:hover { color: var(--ks-red); }
   .diag-guess .name { font: 700 18px/1.2 var(--font-display); letter-spacing: -0.01em; }
   .diag-guess .path { font: 500 12px/1.4 var(--font-mono); color: var(--fg-3); }
 

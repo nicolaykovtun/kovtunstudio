@@ -185,7 +185,7 @@ p, .body { font: 400 16px/1.55 var(--font-body); color: var(--fg-2); margin: 0 0
 .body-s   { font: 400 14px/1.5  var(--font-body); }
 .caption  { font: 500 12px/1.4  var(--font-body); color: var(--fg-3); }
 
-a { color: var(--fg-1); text-decoration: none; border-bottom: 1px solid currentColor; }
+a { color: var(--fg-1); text-decoration: none; }
 a:hover { color: var(--fg-accent); }
 
 code, pre { font-family: var(--font-mono); font-size: 0.9em; }
