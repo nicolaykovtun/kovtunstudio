@@ -8,7 +8,6 @@ description: >-
 cover: /assets/blog/brendirovanie-avto-oshibki/micking-tent-bort.webp
 coverAlt: "Борт тентованного грузовика MICKING: знак, две строки текста, адрес сайта и фотография канистры"
 pubDate: 2026-09-14
-draft: true
 section: Оклейка
 serviceLink: /car-wrap/
 serviceLabel: Дизайн рекламы на автомобиль
