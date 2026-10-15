@@ -7,7 +7,6 @@ description: >-
 cover: /assets/blog/cvetoproba-pered-tirazhom/cover.webp
 coverAlt: "Восемь металлических банок масла с цветными градиентами штриха в ряд у завода в Пусане после пробных прогонов"
 pubDate: 2026-10-15
-draft: true
 section: Упаковка
 serviceLink: /packaging/
 serviceLabel: Дизайн упаковки и этикеток
