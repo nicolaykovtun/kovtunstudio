@@ -43,3 +43,64 @@ const copyText = copy.replace('{year}', String(year));
     </div>
   </div>
 </footer>
+
+{/* Кнопка «Наверх»: появляется после первого экрана, стоит над кнопкой
+    настроек cookies в правом нижнем углу, в ее же стиле. Живет в футере,
+    потому что футер есть на каждой странице. */}
+<button type="button" class="to-top" id="to-top" aria-label="Наверх" title="Наверх" hidden>
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5M5 12l7-7 7 7"/>
+  </svg>
+</button>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('to-top');
+    if (!btn) return;
+    var shown = false;
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var need = window.scrollY > window.innerHeight;
+      if (need !== shown) {
+        shown = need;
+        btn.hidden = !need;
+      }
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+    }, { passive: true });
+    btn.addEventListener('click', function () {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      var main = document.getElementById('main-content');
+      if (main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
+    });
+    update();
+  })();
+</script>
+
+<style>
+  .to-top {
+    position: fixed;
+    z-index: 120;
+    right: max(12px, env(safe-area-inset-right));
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 60px);
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--line-2);
+    color: var(--fg-2);
+    background: var(--bg-1);
+    box-shadow: var(--shadow-2);
+    cursor: pointer;
+    transition: color var(--dur-base), border-color var(--dur-base), opacity var(--dur-base);
+  }
+  .to-top[hidden] { display: none; }
+  .to-top:hover,
+  .to-top:focus-visible { color: var(--ks-red); border-color: var(--ks-red); outline: none; }
+  .to-top:focus-visible { outline: 3px solid var(--ks-red); outline-offset: 3px; }
+  :global(body.lightbox-locked) .to-top { display: none; }
+</style>
