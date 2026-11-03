@@ -85,6 +85,7 @@
 - [Презентация «Тернейский фермер»](https://kovtun.studio/cases/presentation-terney-farmer/): тексты, структура и дизайн слайдов, сельское хозяйство
 - [Брошюра Edelweiss «Золотой Рог»](https://kovtun.studio/cases/presentation-edelweiss/): квартал бизнес-класса, 18 страниц
 - [Брошюра М-Инвест](https://kovtun.studio/cases/brochure-metall-invest/): металлопрокат для знаковых строек Дальнего Востока, 38 страниц
+- [Видеопрезентация для семинара TOTACHI](https://kovtun.studio/cases/presentation-totachi-seminar/): 16 слайдов и ролик на 10 минут с нейросетевым диктором, 139 анимаций по словам озвучки, собрано за неделю
 
 ## Кейсы: оклейка транспорта
 

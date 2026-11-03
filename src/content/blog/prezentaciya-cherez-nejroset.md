@@ -11,6 +11,8 @@ pubDate: 2026-09-09
 section: Нейросети
 serviceLink: /presentations/
 serviceLabel: Разработка презентаций
+caseLink: /cases/presentation-totachi-seminar/
+caseLabel: Видеопрезентация для семинара TOTACHI
 faq:
   - q: >-
       Можно ли сделать презентацию полностью через нейросеть?

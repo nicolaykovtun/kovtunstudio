@@ -107,7 +107,7 @@ Accent #1D1D1B: черный из логотипа МСМ ГРУПП (SVG лог
 - Пост в канале: https://t.me/kovtundesign/167
 - Разбор технических проблем на vc.ru: https://vc.ru/ai/3218027-delali-rolik-s-ii-diktorom-na-10-minut-chto-slomalos-i-kak-chinili
 - Карусель в Instagram: https://www.instagram.com/p/DfQw39eiLbw/
-- Папка с исходниками: cases/unpublished/Presentation-TOTACHI-seminar (клипы и стоп-кадры из `0. Kovtun.studio\05. Маркетинг студии\Соцсети\telegram\2026-10 семинар TOTACHI\клипы\`)
+- Папка с исходниками: cases/published/Presentation-TOTACHI-seminar (клипы и стоп-кадры из `0. Kovtun.studio\05. Маркетинг студии\Соцсети\telegram\2026-10 семинар TOTACHI\клипы\`)
 
 ## Внутренние заметки (не публикуется)
 
