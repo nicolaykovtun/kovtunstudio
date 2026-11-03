@@ -724,11 +724,16 @@
 .case-result p { margin: 0; color: rgba(255,255,255,.75); font-size: 17px; line-height: 1.6; }
 .case-quote { max-width: 1000px; margin: 96px 0 0; color: #fff; font: 700 clamp(32px, 5vw, 64px)/1.05 var(--font-display); letter-spacing: -.035em; }
 
-.case-deliverables { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
-.case-deliverables ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-1); }
+/* Две колонки и две строки: заголовок сверху слева, реквизиты и список работ
+   во второй строке, поэтому линия над реквизитами и линия над списком
+   начинаются на одной высоте. */
+.case-deliverables { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 56px 64px; }
+.case-deliverables > div:first-child { grid-column: 1; grid-row: 1; }
+.case-deliverables .case-credits { grid-column: 1; grid-row: 2; }
+.case-deliverables ul { grid-column: 2; grid-row: 2; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-1); }
 .case-deliverables li { display: flex; justify-content: space-between; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--line-1); font-size: 17px; }
 .case-deliverables li::after { content: "✓"; color: var(--ks-red); font-weight: 800; }
-.case-credits { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line-1); }
+.case-credits { margin-top: 0; padding-top: 24px; border-top: 1px solid var(--line-1); }
 .case-credits dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0; }
 .case-credits dt { color: var(--fg-3); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
 .case-credits dd { margin: 6px 0 0; color: var(--fg-1); font-weight: 650; }
@@ -745,7 +750,10 @@
   .portfolio-hero__footer,
   .case-hero__top,
   .case-section__head,
-  .case-deliverables { grid-template-columns: 1fr; gap: 32px; }
+  .case-deliverables { grid-template-columns: 1fr; grid-template-rows: auto; gap: 32px; }
+  .case-deliverables > div:first-child,
+  .case-deliverables .case-credits,
+  .case-deliverables ul { grid-column: 1; grid-row: auto; }
   .portfolio-hero__count { text-align: left; }
   .portfolio-filters-wrap { top: 0; }
   .portfolio-filter-row { align-items: stretch; flex-direction: column; gap: 14px; }

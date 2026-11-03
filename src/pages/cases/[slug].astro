@@ -703,16 +703,18 @@ const cta = config.cta ?? {
                 <div>
                   <span class="case-section__num">{section.number} / СОСТАВ РАБОТ</span>
                   <h2>Что было сделано</h2>
-                  <div class="case-credits">
-                    <dl>
-                      <div><dt>Клиент</dt><dd>{c.client}</dd></div>
-                      {c.location && <div><dt>Город</dt><dd>{c.location}</dd></div>}
-                      {c.year && <div><dt>Год</dt><dd>{c.year}</dd></div>}
-                      {c.credits.map((credit: any) => (
-                        <div><dt>{credit.role}</dt><dd>{credit.name}</dd></div>
-                      ))}
-                    </dl>
-                  </div>
+                </div>
+                {/* Реквизиты вынесены из колонки заголовка: так их верхняя линия и
+                    верх списка работ стоят в одной строке сетки, на одной высоте. */}
+                <div class="case-credits">
+                  <dl>
+                    <div><dt>Клиент</dt><dd>{c.client}</dd></div>
+                    {c.location && <div><dt>Город</dt><dd>{c.location}</dd></div>}
+                    {c.year && <div><dt>Год</dt><dd>{c.year}</dd></div>}
+                    {c.credits.map((credit: any) => (
+                      <div><dt>{credit.role}</dt><dd>{credit.name}</dd></div>
+                    ))}
+                  </dl>
                 </div>
                 <ul>
                   {c.deliverables.map((item: string) => <li>{item}</li>)}
