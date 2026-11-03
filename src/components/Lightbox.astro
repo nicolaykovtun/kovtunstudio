@@ -3,8 +3,10 @@
 // Открывается кликом по любому элементу с классом .js-lb и data-lb-index.
 // Использует те же css-классы .lightbox*, что и лайтбокс главной (global.css).
 
+// Элемент с полем video открывается плеером: src у него остается постером,
+// миниатюра в ленте внизу тоже строится из постера.
 interface Props {
-  items: { src: string; thumb?: string; label: string }[];
+  items: { src: string; thumb?: string; label: string; video?: string }[];
   metrikaId: number;
 }
 const { items, metrikaId } = Astro.props;
@@ -21,6 +23,7 @@ const { items, metrikaId } = Astro.props;
       <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
     </button>
     <img class="lightbox-image" id="lb-image" src="" alt="">
+    <video class="lightbox-video" id="lb-video" controls playsinline preload="metadata" hidden></video>
     <div class="lightbox-caption">
       <span class="counter" id="lb-counter"></span>
       <span id="lb-label"></span>
@@ -39,6 +42,7 @@ const { items, metrikaId } = Astro.props;
 
     var lb = document.getElementById("lightbox");
     var lbImage = document.getElementById("lb-image");
+    var lbVideo = document.getElementById("lb-video");
     var lbLabel = document.getElementById("lb-label");
     var lbCounter = document.getElementById("lb-counter");
     var lbThumbs = document.getElementById("lb-thumbs");
@@ -55,6 +59,7 @@ const { items, metrikaId } = Astro.props;
         var btn = document.createElement("button");
         btn.className = "lightbox-thumb";
         btn.setAttribute("aria-label", "Открыть работу " + (i + 1));
+        if (it.video) btn.classList.add("lightbox-thumb--video");
         var img = document.createElement("img");
         img.src = toThumb(it);
         img.alt = "";
@@ -74,10 +79,32 @@ const { items, metrikaId } = Astro.props;
       });
     }
 
+    function stopVideo() {
+      if (!lbVideo.hidden) {
+        lbVideo.pause();
+        lbVideo.removeAttribute("src");
+        lbVideo.load();
+        lbVideo.hidden = true;
+      }
+    }
+
     function render() {
       var it = LB_ITEMS[current];
-      lbImage.src = it.src;
-      lbImage.alt = it.label;
+      stopVideo();
+      if (it.video) {
+        // Видео: постер остается в src, плеер стартует сразу, звук включен —
+        // пользователь сам нажал «смотреть».
+        lbImage.hidden = true;
+        lbVideo.poster = it.src;
+        lbVideo.src = it.video;
+        lbVideo.hidden = false;
+        var playing = lbVideo.play();
+        if (playing && playing.catch) playing.catch(function () {});
+      } else {
+        lbImage.hidden = false;
+        lbImage.src = it.src;
+        lbImage.alt = it.label;
+      }
       lbLabel.textContent = it.label;
       lbCounter.textContent = pad(current + 1) + " / " + pad(LB_ITEMS.length);
       var thumbs = lbThumbs.children;
@@ -101,6 +128,8 @@ const { items, metrikaId } = Astro.props;
 
     function closeLb() {
       current = null;
+      stopVideo();
+      lbImage.hidden = false;
       lb.classList.remove("is-open");
       document.body.classList.remove("lightbox-locked");
     }

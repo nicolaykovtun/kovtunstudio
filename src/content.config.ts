@@ -110,6 +110,12 @@ const galleryItem = z.object({
   label: z.string(),
   /** Пропорции миниатюры: широкие экраны сайта режем по высоте. */
   tall: z.boolean().optional(),
+  /**
+   * Видеоклип. Файл лежит в assetRoot/video/<file>.mp4, постер и миниатюра
+   * как у картинки: full/<file>.webp и thumb/<file>-thumbnail.webp. В сетке
+   * показывается постер с меткой «Смотреть видео», в просмотрщике — плеер.
+   */
+  video: z.boolean().optional(),
 });
 
 const galleryGroup = z.object({
@@ -218,7 +224,9 @@ const cases = defineCollection({
     gallery: z
       .object({
         assetRoot: z.string(),
-        cover: z.object({ src: z.string(), alt: z.string() }),
+        // video — имя mp4 в assetRoot/video/: обложка играет без звука по кругу,
+        // src остается постером и og-картинкой.
+        cover: z.object({ src: z.string(), alt: z.string(), video: z.string().optional() }),
         og: z.string().optional(),
         ogAlt: z.string().optional(),
         intro: z.string().optional(),

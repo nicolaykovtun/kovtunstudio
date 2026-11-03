@@ -604,6 +604,64 @@
 }
 .case-gallery-trigger:hover .case-gallery-zoom,
 .case-gallery-trigger:focus-visible .case-gallery-zoom { opacity: 1; transform: none; }
+
+/* Видео в кейсе: обложка играет без звука, плитка показывает постер с меткой
+   воспроизведения, просмотрщик подменяет картинку плеером. */
+.case-cover__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #111;
+}
+.case-gallery-trigger--video { cursor: pointer; }
+.case-gallery-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  display: grid;
+  place-items: center;
+  padding-left: 4px;
+  border-radius: 50%;
+  background: rgba(17,17,17,.78);
+  color: #fff;
+  font: 500 22px/1 var(--font-display);
+  pointer-events: none;
+  transition: transform var(--dur-base), background var(--dur-base);
+}
+.case-gallery-trigger--video:hover .case-gallery-play,
+.case-gallery-trigger--video:focus-visible .case-gallery-play { transform: scale(1.08); background: var(--case-accent, var(--ks-red)); }
+.lightbox-video {
+  display: block;
+  width: min(1280px, calc(100vw - 180px));
+  max-width: 100%;
+  max-height: calc(100vh - 200px);
+  aspect-ratio: 16 / 9;
+  background: #111;
+  border-radius: var(--r-2);
+  box-shadow: 0 30px 80px rgba(0,0,0,.6);
+}
+.lightbox-image[hidden],
+.lightbox-video[hidden] { display: none !important; }
+.lightbox-thumb--video { position: relative; }
+.lightbox-thumb--video::after {
+  content: "▶";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 14px;
+  text-shadow: 0 1px 6px rgba(0,0,0,.8);
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  .lightbox-video { width: calc(100vw - 32px); max-height: calc(100vh - 170px); }
+}
 .case-lightbox .lightbox-btn {
   font: 500 28px/1 var(--font-display);
 }

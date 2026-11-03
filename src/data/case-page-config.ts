@@ -2,6 +2,8 @@ export interface CaseMedia {
   src: string;
   thumb?: string;
   label: string;
+  /** Путь к mp4: элемент показывается постером (src), а открывается плеером. */
+  video?: string;
 }
 
 export interface CaseStoryItem {
@@ -53,7 +55,7 @@ export interface CaseRelated {
 
 export interface EditorialCaseConfig {
   bodyVariant?: string;
-  cover: { src: string; alt: string };
+  cover: { src: string; alt: string; video?: string };
   taskTitle?: string;
   story?: CaseStory;
   resultTitle?: string;

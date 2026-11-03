@@ -68,6 +68,7 @@ function configFromGallery(c: any): EditorialCaseConfig {
   const root = gallery.assetRoot;
   const full = (file: string) => `${root}/full/${file}.webp`;
   const thumb = (file: string) => `${root}/thumb/${file}-thumbnail.webp`;
+  const video = (file: string) => `${root}/video/${file}.mp4`;
 
   const groups: CaseGalleryGroup[] = gallery.groups.map((group: any) => ({
     id: group.id,
@@ -83,6 +84,8 @@ function configFromGallery(c: any): EditorialCaseConfig {
       src: full(item.file),
       thumb: thumb(item.file),
       label: item.label,
+      // Видео: src и thumb остаются постерами, плеер получает mp4.
+      ...(item.video ? { video: video(item.file) } : {}),
     })),
   }));
 
@@ -116,6 +119,7 @@ function configFromGallery(c: any): EditorialCaseConfig {
     cover: {
       src: `${root}/${gallery.cover.src}`,
       alt: gallery.cover.alt,
+      ...(gallery.cover.video ? { video: `${root}/video/${gallery.cover.video}` } : {}),
     },
     story,
     resultTitle: gallery.resultTitle,
@@ -278,7 +282,7 @@ const config = {
 const lightboxItems = groups
   .filter((group) => group.interactive !== false)
   .flatMap((group) => group.items)
-  .map((item) => ({ src: item.src, thumb: item.thumb, label: item.label }));
+  .map((item) => ({ src: item.src, thumb: item.thumb, label: item.label, video: item.video }));
 
 // Соседние кейсы того же клиента: в gallery.yaml лежит только slug, заголовок
 // и обложку берем из источника данных, чтобы они не расходились с кейсом.
@@ -499,13 +503,29 @@ const cta = config.cta ?? {
       </section>
 
       <figure class="case-cover">
-        <img
-          src={config.cover.src}
-          alt={config.cover.alt}
-          width="1800"
-          height="1200"
-          fetchpriority="high"
-        />
+        {config.cover.video ? (
+          <video
+            class="case-cover__video"
+            src={config.cover.video}
+            poster={config.cover.src}
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label={config.cover.alt}
+          >
+            <img src={config.cover.src} alt={config.cover.alt} width="1800" height="1200" />
+          </video>
+        ) : (
+          <img
+            src={config.cover.src}
+            alt={config.cover.alt}
+            width="1800"
+            height="1200"
+            fetchpriority="high"
+          />
+        )}
       </figure>
 
       {sectionRecords.map((section) => (
@@ -640,7 +660,11 @@ const cta = config.cta ?? {
                     <div class="case-prose">
                       {section.group.intro && <p>{section.group.intro}</p>}
                       {section.group.interactive !== false && (
-                        <p>Нажмите на изображение, чтобы открыть его во весь экран. Работают стрелки, клавиши ← → и миниатюры.</p>
+                        <p>
+                          {section.group.items.some((item) => item.video)
+                            ? 'Нажмите на кадр, чтобы открыть видео во весь экран. Работают стрелки, клавиши ← → и миниатюры.'
+                            : 'Нажмите на изображение, чтобы открыть его во весь экран. Работают стрелки, клавиши ← → и миниатюры.'}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -655,13 +679,14 @@ const cta = config.cta ?? {
                       ) : (
                         <button
                           type="button"
-                          class="case-gallery-trigger js-lb"
+                          class={`case-gallery-trigger js-lb${item.video ? ' case-gallery-trigger--video' : ''}`}
                           style={section.group?.ratio ? `aspect-ratio: ${section.group.ratio}` : undefined}
                           data-lb-index={item.lightboxIndex}
-                          aria-label={`Открыть изображение: ${item.label}`}
+                          aria-label={`${item.video ? 'Открыть видео' : 'Открыть изображение'}: ${item.label}`}
                         >
                           <img src={item.thumb ?? item.src} alt={item.label} loading="lazy" />
-                          <span class="case-gallery-zoom" aria-hidden="true">Смотреть крупнее</span>
+                          {item.video && <span class="case-gallery-play" aria-hidden="true">▶</span>}
+                          <span class="case-gallery-zoom" aria-hidden="true">{item.video ? 'Смотреть видео' : 'Смотреть крупнее'}</span>
                         </button>
                       )}
                       <figcaption>{item.label}</figcaption>
