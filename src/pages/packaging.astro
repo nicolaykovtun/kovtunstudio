@@ -244,6 +244,50 @@ const lineSystem = {
     'линейку не приходится пересобирать.',
 };
 
+// Сбор данных по линейке до вёрстки: страница /tools/sku-line.html.
+// Набор полей и нормы зависят от типа продукции: пищевая, масла и
+// автохимия, аккумуляторы, другие товары.
+const lineData = {
+  title: 'Данные по линейке<br>собираю до верстки',
+  aside:
+    'Ошибку в составе, характеристиках или штрихкоде после печати исправит только перепечатка тиража. ' +
+    'Поэтому данные по всем позициям линейки вы заполняете на одной странице, ' +
+    'и я вижу, чего не хватает, еще до первого макета.',
+  cards: [
+    {
+      num: '01',
+      kicker: 'Одна ссылка',
+      title: 'Вся линейка на одной странице',
+      text:
+        'Общие данные вы заполняете один раз, дальше по каждой позиции: вкусу, виду ' +
+        'или модели. Одинаковое значение можно одной кнопкой вставить во все позиции, ' +
+        'и данные разных позиций не путаются в переписке.',
+    },
+    {
+      num: '02',
+      kicker: 'ТР ТС и ГОСТ',
+      title: 'Каждое поле сверено с нормами',
+      text:
+        'Набор полей зависит от продукции: продукты питания, масла и автохимия, ' +
+        'аккумуляторы, другие товары. У каждого поля стоит пометка: обязательно ' +
+        'по техрегламенту, обязательно при условии, рекомендует ГОСТ или по желанию.',
+    },
+    {
+      num: '03',
+      kicker: 'Проверка цифр',
+      title: 'Ошибки видны до макета',
+      text:
+        'Страница проверяет контрольную цифру штрихкода. Для продуктов питания она ' +
+        'сверяет калории с белками, жирами и углеводами и ищет в составе аллергены, ' +
+        'которые не вынесены отдельно. К каждому заявлению на упаковке вы указываете, ' +
+        'чем оно подтверждено: протокол, сертификат или письмо о допуске.',
+    },
+  ],
+  note:
+    'Страница бесплатная. Данные никуда не уходят, пока вы сами их не отправите. ' +
+    'Пользоваться ей можно и с другим подрядчиком.',
+};
+
 const process = {
   title: 'Как идет<br>работа',
   aside:
@@ -252,7 +296,7 @@ const process = {
     {
       num: '01',
       title: 'Бриф и цели',
-      text: 'Сегмент, канал продаж, линейка, конкуренты, требования типографии. Смету отдаю в день брифа.',
+      text: 'Сегмент, канал продаж, линейка, конкуренты, требования типографии. Данные по всем позициям собираем по одной ссылке. Смету отдаю в день брифа.',
     },
     {
       num: '02',
@@ -281,6 +325,8 @@ const faqItems = [
   {
     q: 'Что нужно прислать для расчета?',
     a: 'Список SKU и серий с ключевыми параметрами, тексты для этикетки (состав, изготовитель, сроки), существующие макеты и бренд-элементы, если они есть, и требования типографии, если уже выбрали ее. Смету отдаю в день брифа.',
+    aHtml:
+      'Список SKU и серий с ключевыми параметрами, тексты для этикетки (состав, изготовитель, сроки), существующие макеты и бренд-элементы, если они есть, и требования типографии, если уже выбрали ее. Данные по всем позициям можно заполнить на <a href="/tools/sku-line.html">странице сбора данных</a>: она покажет, чего не хватает по техрегламенту и что рекомендует ГОСТ. Смету отдаю в день брифа.',
   },
   {
     q: 'Сколько занимает работа?',
@@ -576,6 +622,35 @@ const ldPortfolioCases = {
       </div>
     </section>
 
+    <section class="section section-tight" id="data">
+      <div class="container-wide">
+        <div class="section-head">
+          <div>
+            <h2 set:html={lineData.title}></h2>
+          </div>
+          <p class="aside">{lineData.aside}</p>
+        </div>
+
+        <div class="layer-grid">
+          {lineData.cards.map((card) => (
+            <article class="layer-card">
+              <div class="layer-card__top">
+                <span class="layer-num">{card.num}</span>
+                <span class="layer-kicker">{card.kicker}</span>
+              </div>
+              <h3>{card.title}</h3>
+              <p>{card.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="layer-card__links data-cta">
+          <a href="/tools/sku-line.html">Проверить данные своей линейки <span aria-hidden="true">→</span></a>
+        </div>
+        <p class="layer-note">{lineData.note}</p>
+      </div>
+    </section>
+
     <section class="section presentations-pricing" id="pricing">
       <div class="container-wide">
         <div class="section-head">
@@ -739,6 +814,10 @@ const ldPortfolioCases = {
         link.addEventListener('click', function () { goal('telegram_direct'); });
       });
 
+      Array.prototype.forEach.call(document.querySelectorAll('a[href="/tools/sku-line.html"]'), function (link) {
+        link.addEventListener('click', function () { goal('packaging_sku_tool'); });
+      });
+
       Array.prototype.forEach.call(document.querySelectorAll('a[href^="tel:"]'), function (link) {
         link.addEventListener('click', function () { goal('cta_phone'); });
       });
@@ -837,6 +916,10 @@ const ldPortfolioCases = {
     font-weight: 600;
   }
 
+  .data-cta {
+    margin-top: 20px;
+    padding-top: 0;
+  }
   .layer-note {
     margin: 20px 0 0;
     padding-top: 16px;
