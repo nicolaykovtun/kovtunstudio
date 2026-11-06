@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Данные для упаковки линейки — Kovtun.studio</title>
+<meta name="description" content="Соберите состав, штрихкоды и обязательные тексты для всех вкусов линейки на одной странице. Видно, каких данных не хватает до вёрстки.">
+<style>
+:root{
+  --red:#D91620; --red-dark:#B31016; --green:#1a7f37; --amber:#9a6700;
+  --ink:#2B2B2B; --gray:#87888A; --line:#E6E6E6; --bg:#FFFFFF; --soft:#F7F7F7;
+  --font:"Geist","Geist Variable",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 140px}
+header{border-bottom:2px solid var(--red);padding-bottom:20px;margin-bottom:28px}
+.mark{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.mark span{color:var(--red)}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:18px 0 8px;font-weight:600}
+h2.sec{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);font-weight:600;margin:0 0 4px}
+.lead{color:var(--gray);max-width:62ch;margin:0}
+.note{background:var(--soft);border-left:3px solid var(--red);padding:12px 16px;margin:24px 0;font-size:14px}
+.block{border-top:1px solid var(--line);padding:26px 0 8px}
+.bdesc{color:var(--gray);font-size:14px;margin:0 0 20px;max-width:62ch}
+.q{margin:0 0 22px}
+.lab{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.lab label{font-weight:600}
+.tag{font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:2px;border:1px solid var(--line);color:var(--gray);white-space:nowrap}
+.tag.req{border-color:var(--red);color:var(--red)}
+.st{font-size:13px;margin-left:auto;white-space:nowrap}
+.st.ok{color:var(--green)}
+.st.miss{color:var(--red)}
+.st.warn{color:var(--amber)}
+.hint{display:block;color:var(--gray);font-size:13px;margin-bottom:8px}
+.law{color:#b0b1b3}
+.msg{font-size:13px;color:var(--amber);margin-top:6px}
+.msg[hidden]{display:none}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:2px;padding:10px 12px;min-height:44px;transition:border-color .12s}
+textarea{min-height:76px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--red)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.sub-l{display:block;font-size:12px;color:var(--gray);margin-bottom:3px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--line);border-radius:2px;padding:8px 14px;font-size:14px;cursor:pointer;user-select:none}
+.opt input:checked + span{border-color:var(--red);color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.opt input:focus-visible + span{outline:2px solid var(--red);outline-offset:2px}
+.linkbtn{background:none;border:0;padding:0;min-height:0;color:var(--gray);font-size:13px;text-decoration:underline;cursor:pointer;margin-top:6px}
+.linkbtn:hover{color:var(--red)}
+button{font:inherit;font-size:15px;border-radius:2px;padding:11px 18px;min-height:44px;cursor:pointer;border:1px solid var(--ink);background:#fff;color:var(--ink)}
+button:hover{border-color:var(--red);color:var(--red)}
+button.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:600;flex-shrink:0}
+button.primary:hover{background:var(--red-dark);border-color:var(--red-dark);color:#fff}
+button.small{font-size:14px;padding:8px 12px;min-height:40px}
+button:disabled{opacity:.5;cursor:default}
+/* вкладки вкусов */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;-webkit-overflow-scrolling:touch}
+.tab{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:120px;text-align:left;padding:8px 12px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.tab .tn{font-weight:600;font-size:14px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab .tc{font-size:12px;color:var(--gray)}
+.tab.on{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.tab.full .tc{color:var(--green)}
+.tab.add{min-width:0;justify-content:center;align-items:center;color:var(--gray);font-size:22px;line-height:1;padding:8px 16px}
+.skuhead{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px}
+.skuhead .grow{flex:1 1 220px}
+/* заявления */
+.claim{display:grid;grid-template-columns:1fr 220px 44px;gap:8px;margin-bottom:8px}
+.claim button{padding:0;min-width:44px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.chip{font-size:13px;padding:6px 10px;min-height:36px;border-color:var(--line);color:var(--gray)}
+/* сводка */
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;z-index:5}
+.bar-in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.prog{flex:1 1 auto;min-width:0}
+.prog-t{font-size:13px;color:var(--gray);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-t b{color:var(--ink)}
+.track{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--red);transition:width .2s}
+#out{display:none;margin-top:36px;border-top:2px solid var(--red);padding-top:24px}
+#out h2{font-size:22px;margin:0 0 4px;font-weight:600}
+#out .sub{color:var(--gray);font-size:14px;margin:0 0 20px}
+.print-head{display:none}
+.mx{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px}
+.mxw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mx th,.mx td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.mx th{font-weight:600;font-size:13px;color:var(--gray);white-space:nowrap}
+.mx td.c{text-align:center;font-weight:700;width:1%;white-space:nowrap}
+.c.ok{color:var(--green)} .c.miss{color:var(--red)} .c.warn{color:var(--amber)} .c.na{color:var(--line)}
+.rep{background:var(--soft);padding:24px;border-radius:2px}
+.rep h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin:24px 0 10px;font-weight:600}
+.rep h3:first-child{margin-top:0}
+.rep .bi{margin:0 0 8px;font-size:15px}
+.rep .bi b{font-weight:600}
+.rep section{break-inside:avoid}
+.todo{margin:0;padding-left:18px;font-size:15px}
+.todo li{margin-bottom:4px}
+.todo .w{color:var(--amber)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.agree{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--gray);margin-top:14px;line-height:1.5;cursor:pointer}
+.agree input{margin-top:2px;width:18px;height:18px;flex-shrink:0}
+.agree a{color:inherit}
+.sendnote{margin-top:10px;font-size:14px}
+.sendnote.ok{color:var(--green)}
+.sendnote.err{color:var(--red)}
+.after{margin-top:20px;padding:12px 16px;background:var(--soft);border-left:3px solid var(--line);font-size:14px;color:var(--gray)}
+.after a{color:var(--ink)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);color:var(--gray);font-size:13px}
+footer a{color:var(--ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:88px;background:var(--ink);color:#fff;padding:10px 18px;border-radius:2px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.on{opacity:1}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+@media print{
+  .bar,header,.note,#form,footer,.row,.after,.toast,#out .sub,.agree,.sendnote{display:none!important}
+  body{font-size:11pt}
+  .wrap{padding:0;max-width:none}
+  #out{display:block!important;border-top:0;padding-top:0;margin-top:0}
+  #out h2{display:none}
+  .print-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--red);padding-bottom:10px;margin-bottom:18px}
+  .print-head .pd{color:var(--gray);font-size:10pt}
+  .rep{background:none;padding:0}
+  .mx{font-size:9pt}
+}
+@media (max-width:560px){
+  h1{font-size:26px}
+  .wrap{padding-bottom:150px}
+  .bar{padding:10px 16px}
+  .bar-in{gap:12px}
+  .grid3{grid-template-columns:1fr 1fr}
+  .claim{grid-template-columns:1fr 44px}
+  .claim select{grid-column:1 / 2;grid-row:2}
+  .rep{padding:18px 16px}
+  .st{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="mark">K<span>.</span></div>
+  <h1>Данные для упаковки линейки</h1>
+  <p class="lead">Одна страница на все вкусы. Заполните общие данные один раз, затем по каждому вкусу состав, пищевую ценность и штрихкод. Страница сразу показывает, чего не хватает для вёрстки и что обязательно по техрегламенту.</p>
+  <div class="top-actions">
+    <button type="button" class="small" id="loadTop">Продолжить из файла</button>
+    <button type="button" class="small" id="demo">Посмотреть на примере</button>
+  </div>
+  <input type="file" id="fileIn" accept=".json,application/json" hidden>
+</header>
+
+<div class="note">Всё считается в браузере. Пока вы не нажали «Отправить в студию», данные никуда не уходят и не сохраняются: закроете вкладку, они пропадут. Чтобы вернуться позже, нажмите внизу «Скачать файл», а потом откройте его кнопкой «Продолжить из файла».</div>
+
+<div id="form">
+  <section class="block">
+    <h2 class="sec">1. Общее для всей линейки</h2>
+    <p class="bdesc">Заполняется один раз. Если у какого-то вкуса другой изготовитель, укажите это в его вкладке в поле «Особенности».</p>
+    <div id="common"></div>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">2. Вкусы</h2>
+    <p class="bdesc">Каждый вкус в своей вкладке. Счётчик на вкладке показывает, сколько обязательных полей заполнено. Если значение одинаковое для всех вкусов, нажмите под полем «Вставить во все вкусы».</p>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="skuhead">
+      <div class="grow"><span class="sub-l">Название вкуса во вкладке</span><input type="text" id="skuName" maxlength="60"></div>
+      <button type="button" class="small" id="skuCopy">Копия вкуса</button>
+      <button type="button" class="small" id="skuDel">Удалить</button>
+    </div>
+    <div id="sku"></div>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">3. Заявления на упаковке</h2>
+    <p class="bdesc">Всё, что вы хотите написать о пользе и качестве: «источник белка», «без сахара», «греческое оливковое». Писать их не обязательно, но каждое заявление на пищевой упаковке нужно чем-то подтвердить. Обещания лечебного действия на пищевой продукции под запретом, их лучше показать юристу.</p>
+    <div class="chips" id="chips"></div>
+    <div id="claims"></div>
+    <button type="button" class="small" id="claimAdd">Добавить заявление</button>
+  </section>
+
+  <section class="block">
+    <h2 class="sec">4. Контакт</h2>
+    <div id="contactBox"></div>
+  </section>
+</div>
+
+<section id="out">
+  <div class="print-head"><div class="mark">K<span>.</span></div><div class="pd">Данные для упаковки линейки · <span id="pdate"></span></div></div>
+  <h2>Сводка по линейке</h2>
+  <p class="sub">Таблица показывает каждый вкус: ✓ заполнено, ✕ не хватает обязательного, ! проверьте. Ниже список того, что осталось собрать.</p>
+  <div class="mxw"><table class="mx" id="mx"></table></div>
+  <div class="rep" id="rep"></div>
+  <div class="row">
+    <button type="button" id="saveFile">Скачать файл</button>
+    <button type="button" id="printBtn">Сохранить в PDF</button>
+    <button type="button" class="primary" id="sendBtn">Отправить в студию</button>
+  </div>
+  <label class="agree"><input type="checkbox" id="agree"> Согласен на обработку персональных данных: <a href="https://kovtun.studio/privacy/" target="_blank" rel="noopener">политика</a> и <a href="https://kovtun.studio/consent/" target="_blank" rel="noopener">согласие</a>.</label>
+  <p class="sendnote" id="sendnote" hidden></p>
+  <p class="after">Страница помогает собрать данные, но не заменяет проверку юриста и лаборатории. Перечень полей составлен по ТР ТС 022/2011 и ТР ТС 024/2011. Вопросы можно задать в Telegram: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+</section>
+
+<footer>
+  Инструмент студии <a href="https://kovtun.studio/">Kovtun.studio</a>: дизайн упаковки и фирменного стиля.
+  Пользуйтесь свободно, в том числе с другими подрядчиками.
+</footer>
+</div>
+
+<div class="bar"><div class="bar-in">
+  <div class="prog">
+    <div class="prog-t" id="progT">Заполнено <b>0 из 0</b> обязательных полей</div>
+    <div class="track"><div class="fill" id="fill"></div></div>
+  </div>
+  <button type="button" class="primary" id="build">Сводка</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Поля ----------
+   req: 'req' обязательно, 'cond' обязательно при условии, 'opt' по желанию.
+   law: на что опирается требование, показывается мелко. */
+var COMMON = [
+  {id:'brand', label:'Бренд', req:'opt', hint:'Если на упаковке есть надписи латиницей, они допустимы только как зарегистрированный товарный знак.', law:'168-ФЗ, с 01.03.2026'},
+  {id:'maker', label:'Изготовитель: название', req:'req', hint:'Как в декларации: ООО «…», ИП …', law:'ТР ТС 022, ст. 4.1'},
+  {id:'makerAddr', label:'Адрес изготовителя', req:'req', type:'area', hint:'Место нахождения. Если производство по другому адресу, укажите и его.', law:'ТР ТС 022, ст. 4.8'},
+  {id:'claimsBy', label:'Кто принимает претензии', req:'cond', type:'area', hint:'Название и адрес. Нужно, если это не изготовитель, например владелец бренда.', law:'ТР ТС 022, ст. 4.8'},
+  {id:'importer', label:'Импортёр', req:'cond', type:'area', hint:'Только если продукт ввозится из стран вне ЕАЭС.', law:'ТР ТС 022, ст. 4.8'},
+  {id:'decl', label:'Декларация или сертификат ЕАЭС', req:'req', hint:'Номер документа. Без него знак ЕАС на упаковку ставить нельзя.', law:'Решение КТС № 711'},
+  {id:'standard', label:'ТУ или ГОСТ', req:'opt', hint:'Если продукт выпускается по ним и вы хотите указать это на упаковке.'},
+  {id:'chz', label:'Маркировка «Честный знак»', req:'req', type:'choice', options:['Нужна, бренд подключён','Нужна, ещё не подключён','Не нужна','Не знаю'], hint:'Нужна ли DataMatrix на упаковке. Для растительных масел, молочной продукции, воды и ряда других групп она обязательна.', law:'ПП РФ № 676 и др.'},
+  {id:'dateHow', label:'Как наносится дата изготовления', req:'req', type:'choice', options:['На производстве, принтером','Печатается в типографии','Наклейкой','Не знаю'], hint:'От этого зависит, оставлять ли на макете пустое поле под дату.'},
+  {id:'dieline', label:'Развёртка от типографии', req:'req', type:'choice', options:['Есть, пришлю','Нет, нужна помощь','Упаковка стандартная'], hint:'Штамп или шаблон с размерами, клапанами и зонами склейки.'}
+];
+
+var SKU = [
+  {id:'name', label:'Наименование продукта', req:'req', hint:'Вид продукта, как в документах: «масло растительное — смесь», «батончик глазированный». Фирменное название пишется отдельно.', law:'ТР ТС 022, ст. 4.3', all:false},
+  {id:'trade', label:'Название на упаковке', req:'opt', hint:'Фирменное название или вкус крупно на лицевой стороне.'},
+  {id:'net', label:'Масса или объём нетто', req:'req', hint:'Например, 40 г или 250 мл. Для набора: 30 × 12 мл.', law:'ТР ТС 022, ст. 4.1', all:true},
+  {id:'composition', label:'Состав', req:'req', type:'area', hint:'По убыванию доли. Проценты нужны для компонентов, которые упомянуты в названии или показаны на картинке. Для масел укажите степень очистки.', law:'ТР ТС 022, ст. 4.4; ТР ТС 024, ст. 8'},
+  {id:'allergens', label:'Аллергены в составе', req:'cond', hint:'Молоко, яйца, глютен, орехи, арахис, кунжут, соя, горчица, сельдерей, рыба, ракообразные, моллюски, люпин, сульфиты. Если их нет, напишите «нет».', law:'ТР ТС 022, ст. 4.4'},
+  {id:'traces', label:'Может содержать следы', req:'opt', hint:'Если на производстве есть риск перекрёстного попадания. Ставится сразу после состава.', law:'ТР ТС 022, ст. 4.4', all:true},
+  {id:'nutr', label:'Пищевая ценность на 100 г', req:'req', type:'nutr', hint:'Белки, жиры, углеводы в граммах. Если показатель меньше 0,5 г, можно поставить 0.', law:'ТР ТС 022, ст. 4.9'},
+  {id:'energy', label:'Энергетическая ценность на 100 г', req:'req', type:'energy', hint:'В ккал и кДж, оба значения.', law:'ТР ТС 022, ст. 4.9'},
+  {id:'shelf', label:'Срок годности', req:'req', hint:'Например, 12 месяцев.', law:'ТР ТС 022, ст. 4.1', all:true},
+  {id:'storage', label:'Условия хранения', req:'req', type:'area', hint:'Температура и влажность.', law:'ТР ТС 022, ст. 4.1', all:true},
+  {id:'afterOpen', label:'Хранение после вскрытия', req:'cond', hint:'Обязательно, если продукт меняется после вскрытия: масла, соусы, молочные продукты.', law:'ТР ТС 022, ст. 4.1; ТР ТС 024', all:true},
+  {id:'usage', label:'Рекомендации по употреблению', req:'opt', type:'area', hint:'Как готовить или употреблять, ограничения, если они есть.', law:'ТР ТС 022, ст. 4.1', all:true},
+  {id:'gmo', label:'ГМО больше 0,9 %', req:'req', type:'choice', options:['Нет','Есть'], hint:'Если есть, это обязательно указывается на упаковке.', law:'ТР ТС 022, ст. 4.1', all:true},
+  {id:'ean', label:'Штрихкод EAN-13', req:'req', hint:'13 цифр. Номер выдаёт ГС1 РУС. Страница проверит контрольную цифру.', law:'GS1'},
+  {id:'extra', label:'Особенности этого вкуса', req:'opt', type:'area', hint:'Всё, чем этот вкус отличается от остальных: другой изготовитель, другой размер, пожелания по оформлению.'}
+];
+
+var CONTACT = [
+  {id:'company', label:'Компания', req:'opt'},
+  {id:'person', label:'Как к вам обращаться', req:'opt'},
+  {id:'contact', label:'Контакт для связи', req:'opt', hint:'Телефон, Telegram или почта. Нужен только для отправки в студию.'}
+];
+
+var CLAIM_PRESETS = ['Источник белка','Высокое содержание…','Без сахара','Без ГМО','Натуральный продукт','Холодный отжим','Страна происхождения сырья','Без консервантов'];
+var PROOFS = ['Чем подтверждаем?','Протокол испытаний','Документы поставщика','Декларация изготовителя','Заключение юриста','Пока нет документа'];
+
+var ALLERGEN_WORDS = [
+  ['молок','молоко'],['сливк','молоко'],['сыр','молоко'],['лактоз','молоко'],['яйц','яйца'],['яичн','яйца'],
+  ['пшениц','глютен'],['рож','глютен'],['ячмен','глютен'],['овс','глютен'],['глютен','глютен'],
+  ['арахис','арахис'],['миндал','орехи'],['фундук','орехи'],['кешью','орехи'],['грецк','орехи'],['фисташ','орехи'],['пекан','орехи'],
+  ['кунжут','кунжут'],['соев','соя'],['соя','соя'],['горчиц','горчица'],['сельдер','сельдерей'],
+  ['рыб','рыба'],['креветк','ракообразные'],['краб','ракообразные'],['мидии','моллюски'],['кальмар','моллюски'],
+  ['люпин','люпин'],['сульфит','сульфиты'],['диоксид серы','сульфиты']
+];
+
+/* ---------- Состояние ---------- */
+var state = {common:{}, skus:[], claims:[], contact:{}, cur:0};
+function newSku(n){ return {title: n || ('Вкус ' + (state.skus.length + 1)), v:{}}; }
+function reset(){ state = {common:{}, skus:[newSku('Вкус 1')], claims:[], contact:{}, cur:0}; }
+reset();
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function num(s){ if (s === '' || s == null) return NaN; return parseFloat(String(s).replace(',', '.').replace(/\s/g,'')); }
+function filled(f, v){
+  if (f.type === 'nutr') return v && ['p','f','c'].every(function(k){ return v[k] !== undefined && String(v[k]).trim() !== ''; });
+  if (f.type === 'energy') return v && ['kcal','kj'].every(function(k){ return v[k] !== undefined && String(v[k]).trim() !== ''; });
+  return v !== undefined && v !== null && String(v).trim() !== '';
+}
+
+/* ---------- Проверки значений ---------- */
+function eanCheck(s){
+  var d = String(s || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.length !== 13 && d.length !== 8) return 'В штрихкоде ' + d.length + ' цифр, нужно 13 (или 8 для маленькой упаковки).';
+  var arr = d.split('').map(Number), last = arr.pop(), sum = 0;
+  arr.reverse().forEach(function(x, i){ sum += x * (i % 2 === 0 ? 3 : 1); });
+  var cd = (10 - sum % 10) % 10;
+  return cd === last ? '' : 'Контрольная цифра не сходится: должна быть ' + cd + '. Проверьте номер.';
+}
+function energyCheck(v){
+  var n = v.nutr || {}, e = v.energy || {};
+  var p = num(n.p), f = num(n.f), c = num(n.c), kcal = num(e.kcal), kj = num(e.kj), out = [];
+  if (!isNaN(p) && !isNaN(f) && !isNaN(c) && !isNaN(kcal)){
+    var calc = 4 * p + 9 * f + 4 * c;
+    if (calc > 0 && Math.abs(kcal - calc) / calc > 0.1) out.push('По белкам, жирам и углеводам выходит около ' + Math.round(calc) + ' ккал, указано ' + kcal + '. Проверьте.');
+  }
+  if (!isNaN(kcal) && !isNaN(kj) && kcal > 0){
+    var j = kcal * 4.184;
+    if (Math.abs(kj - j) / j > 0.03) out.push(kcal + ' ккал это около ' + Math.round(j) + ' кДж, указано ' + kj + '.');
+  }
+  if (!isNaN(p + f + c) && p + f + c > 100.5) out.push('Белков, жиров и углеводов вместе больше 100 г на 100 г продукта.');
+  return out.join(' ');
+}
+function allergenCheck(v){
+  var comp = String(v.composition || '').toLowerCase();
+  if (!comp) return '';
+  var al = String(v.allergens || '').toLowerCase(), found = {};
+  ALLERGEN_WORDS.forEach(function(w){
+    var re = new RegExp('(^|[^а-яё])' + w[0]);
+    if (re.test(comp)) found[w[1]] = 1;
+  });
+  var miss = Object.keys(found).filter(function(k){ return al.indexOf(k.slice(0, 4)) === -1; });
+  if (!miss.length) return '';
+  return 'В составе, похоже, есть: ' + miss.join(', ') + '. Укажите в аллергенах или напишите, почему нет.';
+}
+function skuWarn(f, v){
+  if (f.id === 'ean') return eanCheck(v.ean);
+  if (f.id === 'energy') return energyCheck(v);
+  if (f.id === 'allergens') return allergenCheck(v);
+  return '';
+}
+/* статус поля: ok / miss / warn / empty (необязательное пустое) */
+function status(f, v, warn){
+  var has = filled(f, v);
+  if (warn) return 'warn';
+  if (has) return 'ok';
+  if (f.req === 'req') return 'miss';
+  if (f.req === 'cond') return 'cond';
+  return 'empty';
+}
+var ST_TEXT = {ok:'✓ есть', miss:'✕ не хватает', warn:'! проверьте', cond:'если применимо', empty:''};
+var TAG = {req:'<span class="tag req">обязательно</span>', cond:'<span class="tag">при условии</span>', opt:'<span class="tag">по желанию</span>'};
+
+/* ---------- Отрисовка поля ---------- */
+function fieldHtml(f, scope, v){
+  var id = scope + '_' + f.id, h = '';
+  h += '<div class="q" data-f="' + f.id + '" data-scope="' + scope + '">';
+  h += '<div class="lab"><label for="' + id + '">' + esc(f.label) + '</label>' + (TAG[f.req] || '') + '<span class="st" data-st></span></div>';
+  if (f.hint || f.law) h += '<span class="hint">' + esc(f.hint || '') + (f.law ? ' <span class="law">' + esc(f.law) + '</span>' : '') + '</span>';
+  if (f.type === 'area') h += '<textarea id="' + id + '" data-k="' + f.id + '">' + esc(v) + '</textarea>';
+  else if (f.type === 'choice'){
+    h += '<div class="opts">';
+    f.options.forEach(function(o, i){
+      h += '<label class="opt"><input type="radio" name="' + id + '" value="' + esc(o) + '" data-k="' + f.id + '"' + (v === o ? ' checked' : '') + (i === 0 ? ' id="' + id + '"' : '') + '><span>' + esc(o) + '</span></label>';
+    });
+    h += '</div>';
+  } else if (f.type === 'nutr'){
+    v = v || {};
+    h += '<div class="grid3">' + [['p','Белки, г'],['f','Жиры, г'],['c','Углеводы, г']].map(function(x, i){
+      return '<div><span class="sub-l">' + x[1] + '</span><input type="text" inputmode="decimal"' + (i === 0 ? ' id="' + id + '"' : '') + ' data-k="' + f.id + '" data-sub="' + x[0] + '" value="' + esc(v[x[0]]) + '"></div>';
+    }).join('') + '</div>';
+  } else if (f.type === 'energy'){
+    v = v || {};
+    h += '<div class="grid2">' + [['kcal','ккал'],['kj','кДж']].map(function(x, i){
+      return '<div><span class="sub-l">' + x[1] + '</span><input type="text" inputmode="decimal"' + (i === 0 ? ' id="' + id + '"' : '') + ' data-k="' + f.id + '" data-sub="' + x[0] + '" value="' + esc(v[x[0]]) + '"></div>';
+    }).join('') + '</div>';
+  } else {
+    h += '<input type="text" id="' + id + '" data-k="' + f.id + '" value="' + esc(v) + '"' + (f.id === 'ean' ? ' inputmode="numeric"' : '') + '>';
+  }
+  h += '<div class="msg" data-msg hidden></div>';
+  if (scope === 'sku' && f.all) h += '<button type="button" class="linkbtn" data-all="' + f.id + '">Вставить во все вкусы</button>';
+  h += '</div>';
+  return h;
+}
+
+function renderCommon(){
+  $('common').innerHTML = COMMON.map(function(f){ return fieldHtml(f, 'common', state.common[f.id]); }).join('');
+  $('contactBox').innerHTML = CONTACT.map(function(f){ return fieldHtml(f, 'contact', state.contact[f.id]); }).join('');
+}
+function renderSku(){
+  var s = state.skus[state.cur];
+  $('skuName').value = s.title;
+  $('sku').innerHTML = SKU.map(function(f){ return fieldHtml(f, 'sku', s.v[f.id]); }).join('');
+  $('skuDel').disabled = state.skus.length < 2;
+}
+function skuCount(s){
+  var need = SKU.filter(function(f){ return f.req === 'req'; });
+  var done = need.filter(function(f){ return filled(f, s.v[f.id]) && !skuWarn(f, s.v); }).length;
+  return [done, need.length];
+}
+function renderTabs(){
+  var h = state.skus.map(function(s, i){
+    var c = skuCount(s);
+    return '<button type="button" role="tab" class="tab' + (i === state.cur ? ' on' : '') + (c[0] === c[1] ? ' full' : '') + '" data-i="' + i + '" aria-selected="' + (i === state.cur) + '"><span class="tn">' + esc(s.title) + '</span><span class="tc">' + c[0] + ' из ' + c[1] + '</span></button>';
+  }).join('');
+  h += '<button type="button" class="tab add" id="skuAdd" title="Добавить вкус" aria-label="Добавить вкус">+</button>';
+  $('tabs').innerHTML = h;
+}
+
+/* статусы под полями + общий прогресс */
+function refresh(){
+  var s = state.skus[state.cur];
+  document.querySelectorAll('.q').forEach(function(q){
+    var scope = q.getAttribute('data-scope'), fid = q.getAttribute('data-f');
+    var list = scope === 'common' ? COMMON : scope === 'sku' ? SKU : CONTACT;
+    var f = list.filter(function(x){ return x.id === fid; })[0];
+    var src = scope === 'common' ? state.common : scope === 'sku' ? s.v : state.contact;
+    var warn = scope === 'sku' ? skuWarn(f, s.v) : '';
+    var st = status(f, src[fid], warn);
+    var el = q.querySelector('[data-st]');
+    el.className = 'st ' + st; el.textContent = scope === 'contact' ? '' : ST_TEXT[st];
+    var m = q.querySelector('[data-msg]');
+    m.hidden = !warn; m.textContent = warn;
+  });
+  renderTabs();
+  var done = 0, total = 0;
+  COMMON.forEach(function(f){ if (f.req === 'req'){ total++; if (filled(f, state.common[f.id])) done++; } });
+  state.skus.forEach(function(x){ var c = skuCount(x); done += c[0]; total += c[1]; });
+  $('progT').innerHTML = 'Заполнено <b>' + done + ' из ' + total + '</b> обязательных полей';
+  $('fill').style.width = (total ? Math.round(done / total * 100) : 0) + '%';
+  dirty = true;
+}
+
+/* ---------- Ввод ---------- */
+function onInput(e){
+  var t = e.target, k = t.getAttribute('data-k');
+  if (!k) return;
+  var q = t.closest('.q'), scope = q.getAttribute('data-scope');
+  var src = scope === 'common' ? state.common : scope === 'sku' ? state.skus[state.cur].v : state.contact;
+  var sub = t.getAttribute('data-sub');
+  if (sub){ src[k] = src[k] || {}; src[k][sub] = t.value; }
+  else src[k] = t.value;
+  refresh();
+}
+document.addEventListener('input', onInput);
+document.addEventListener('change', onInput);
+
+$('tabs').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'skuAdd'){ state.skus.push(newSku()); state.cur = state.skus.length - 1; }
+  else state.cur = +b.getAttribute('data-i');
+  renderSku(); refresh();
+});
+$('skuName').addEventListener('input', function(){ state.skus[state.cur].title = this.value || 'Без названия'; renderTabs(); });
+$('skuCopy').addEventListener('click', function(){
+  var s = state.skus[state.cur];
+  var c = {title: s.title + ' (копия)', v: JSON.parse(JSON.stringify(s.v))};
+  delete c.v.ean;
+  state.skus.push(c); state.cur = state.skus.length - 1;
+  renderSku(); refresh(); toast('Вкус скопирован, штрихкод очищен');
+});
+$('skuDel').addEventListener('click', function(){
+  if (state.skus.length < 2) return;
+  if (!confirm('Удалить вкус «' + state.skus[state.cur].title + '»?')) return;
+  state.skus.splice(state.cur, 1); state.cur = Math.max(0, state.cur - 1);
+  renderSku(); refresh();
+});
+$('sku').addEventListener('click', function(e){
+  var b = e.target.closest('[data-all]'); if (!b) return;
+  var k = b.getAttribute('data-all'), v = state.skus[state.cur].v[k];
+  if (!filled({}, v)){ toast('Сначала заполните поле'); return; }
+  state.skus.forEach(function(s){ s.v[k] = JSON.parse(JSON.stringify(v)); });
+  refresh(); toast('Вставлено во все вкусы: ' + state.skus.length);
+});
+
+/* ---------- Заявления ---------- */
+function renderClaims(){
+  $('chips').innerHTML = CLAIM_PRESETS.map(function(p){ return '<button type="button" class="chip" data-p="' + esc(p) + '">+ ' + esc(p) + '</button>'; }).join('');
+  $('claims').innerHTML = state.claims.map(function(c, i){
+    return '<div class="claim" data-ci="' + i + '"><input type="text" data-c="text" value="' + esc(c.text) + '" placeholder="Текст заявления" aria-label="Заявление ' + (i + 1) + '">' +
+      '<select data-c="proof" aria-label="Чем подтверждаем">' + PROOFS.map(function(p, j){ return '<option value="' + (j ? esc(p) : '') + '"' + (c.proof === p ? ' selected' : '') + '>' + esc(p) + '</option>'; }).join('') + '</select>' +
+      '<button type="button" data-cdel aria-label="Удалить">✕</button></div>';
+  }).join('');
+}
+$('chips').addEventListener('click', function(e){
+  var b = e.target.closest('[data-p]'); if (!b) return;
+  state.claims.push({text: b.getAttribute('data-p'), proof:''}); renderClaims(); dirty = true;
+});
+$('claimAdd').addEventListener('click', function(){ state.claims.push({text:'', proof:''}); renderClaims(); });
+$('claims').addEventListener('input', function(e){
+  var row = e.target.closest('[data-ci]'); if (!row) return;
+  state.claims[+row.getAttribute('data-ci')][e.target.getAttribute('data-c')] = e.target.value; dirty = true;
+});
+$('claims').addEventListener('change', function(e){
+  var row = e.target.closest('[data-ci]'); if (!row) return;
+  state.claims[+row.getAttribute('data-ci')][e.target.getAttribute('data-c')] = e.target.value; dirty = true;
+});
+$('claims').addEventListener('click', function(e){
+  var b = e.target.closest('[data-cdel]'); if (!b) return;
+  state.claims.splice(+b.closest('[data-ci]').getAttribute('data-ci'), 1); renderClaims();
+});
+
+/* ---------- Сводка ---------- */
+function fmt(f, v){
+  if (f.type === 'nutr') return v ? 'белки ' + (v.p || '—') + ' г, жиры ' + (v.f || '—') + ' г, углеводы ' + (v.c || '—') + ' г' : '';
+  if (f.type === 'energy') return v ? (v.kcal || '—') + ' ккал / ' + (v.kj || '—') + ' кДж' : '';
+  return v == null ? '' : String(v).trim();
+}
+function collect(){
+  var todo = [], warns = [];
+  COMMON.forEach(function(f){
+    if (f.req === 'req' && !filled(f, state.common[f.id])) todo.push('Общее: ' + f.label);
+  });
+  state.skus.forEach(function(s){
+    SKU.forEach(function(f){
+      var w = skuWarn(f, s.v);
+      if (w) warns.push(s.title + ', ' + f.label + ': ' + w);
+      else if (f.req === 'req' && !filled(f, s.v[f.id])) todo.push(s.title + ': ' + f.label);
+    });
+  });
+  state.claims.forEach(function(c){
+    if (!c.text) return;
+    if (!c.proof || c.proof === 'Пока нет документа') warns.push('Заявление «' + c.text + '»: нет подтверждения. Без документа его лучше убрать.');
+  });
+  return {todo: todo, warns: warns};
+}
+function build(){
+  var rows = SKU.filter(function(f){ return f.req !== 'opt'; });
+  var h = '<thead><tr><th>Поле</th>' + state.skus.map(function(s){ return '<th>' + esc(s.title) + '</th>'; }).join('') + '</tr></thead><tbody>';
+  rows.forEach(function(f){
+    h += '<tr><td>' + esc(f.label) + '</td>' + state.skus.map(function(s){
+      var st = status(f, s.v[f.id], skuWarn(f, s.v));
+      var sym = {ok:'✓', miss:'✕', warn:'!', cond:'·', empty:'·'}[st];
+      return '<td class="c ' + (st === 'cond' || st === 'empty' ? 'na' : st) + '">' + sym + '</td>';
+    }).join('') + '</tr>';
+  });
+  $('mx').innerHTML = h + '</tbody>';
+
+  var r = collect(), rep = '';
+  rep += '<section><h3>Что осталось собрать</h3>';
+  if (!r.todo.length && !r.warns.length) rep += '<p class="bi">Все обязательные поля заполнены, явных ошибок нет.</p>';
+  else rep += '<ul class="todo">' + r.todo.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('') + r.warns.map(function(t){ return '<li class="w">' + esc(t) + '</li>'; }).join('') + '</ul>';
+  rep += '</section>';
+  rep += '<section><h3>Общее для линейки</h3>' + COMMON.map(function(f){ var v = fmt(f, state.common[f.id]); return v ? '<p class="bi"><b>' + esc(f.label) + ':</b> ' + esc(v) + '</p>' : ''; }).join('') + '</section>';
+  state.skus.forEach(function(s){
+    rep += '<section><h3>' + esc(s.title) + '</h3>' + SKU.map(function(f){ var v = fmt(f, s.v[f.id]); return v ? '<p class="bi"><b>' + esc(f.label) + ':</b> ' + esc(v) + '</p>' : ''; }).join('') + '</section>';
+  });
+  var cl = state.claims.filter(function(c){ return c.text; });
+  if (cl.length) rep += '<section><h3>Заявления</h3>' + cl.map(function(c){ return '<p class="bi"><b>' + esc(c.text) + ':</b> ' + esc(c.proof || 'не указано') + '</p>'; }).join('') + '</section>';
+  var ct = CONTACT.map(function(f){ var v = fmt(f, state.contact[f.id]); return v ? '<p class="bi"><b>' + esc(f.label) + ':</b> ' + esc(v) + '</p>' : ''; }).join('');
+  if (ct) rep += '<section><h3>Контакт</h3>' + ct + '</section>';
+  $('rep').innerHTML = rep;
+  $('pdate').textContent = new Date().toLocaleDateString('ru-RU');
+  $('out').style.display = 'block';
+  $('out').scrollIntoView({behavior:'smooth'});
+}
+$('build').addEventListener('click', build);
+$('printBtn').addEventListener('click', function(){ window.print(); });
+
+/* текст для CRM: коротко, без пустых полей */
+function asText(){
+  var r = collect(), L = [];
+  L.push('Линейка: ' + state.skus.map(function(s){ return s.title; }).join(', '));
+  if (r.todo.length) L.push('\nНе хватает:\n- ' + r.todo.join('\n- '));
+  if (r.warns.length) L.push('\nПроверить:\n- ' + r.warns.join('\n- '));
+  L.push('\nОБЩЕЕ');
+  COMMON.forEach(function(f){ var v = fmt(f, state.common[f.id]); if (v) L.push(f.label + ': ' + v); });
+  state.skus.forEach(function(s){
+    L.push('\n' + s.title.toUpperCase());
+    SKU.forEach(function(f){ var v = fmt(f, s.v[f.id]); if (v) L.push(f.label + ': ' + v); });
+  });
+  var cl = state.claims.filter(function(c){ return c.text; });
+  if (cl.length){ L.push('\nЗАЯВЛЕНИЯ'); cl.forEach(function(c){ L.push(c.text + ': ' + (c.proof || 'не указано')); }); }
+  return L.join('\n');
+}
+
+/* ---------- Файл: скачать и загрузить ---------- */
+/* имя файла латиницей: кириллицу в имени скачанного файла часть браузеров заменяет на «download» */
+var TR = {а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'ts',ч:'ch',ш:'sh',щ:'sch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya'};
+function slug(s){ return String(s || '').toLowerCase().replace(/[а-яё]/g, function(c){ return TR[c]; }).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); }
+$('saveFile').addEventListener('click', function(){
+  var data = {tool:'kovtun-sku-line', version:1, saved:new Date().toISOString(), common:state.common, skus:state.skus, claims:state.claims, contact:state.contact};
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  var a = document.createElement('a');
+  var d = new Date(), ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'upakovka-' + (slug(state.contact.company || state.common.brand) || 'lineyka') + '-' + ds + '.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  dirty = false;
+  toast('Файл скачан');
+});
+function load(data){
+  if (!data || data.tool !== 'kovtun-sku-line' || !Array.isArray(data.skus) || !data.skus.length) throw new Error('bad');
+  state = {common:data.common || {}, skus:data.skus.map(function(s){ return {title:String(s.title || 'Вкус'), v:s.v || {}}; }), claims:data.claims || [], contact:data.contact || {}, cur:0};
+  renderAll(); dirty = false;
+}
+$('loadTop').addEventListener('click', function(){ $('fileIn').click(); });
+$('fileIn').addEventListener('change', function(){
+  var f = this.files[0]; if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function(){
+    try { load(JSON.parse(rd.result)); toast('Данные загружены'); }
+    catch(e){ toast('Это не файл этой страницы'); }
+  };
+  rd.readAsText(f); this.value = '';
+});
+
+/* ---------- Пример ---------- */
+$('demo').addEventListener('click', function(){
+  if (dirty && !confirm('Заменить введённые данные примером?')) return;
+  load({tool:'kovtun-sku-line', common:{
+      brand:'Яблочный двор', maker:'ООО «Пример»', makerAddr:'Россия, 690000, г. Владивосток, ул. Примерная, д. 1',
+      decl:'ЕАЭС N RU Д-RU.РА01.В.00000/26', chz:'Не нужна', dateHow:'На производстве, принтером', dieline:'Есть, пришлю'},
+    skus:[
+      {title:'Классика', v:{name:'Чипсы яблочные сушёные', trade:'Яблочные чипсы. Классика', net:'40 г', composition:'Яблоки сушёные 100 %.', allergens:'нет', nutr:{p:'2',f:'0,5',c:'78'}, energy:{kcal:'325',kj:'1360'}, shelf:'12 месяцев', storage:'При температуре от +5 до +25 °С и влажности не более 75 %.', gmo:'Нет', ean:'4601234567893'}},
+      {title:'С корицей', v:{name:'Чипсы яблочные сушёные с корицей', net:'40 г', composition:'Яблоки сушёные 98 %, корица молотая 2 %.', nutr:{p:'2',f:'0,6',c:'77'}, energy:{kcal:'420',kj:'1360'}, shelf:'12 месяцев', gmo:'Нет', ean:'4601234567900'}},
+      {title:'С грушей', v:{name:'Чипсы фруктовые сушёные', net:'40 г', composition:'Яблоки сушёные 60 %, груша сушёная 40 %. Обработано кунжутным маслом.', allergens:'нет', nutr:{p:'2',f:'0,5',c:''}, shelf:'12 месяцев', gmo:'Нет'}}
+    ],
+    claims:[{text:'Без сахара', proof:'Протокол испытаний'},{text:'Источник клетчатки', proof:'Пока нет документа'}],
+    contact:{}});
+  toast('Загружен пример: три вкуса');
+});
+
+/* ---------- Отправка в CRM ---------- */
+var ENDPOINT = 'https://crm.kovtun.studio/api/lead.php';
+var sent = false;
+function say(text, cls){ var n = $('sendnote'); n.textContent = text; n.className = 'sendnote ' + (cls || ''); n.hidden = false; }
+var FAIL = 'Не отправилось. Нажмите «Скачать файл» и пришлите его в Telegram: t.me/kovtundesign';
+$('sendBtn').addEventListener('click', function(){
+  if (sent){ say('Данные уже отправлены.', 'ok'); return; }
+  var contact = String(state.contact.contact || '').trim();
+  if (!contact){
+    say('Заполните «Контакт для связи» в разделе 4, иначе ответить будет некуда.', 'err');
+    var c = $('contact_contact'); if (c){ c.scrollIntoView({behavior:'smooth', block:'center'}); c.focus(); }
+    return;
+  }
+  if (!$('agree').checked){ say('Отметьте согласие на обработку данных.', 'err'); return; }
+  var company = String(state.contact.company || state.common.brand || '').trim();
+  var p = new URLSearchParams(location.search);
+  var text = 'Данные для упаковки линейки' + (company ? ' — ' + company : '') + '\n\n' + asText();
+  var payload = {
+    name: company || String(state.contact.person || ''), contact: contact,
+    message: text.slice(0, 7900), page: location.pathname, referrer: document.referrer || '',
+    utmSource: p.get('utm_source') || '', utmMedium: p.get('utm_medium') || '', utmCampaign: p.get('utm_campaign') || '',
+    yclid: p.get('yclid') || '', formKey: 'kovtun-studio-109482416', website: '',
+    skuLine: {common:state.common, skus:state.skus, claims:state.claims}
+  };
+  /* сервер принимает до 20 000 байт: полные данные кладём, только если влезают */
+  var size = function(o){ return new Blob([JSON.stringify(o)]).size; };
+  if (size(payload) > 19500) delete payload.skuLine;
+  while (size(payload) > 19500 && payload.message.length > 500) payload.message = payload.message.slice(0, Math.floor(payload.message.length * 0.8)) + '\n…обрезано, полный текст в файле';
+  var btn = $('sendBtn'); btn.disabled = true; say('Отправляю…', '');
+  fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)})
+    .then(function(r){ return r.json().catch(function(){ return null; }); })
+    .then(function(j){
+      if (j && j.ok){ sent = true; btn.textContent = 'Отправлено'; say('Данные ушли в студию, заявка №' + (j.lead || '—') + '. Отвечу в течение рабочего дня. Файл себе всё равно сохраните.', 'ok'); }
+      else { btn.disabled = false; say(FAIL, 'err'); }
+    })
+    .catch(function(){ btn.disabled = false; say(FAIL, 'err'); });
+});
+
+/* ---------- Прочее ---------- */
+var dirty = false;
+window.addEventListener('beforeunload', function(e){ if (dirty){ e.preventDefault(); e.returnValue = ''; } });
+var tt;
+function toast(msg){ var t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(function(){ t.classList.remove('on'); }, 1800); }
+function renderAll(){ renderCommon(); renderSku(); renderClaims(); refresh(); dirty = false; }
+renderAll();
+})();
+</script>
+</body>
+</html>
