@@ -1,4 +1,6 @@
 ---
+import LogoAnimated from './LogoAnimated.astro';
+
 interface Column {
   title: string;
   links?: { href: string; label: string; external?: boolean }[];
@@ -19,7 +21,7 @@ const copyText = copy.replace('{year}', String(year));
   <div class="container-wide">
     <div class="top">
       <div>
-        <span class="brand"><img src="/assets/logo-on-dark.svg" alt="Kovtun.studio"></span>
+        <span class="brand" role="img" aria-label="Kovtun.studio"><LogoAnimated id="kv-mask-footer" /></span>
         <p class="tag">{tagline}</p>
       </div>
       {columns.map(col => (

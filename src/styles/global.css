@@ -1540,6 +1540,8 @@ body.theme-dark .k-footer { background: #0a0a0a; }
 .k-footer .brand img {
   height: 30px; width: auto; display: block;
 }
+/* Логотип с анимацией при наведении (LogoAnimated.astro): размер как у прежней картинки, буквы белые на графите */
+.k-footer .brand .kv-logo { --kv-h: 30px; --kv-ink: #fff; }
 .k-footer .tag {
   font: 400 15px/1.55 var(--font-body);
   color: rgba(255,255,255,.65);
