@@ -1,4 +1,6 @@
 ---
+import LogoAnimated from './LogoAnimated.astro';
+
 interface NavChild {
   href: string;
   label: string;
@@ -50,8 +52,7 @@ const megaItems = nav
 <header class="k-header">
   <div class="container-wide row">
     <a class="brand" href="/" aria-label="Kovtun.studio — на главную">
-      <img class="logo-dark"  src="/assets/logo.svg"         alt="Kovtun.studio">
-      <img class="logo-light" src="/assets/logo-on-dark.svg" alt="Kovtun.studio">
+      <LogoAnimated id="kv-mask-header" />
     </a>
     <nav aria-label="Главная навигация">
       {nav.map((item, index) => (

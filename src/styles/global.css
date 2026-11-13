@@ -127,6 +127,9 @@ body.theme-dark .k-header {
 .k-header .brand .logo-light { display: none; }
 body.theme-dark .k-header .brand .logo-dark  { display: none; }
 body.theme-dark .k-header .brand .logo-light { display: block; }
+/* Логотип с анимацией при наведении (LogoAnimated.astro): высота как у прежней картинки, на темной шапке буквы белые */
+.k-header .brand .kv-logo { --kv-h: 26px; }
+body.theme-dark .k-header .brand .kv-logo { --kv-ink: #fff; }
 .k-header nav {
   display: flex; align-items: center; gap: 36px;
 }
