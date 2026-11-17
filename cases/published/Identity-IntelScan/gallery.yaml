@@ -73,7 +73,7 @@ groups:
       - file: intelscan-direction-02
         label: Вариант 2, курсивная аббревиатура ИСС над набором в три строки
       - file: intelscan-direction-03
-        label: Вариант 3, иСС в шестиугольнике
+        label: Вариант 3, ИСС в шестиугольнике
       - file: intelscan-direction-04
         label: Вариант 4, шрифтовой ИНТЕЛСКАН в наклонной плашке
       - file: intelscan-direction-05
@@ -81,7 +81,7 @@ groups:
       - file: intelscan-direction-06
         label: Вариант 6, скобки-визир вокруг ИС
       - file: intelscan-direction-07
-        label: Вариант 7, иС в щите
+        label: Вариант 7, ИС в щите
       - file: intelscan-direction-08
         label: Вариант 8, курсивная ИСС с линией скорости
       - file: intelscan-direction-09
