@@ -14,6 +14,7 @@ export const caseCatalogOrder = [
   'identity-trubovarnya',
   'website-trubovarnya',
   'identity-sila-car',
+  'identity-intelscan',
   'website-ptksk',
   'website-eon-phuket',
   'website-greatway',

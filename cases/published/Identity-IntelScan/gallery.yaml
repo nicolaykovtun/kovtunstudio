@@ -1,0 +1,102 @@
+# Раскладка изображений кейса. Пути в full/ и thumb/ строятся из имени файла:
+# full/<file>.webp и thumb/<file>-thumbnail.webp внутри assetRoot.
+# Картинки собраны скриптом tmp/slices/identity-intelscan.mjs из финальных SVG
+# и архивных PNG папки IntelScan Service\Logo.
+assetRoot: /assets/cases/identity-intelscan
+
+cover:
+  src: identity-intelscan-cover.webp
+  alt: Белый курсивный логотип ИСС с подписью Интелскан сервис на асфальтовом фоне
+
+og: identity-intelscan-og.webp
+ogAlt: Логотип ИнтелСкан Сервис
+
+keywords: логотип, лигатура, ребрендинг, чиптюнинг, автосервис, ИнтелСкан Сервис, ИСС, Владивосток, Николай Ковтун
+
+resultTitle: Что получил заказчик
+resultIntro: >-
+  Знак держит обе стороны брифа: наклон дает скорость, один вес штриха дает
+  строгость. Под каждый фон есть готовый файл.
+
+ctaTitle: Логотип перерос бизнес?
+ctaText: >-
+  Расскажите, где живет знак сейчас и что в нем мешает. До первого эскиза
+  вместе договоримся, что для вас значит дороже и как пишется название.
+ctaButton: Обсудить логотип
+
+compare:
+  title: Было и стало
+  intro: >-
+    Старый знак держался на картинке машины и пламени. Новый передает скорость
+    формой букв, без иллюстрации.
+  items:
+    - number: '01'
+      title: Логотип
+      text: >-
+        Латинский ISS с силуэтом автомобиля и подписью в Arial заменила
+        курсивная лигатура ИСС с подписью на русском.
+      before: intelscan-before-old-logo
+      after: intelscan-after-new-logo
+      beforeCaption: Старый знак / до
+      afterCaption: Новый знак / после
+      beforeAlt: Старый логотип ISS с силуэтом машины, линиями пламени и подписью IntelScan Service
+      afterAlt: Новый логотип ИСС белым на черном фоне
+
+groups:
+  - id: logo
+    title: Знак в четырех цветах
+    layout: slides
+    intro: >-
+      Одна форма во всех файлах. Асфальтовый и серый работают в паре,
+      черный и белый нужны для печати в одну краску.
+    items:
+      - file: intelscan-logo-02-on-gray
+        label: Асфальтовый знак на сером фоне
+      - file: intelscan-logo-03-on-asphalt
+        label: Серый знак на асфальтовом фоне
+      - file: intelscan-logo-04-white-on-black
+        label: Белый знак на черном фоне
+      - file: intelscan-logo-05-black-on-white
+        label: Черный знак на белом фоне
+
+  - id: search
+    title: Пятнадцать направлений и ветка финала
+    layout: slides
+    intro: >-
+      Шрифтовые начертания, курсивная аббревиатура, шестиугольник, рамка-визир,
+      щит и круглая монограмма. Каждое направление показано на белом и на трех
+      фирменных фонах. Шестнадцатая карточка: вариант, из которого вырос
+      финальный знак.
+    items:
+      - file: intelscan-direction-01
+        label: Вариант 1, шрифтовой ИНТЕЛСКАН в широком начертании
+      - file: intelscan-direction-02
+        label: Вариант 2, курсивная аббревиатура ИСС над набором в три строки
+      - file: intelscan-direction-03
+        label: Вариант 3, иСС в шестиугольнике
+      - file: intelscan-direction-04
+        label: Вариант 4, шрифтовой ИНТЕЛСКАН в наклонной плашке
+      - file: intelscan-direction-05
+        label: Вариант 5, курсивная ИСС в плашке-параллелограмме
+      - file: intelscan-direction-06
+        label: Вариант 6, скобки-визир вокруг ИС
+      - file: intelscan-direction-07
+        label: Вариант 7, иС в щите
+      - file: intelscan-direction-08
+        label: Вариант 8, курсивная ИСС с линией скорости
+      - file: intelscan-direction-09
+        label: Вариант 9, рубленая ИСС из прямоугольников
+      - file: intelscan-direction-10
+        label: Вариант 10, курсивная ИСС в красной плашке
+      - file: intelscan-direction-11
+        label: Вариант 11, монограмма ИС в квадрате
+      - file: intelscan-direction-12
+        label: Вариант 12, рубленая ИСС в рамке
+      - file: intelscan-direction-13
+        label: Вариант 13, лигатура ИС из шестигранных штрихов
+      - file: intelscan-direction-14
+        label: Вариант 14, круглая монограмма ИС
+      - file: intelscan-direction-15
+        label: Вариант 15, монограмма ИС в узком щите
+      - file: intelscan-direction-16-final-branch
+        label: Вариант 16.2, ветка, из которой вырос финальный знак
