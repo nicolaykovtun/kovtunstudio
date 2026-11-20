@@ -13,6 +13,7 @@ import ContactForm from '../components/ContactForm.astro';
 import Footer from '../components/Footer.astro';
 import RevealScript from '../components/RevealScript.astro';
 import { directionByCategory, sphereBySegment } from '../data/case-catalog';
+import { caseCovers, coverFor } from '../lib/case-covers';
 import { editorialCaseConfigs } from '../data/case-page-config';
 
 const dataDir = path.resolve('./src/data');
@@ -138,7 +139,12 @@ for (const c of legacyCases) addToSphere(c.sphereKey, c.name);
 for (const entry of editorialEntries) {
   addToSphere(sphereBySegment[entry.data.segment] ?? entry.data.segment, entry.data.client);
 }
-const spheres = [...sphereMap.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'));
+// Превью под курсором: у сферы своей картинки нет, показываем обложку первого
+// ее кейса по канону каталога — того же, что стоит первым в портфолио.
+const covers = await caseCovers();
+const spheres = [...sphereMap.values()]
+  .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'))
+  .map((s) => ({ ...s, preview: coverFor(covers, 'sphereKey', s.key) }));
 const proofNums =
   `${totalCases} ${plural(totalCases, 'разобранный кейс', 'разобранных кейса', 'разобранных кейсов')} в портфолио.`;
 
@@ -346,7 +352,12 @@ const faqLd = {
         <ol class="sphere-list">
           {spheres.map((s, i) => (
             <li>
-              <a class="sphere-row" href={`/portfolio/?sphere=${s.key}`}>
+              <a
+                class="sphere-row"
+                href={`/portfolio/?sphere=${s.key}`}
+                data-preview-src={s.preview?.src}
+                data-preview-alt={s.preview?.alt}
+              >
                 <span class="sr-num" aria-hidden="true">{pad(i + 1)}</span>
                 <span class="sr-body">
                   <span class="sr-name">{s.label}</span>
@@ -549,6 +560,7 @@ const faqLd = {
     counter-reset: none;
   }
   .sphere-row {
+    position: relative;
     display: grid;
     grid-template-columns: 56px minmax(0, 1fr) auto 40px;
     align-items: center;
@@ -560,6 +572,25 @@ const faqLd = {
     transition: background var(--dur-base) var(--ease-out);
   }
   .sphere-row:hover { background: var(--bg-2); }
+  /* Красная засечка слева растет снизу вверх — та же деталь, что у строк
+     направлений в портфолио и у задач на странице сайтов. */
+  .sphere-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: -1px;
+    width: 2px;
+    background: var(--ks-red);
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .sphere-row:hover::before { transform: scaleY(1); }
+  .sr-num,
+  .sr-body { transition: transform var(--dur-base) var(--ease-out); }
+  .sphere-row:hover .sr-num { transform: translateX(4px); }
+  .sphere-row:hover .sr-body { transform: translateX(10px); }
   .sr-num {
     font: 800 13px/1 var(--font-display);
     letter-spacing: 0.08em;
@@ -591,6 +622,17 @@ const faqLd = {
     transition: transform var(--dur-base) var(--ease-out), color var(--dur-base);
   }
   .sphere-row:hover .sr-arrow { transform: translateX(6px); color: var(--ks-red); }
+
+  /* Без анимации подсветка строки остается, уезжает только движение. */
+  @media (prefers-reduced-motion: reduce) {
+    .sphere-row::before,
+    .sr-num,
+    .sr-body,
+    .sr-arrow { transition: none; }
+    .sphere-row:hover .sr-num,
+    .sphere-row:hover .sr-body,
+    .sphere-row:hover .sr-arrow { transform: none; }
+  }
   .services-proof .gallery-more { margin-top: 28px; }
   @media (max-width: 700px) {
     .sphere-row { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; padding: 14px 14px; margin: 0 -14px; }

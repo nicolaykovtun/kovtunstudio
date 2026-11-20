@@ -18,6 +18,7 @@ import Footer from '../components/Footer.astro';
 import { caseOrderIndex, directionByCategory } from '../data/case-catalog';
 import { servicePageNav } from '../lib/site-nav';
 import { coverSrcset, coverSizes } from '../lib/covers';
+import { caseCoverBySlug } from '../lib/case-covers';
 import '../styles/presentations.css';
 
 const dataDir = path.resolve('./src/data');
@@ -329,6 +330,9 @@ const tasks = [
     label: 'EON Phuket',
   },
 ];
+
+// Превью под курсором: у каждой задачи есть свой кейс, показываем его обложку.
+const coverBySlug = await caseCoverBySlug();
 
 const process = {
   title: 'Четыре этапа,<br>каждый утверждается',
@@ -715,7 +719,11 @@ const ldPortfolioCases = {
 
         <div class="task-list">
           {tasks.map((item) => (
-            <article class="task-row">
+            <article
+              class="task-row"
+              data-preview-src={coverBySlug[item.slug]?.src}
+              data-preview-alt={coverBySlug[item.slug]?.alt}
+            >
               <span class="task-num">{item.num}</span>
               <div class="task-body">
                 <h3>{item.task}</h3>
@@ -950,12 +958,50 @@ const ldPortfolioCases = {
   }
 
   .task-row {
+    position: relative;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 24px;
     align-items: start;
     padding: 26px 4px;
     background: var(--bg-1);
+    transition: background var(--dur-base) var(--ease-out);
+  }
+  .task-row:hover { background: var(--bg-2); }
+  /* Засечка слева и сдвиг текста — то же движение, что у строк направлений
+     в портфолио и у сфер на главной. */
+  .task-row::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--ks-red);
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .task-row:hover::before { transform: scaleY(1); }
+  .task-num,
+  .task-body { transition: transform var(--dur-base) var(--ease-out); }
+  .task-row:hover .task-num { transform: translateX(4px); }
+  .task-row:hover .task-body { transform: translateX(10px); }
+  .task-row:hover .task-link { color: var(--ks-red); }
+  .task-link span {
+    display: inline-block;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .task-row:hover .task-link span { transform: translateX(5px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .task-row::before,
+    .task-num,
+    .task-body,
+    .task-link span { transition: none; }
+    .task-row:hover .task-num,
+    .task-row:hover .task-body,
+    .task-row:hover .task-link span { transform: none; }
   }
 
   .task-num {
@@ -982,6 +1028,7 @@ const ldPortfolioCases = {
   .task-link {
     display: inline-flex;
     gap: 6px;
+    transition: color var(--dur-base);
     white-space: nowrap;
     font-size: 14px;
     font-weight: 600;

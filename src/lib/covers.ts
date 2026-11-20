@@ -61,3 +61,18 @@ function webpWidth(file: string): number | undefined {
 
 /** Карточка кейса: одна колонка на телефоне, две на планшете, треть экрана на десктопе. */
 export const coverSizes = '(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw';
+
+/**
+ * Уменьшенная копия обложки для превью под курсором.
+ *
+ * Превью показывается размером ~340 px, а обложки кейсов лежат по 1600–2400 px:
+ * тянуть их ради всплывающей картинки незачем. Берем ту же копию на 800 px,
+ * что и srcset карточки, а если ее нет — исходник. Архивные превью оклейки
+ * уже лежат в /thumb/ нужного размера.
+ */
+export function previewSrc(src: string): string {
+  if (src.startsWith('/assets/portfolio/full/')) return src.replace('/full/', '/thumb/');
+  const small = src.replace(/\.webp$/, '-800.webp');
+  if (small !== src && fs.existsSync(path.join('public', small))) return small;
+  return src;
+}

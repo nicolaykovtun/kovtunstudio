@@ -14,6 +14,7 @@ import yaml from 'js-yaml';
 import { getCollection } from 'astro:content';
 import { caseOrderIndex } from '../data/case-catalog';
 import { editorialCaseConfigs } from '../data/case-page-config';
+import { caseCoverBySlug } from '../lib/case-covers';
 
 interface Props {
   /** full — блок с заголовком-тезисом для главной; compact — полоса под ценами на странице услуги. */
@@ -129,6 +130,9 @@ const plural = (n: number, one: string, few: string, many: string) => {
 const numeral = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять', 'десять'];
 const ordinal = ['', '', 'второй', 'третий', 'четвертый', 'пятый', 'шестой'];
 
+// Превью под курсором: шаг цепочки — это кейс, показываем его обложку.
+const coverBySlug = await caseCoverBySlug();
+
 const top = chains[0];
 const topCount = top?.steps.length ?? 0;
 const topWord = numeral[topCount] ?? String(topCount);
@@ -170,7 +174,11 @@ const yearsOf = (steps: Step[]) => {
             <ol class="chain__steps">
               {chain.steps.map((step) => (
                 <li>
-                  <a href={`/cases/${step.slug}/`}>
+                  <a
+                    href={`/cases/${step.slug}/`}
+                    data-preview-src={coverBySlug[step.slug]?.src}
+                    data-preview-alt={coverBySlug[step.slug]?.alt}
+                  >
                     <span class="chain__label">{step.label}</span>
                     {step.year && <small>{step.year}</small>}
                   </a>
@@ -184,6 +192,36 @@ const yearsOf = (steps: Step[]) => {
   </section>
 )}
 
+<script is:inline>
+  (function () {
+    'use strict';
+    var lists = document.querySelectorAll('.chain__steps');
+    if (!lists.length) return;
+
+    function mark(list) {
+      var items = list.children;
+      for (var i = 0; i < items.length; i++) {
+        var next = items[i + 1];
+        items[i].classList.toggle('is-wrap', !!next && next.offsetTop > items[i].offsetTop);
+      }
+    }
+    function markAll() {
+      Array.prototype.forEach.call(lists, mark);
+    }
+
+    markAll();
+    /* Пересчет на смене ширины и после загрузки Geist: подписи меряются
+       шрифтом, и до его подмены строки рвутся в других местах. */
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(markAll);
+      Array.prototype.forEach.call(lists, function (list) { ro.observe(list); });
+    } else {
+      window.addEventListener('resize', markAll);
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
+  })();
+</script>
+
 <style>
   .chains {
     display: grid;
@@ -194,6 +232,15 @@ const yearsOf = (steps: Step[]) => {
     padding: 26px 26px 22px;
     background: var(--bg-2);
     border-top: 3px solid var(--line-2);
+    transition:
+      transform var(--dur-slow) var(--ease-out),
+      box-shadow var(--dur-slow) var(--ease-out),
+      border-color var(--dur-base);
+  }
+  .chain:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-2);
+    border-top-color: var(--ks-red);
   }
   .chain--lead {
     grid-column: 1 / -1;
@@ -220,41 +267,56 @@ const yearsOf = (steps: Step[]) => {
     white-space: nowrap;
   }
 
-  /* Шаги цепочки: стрелка между пунктами — сама история заказов. */
+  /* Шаги цепочки: стрелка между пунктами — сама история заказов. Стоит она
+     после шага, а не перед следующим: ведущая стрелка на переносе сдвигала
+     первый шаг новой строки на 40px вправо, и левый край списка получался
+     рваным — у Green Power и МСМ ГРУПП это видно сразу. */
   .chain__steps {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;
-    gap: 8px 0;
+    gap: 2px 0;
     margin: 0;
     padding: 0;
     list-style: none;
     counter-reset: none;
   }
   .chain__steps li { display: flex; align-items: center; }
-  .chain__steps li + li::before {
+  .chain__steps li:not(:last-child)::after {
     content: '→';
     margin: 0 12px;
     color: var(--ks-red);
     font: 400 20px/1 var(--font-display);
   }
+  /* Последний шаг в строке: следующий уехал на строку ниже, и стрелка вправо
+     показывала бы в пустоту. Класс ставит скрипт ниже — в CSS перенос строки
+     не виден. Без скрипта остается обычная стрелка вправо. */
+  .chain__steps li.is-wrap::after { content: '↓'; }
+  /* Линия под шагом снята: на сайте ссылки не подчеркиваются, роль ссылки
+     держат вес 600 и красный на наведении. Вместо линии шаг чуть приподнимается
+     — движение то же, что у строк списков. */
   .chain__steps a {
     display: inline-flex;
     align-items: baseline;
     gap: 8px;
     min-height: 44px;
-    padding: 0 2px;
+    /* Паддингом, а не min-height: при baseline-выравнивании текст прижимался
+       к верху 44-пиксельной ссылки, и стрелка рядом оказывалась на 12px ниже
+       подписи. Теперь высота набирается паддингом, текст стоит по центру
+       строки и стрелка совпадает с ним. */
+    padding: 12px 2px;
     text-decoration: none;
     color: var(--fg-1);
     font: 600 15px/1.3 var(--font-display);
-    border-bottom: 1px solid var(--line-2);
-    transition: color var(--dur-base), border-color var(--dur-base);
+    transition: color var(--dur-base), transform var(--dur-base) var(--ease-out);
   }
-  .chain__steps a:hover { color: var(--ks-red); border-color: var(--ks-red); }
+  .chain__steps a:hover { color: var(--ks-red); transform: translateY(-2px); }
   .chain__steps small {
     font: 500 12px/1 var(--font-mono);
     color: var(--fg-3);
+    transition: color var(--dur-base);
   }
+  .chain__steps a:hover small { color: var(--ks-red); }
 
   /* Компактный вариант на странице услуги: та же раскладка, меньше воздуха.
      Ведущая цепочка из шести шагов в узкой колонке ломалась на три строки,
@@ -264,9 +326,16 @@ const yearsOf = (steps: Step[]) => {
   .returning--compact .chain--lead .chain__head strong { font-size: 20px; }
   .returning--compact .chain__steps a { font-size: 14px; }
 
+  @media (prefers-reduced-motion: reduce) {
+    .chain,
+    .chain__steps a { transition: none; }
+    .chain:hover,
+    .chain__steps a:hover { transform: none; }
+  }
+
   @media (max-width: 900px) {
     .chains,
     .returning--compact .chains { grid-template-columns: 1fr; }
-    .chain__steps li + li::before { margin: 0 10px; }
+    .chain__steps li:not(:last-child)::after { margin: 0 10px; }
   }
 </style>

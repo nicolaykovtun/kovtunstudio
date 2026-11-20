@@ -130,6 +130,7 @@ import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/editorial-pages.css';
 import CookieConsent from '../components/CookieConsent.astro';
+import HoverPreview from '../components/HoverPreview.astro';
 ---
 <!doctype html>
 <html lang={site.lang}>
@@ -197,6 +198,7 @@ import CookieConsent from '../components/CookieConsent.astro';
 <body class={bodyClass}>
   <a class="skip-link" href="#main-content">Перейти к содержанию</a>
   <slot />
+  <HoverPreview />
   <CookieConsent
     metrikaId={site.metrika.id}
     metrikaOptions={site.metrika.options}

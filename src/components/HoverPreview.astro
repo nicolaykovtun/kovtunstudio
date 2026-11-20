@@ -1,0 +1,172 @@
+---
+/**
+ * Превью работы под курсором.
+ *
+ * Строки списков — сферы, направления, задачи, цепочки клиентов — при наведении
+ * показывают обложку кейса, которая едет за курсором с небольшим отставанием и
+ * подворачивается в сторону движения. Так строка текста заранее отвечает на
+ * вопрос «а что там», и по спискам становится интересно вести мышь.
+ *
+ * Разметка страницы дает только данные: data-preview-src (обязательный) и
+ * data-preview-alt. Один блок на страницу, лежит в BaseLayout; если на странице
+ * нет ни одной строки с превью, он удаляет себя сам.
+ *
+ * Только мышь: на тач-устройствах наведения нет, при prefers-reduced-motion
+ * блок не включается. Картинки грузятся не раньше, чем курсор вошел в список.
+ */
+---
+
+<div class="hover-preview" data-hover-preview aria-hidden="true">
+  <img alt="" decoding="async" width="800" height="450" />
+</div>
+
+<script is:inline>
+  (function () {
+    'use strict';
+
+    var root = document.querySelector('[data-hover-preview]');
+    if (!root) return;
+
+    var targets = document.querySelectorAll('[data-preview-src]');
+    /* any-hover, а не hover: на ноутбуке с сенсорным экраном браузер считает
+       основным указателем палец и hover: hover не срабатывает, хотя мышь есть. */
+    var fine = window.matchMedia('(any-hover: hover) and (any-pointer: fine)').matches;
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!targets.length || !fine || calm) {
+      root.parentNode.removeChild(root);
+      return;
+    }
+
+    var img = root.querySelector('img');
+    var mx = 0, my = 0;      /* курсор */
+    var x = 0, y = 0;        /* превью: догоняет курсор */
+    var shown = 0, want = 0; /* видимость: 0 скрыто, 1 показано */
+    var raf = 0;
+    var live = false;
+    var loaded = [];
+
+    /* Картинки списка грузим разом, когда курсор вошел в него: к третьей
+       строке подряд превью появляется уже без паузы, а на странице, где по
+       спискам не водили мышью, не грузится ничего. */
+    function preload(el) {
+      var scope = el.closest('ol, ul, .task-list, .chains') || document;
+      if (loaded.indexOf(scope) >= 0) return;
+      loaded.push(scope);
+      Array.prototype.forEach.call(scope.querySelectorAll('[data-preview-src]'), function (node) {
+        var pre = new Image();
+        pre.src = node.getAttribute('data-preview-src');
+      });
+    }
+
+    function clamp(v, min, max) {
+      return v < min ? min : v > max ? max : v;
+    }
+
+    function frame() {
+      var w = root.offsetWidth || 340;
+      var h = root.offsetHeight || 191;
+      var tx = clamp(mx, w / 2 + 12, window.innerWidth - w / 2 - 12);
+      var ty = clamp(my, h / 2 + 12, window.innerHeight - h / 2 - 12);
+
+      x += (tx - x) * 0.16;
+      y += (ty - y) * 0.16;
+      shown += (want - shown) * 0.18;
+
+      /* Наклон берем из отставания: пока превью догоняет курсор, оно чуть
+         подвернуто в сторону движения и само выравнивается на остановке. */
+      var tilt = clamp((tx - x) * 0.05, -7, 7);
+      var scale = 0.88 + 0.12 * shown;
+
+      root.style.transform =
+        'translate3d(' + (x - w / 2) + 'px,' + (y - h / 2) + 'px,0) ' +
+        'rotate(' + tilt.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')';
+      root.style.opacity = shown.toFixed(3);
+
+      var moving = Math.abs(tx - x) > 0.4 || Math.abs(ty - y) > 0.4 || Math.abs(want - shown) > 0.004;
+      if (moving) {
+        raf = requestAnimationFrame(frame);
+      } else {
+        raf = 0;
+        if (!want) {
+          /* Картинку не сбрасываем: она остается в кеше и следующее наведение
+             на ту же строку показывает превью без мигания пустой плашкой. */
+          root.classList.remove('is-live');
+          live = false;
+        }
+      }
+    }
+
+    function run() {
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    function show(el, event) {
+      var src = el.getAttribute('data-preview-src');
+      if (!src) return;
+      mx = event.clientX;
+      my = event.clientY;
+      if (!live) { x = mx; y = my; live = true; }
+      if (img.getAttribute('src') !== src) {
+        img.src = src;
+        img.alt = el.getAttribute('data-preview-alt') || '';
+      }
+      root.classList.add('is-live');
+      want = 1;
+      run();
+    }
+
+    function hide() {
+      want = 0;
+      run();
+    }
+
+    Array.prototype.forEach.call(targets, function (el) {
+      el.addEventListener('mouseenter', function (event) {
+        preload(el);
+        show(el, event);
+      });
+      el.addEventListener('mousemove', function (event) {
+        mx = event.clientX;
+        my = event.clientY;
+        run();
+      });
+      el.addEventListener('mouseleave', hide);
+    });
+
+    window.addEventListener('blur', hide);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) hide();
+    });
+  })();
+</script>
+
+<style>
+  .hover-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: clamp(220px, 26vw, 360px);
+    aspect-ratio: 16 / 9;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    border-radius: var(--r-2);
+    background: var(--bg-3);
+    box-shadow: var(--shadow-3);
+    will-change: transform, opacity;
+  }
+  .hover-preview.is-live { visibility: visible; }
+  .hover-preview img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* В узком окне картинка под курсором закрывала бы собой строку; мышь там
+     тоже редкость, а тач-устройства отсекает сам скрипт. */
+  @media (max-width: 700px) {
+    .hover-preview { display: none; }
+  }
+</style>

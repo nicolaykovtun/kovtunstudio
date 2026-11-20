@@ -721,10 +721,14 @@ html.reveal-motion [data-reveal-group].is-revealed[data-reveal-item] {
   display: flex; flex-direction: column;
   position: relative;
   overflow: hidden;
-  transition: transform var(--dur-base) var(--ease-out);
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-slow) var(--ease-out);
   min-height: 360px;
 }
-.what-card:hover { transform: translateY(-3px); }
+/* Подъем на 3px остался прежним, к нему добавлены тень и сдвиг номера:
+   карточка отзывается на курсор, но не прыгает. */
+.what-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
 .what-card.is-featured {
   background: var(--ks-charcoal);
   color: #fff;
@@ -739,6 +743,15 @@ html.reveal-motion [data-reveal-group].is-revealed[data-reveal-item] {
   margin: -10px 0 28px -8px;
   display: block;
   font-feature-settings: "tnum";
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.what-card:hover .big-num { transform: translateX(6px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .what-card,
+  .what-card .big-num { transition: none; }
+  .what-card:hover,
+  .what-card:hover .big-num { transform: none; }
 }
 .what-card h3 {
   font: 700 26px/1.15 var(--font-display);
