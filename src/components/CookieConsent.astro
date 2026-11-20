@@ -47,6 +47,26 @@ const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
   (function () {
     'use strict';
 
+    // Рабочий браузер: отметка сохраняется только в нем и выключает Метрику.
+    // Параметр 1 включает исключение, 0 возвращает обычный учет.
+    var INTERNAL_KEY = 'ks_metrika_internal';
+    var internalVisit = false;
+    try {
+      var currentUrl = new URL(window.location.href);
+      var internalMode = currentUrl.searchParams.get('ks_metrika_internal');
+      if (internalMode === '1' || internalMode === '0') {
+        internalVisit = internalMode === '1';
+        try {
+          if (internalVisit) localStorage.setItem(INTERNAL_KEY, '1');
+          else localStorage.removeItem(INTERNAL_KEY);
+        } catch (error) {}
+        currentUrl.searchParams.delete('ks_metrika_internal');
+        history.replaceState(history.state, '', currentUrl.href);
+      } else {
+        internalVisit = localStorage.getItem(INTERNAL_KEY) === '1';
+      }
+    } catch (error) {}
+
     var STORAGE_KEY = 'ks_analytics_consent';
     var CONSENT_VERSION = '3';
     var banner = document.getElementById('cookie-consent');
@@ -123,7 +143,7 @@ const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
 
     // Обезличенный режим: хит уходит, cookies не пишутся, Вебвизор выключен.
     function loadMetrikaAnonymous() {
-      if (initMode) return;
+      if (internalVisit || initMode) return;
       initMode = 'anon';
       window['disableYaCounter' + METRIKA_ID] = false;
       ensureTag();
@@ -132,7 +152,7 @@ const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
 
     // Полный режим: cookies, Вебвизор, склейка визитов одного посетителя.
     function loadMetrikaFull() {
-      if (initMode === 'full') return;
+      if (internalVisit || initMode === 'full') return;
       window['disableYaCounter' + METRIKA_ID] = false;
       ensureTag();
       window.ym(METRIKA_ID, 'init', METRIKA_OPTIONS);
@@ -365,3 +385,4 @@ const { metrikaId, metrikaOptions, googleAnalyticsId } = Astro.props;
     .cookie-consent__button { width: 100%; }
   }
 </style>
+
