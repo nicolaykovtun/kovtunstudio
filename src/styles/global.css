@@ -455,6 +455,14 @@ body.theme-dark .k-header .brand .kv-logo { --kv-ink: #fff; }
   max-width: 16ch;
 }
 .hero h1 em { font-style: normal; }
+/* Строка с названием услуги внутри H1 (20.11.2026): поиск читает ее как заголовок,
+   на экране она мелкая и стоит над слоганом. */
+.hero h1 .hero-kicker {
+  display: block;
+  font: 700 13px/1.4 var(--font-display);
+  letter-spacing: 0.14em; text-transform: uppercase;
+  margin: 0 0 28px;
+}
 .hero p.lede {
   font: 400 clamp(17px, 1.4vw, 21px)/1.5 var(--font-body);
   max-width: 56ch; margin: 0 0 48px;

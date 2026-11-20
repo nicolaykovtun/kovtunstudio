@@ -6,6 +6,8 @@ interface MetaItem {
   label: string;
 }
 interface Props {
+  /** Строка с поисковой фразой над слоганом: часть H1, набрана мелко. */
+  eyebrow?: string;
   headline: string;
   headlineAccent: string;
   lede: string;
@@ -13,11 +15,12 @@ interface Props {
   ctaSecondary: string;
   meta: MetaItem[];
 }
-const { headline, headlineAccent, lede, ctaPrimary, ctaSecondary, meta } = Astro.props;
+const { eyebrow, headline, headlineAccent, lede, ctaPrimary, ctaSecondary, meta } = Astro.props;
 ---
 <section class="hero hero-red" id="top">
   <div class="container-wide inner">
     <h1>
+      {eyebrow && <span class="hero-kicker">{eyebrow}</span>}
       {headline}<br>
       <em>{headlineAccent}</em>
     </h1>
