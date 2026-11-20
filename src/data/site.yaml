@@ -88,8 +88,8 @@ legal:
   registrationDate: "29 июня 2023 года"
   registrationAuthority: "Межрайонная инспекция ФНС России № 15 по Приморскому краю"
   location: "Россия, Приморский край, г. Владивосток"
-  policyDate: "2 сентября 2026 года"
-  policyVersion: "1.1"
+  policyDate: "20 ноября 2026 года"
+  policyVersion: "1.2"
 
 # Аналитика
 metrika:
@@ -104,12 +104,14 @@ metrika:
 googleAnalytics:
   measurementId: G-BYR2MY8W1S
 
-# Заявка уходит в свою CRM (crm.kovtun.studio, хостинг Beget, Россия)
-# одновременно с открытием мессенджера: имя, направление и текст задачи,
-# метки рекламы и страница входа. Приемник — public_html/api/lead.php.
+# Заявка уходит в Telegram-бот студии @kovtunstudio_zayavki_bot: имя, контакт,
+# текст задачи, метки рекламы и страница входа. Сервера crm.kovtun.studio больше
+# нет (VPS удален 18.11.2026). Токен виден в коде страниц: это отдельный бот
+# только для заявок, при спаме токен перевыпускается в @BotFather и меняется здесь
+# и в /tools/*.html.
 leadCapture:
-  endpoint: "https://crm.kovtun.studio/api/lead.php"
-  formKey: "kovtun-studio-109482416"
+  telegramToken: "9056422211:AAFk_KkcHZiLvNjx-0Pb2Xr7AI9k5rsq9ao"
+  telegramChat: "53408809"
 
 # Подтверждение владения у поисковиков
 verification:

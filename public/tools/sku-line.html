@@ -741,8 +741,21 @@ $('demo').addEventListener('click', function(){
   toast('Загружен пример: ' + TYPES[t].label.toLowerCase());
 });
 
-/* ---------- Отправка в CRM ---------- */
-var ENDPOINT = 'https://crm.kovtun.studio/api/lead.php';
+/* ---------- Отправка в студию: напрямую в Telegram-бот заявок ----------
+   Сервера crm.kovtun.studio больше нет (VPS удален 18.11.2026). Токен виден в коде страницы:
+   это отдельный бот только для заявок, при спаме токен перевыпускается в @BotFather.
+   Запрос без своих заголовков (FormData), поэтому браузер не делает предварительный OPTIONS. */
+var TG_TOKEN = '9056422211:AAFk_KkcHZiLvNjx-0Pb2Xr7AI9k5rsq9ao';
+var TG_CHAT = '53408809';
+function tgDoc(name, body, type, caption){
+  var fd = new FormData();
+  fd.append('chat_id', TG_CHAT);
+  if (caption) fd.append('caption', caption.slice(0, 1000));
+  fd.append('document', new Blob([body], {type:type}), name);
+  return fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendDocument', {method:'POST', body:fd})
+    .then(function(r){ return r.json(); })
+    .then(function(j){ if (!j || !j.ok) throw new Error('tg'); return j; });
+}
 var sent = false;
 function say(text, cls){ var n = $('sendnote'); n.textContent = text; n.className = 'sendnote ' + (cls || ''); n.hidden = false; }
 var FAIL = 'Не отправилось. Нажмите «Скачать файл» и пришлите его в Telegram: t.me/kovtundesign';
@@ -758,24 +771,20 @@ $('sendBtn').addEventListener('click', function(){
   var company = String(state.contact.company || state.common.brand || '').trim();
   var p = new URLSearchParams(location.search);
   var text = 'Данные для упаковки линейки (' + TYPES[state.type].label.toLowerCase() + ')' + (company ? ' — ' + company : '') + '\n\n' + asText();
-  var payload = {
-    name: company || String(state.contact.person || ''), contact: contact,
-    message: text.slice(0, 7900), page: location.pathname, referrer: document.referrer || '',
-    utmSource: p.get('utm_source') || '', utmMedium: p.get('utm_medium') || '', utmCampaign: p.get('utm_campaign') || '',
-    yclid: p.get('yclid') || '', formKey: 'kovtun-studio-109482416', website: '',
-    skuLine: {type:state.type, common:state.common, skus:state.skus, claims:state.claims}
-  };
-  /* сервер принимает до 20 000 байт: полные данные кладем, только если влезают */
-  var size = function(o){ return new Blob([JSON.stringify(o)]).size; };
-  if (size(payload) > 19500) delete payload.skuLine;
-  while (size(payload) > 19500 && payload.message.length > 500) payload.message = payload.message.slice(0, Math.floor(payload.message.length * 0.8)) + '\n…обрезано, полный текст в файле';
+  var utm = ['utm_source', 'utm_medium', 'utm_campaign', 'yclid'].map(function(k){ return p.get(k) ? k + '=' + p.get(k) : ''; }).filter(Boolean).join(' ');
+  var caption = 'Заявка: данные для упаковки линейки (' + TYPES[state.type].label.toLowerCase() + ')\n'
+    + 'Компания: ' + (company || '—') + '\n'
+    + 'Контакт: ' + contact + (state.contact.person ? ' (' + state.contact.person + ')' : '') + '\n'
+    + 'Позиций: ' + state.skus.length + '\n'
+    + 'Страница: ' + location.pathname + (utm ? '\nМетки: ' + utm : '') + (document.referrer ? '\nОткуда: ' + document.referrer : '');
+  var d = new Date(), ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var base = 'upakovka-' + (slug(company) || 'lineyka') + '-' + ds;
+  var data = {tool:'kovtun-sku-line', version:2, type:state.type, saved:d.toISOString(), common:state.common, skus:state.skus, claims:state.claims, contact:state.contact};
   var btn = $('sendBtn'); btn.disabled = true; say('Отправляю…', '');
-  fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)})
-    .then(function(r){ return r.json().catch(function(){ return null; }); })
-    .then(function(j){
-      if (j && j.ok){ sent = true; btn.textContent = 'Отправлено'; say('Данные ушли в студию, заявка №' + (j.lead || '—') + '. Отвечу в течение рабочего дня. Файл себе все равно сохраните.', 'ok'); }
-      else { btn.disabled = false; say(FAIL, 'err'); }
-    })
+  /* первым идет читаемый текст с подписью-заявкой, вторым файл, который открывается кнопкой «Продолжить из файла» */
+  tgDoc(base + '.txt', text, 'text/plain;charset=utf-8', caption)
+    .then(function(){ return tgDoc(base + '.json', JSON.stringify(data, null, 2), 'application/json', 'Файл для «Продолжить из файла»: ' + (company || contact)); })
+    .then(function(){ sent = true; btn.textContent = 'Отправлено'; say('Данные ушли в студию. Отвечу в течение рабочего дня. Файл себе все равно сохраните.', 'ok'); })
     .catch(function(){ btn.disabled = false; say(FAIL, 'err'); });
 });
 

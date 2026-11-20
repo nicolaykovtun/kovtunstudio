@@ -204,8 +204,8 @@ import CookieConsent from '../components/CookieConsent.astro';
   />
 
   <script is:inline define:vars={{
-    LEAD_ENDPOINT: site.leadCapture?.endpoint || '',
-    LEAD_FORM_KEY: site.leadCapture?.formKey || '',
+    LEAD_TG_TOKEN: site.leadCapture?.telegramToken || '',
+    LEAD_TG_CHAT: site.leadCapture?.telegramChat || '',
     METRIKA_ID: site.metrika.id,
   }}>
     (function () {
@@ -263,33 +263,31 @@ import CookieConsent from '../components/CookieConsent.astro';
       var attribution = readAttribution();
       var FIRST_VISIT = firstVisit();
 
-      /* Отправка заявки в CRM. Возвращает Promise с {ok, lead, deal} —
-         форма показывает подтверждение только после ответа сервера. */
+      /* Отправка заявки в Telegram-бот студии. Возвращает Promise с {ok} —
+         форма показывает подтверждение только после ответа Telegram.
+         Запрос без своих заголовков, поэтому браузер не делает предварительный OPTIONS. */
       window.kovtunLeadSubmit = function (lead) {
-        if (!LEAD_ENDPOINT) return Promise.resolve({ ok: false });
+        if (!LEAD_TG_TOKEN || !LEAD_TG_CHAT) return Promise.resolve({ ok: false });
+        /* ловушка для ботов: поле скрыто от людей, заполненное молча считаем отправленным */
+        if (document.querySelector('[data-lead-hp]')?.value) return Promise.resolve({ ok: true });
         return ymClientId().then(function (cid) {
-          var params = new URLSearchParams({
-            kind: 'website_lead',
-            formKey: LEAD_FORM_KEY,
-            page: window.location.pathname,
-            name: (lead && lead.name) || '',
-            contact: (lead && lead.contact) || '',
-            message: (lead && lead.message) || '',
-            consent: (lead && lead.consent) || '',
-            utmSource: attribution.utmSource,
-            utmMedium: attribution.utmMedium,
-            utmCampaign: attribution.utmCampaign,
-            referrer: attribution.referrer,
-            yclid: attribution.yclid,
-            ym_client_id: cid,
-            first_visit: FIRST_VISIT,
-            website: document.querySelector('[data-lead-hp]')?.value || ''
-          });
-          return fetch(LEAD_ENDPOINT, { method: 'POST', body: params, keepalive: true })
+          var a = attribution;
+          var tail = [
+            (lead && lead.consent) ? 'Согласие: ' + lead.consent : '',
+            'Страница: ' + window.location.pathname,
+            a.referrer ? 'Откуда: ' + a.referrer : '',
+            (a.utmSource || a.utmMedium || a.utmCampaign) ? 'Метки: ' + [a.utmSource, a.utmMedium, a.utmCampaign].filter(Boolean).join(' / ') : '',
+            a.yclid ? 'yclid: ' + a.yclid : '',
+            cid ? 'Метрика: ' + cid + (FIRST_VISIT ? ', первый визит ' + FIRST_VISIT : '') : ''
+          ].filter(Boolean).join('\n');
+          var text = 'Заявка с сайта\n'
+            + 'Имя: ' + ((lead && lead.name) || '—') + '\n'
+            + 'Контакт: ' + ((lead && lead.contact) || '—') + '\n\n'
+            + ((lead && lead.message) || '') + '\n\n' + tail;
+          var body = new URLSearchParams({ chat_id: LEAD_TG_CHAT, text: text.slice(0, 4000) });
+          return fetch('https://api.telegram.org/bot' + LEAD_TG_TOKEN + '/sendMessage', { method: 'POST', body: body, keepalive: true })
             .then(function (r) { return r.json(); })
-            .then(function (j) {
-              return (j && j.ok) ? { ok: true, lead: j.lead || 0, deal: j.deal || 0 } : { ok: false };
-            });
+            .then(function (j) { return (j && j.ok) ? { ok: true } : { ok: false }; });
         }).catch(function () { return { ok: false }; });
       };
     })();

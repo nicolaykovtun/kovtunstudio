@@ -549,10 +549,13 @@ footer a{color:var(--ink)}
 })();
 </script>
 <script>
-/* Отправка брифа в CRM студии. Отдельным блоком, чтобы не трогать сборщик
+/* Отправка брифа в студию (Telegram-бот заявок). Отдельным блоком, чтобы не трогать сборщик
    выше: он только выкладывает готовый текст в window.__briefText. */
 (function(){
-  var ENDPOINT = 'https://crm.kovtun.studio/api/lead.php';
+  /* сервера crm.kovtun.studio больше нет (18.11.2026): бриф уходит в отдельный Telegram-бот заявок.
+     Токен виден в коде, при спаме перевыпускается в @BotFather. */
+  var TG_TOKEN = '9056422211:AAFk_KkcHZiLvNjx-0Pb2Xr7AI9k5rsq9ao';
+  var TG_CHAT = '53408809';
   var btn = document.getElementById('sendBtn');
   if (!btn) { return; }
   var agree = document.getElementById('agree');
@@ -590,29 +593,33 @@ footer a{color:var(--ink)}
 
     var company = val('company');
     var p = new URLSearchParams(location.search);
-    var body = new URLSearchParams({
-      name: company,
-      contact: contact,
-      message: kind + (company ? ' — ' + company : '') + '\n\n' + text,
-      page: location.pathname,
-      referrer: document.referrer || '',
-      utmSource: p.get('utm_source') || '',
-      utmMedium: p.get('utm_medium') || '',
-      utmCampaign: p.get('utm_campaign') || '',
-      yclid: p.get('yclid') || '',
-      formKey: 'kovtun-studio-109482416',
-      website: ''
-    });
+    var utm = ['utm_source', 'utm_medium', 'utm_campaign', 'yclid'].map(function(k){ return p.get(k) ? k + '=' + p.get(k) : ''; }).filter(Boolean).join(' ');
+    var head = 'Заявка: ' + kind + '\n'
+      + 'Компания: ' + (company || '—') + '\n'
+      + 'Контакт: ' + contact + '\n'
+      + 'Страница: ' + location.pathname + (utm ? '\nМетки: ' + utm : '') + (document.referrer ? '\nОткуда: ' + document.referrer : '');
+    var full = head + '\n\n' + text;
+    /* в одно сообщение Telegram влезает 4096 знаков; длинный бриф уходит файлом с короткой подписью */
+    var url = 'https://api.telegram.org/bot' + TG_TOKEN + '/', req;
+    if (full.length <= 4000) {
+      req = fetch(url + 'sendMessage', {method:'POST', body: new URLSearchParams({chat_id: TG_CHAT, text: full})});
+    } else {
+      var fd = new FormData();
+      fd.append('chat_id', TG_CHAT);
+      fd.append('caption', head.slice(0, 1000));
+      fd.append('document', new Blob([kind + (company ? ' — ' + company : '') + '\n\n' + text], {type:'text/plain;charset=utf-8'}), 'brief.txt');
+      req = fetch(url + 'sendDocument', {method:'POST', body: fd});
+    }
 
     btn.disabled = true;
     say('Отправляю…', '');
-    fetch(ENDPOINT, {method:'POST', body: body})
+    req
       .then(function(r){ return r.json().catch(function(){ return null; }); })
       .then(function(j){
         if (j && j.ok) {
           sent = true;
           btn.textContent = 'Отправлено';
-          say('Бриф ушел в студию, заявка №' + (j.lead || '—') + '. Отвечу в течение рабочего дня.', 'ok');
+          say('Бриф ушел в студию. Отвечу в течение рабочего дня.', 'ok');
         } else {
           btn.disabled = false;
           say('Не отправилось. Скопируйте текст и пришлите в Telegram: t.me/kovtundesign', 'err');
