@@ -216,7 +216,7 @@ footer a{color:var(--ink)}
   </div>
   <label class="agree"><input type="checkbox" id="agree"> Согласен на обработку персональных данных: <a href="https://kovtun.studio/privacy/" target="_blank" rel="noopener">политика</a> и <a href="https://kovtun.studio/consent/" target="_blank" rel="noopener">согласие</a>.</label>
   <p class="sendnote" id="sendnote" hidden></p>
-  <p class="after">Страница помогает собрать данные, но не заменяет проверку юриста и лаборатории. Перечень полей составлен по ТР ТС 022/2011 и ТР ТС 024/2011. Вопросы можно задать в Telegram: <a href="https://t.me/kovtundesign" target="_blank" rel="noopener">t.me/kovtundesign</a>.</p>
+  <p class="after">Страница помогает собрать данные, но не заменяет проверку юриста и лаборатории. Перечень полей составлен по ТР ТС 022/2011 и ТР ТС 024/2011. Вопросы можно задать в Telegram: <a href="https://t.me/nikolaikovtun" target="_blank" rel="noopener">t.me/nikolaikovtun</a>.</p>
 </section>
 
 <footer>
@@ -758,7 +758,7 @@ function tgDoc(name, body, type, caption){
 }
 var sent = false;
 function say(text, cls){ var n = $('sendnote'); n.textContent = text; n.className = 'sendnote ' + (cls || ''); n.hidden = false; }
-var FAIL = 'Не отправилось. Нажмите «Скачать файл» и пришлите его в Telegram: t.me/kovtundesign';
+var FAIL = 'Не отправилось. Нажмите «Скачать файл» и пришлите его в Telegram: t.me/nikolaikovtun';
 $('sendBtn').addEventListener('click', function(){
   if (sent){ say('Данные уже отправлены.', 'ok'); return; }
   var contact = String(state.contact.contact || '').trim();

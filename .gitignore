@@ -27,7 +27,7 @@ _commit-msg.txt
 _to_delete_*
 
 # Local backups of original (pre-optimized) image assets — not for repo
-assets/**/original/
+**/assets/**/original/
 
 # Настройки Claude Code. Конфиг запуска дев-сервера коммитим: по нему
 # preview-инструменты поднимают сервер у любого, кто клонировал репозиторий.
